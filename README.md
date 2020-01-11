@@ -14,3 +14,11 @@ React Natives Elements
 - https://react-native-elements.github.io/react-native-elements/
 
 npm install react-native-elements
+
+
+Telas de interface:
+
+shell
+ app.js
+ telas/home.js
+shell
