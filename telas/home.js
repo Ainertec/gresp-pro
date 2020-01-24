@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, StyleSheet, Image, ScrollView, Text} from 'react-native';
 import { BottomNavigation } from 'react-native-material-ui';
-import { Header, Icon, ListItem} from 'react-native-elements';
+import { Header, Icon, ListItem, Overlay, Input,Button} from 'react-native-elements';
 
 export default function App() {
   return (
     <View style={styles.container}>
       <View style={{height: 60,justifyContent:"center",marginTop:10}}>
          <Header 
-          leftComponent={<Image style={{ width: 100, height: 30}} source={require('../img/logo.png')}/>} 
+          leftComponent={<Image style={{ width: 100, height: 30}} source={require('./img/logo.png')}/>} 
           rightComponent={<Icon name='settings-applications' color='#fff' onPress={() => alert('Sou as configuracoes')}/>} 
           containerStyle={{ backgroundColor: '#3F173F', justifyContent: 'space-around'}}/>
       </View>
@@ -67,6 +67,11 @@ export default function App() {
             rightComponent={<Icon style={{marginBottom:10}} reverse raised color='#7b1b53' name='send' onPress={() => alert('Sou o chat')}/>}
           />
       </View>
+      <Overlay>
+        <Text style={{marginTop:60,textAlign:"center",fontSize:20, marginBottom:50}}>Configurar IP de Rota</Text>
+        <Input keyboardType="numeric" placeholder='Exemplo 192.168.0.1'/>
+        <Button buttonStyle={{marginTop:40}} type="solid" title="Salvar" onPress={() => alert('Sou a busca por nome')} />
+      </Overlay>
     </View>
   );
 }
