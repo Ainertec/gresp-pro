@@ -24,7 +24,7 @@ export default function App() {
 
       <View style={{flexDirection:'row'}}>
           <Input containerStyle={{width:290}} inputStyle={{color:"white"}} placeholder='Nome'/>
-          <Button containerStyle={{width:50}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="youtube-searched-for" size={15}/>} onPress={() => alert('Sou a busca por nome')} />
+          <Button containerStyle={{width:50}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="search" size={15}/>} onPress={() => alert('Sou a busca por nome')} />
       </View>
 
       <View style={{flex:1,marginTop:15}}>
