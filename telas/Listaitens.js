@@ -7,6 +7,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <View style={{marginTop:30}}>
+        <Text style={{marginBottom:10, color:"white", textAlign:"center", fontSize:22}}>Produtos</Text>
         <BottomNavigation hidden={true}>
           <BottomNavigation.Action
               key="Produtos"
@@ -19,12 +20,11 @@ export default function App() {
               onPress={() => alert('Sou a tela com as bebidas')}
           />
         </BottomNavigation>
-        <Text style={{marginTop:10, color:"white", textAlign:"center", fontSize:22}}>Produtos</Text>
       </View>
 
-      <View style={{flexDirection:'row'}}>
+      <View style={{marginTop:10,flexDirection:'row'}}>
           <Input containerStyle={{width:290}} inputStyle={{color:"white"}} placeholder='Nome'/>
-          <Button containerStyle={{width:50}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="search" size={15}/>} onPress={() => alert('Sou a busca por nome')} />
+          <Button containerStyle={{width:50}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="youtube-searched-for" size={15}/>} onPress={() => alert('Sou a busca por nome')} />
       </View>
 
       <View style={{flex:1,marginTop:15}}>
