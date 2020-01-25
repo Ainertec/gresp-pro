@@ -22,6 +22,9 @@ export default function Home({ navigation }) {
       })
       if (response.data == null)
         response.data = [];
+      if(!response.data){
+        console.log("oi")
+      }  
 
       return response.data;
       
@@ -29,13 +32,8 @@ export default function Home({ navigation }) {
     loadOrders().then(ordersData =>{
       setOrders(ordersData);
     });
-   
 
-
-
-
-
-  }, [])
+  }, [orders])
 
 
 
@@ -117,7 +115,7 @@ export default function Home({ navigation }) {
       <ListOrder orders={orders} />
 
 
-      <View>
+      {/* <View>
         <BottomNavigation hidden={true}>
           <BottomNavigation.Action
             key="Ler"
@@ -137,7 +135,7 @@ export default function Home({ navigation }) {
           centerComponent={<Text> Total: R${orders.total} </Text>}
           rightComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#7b1b53' name='send' onPress={() => alert('Sou o chat')} />}
         />
-      </View>
+      </View> */}
 
     </View>
   );

@@ -1,24 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, ScrollView, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, AsyncStorage, ScrollView, Text, Alert } from 'react-native';
 import { BottomNavigation } from 'react-native-material-ui';
-import { Header, Icon, ListItem, CheckBox } from 'react-native-elements';
-import ItemSelect from 'react-native-item-select'
+import { Header, Icon, ListItem } from 'react-native-elements';
+import api from '../services/api'
 
 export default function ListOrder({ orders }) {
   const [listaDrink, setListaDrink] = useState([]);
   const [listaProduc, setListaProduc] = useState([]);
-  const [checkState, setcheckState] = useState(false);
-  async function  productRemove(id){
-    var position; 
-    for(var element of listaProduc){
-       if(element._id == id){
-         position = listaProduc.indexOf(element);
-       }
-      }
-      await listaProduc.splice(position,position+1)
-      setListaProduc(listaProduc.slice());
+  //const [orders, setOrders] = useState([order]);
+  
+  
 
-  }
   async function  productRemove(id){
     var position; 
     for(var element of listaProduc){
@@ -41,6 +33,42 @@ export default function ListOrder({ orders }) {
       setListaDrink(listaDrink.slice());
 
   }
+  async function sendOrder(){
+    const drinkables = [];
+    const products = [];
+
+    for(const element of listaProduc){ 
+      var aux = {
+        product:element.product._id,
+        quantity:element.quantity,
+      }; 
+      products.push(aux);
+    };
+    for(const element of listaDrink){ 
+      var aux = {
+        drinkable:element.drinkable._id,
+        quantity:element.quantity,
+      }; 
+      drinkables.push(aux);
+    }
+
+    const note = orders.note;
+    const identification = await AsyncStorage.getItem('id');
+    
+    const response = await api.put(`/orders/${identification}`,{
+      
+      products,
+      drinkables,
+      note
+      
+    });
+    if(response.status == 200)
+      Alert.alert("pedido atualizado!")
+    else
+    Alert.alert("ocorreu um erro!")
+    
+  }
+  
 
 
   useEffect(() => {
@@ -58,16 +86,12 @@ export default function ListOrder({ orders }) {
     }
     async function getList() {
       await getDrinkables(orders.drinkables, orders.products);
-    }
-    if(orders != [])
+    };
+    if(orders )
       getList();
        console.log("------------");
 
-
-
-
-
-  }, [orders])
+  }, [ orders])
 
   return (
     <View style={styles.container}>
@@ -112,7 +136,7 @@ export default function ListOrder({ orders }) {
         </ScrollView>
       </View>
 
-        {/* <View>
+         <View>
         <BottomNavigation hidden={true}>
           <BottomNavigation.Action
             key="Ler"
@@ -130,9 +154,9 @@ export default function ListOrder({ orders }) {
         <Header containerStyle={{ backgroundColor: '#fff' }}
           leftComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#a46810' name='monetization-on' onPress={() => console.log("minha Lista:",listaDrink)} />}
           centerComponent={<Text>Total: R${orders.total} </Text>}
-          rightComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#7b1b53' name='send' onPress={() => alert('Sou o chat')} />}
+          rightComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#7b1b53' name='send' onPress={() => sendOrder()} />}
         />
-      </View>   */}
+      </View>   
     </View>
   );
 }
