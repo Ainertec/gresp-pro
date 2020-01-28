@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { View, StyleSheet, Image, ScrollView, Text, AsyncStorage } from 'react-native';
+import { View, StyleSheet, Image, ScrollView, Text, Alert } from 'react-native';
 import { BottomNavigation } from 'react-native-material-ui';
 import { Header, Icon, ListItem, Input, Button } from 'react-native-elements';
 import api from '../services/api';
@@ -10,7 +10,7 @@ export default function ListaItens({ navigation }) {
   const [product, setProduct] = useState([]);
   const [selectedType, setSelectedType] = useState(0);
   const [name, setName] = useState('');
-  var producList = null; 
+  var producList = null;
   const [list, setList] = useState([]);
   var drinkableList = null;
 
@@ -28,17 +28,16 @@ export default function ListaItens({ navigation }) {
       setList(response.data);
     }
   }
-
   function addItens(l) {
-    if(producList == null)
-      producList = navigation.getParam('listaProduc',[]);
-    if(drinkableList == null)
-      drinkableList = navigation.getParam('listaDrink',[]);
-    
+    if (producList == null)
+      producList = navigation.getParam('listaProduc', []);
+    if (drinkableList == null)
+      drinkableList = navigation.getParam('listaDrink', []);
+
     console.log("teste da lista produto: ", producList);
 
     if (l.quantity == undefined) {
-      return alert("Selecione a quantidade")
+      return Alert.alert("Atenção!","Selecione a quantidade!")
     }
     if (selectedType == 1) {
 
@@ -46,15 +45,15 @@ export default function ListaItens({ navigation }) {
         product: l,
         quantity: l.quantity
       };
-      
+
       for (const element of producList) {
         if (element.product._id == l._id) {
-          return alert(`${l.name} já foi selecionado!`);
+          return Alert.alert("Atenção!",`${l.name} já foi selecionado!`);
         }
       }
       producList.push(obj);
-      console.log("lista produto adicionada:",producList);
-      return alert(`O item ${l.name} foi adicionado!`);
+      console.log("lista produto adicionada:", producList);
+      return Alert.alert("Tudo Certo!",`O item ${l.name} foi adicionado!`);
     } else {
       var obj = {
         drinkable: l,
@@ -62,20 +61,32 @@ export default function ListaItens({ navigation }) {
       };
       for (const element of drinkableList) {
         if (element.drinkable._id == l._id) {
-          return alert(`O item ${l.name} já foi selecionado!`);
+          return Alert.alert("Atenção",`O item ${l.name} já foi selecionado!`);
         }
       }
       drinkableList.push(obj);
-      console.log("lista bebida adicionada:",drinkableList);
-       return alert(`O item ${l.name} foi adicionado!`);
+      console.log("lista bebida adicionada:", drinkableList);
+      return Alert.alert(
+        "Tudo Certo!",
+        `O item ${l.name} foi adicionado!`
+        );
     }
-    
-    
+
+
 
   }
   async function ending() {
+    navigation.navigate('Home', { producList, drinkableList });
+  }
+  function checked(l) {
+    if (producList == null)
+      producList = navigation.getParam('listaProduc', []);
+    if (drinkableList == null)
+      drinkableList = navigation.getParam('listaDrink', []);
+    if(producList.find(l))
+      console.log("achei o danado");
 
-    navigation.navigate('Home',{producList,drinkableList});
+
   }
 
 
@@ -85,6 +96,7 @@ export default function ListaItens({ navigation }) {
       const responseProduct = await api.get('/products');
       setDrink(responseDrink.data);
       setProduct(responseProduct.data);
+      
       setSelectedType(1);
 
     }
@@ -101,7 +113,7 @@ export default function ListaItens({ navigation }) {
     }
   }, [selectedType]);
 
-  
+
 
   return (
     <View style={styles.container}>
@@ -132,17 +144,27 @@ export default function ListaItens({ navigation }) {
             list.map((l, i) => (
               <ListItem
                 key={i}
-                leftAvatar={<Icon name={selectedType == 1 ? "local-dining" : "local-bar"} />}
+                leftAvatar={<Icon name={selectedType == 1 ? "local-dining" : "local-bar"} /> }
                 title={l.name}
                 subtitle={`R$ ${l.price}`}
                 input={{
-                  inputContainerStyle: { width: 50 }, defaultValue:(l.quantity == undefined)?`${0}`:`${l.quantity}` , placeholder: '0', label: "Quantidade", onChangeText: text => {
+                  inputContainerStyle: { width: 50 }, defaultValue: (l.quantity == undefined) ? "" : `${l.quantity}`, placeholder: '0', label: "Quantidade", onChangeText: text => {
                     l['quantity'] = text;
                   }, keyboardType: "numeric",
                 }}
-                rightIcon={{ name: 'add', onPress: () => addItens(l) }}
+                rightIcon={{ name: 'add', onPress: () => addItens(l), size:30}}
                 bottomDivider
-              //onPress={() => alert('se apertar em mim adiciona esse produto no pedido com a quantidade solicitada')}
+                onPress={()=>Alert.alert(
+                  "Informações",
+                  `Nome: ${l.name} 
+Descrição: ${l.description}`,
+
+                  // [
+                  //  {text: `Descrição: ${l.description}`},
+                  // ]
+
+                ) }
+                
               />
             ))
           }
