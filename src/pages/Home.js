@@ -1,41 +1,126 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, AsyncStorage, FlatList, Image, ScrollView, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, AsyncStorage, Image, ScrollView, Text, Alert } from 'react-native';
 import { BottomNavigation } from 'react-native-material-ui';
-import { Header, Icon, ListItem } from 'react-native-elements';
+import { Header, Icon, ListItem, Overlay, Input, Button } from 'react-native-elements';
 
-import Dialog from 'react-native-dialog';
-import ListOrder from '../components/ListOrder'
 import api from '../services/api'
-import Identificator from './Identificator.js'
+
 
 
 export default function Home({ navigation }) {
   const [orders, setOrders] = useState([]);
- 
-  useEffect(() => {
+  const [listaDrink, setListaDrink] = useState([]);
+  const [listaProduc, setListaProduc] = useState([]);
 
-    async function loadOrders() {
-      const identification = await AsyncStorage.getItem("id");
-
-      const response = await api.get('/order/', {
-        params: { identification }
-      })
-      if (response.data == null)
-        response.data = [];
-      if(!response.data){
-        console.log("oi")
-      }  
-
-      return response.data;
-      
+  async function productRemove(id) {
+    var position;
+    for (var element of listaProduc) {
+      if (element.product._id == id) {
+        position = listaProduc.indexOf(element);
+      }
     }
-    loadOrders().then(ordersData =>{
-      setOrders(ordersData);
+    await listaProduc.splice(position,1);
+    console.log("Lista product Home:",listaProduc);
+    setListaProduc(listaProduc.slice());
+
+  }
+  async function drinkableRemove(id) {
+    var position;
+    for (var element of listaDrink) {
+      if (element.drinkable._id == id) {
+        position = listaDrink.indexOf(element);
+      }
+    }
+    await listaDrink.splice(position,1)
+    
+    setListaDrink(listaDrink.slice());
+
+  }
+  async function sendOrder() {
+    const drinkables = [];
+    const products = [];
+
+    for (const element of listaProduc) {
+      var aux = {
+        product: element.product._id,
+        quantity: element.quantity,
+      };
+      products.push(aux);
+    };
+    for (const element of listaDrink) {
+      var aux = {
+        drinkable: element.drinkable._id,
+        quantity: element.quantity,
+      };
+      drinkables.push(aux);
+    }
+
+    const note = orders.note;
+    const identification = await AsyncStorage.getItem('id');
+
+    const response = await api.put(`/orders/${identification}`, {
+
+      products,
+      drinkables,
+      note
+
     });
+    await getDrinkablesAndProducts(response.data.drinkables, response.data.products);
+    setOrders(response.data);
+    if (response.status == 200)
+      Alert.alert("pedido atualizado!")
+    else
+      Alert.alert("ocorreu um erro!")
 
-  }, [orders])
+  }
+  async function getDrinkablesAndProducts(drinkables, products) {
+    var temporaryListDrink = [];
+    var temporaryListProduc = [];
+    if (drinkables == undefined || drinkables == null)
+      drinkables = [];
+    if (products == undefined || products == null)
+      products = [];
+
+    for (var element of drinkables) {
+      temporaryListDrink.push(element);
+    };
+
+    for (var element of products) {
+      temporaryListProduc.push(element);
+    };
+
+    setListaDrink(temporaryListDrink);
+    setListaProduc(temporaryListProduc);
+
+  }
+  async function loadOrders() {
+    const identification = await AsyncStorage.getItem("id");
+
+    const response = await api.get('/order/', {
+      params: { identification }
+    })
+    if (response.data == null)
+      response.data = [];
+
+    await getDrinkablesAndProducts(response.data.drinkables, response.data.products);
+
+    setOrders(response.data);
 
 
+  }
+
+  useEffect(() => {
+    const teste = navigation.getParam('producList',null);
+    const teste2 = navigation.getParam('drinkableList',null);
+    console.log(teste);
+    if(teste == null)
+      loadOrders();
+    else
+    getDrinkablesAndProducts(teste2,teste);
+    console.log("-------");
+
+
+  }, []);
 
 
   return (
@@ -44,7 +129,7 @@ export default function Home({ navigation }) {
       <View style={{ height: 60, justifyContent: "center", marginTop: 10 }}>
         <Header
           leftComponent={<Image style={{ width: 100, height: 30 }} source={require('../../img/logo.png')} />}
-          rightComponent={<Icon name='settings-applications' color='#fff' onPress={() => alert('Sou as configuracoes')} />}
+          rightComponent={<Icon name='settings-applications' color='#fff' onPress={() => navigation.navigate('Configs')} />}
           containerStyle={{ backgroundColor: '#3F173F', justifyContent: 'space-around' }} />
 
       </View>
@@ -53,12 +138,12 @@ export default function Home({ navigation }) {
           <BottomNavigation.Action
             key="Ler"
             icon="center-focus-strong"
-            onPress={() => alert('Sou a leitura qr')}
+            onPress={() => navigation.navigate('LeituraQrCode')}
           />
           <BottomNavigation.Action
             key="Pedido"
             icon="description"
-            onPress={() => navigation.navigate('Home')}
+            onPress={() => navigation.navigate('Cozinha')}
           />
           <BottomNavigation.Action
             key="Digitar"
@@ -73,55 +158,54 @@ export default function Home({ navigation }) {
 
       </View>
 
-
-
-
-      {/* <View style={{ flex: 1, marginTop: 15 }}>
-        <FlatList
-          style={styles.list}
-          data={lista}
-          keyExtractor={ list =>list._id}
-          showsVerticalScrollIndicator={false}
-          renderItem={({item}) =>(
-            <View style={{flex:1,flexDirection:'row'}}>
-            <Text>{item.name}</Text>
-            <Text >R$:{item.price}</Text>
-            <Text>Quantidade: {item.quantity}</Text>
-
-            </View>
-          )}
-        />
-      </View> */}
-      {/* <View style={{ flex: 1, marginTop: 15 }}>
+      <View style={{ flex: 1, marginTop: 15 }}>
         <ScrollView style={{ flex: 1, backgroundColor: "#ffe" }}>
           {
-            lista.map((l, i) => (
+
+            listaProduc.map((l, i) => (
               <ListItem
                 key={i}
                 leftAvatar={<Icon name='restaurant' />}
-                title={l.name}
-                chevron={(<Text>R$:{l.price}</Text>)}
-                onLongPress={() => alert(l._id)}
+                title={l.product.name}
+                input={{ inputContainerStyle: { width: 50 }, defaultValue: `${l.quantity}`, placeholder: '0', label: "Quantidade", onChangeText: text => { l.quantity = text }, keyboardType: "numeric", }}
+                subtitle={`R$ ${l.product.price}`}
+                //checkBox={ { onPress:()=> state(l._id,l), }}
+                rightIcon={{ name: 'clear', onPress: () => productRemove(l.product._id) }}
+
+
                 bottomDivider
-              //rightTitle ={l.price}
-
-
-
               />
             ))
+
           }
+          {
+            listaDrink.map((l, i) => (
+              <ListItem
+                key={i}
+                leftAvatar={<Icon name='restaurant' />}
+                title={l.drinkable.name}
+                input={{ inputContainerStyle: { width: 50 }, defaultValue: `${l.quantity}`, placeholder: '0', label: "Quantidade", onChangeText: text => { l.quantity = text }, keyboardType: "numeric", }}
+                subtitle={`R$ ${l.drinkable.price}`}
+                rightIcon={{ name: 'clear', onPress: () => drinkableRemove(l.drinkable._id) }}
+
+                bottomDivider
+              />
+            ))
+
+          }
+          <Text>Observações:{orders.note}</Text>
+
+
         </ScrollView>
-      </View> */}
-      <ListOrder orders={orders} />
+      </View>
 
-
-      {/* <View>
+      <View>
         <BottomNavigation hidden={true}>
           <BottomNavigation.Action
             key="Ler"
             icon="add-circle"
             label="Adicionar"
-            onPress={() => alert('Sou o adicionar')}
+            onPress={() => navigation.navigate('ListaItens',{listaProduc,listaDrink})}
           />
           <BottomNavigation.Action
             key="Pedido"
@@ -131,12 +215,11 @@ export default function Home({ navigation }) {
           />
         </BottomNavigation>
         <Header containerStyle={{ backgroundColor: '#fff' }}
-          leftComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#a46810' name='monetization-on' onPress={() => alert('Sou o pagamento')} />}
-          centerComponent={<Text> Total: R${orders.total} </Text>}
-          rightComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#7b1b53' name='send' onPress={() => alert('Sou o chat')} />}
+          leftComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#a46810' name='monetization-on' onPress={() => console.log("minha Lista:", listaDrink)} />}
+          centerComponent={<Text>Total: R${orders.total.toFixed(2)} </Text>}
+          rightComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#7b1b53' name='send' onPress={() => sendOrder()} />}
         />
-      </View> */}
-
+      </View>
     </View>
   );
 }
