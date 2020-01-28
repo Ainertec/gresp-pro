@@ -19,8 +19,8 @@ export default function Home({ navigation }) {
         position = listaProduc.indexOf(element);
       }
     }
-    await listaProduc.splice(position,1);
-    console.log("Lista product Home:",listaProduc);
+    await listaProduc.splice(position, 1);
+    console.log("Lista product Home:", listaProduc);
     setListaProduc(listaProduc.slice());
 
   }
@@ -31,8 +31,8 @@ export default function Home({ navigation }) {
         position = listaDrink.indexOf(element);
       }
     }
-    await listaDrink.splice(position,1)
-    
+    await listaDrink.splice(position, 1)
+
     setListaDrink(listaDrink.slice());
 
   }
@@ -57,14 +57,25 @@ export default function Home({ navigation }) {
 
     const note = orders.note;
     const identification = await AsyncStorage.getItem('id');
+    const newOrder = await AsyncStorage.getItem('new');
+    
+    var response;
+    if (newOrder) {
+       response = await api.post("/orders/", {
+        identification,
+        products,
+        drinkables,
+        note
+      });
+    } else {
+       response = await api.put(`/orders/${identification}`, {
 
-    const response = await api.put(`/orders/${identification}`, {
+        products,
+        drinkables,
+        note
 
-      products,
-      drinkables,
-      note
-
-    });
+      });
+    }
     await getDrinkablesAndProducts(response.data.drinkables, response.data.products);
     setOrders(response.data);
     if (response.status == 200)
@@ -99,8 +110,12 @@ export default function Home({ navigation }) {
     const response = await api.get('/order/', {
       params: { identification }
     })
-    if (response.data == null)
+
+
+    if (response.data == null) {
+      await AsyncStorage.setItem('new', true);
       response.data = [];
+    }
 
     await getDrinkablesAndProducts(response.data.drinkables, response.data.products);
 
@@ -110,13 +125,13 @@ export default function Home({ navigation }) {
   }
 
   useEffect(() => {
-    const teste = navigation.getParam('producList',null);
-    const teste2 = navigation.getParam('drinkableList',null);
+    const teste = navigation.getParam('producList', null);
+    const teste2 = navigation.getParam('drinkableList', null);
     console.log(teste);
-    if(teste == null)
+    if (teste == null)
       loadOrders();
     else
-    getDrinkablesAndProducts(teste2,teste);
+      getDrinkablesAndProducts(teste2, teste);
     console.log("-------");
 
 
@@ -205,7 +220,7 @@ export default function Home({ navigation }) {
             key="Ler"
             icon="add-circle"
             label="Adicionar"
-            onPress={() => navigation.navigate('ListaItens',{listaProduc,listaDrink})}
+            onPress={() => navigation.navigate('ListaItens', { listaProduc, listaDrink })}
           />
           <BottomNavigation.Action
             key="Pedido"
@@ -216,7 +231,7 @@ export default function Home({ navigation }) {
         </BottomNavigation>
         <Header containerStyle={{ backgroundColor: '#fff' }}
           leftComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#a46810' name='monetization-on' onPress={() => console.log("minha Lista:", listaDrink)} />}
-          centerComponent={<Text>Total: R${orders.total.toFixed(2)} </Text>}
+          centerComponent={<Text>Total: R${(orders.total == undefined) ? "0" : orders.total.toFixed(2)} </Text>}
           rightComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#7b1b53' name='send' onPress={() => sendOrder()} />}
         />
       </View>
