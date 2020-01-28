@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, AsyncStorage, ScrollView, Text, Alert } from 'react-native';
 import { BottomNavigation } from 'react-native-material-ui';
-import { Header, Icon, ListItem } from 'react-native-elements';
+import { Header, Icon, ListItem,Overlay, Input,Button } from 'react-native-elements';
 import api from '../services/api'
 
-export default function ListOrder({ orders }) {
+export default function ListOrder({ orders, navigation,parametros  }) {
   const [listaDrink, setListaDrink] = useState([]);
   const [listaProduc, setListaProduc] = useState([]);
   //const [orders, setOrders] = useState([order]);
@@ -72,24 +72,33 @@ export default function ListOrder({ orders }) {
 
 
   useEffect(() => {
-    async function getDrinkables(drinkables, products) {
+    async function getDrinkables(drinkables, products,parametros ) {
        var temporaryListDrink = [];
        var temporaryListProduc = [];
        for (var element of drinkables) {
         temporaryListDrink.push(element);
        };
+      
        for (var element of products) {
        temporaryListProduc.push(element);
-        };
+      };
+
+       
+      //temporaryListProduc.push(parametros);
+      //console.log("parametros:",parametros);
+
       setListaDrink(temporaryListDrink);
       setListaProduc(temporaryListProduc);
+      
     }
     async function getList() {
-      await getDrinkables(orders.drinkables, orders.products);
+      if(orders != undefined)
+        await getDrinkables(orders.drinkables, orders.products,parametros);
     };
-    if(orders )
+    if(orders != undefined )
       getList();
-       console.log("------------");
+
+    console.log("------------");
 
   }, [ orders])
 
@@ -142,7 +151,7 @@ export default function ListOrder({ orders }) {
             key="Ler"
             icon="add-circle"
             label="Adicionar"
-            onPress={() => alert('Sou o adicionar')}
+            onPress={() => navigation.navigate('ListaItens')}
           />
           <BottomNavigation.Action
             key="Pedido"
@@ -156,7 +165,12 @@ export default function ListOrder({ orders }) {
           centerComponent={<Text>Total: R${orders.total} </Text>}
           rightComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#7b1b53' name='send' onPress={() => sendOrder()} />}
         />
-      </View>   
+      </View>
+      {/* <Overlay>
+        <Text style={{marginTop:60,textAlign:"center",fontSize:20, marginBottom:50}}>Configurar IP de Rota</Text>
+        <Input keyboardType="numeric" placeholder='Exemplo 192.168.0.1'/>
+        <Button buttonStyle={{marginTop:40}} type="solid" title="Salvar" onPress={() => alert('Sou a busca por nome')} />
+      </Overlay>    */}
     </View>
   );
 }
