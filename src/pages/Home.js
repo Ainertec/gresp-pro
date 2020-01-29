@@ -56,37 +56,53 @@ export default function Home({ navigation }) {
     }
 
     const note = orders.note;
-    const identification = await AsyncStorage.getItem('id');
-    const newOrder = await AsyncStorage.getItem('new');
-    
+    const identification = Number.parseInt(await AsyncStorage.getItem('id'));
+    const newOrder = await AsyncStorage.getItem("newOrder");
+    await AsyncStorage.removeItem("newOrder");
     var response;
+
     if (newOrder) {
-       response = await api.post("/orders/", {
+      response = await api.post("/orders/", {
         identification,
         products,
         drinkables,
-        note
+
       });
+      if(response.alert){
+        Alert.alert(`${response.alert}`);
+      }
+
+      if (response.status == 200)
+        Alert.alert("Tudo Certo!","pedido criado!");
+      else
+        Alert.alert("ocorreu um erro!");
+
     } else {
-       response = await api.put(`/orders/${identification}`, {
+      response = await api.put(`/orders/${identification}`, {
 
         products,
         drinkables,
         note
 
       });
+      if(response.alert){
+        Alert.alert(`${response.alert}`);
+      }
+      if (response.status == 200)
+        Alert.alert("Tudo Certo!","Pedido atualizado!")
+      else
+        Alert.alert("ocorreu um erro!")
+
     }
-    await getDrinkablesAndProducts(response.data.drinkables, response.data.products);
-    setOrders(response.data);
-    if (response.status == 200)
-      Alert.alert("pedido atualizado!")
-    else
-      Alert.alert("ocorreu um erro!")
+    await getDrinkablesAndProducts(response.data.order.drinkables, response.data.order.products);
+    setOrders(response.data.order);
 
   }
   async function getDrinkablesAndProducts(drinkables, products) {
     var temporaryListDrink = [];
     var temporaryListProduc = [];
+    console.log("chegou as bebidas:", drinkables);
+    console.log("chegou os produtos:", products);
     if (drinkables == undefined || drinkables == null)
       drinkables = [];
     if (products == undefined || products == null)
@@ -111,9 +127,9 @@ export default function Home({ navigation }) {
       params: { identification }
     })
 
-
+    console.log("resposta: ", response.data);
     if (response.data == null) {
-      await AsyncStorage.setItem('new', true);
+      await AsyncStorage.setItem("newOrder", "true");
       response.data = [];
     }
 
