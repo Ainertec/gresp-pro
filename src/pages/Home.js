@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, AsyncStorage, Image, ScrollView, Text, Alert } from 'react-native';
 import { BottomNavigation } from 'react-native-material-ui';
-import { Header, Icon, ListItem, Overlay, Input, Button } from 'react-native-elements';
+import { Header, Icon, ListItem, Overlay, Input, Button, Badge,CheckBox } from 'react-native-elements';
 
 import api from '../services/api'
 
@@ -11,6 +11,8 @@ export default function Home({ navigation }) {
   const [orders, setOrders] = useState([]);
   const [listaDrink, setListaDrink] = useState([]);
   const [listaProduc, setListaProduc] = useState([]);
+  const [showPay,setShowPay] = useState(false);
+  const [showConfigs,setShowConfigs] = useState(false);
 
   async function productRemove(id) {
     var position;
@@ -160,7 +162,7 @@ export default function Home({ navigation }) {
       <View style={{ height: 60, justifyContent: "center", marginTop: 10 }}>
         <Header
           leftComponent={<Image style={{ width: 100, height: 30 }} source={require('../../img/logo.png')} />}
-          rightComponent={<Icon name='settings-applications' color='#fff' onPress={() => navigation.navigate('Configs')} />}
+          rightComponent={<Icon name='settings-applications' color='#fff' onPress={() => setShowConfigs(true)} />}
           containerStyle={{ backgroundColor: '#3F173F', justifyContent: 'space-around' }} />
 
       </View>
@@ -246,11 +248,26 @@ export default function Home({ navigation }) {
           />
         </BottomNavigation>
         <Header containerStyle={{ backgroundColor: '#fff' }}
-          leftComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#a46810' name='monetization-on' onPress={() => console.log("minha Lista:", listaDrink)} />}
+          leftComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#a46810' name='monetization-on' onPress={() => setShowPay(true)} />}
           centerComponent={<Text>Total: R${(orders.total == undefined) ? "0" : orders.total.toFixed(2)} </Text>}
           rightComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#7b1b53' name='send' onPress={() => sendOrder()} />}
         />
       </View>
+      
+        <Overlay isVisible={showPay}>
+          <Text style={{marginTop:40,textAlign:"center",fontSize:20, marginBottom:50}}>Pagamento</Text>
+          <Badge status="success" value={<Text style={{color:"white", fontSize:16}}> Total: R${(orders.total == undefined) ? "0" : orders.total.toFixed(2)} </Text>}/>
+          <CheckBox title="Dinheiro" value="Dinheiro" checked={true}></CheckBox>
+          <CheckBox title="Cartão" ></CheckBox>
+          <Button buttonStyle={{marginTop:70, backgroundColor:"green"}} type="solid" icon={{name: "send", size: 15, color:"white"}} title="Efetuar" onPress={() => setShowPay(false)} />
+        </Overlay>
+
+        <Overlay isVisible={showConfigs} overlayStyle={{height:350, justifyContent:"center"}}>
+          <Text style={{marginTop:60,textAlign:"center",fontSize:20, marginBottom:50}}>Configurar IP de Rota</Text>
+          <Input keyboardType="numeric" placeholder='Exemplo 192.168.0.1'/>
+          <Button buttonStyle={{marginTop:40}} type="solid" title="Salvar" onPress={() => setShowConfigs(false)} />
+        </Overlay>
+      
     </View>
   );
 }
