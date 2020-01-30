@@ -141,6 +141,9 @@ export default function Home({ navigation }) {
 
 
   }
+  async function payment(){
+    setShowPay(false);
+  }
 
   useEffect(() => {
     const teste = navigation.getParam('producList', null);
@@ -259,7 +262,7 @@ export default function Home({ navigation }) {
           <Badge status="success" value={<Text style={{color:"white", fontSize:16}}> Total: R${(orders.total == undefined) ? "0" : orders.total.toFixed(2)} </Text>}/>
           <CheckBox title="Dinheiro" value="Dinheiro" checked={true}></CheckBox>
           <CheckBox title="Cartão" ></CheckBox>
-          <Button buttonStyle={{marginTop:70, backgroundColor:"green"}} type="solid" icon={{name: "send", size: 15, color:"white"}} title="Efetuar" onPress={() => setShowPay(false)} />
+          <Button buttonStyle={{marginTop:70, backgroundColor:"green"}} type="solid" icon={{name: "send", size: 15, color:"white"}} title="Efetuar" onPress={() => payment()} />
         </Overlay>
 
         <Overlay isVisible={showConfigs} overlayStyle={{height:350, justifyContent:"center"}}>
