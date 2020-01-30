@@ -1,8 +1,50 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
 import { View, StyleSheet, ScrollView, Text} from 'react-native';
-import { Header, Icon, ListItem, Button} from 'react-native-elements';
+import { Header, Icon, ListItem, Button, Overlay} from 'react-native-elements';
+
+import api from '../services/api';
 
 export default function Cozinha({navigation}) {
+  const [openOrders,setOpenOrders] = useState([]);
+  const [finishedOrders,setFinishedOrders] = useState([]);
+
+  const [drinks,setDrinks] = useState([]);
+  const [products,setProducts] = useState([]);
+  const [note,setNote] = useState('');
+
+  const [showModal,setShowModal] = useState(false);
+
+  function showInformations(l){
+    setNote(l.note);
+    setDrinks(l.drinkables);
+    setProducts(l.products);
+    setShowModal(true);
+
+  }
+  async function finished(id){
+    var identification = Number.parseInt(id);
+    console.log("sou id",id);
+    const response = await api.post("/kitchen/",{
+      identification,
+    });
+    setFinishedOrders([...finishedOrders,response.data]);
+    alert(position);
+    const position = openOrders.indexOf({identification});
+    openOrders.splice(position,1);
+     setOpenOrders(openOrders.slice());
+    console.log(response);
+
+  }
+  useEffect(()=>{
+    async function loadOrders(){
+      const response = await api.get("orders");
+      const responsefinisheds = await api.get("/kitchen/");
+      setOpenOrders(response.data);
+
+      setFinishedOrders(responsefinisheds.data);
+    }
+    loadOrders();
+  },[]);
   return (
     <View style={styles.container}>
       <View>
@@ -16,14 +58,15 @@ export default function Cozinha({navigation}) {
         <Text style={{color:"white"}}>Em andamento</Text>
         <ScrollView style={{flex:1,backgroundColor:"#ffe"}}>
           {
-            list.map((l, i) => (
+            openOrders.map((l, i) => (
               <ListItem
                 key={i}
-                leftAvatar={l.ico}
-                title={l.id}
-                chevron={l.fechar}
+                leftAvatar={<Icon name='touch-app' />}
+                title={`Pedido N°: ${l.identification}`}
+                subtitle = {`Total: ${l.total.toFixed(2)}`}
+                rightIcon={{name:'close',onPress: ()=> finished(l.identification)}}
                 bottomDivider
-                onPress={() => alert('se apertar em mim verá todos os itens solicitados neste pedido')}
+                onPress={() => showInformations(l)}
               />
             ))
           }
@@ -33,14 +76,16 @@ export default function Cozinha({navigation}) {
         <Text style={{color:"white"}}>Finalizado</Text>
         <ScrollView style={{flex:1,backgroundColor:"#ffe"}}>
           {
-            list2.map((l, i) => (
+            finishedOrders.map((l, i) => (
               <ListItem
-                key={i}
-                leftAvatar={l.ico}
-                title={l.id}
-                chevron={l.fechar}
-                bottomDivider
-                onPress={() => alert('se apertar em mim verá todos os dados deste pedido')}
+              key={i}
+              leftAvatar={<Icon name='touch-app' />}
+              title={`Pedido N°: ${l.identification}`}
+              subtitle = {`Total: ${l.total.toFixed(2)}`}
+              //rightIcon={{name:'close', onPress: ()=> finished(l._id) }}
+              bottomDivider
+              onPress={() => showInformations(l)}
+              
               />
             ))
           }
@@ -49,101 +94,52 @@ export default function Cozinha({navigation}) {
       <View style={{marginTop:15,backgroundColor:"#3F173F"}}>
 
       </View>
+      <Overlay isVisible={showModal} >
+          <Text style={{marginTop:10,textAlign:"center",fontSize:20, marginBottom:30}}>Pedido</Text>
+          <ScrollView style={{flex:1,backgroundColor:"#ffe"}}>
+            <Text style={{fontSize:18, marginTop:5,marginBottom:10}}>Descrição do pedido</Text>
+            <View style={{ borderBottomColor: 'black', borderBottomWidth: 1}}/>
+            <Text style={{marginTop:10, fontSize:18}}>Produtos:</Text>
+            <ScrollView style={{flex:1,backgroundColor:"#ffe"}}>
+          {
+            products.map((l, i) => (
+              <ListItem
+                key={i}
+                leftAvatar={<Icon name='touch-app' />}
+                title={` ${l.product.name}`}
+                subtitle = {`Quantidade: ${l.quantity}\nDescrição: ${l.product.description}`}
+                chevron={`${l.quantity}`}
+                bottomDivider
+                //onPress={() => showInformations(l)}
+              />
+            ))
+          }
+        </ScrollView>
+        <Text style={{marginTop:10, fontSize:18}}>Bebidas:</Text>
+        <ScrollView style={{flex:1,backgroundColor:"#ffe"}}>
+          {
+            drinks.map((l, i) => (
+              <ListItem
+                key={i}
+                leftAvatar={<Icon name='touch-app' />}
+                title={` ${l.drinkable.name}`}
+                subtitle = {`Quantidade: ${l.quantity}\nDescrição: ${l.drinkable.description}`}
+                chevron={`${l.quantity}`}
+                bottomDivider
+                //onPress={() => showInformations(l)}
+              />
+            ))
+          }
+        </ScrollView>
+            <View style={{ borderBottomColor: 'black', borderBottomWidth: 1, marginTop:10}}/>
+            <Text style={{marginTop:10, fontSize:18}}>Observação:</Text>
+        <Text style={{fontSize:16, marginBottom:10}}>{note}</Text>
+          </ScrollView>
+          <Button buttonStyle={{marginTop:40}} type="outline" title="Fechar" onPress={() => setShowModal(false)} />
+        </Overlay>
     </View>
   );
 }
-
-const list = [
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como Finalizado, pedidos finalizados n são mais mostrados nesta lista')} />
-  },
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como Finalizado, pedidos finalizados n são mais mostrados nesta lista')} />
-  },
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como Finalizado, pedidos finalizados n são mais mostrados nesta lista')} />
-  },
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como Finalizado, pedidos finalizados n são mais mostrados nesta lista')} />
-  },
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como Finalizado, pedidos finalizados n são mais mostrados nesta lista')} />
-  },
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como Finalizado, pedidos finalizados n são mais mostrados nesta lista')} />
-  },
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como Finalizado, pedidos finalizados n são mais mostrados nesta lista')} />
-  },
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como Finalizado, pedidos finalizados n são mais mostrados nesta lista')} />
-  },
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como Finalizado, pedidos finalizados n são mais mostrados nesta lista')} />
-  },
-]
-
-
-const list2 = [
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como entregue, pedidos entregues n são mais mostrados nesta lista')} />
-  },
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como entregue, pedidos entregues n são mais mostrados nesta lista')} />
-  },
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como entregue, pedidos entregues n são mais mostrados nesta lista')} />
-  },
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como entregue, pedidos entregues n são mais mostrados nesta lista')} />
-  },
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como entregue, pedidos entregues n são mais mostrados nesta lista')} />
-  },
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como entregue, pedidos entregues n são mais mostrados nesta lista')} />
-  },
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como entregue, pedidos entregues n são mais mostrados nesta lista')} />
-  },
-  {
-    id: '0000000000',
-    ico: <Icon name='touch-app' />,
-    fechar:<Button containerStyle={{width:40}} type="solid" buttonStyle={{backgroundColor:"white"}} icon={<Icon name="close" size={20}/>} onPress={() => alert('Colocar esse pedido como entregue, pedidos entregues n são mais mostrados nesta lista')} />
-  },
-]
 
 const styles = StyleSheet.create({
   container: {
