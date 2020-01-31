@@ -1,7 +1,8 @@
-import React,{useState, useEffect} from 'react';
-import { View, StyleSheet, ScrollView, Text} from 'react-native';
+import React,{useState, useEffect, useMemo} from 'react';
+import { View, StyleSheet, ScrollView, Text,Alert} from 'react-native';
 import { Header, Icon, ListItem, Button, Overlay} from 'react-native-elements';
 
+import socketio from 'socket.io-client';
 import api from '../services/api';
 
 export default function Cozinha({navigation}) {
@@ -15,6 +16,7 @@ export default function Cozinha({navigation}) {
   const [showModal,setShowModal] = useState(false);
 
   function showInformations(l){
+    //alert(l.identification);
     setNote(l.note);
     setDrinks(l.drinkables);
     setProducts(l.products);
@@ -22,17 +24,20 @@ export default function Cozinha({navigation}) {
 
   }
   async function finished(id){
+  
     var identification = Number.parseInt(id);
-    console.log("sou id",id);
+    let position;
     const response = await api.post("/kitchen/",{
       identification,
     });
     setFinishedOrders([...finishedOrders,response.data]);
-    alert(position);
-    const position = openOrders.indexOf({identification});
+    for(const element of openOrders){
+      if(element.identification == identification)
+        position = openOrders.indexOf(element);
+    }
     openOrders.splice(position,1);
      setOpenOrders(openOrders.slice());
-    console.log(response);
+    
 
   }
   useEffect(()=>{
@@ -45,6 +50,16 @@ export default function Cozinha({navigation}) {
     }
     loadOrders();
   },[]);
+
+  const socket = useMemo(()=> socketio('http://192.168.3.100:3333'), []);
+
+  useEffect(()=>{
+    socket.on('newOrder',data =>{
+      setOpenOrders([...openOrders,data]);
+      
+      
+    });
+  },[openOrders, socket])
   return (
     <View style={styles.container}>
       <View>
@@ -108,7 +123,6 @@ export default function Cozinha({navigation}) {
                 leftAvatar={<Icon name='touch-app' />}
                 title={` ${l.product.name}`}
                 subtitle = {`Quantidade: ${l.quantity}\nDescrição: ${l.product.description}`}
-                chevron={`${l.quantity}`}
                 bottomDivider
                 //onPress={() => showInformations(l)}
               />
@@ -124,7 +138,6 @@ export default function Cozinha({navigation}) {
                 leftAvatar={<Icon name='touch-app' />}
                 title={` ${l.drinkable.name}`}
                 subtitle = {`Quantidade: ${l.quantity}\nDescrição: ${l.drinkable.description}`}
-                chevron={`${l.quantity}`}
                 bottomDivider
                 //onPress={() => showInformations(l)}
               />
