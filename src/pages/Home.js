@@ -13,7 +13,27 @@ export default function Home({ navigation }) {
   const [listaProduc, setListaProduc] = useState([]);
   const [showPay,setShowPay] = useState(false);
   const [showConfigs,setShowConfigs] = useState(false);
+  const [checked,setChecked] = useState(true);
+  const [checked2,setChecked2] = useState(false);
+  const [paymentKind,setPaymentKind] = useState('Dinheiro');
+  const [ip,setIp] = useState("")
 
+  async function config(){
+    alert(ip);
+    await AsyncStorage.setItem("ip",ip);
+    setShowConfigs(false);
+  }
+  function selected(number){
+    if(number === 1){
+      setChecked2(false);
+      setChecked(true);
+      setPaymentKind("Dinheiro");
+    }else{
+      setChecked(false);
+      setChecked2(true);
+      setPaymentKind("Cartão");
+    }
+  }
   async function productRemove(id) {
     var position;
     for (var element of listaProduc) {
@@ -142,7 +162,16 @@ export default function Home({ navigation }) {
 
   }
   async function payment(){
+    if(orders.total === undefined)
+      return Alert.alert("Ops!","Crie ou atualize o pedido para paga-lo!");
+    const identification = await AsyncStorage.getItem("id");
+    console.log("identification",identification);
+    console.log("paymentKind",paymentKind);
+    const response = await api.delete(`/orders/${identification}/${paymentKind}`);
+    console.log("response pagamento",response);
     setShowPay(false);
+    await AsyncStorage.removeItem('id');
+    Alert.alert("Pedido Pago!",`Número:${identification}`);
   }
 
   useEffect(() => {
@@ -260,15 +289,16 @@ export default function Home({ navigation }) {
         <Overlay isVisible={showPay}>
           <Text style={{marginTop:40,textAlign:"center",fontSize:20, marginBottom:50}}>Pagamento</Text>
           <Badge status="success" value={<Text style={{color:"white", fontSize:16}}> Total: R${(orders.total == undefined) ? "0" : orders.total.toFixed(2)} </Text>}/>
-          <CheckBox title="Dinheiro" value="Dinheiro" checked={true}></CheckBox>
-          <CheckBox title="Cartão" ></CheckBox>
+          <CheckBox title="Dinheiro" value="Dinheiro" checked={checked} onPress= {() => selected(1)}></CheckBox>
+          <CheckBox title="Cartão" checked={checked2} onPress= {() =>selected(2)}></CheckBox>
           <Button buttonStyle={{marginTop:70, backgroundColor:"green"}} type="solid" icon={{name: "send", size: 15, color:"white"}} title="Efetuar" onPress={() => payment()} />
+          <Button buttonStyle={{marginTop:5, backgroundColor:"red"}} type="solid" icon={{name: "close", size: 15, color:"white"}} title="Cancelar" onPress={() => setShowPay(false)} />
         </Overlay>
 
         <Overlay isVisible={showConfigs} overlayStyle={{height:350, justifyContent:"center"}}>
           <Text style={{marginTop:60,textAlign:"center",fontSize:20, marginBottom:50}}>Configurar IP de Rota</Text>
-          <Input keyboardType="numeric" placeholder='Exemplo 192.168.0.1'/>
-          <Button buttonStyle={{marginTop:40}} type="solid" title="Salvar" onPress={() => setShowConfigs(false)} />
+          <Input keyboardType="numeric" placeholder='Exemplo 192.168.0.1' onChangeText={(text)=> setIp(text)}/>
+          <Button buttonStyle={{marginTop:40}} type="solid" title="Salvar" onPress={() => config()} />
         </Overlay>
       
     </View>
