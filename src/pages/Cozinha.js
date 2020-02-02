@@ -16,7 +16,6 @@ export default function Cozinha({navigation}) {
   const [showModal,setShowModal] = useState(false);
 
   function showInformations(l){
-    //alert(l.identification);
     setNote(l.note);
     setDrinks(l.drinkables);
     setProducts(l.products);
