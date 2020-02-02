@@ -9,15 +9,23 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.8.3",
+    "axios": "^0.19.1",
     "expo": "~36.0.0",
+    "expo-barcode-scanner": "^8.0.0",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
+    "react-native-dialog": "^5.6.0",
     "react-native-elements": "^1.2.7",
-    "react-native-gesture-handler": "^1.5.3",
+    "react-native-gesture-handler": "~1.5.0",
     "react-native-material-ui": "^1.30.1",
+    "react-native-modal": "^11.5.3",
+    "react-native-reanimated": "~1.4.0",
+    "react-native-vector-icons": "^6.6.0",
     "react-native-web": "~0.11.7",
-    "react-navigation-stack": "^2.0.13"
+    "react-navigation": "^4.0.10",
+    "react-navigation-stack": "^2.0.13",
+    "socket.io-client": "^2.3.0"
   },
   "devDependencies": {
     "babel-preset-expo": "~8.0.0",
