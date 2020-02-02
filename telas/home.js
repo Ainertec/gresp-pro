@@ -33,7 +33,7 @@ export default function App() {
       </View>
       <View style={{height:80,marginTop:15}}>
         <ScrollView style={{backgroundColor:"#ffe"}}>
-            <Text>Observacão:</Text>
+            <Text>Observação:</Text>
             <TextInput multiline={true} numberOfLines={3} editable={true}></TextInput>
         </ScrollView>
       </View>
