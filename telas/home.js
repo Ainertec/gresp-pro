@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, Image, ScrollView, Text} from 'react-native';
+import { View, StyleSheet, Image, ScrollView, Text, TextInput} from 'react-native';
 import { BottomNavigation } from 'react-native-material-ui';
-import { Header, Icon, ListItem, Overlay, Input,Button} from 'react-native-elements';
+import { Header, Icon, ListItem} from 'react-native-elements';
 
 export default function App() {
   return (
@@ -31,7 +31,13 @@ export default function App() {
           />
         </BottomNavigation>
       </View>
-      <View style={{flex:1,marginTop:15}}>
+      <View style={{height:80,marginTop:15}}>
+        <ScrollView style={{backgroundColor:"#ffe"}}>
+            <Text>Observação:</Text>
+            <TextInput multiline={true} numberOfLines={3} editable={true}></TextInput>
+        </ScrollView>
+      </View>
+      <View style={{flex:1}}>
         <ScrollView style={{flex:1,backgroundColor:"#ffe"}}>
           {
             list.map((l, i) => (
@@ -54,12 +60,6 @@ export default function App() {
                 label="Adicionar"
                 onPress={() => alert('Sou o adicionar')}
             />
-            <BottomNavigation.Action
-                key="Pedido"
-                icon="delete"
-                label="Remover"
-                onPress={() => alert('Sou o remover')}
-            />
           </BottomNavigation>
           <Header containerStyle={{ backgroundColor: '#fff'}}
             leftComponent={<Icon style={{marginBottom:10}} reverse raised color='#a46810' name='monetization-on' onPress={() => alert('Sou o pagamento')}/>}
@@ -67,11 +67,6 @@ export default function App() {
             rightComponent={<Icon style={{marginBottom:10}} reverse raised color='#7b1b53' name='send' onPress={() => alert('Sou o chat')}/>}
           />
       </View>
-      <Overlay>
-        <Text style={{marginTop:60,textAlign:"center",fontSize:20, marginBottom:50}}>Configurar IP de Rota</Text>
-        <Input keyboardType="numeric" placeholder='Exemplo 192.168.0.1'/>
-        <Button buttonStyle={{marginTop:40}} type="solid" title="Salvar" onPress={() => alert('Sou a busca por nome')} />
-      </Overlay>
     </View>
   );
 }
