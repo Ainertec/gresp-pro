@@ -1,25 +1,9 @@
 import React from 'react';
-import { StyleSheet, StatusBar, View, Image } from 'react-native';
+import { Text, View, Button } from 'react-native'
+import Routes from './src/routes';
+import Dialog from 'react-native-dialog'
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Image style={{width: 160, height: 60}} source={require('./img/logo.png')}/>
-      <Image style={{width: 50, height: 50}} source={require('./img/load.gif')}/>
-    </View>
-  );
+  return <Routes/>
+    
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#3F173F',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  texto:{
-    color:'#fff',
-    fontSize:30,
-  }
-});
