@@ -18,6 +18,11 @@ export default function Home({ navigation }) {
   const [paymentKind,setPaymentKind] = useState('Dinheiro');
   const [ip,setIp] = useState("")
 
+  function changeTexte(q){
+    setOrders(orders.total = 0);
+    return q;
+    alert("ola!")
+  }
   async function config(){
     alert(ip);
     await AsyncStorage.setItem("ip",ip);
@@ -44,6 +49,7 @@ export default function Home({ navigation }) {
     await listaProduc.splice(position, 1);
     console.log("Lista product Home:", listaProduc);
     setListaProduc(listaProduc.slice());
+    setOrders(orders.total = 0);
 
   }
   async function drinkableRemove(id) {
@@ -56,6 +62,7 @@ export default function Home({ navigation }) {
     await listaDrink.splice(position, 1)
 
     setListaDrink(listaDrink.slice());
+    setOrders(orders.total = 0);
 
   }
   async function sendOrder() {
@@ -162,7 +169,7 @@ export default function Home({ navigation }) {
 
   }
   async function payment(){
-    if(orders.total === undefined)
+    if(orders.total === undefined || orders.total === 0)
       return Alert.alert("Ops!","Crie ou atualize o pedido para paga-lo!");
     const identification = await AsyncStorage.getItem("id");
     console.log("identification",identification);
@@ -232,7 +239,7 @@ export default function Home({ navigation }) {
                 key={i}
                 leftAvatar={<Icon name='restaurant' />}
                 title={l.product.name}
-                input={{ inputContainerStyle: { width: 50 }, defaultValue: `${l.quantity}`, placeholder: '0', label: "Quantidade", onChangeText: text => { l.quantity = text }, keyboardType: "numeric", }}
+                input={{ inputContainerStyle: { width: 50 }, defaultValue: `${l.quantity}`, placeholder: '0', label: "Quantidade", onChangeText: text => { setOrders(orders.total = 0);l.quantity = text}, keyboardType: "numeric", }}
                 subtitle={`R$ ${l.product.price}`}
                 //checkBox={ { onPress:()=> state(l._id,l), }}
                 rightIcon={{ name: 'clear', onPress: () => productRemove(l.product._id) }}
@@ -249,7 +256,7 @@ export default function Home({ navigation }) {
                 key={i}
                 leftAvatar={<Icon name='restaurant' />}
                 title={l.drinkable.name}
-                input={{ inputContainerStyle: { width: 50 }, defaultValue: `${l.quantity}`, placeholder: '0', label: "Quantidade", onChangeText: text => { l.quantity = text }, keyboardType: "numeric", }}
+                input={{ inputContainerStyle: { width: 50 }, defaultValue: `${l.quantity}`, placeholder: '0', label: "Quantidade", onChangeText: text => { setOrders(orders.total = 0);l.quantity = text }, keyboardType: "numeric", }}
                 subtitle={`R$ ${l.drinkable.price}`}
                 rightIcon={{ name: 'clear', onPress: () => drinkableRemove(l.drinkable._id) }}
 
