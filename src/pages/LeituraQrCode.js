@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image,AsyncStorage } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Header, Icon, Button} from 'react-native-elements';
 
@@ -14,10 +14,11 @@ export default function LeituraQrCode({navigation}) {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
     /////////////////////////////////////////////////// aqui pega o código ohhhhhh //////////////////////////////////////////////////////////
-    alert(`Daqui vamos enviar para a home esse codigo ${data}`);
+    await AsyncStorage.setItem('id',data);
+    navigation.navigate('Home');
   };
 
   if (hasPermission === null) {
@@ -34,9 +35,9 @@ export default function LeituraQrCode({navigation}) {
           rightComponent={<Icon name='arrow-forward' color='#fff' onPress={() => navigation.navigate('Home')}/>} 
           containerStyle={{ backgroundColor: '#3F173F', justifyContent: 'space-around'}}/>
       <BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} style={{height:450, marginTop:30}}/>
-      <View style={{marginTop:15, alignItems:"center"}}>
+      {/* <View style={{marginTop:15, alignItems:"center"}}>
         {scanned && <Button title={'Atualizar'} buttonStyle={{width:300 ,backgroundColor:'#3F173F'}} onPress={() => setScanned(false)} />}
-      </View>
+      </View> */}
     </View>
   );
 }
