@@ -148,8 +148,12 @@ export default function ListaItens({ navigation }) {
                 title={l.name}
                 subtitle={`R$ ${l.price}`}
                 input={{
-                  inputContainerStyle: { width: 50 }, defaultValue: (l.quantity == undefined) ? "" : `${l.quantity}`, placeholder: '0', label: "Quantidade", onChangeText: text => {
-                    l['quantity'] = text;
+                  inputContainerStyle: { width: 55,},
+                  defaultValue: (l.quantity == undefined) ? "" : `${l.quantity}`,
+                  placeholder: '0',
+                  label: "Quantidade",
+                  onChangeText: text => {
+                  l['quantity'] = text;
                   }, keyboardType: "numeric",
                 }}
                 rightIcon={{ name: 'add', onPress: () => addItens(l), size:30}}
