@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, AsyncStorage, Image, ScrollView, Text, Alert } from 'react-native';
+import { View, StyleSheet, AsyncStorage, Image, ScrollView, Text, Alert, TextInput } from 'react-native';
 import { BottomNavigation } from 'react-native-material-ui';
-import { Header, Icon, ListItem, Overlay, Input, Button, Badge,CheckBox } from 'react-native-elements';
+import { Header, Icon, ListItem, Overlay, Input, Button, Badge, CheckBox } from 'react-native-elements';
 
 import api from '../services/api'
 
@@ -11,29 +11,27 @@ export default function Home({ navigation }) {
   const [orders, setOrders] = useState([]);
   const [listaDrink, setListaDrink] = useState([]);
   const [listaProduc, setListaProduc] = useState([]);
-  const [showPay,setShowPay] = useState(false);
-  const [showConfigs,setShowConfigs] = useState(false);
-  const [checked,setChecked] = useState(true);
-  const [checked2,setChecked2] = useState(false);
-  const [paymentKind,setPaymentKind] = useState('Dinheiro');
-  const [ip,setIp] = useState("")
+  const [showPay, setShowPay] = useState(false);
+  const [showConfigs, setShowConfigs] = useState(false);
+  const [checked, setChecked] = useState(true);
+  const [checked2, setChecked2] = useState(false);
+  const [paymentKind, setPaymentKind] = useState('Dinheiro');
+  const [ip, setIp] = useState('');
+  const [note, setNote] = useState('');
+  const [changed,setChanged] = useState(false);
 
-  function changeTexte(q){
-    setOrders(orders.total = 0);
-    return q;
-    alert("ola!")
-  }
-  async function config(){
+  
+  async function config() {
     alert(ip);
-    await AsyncStorage.setItem("ip",ip);
+    await AsyncStorage.setItem("ip", ip);
     setShowConfigs(false);
   }
-  function selected(number){
-    if(number === 1){
+  function selected(number) {
+    if (number === 1) {
       setChecked2(false);
       setChecked(true);
       setPaymentKind("Dinheiro");
-    }else{
+    } else {
       setChecked(false);
       setChecked2(true);
       setPaymentKind("Cartão");
@@ -84,7 +82,6 @@ export default function Home({ navigation }) {
       drinkables.push(aux);
     }
 
-    const note = orders.note;
     const identification = Number.parseInt(await AsyncStorage.getItem('id'));
     const newOrder = await AsyncStorage.getItem("newOrder");
     await AsyncStorage.removeItem("newOrder");
@@ -95,14 +92,15 @@ export default function Home({ navigation }) {
         identification,
         products,
         drinkables,
+        note
 
       });
-      if(response.alert){
+      if (response.alert) {
         Alert.alert(`${response.alert}`);
       }
 
       if (response.status == 200)
-        Alert.alert("Tudo Certo!","pedido criado!");
+        Alert.alert("Tudo Certo!", "pedido criado!");
       else
         Alert.alert("ocorreu um erro!");
 
@@ -114,15 +112,16 @@ export default function Home({ navigation }) {
         note
 
       });
-      if(response.alert){
+      if (response.alert) {
         Alert.alert(`${response.alert}`);
       }
       if (response.status == 200)
-        Alert.alert("Tudo Certo!","Pedido atualizado!")
+        Alert.alert("Tudo Certo!", "Pedido atualizado!")
       else
         Alert.alert("ocorreu um erro!")
 
     }
+    setChanged(false);
     await getDrinkablesAndProducts(response.data.order.drinkables, response.data.order.products);
     setOrders(response.data.order);
 
@@ -168,17 +167,17 @@ export default function Home({ navigation }) {
 
 
   }
-  async function payment(){
-    if(orders.total === undefined || orders.total === 0)
-      return Alert.alert("Ops!","Crie ou atualize o pedido para paga-lo!");
+  async function payment() {
+    if (orders.total === undefined || changed === true)
+      return Alert.alert("Ops!", "Crie ou atualize o pedido para paga-lo!");
     const identification = await AsyncStorage.getItem("id");
-    console.log("identification",identification);
-    console.log("paymentKind",paymentKind);
+    console.log("identification", identification);
+    console.log("paymentKind", paymentKind);
     const response = await api.delete(`/orders/${identification}/${paymentKind}`);
-    console.log("response pagamento",response);
+    console.log("response pagamento", response);
     setShowPay(false);
     await AsyncStorage.removeItem('id');
-    Alert.alert("Pedido Pago!",`Número:${identification}`);
+    Alert.alert("Pedido Pago!", `Número:${identification}`);
   }
 
   useEffect(() => {
@@ -214,7 +213,7 @@ export default function Home({ navigation }) {
           />
           <BottomNavigation.Action
             key="Pedido"
-            icon="description"
+            icon="kitchen"
             onPress={() => navigation.navigate('Cozinha')}
           />
           <BottomNavigation.Action
@@ -229,8 +228,16 @@ export default function Home({ navigation }) {
         </BottomNavigation>
 
       </View>
+      <View style={styles.form}>
+          <Text style={styles.note}>Observação:</Text>
+          <TextInput style={styles.input} 
+          placeholder="Digite uma observação" 
+          defaultValue={orders.note}
+          onChangeText={(text)=> setNote(text)}
+          multiline={true} numberOfLines={3} editable={true}></TextInput>
+      </View>
 
-      <View style={{ flex: 1, marginTop: 15 }}>
+      <View style={{ flex: 1, marginTop: 5 }}>
         <ScrollView style={{ flex: 1, backgroundColor: "#ffe" }}>
           {
 
@@ -239,7 +246,7 @@ export default function Home({ navigation }) {
                 key={i}
                 leftAvatar={<Icon name='restaurant' />}
                 title={l.product.name}
-                input={{ inputContainerStyle: { width: 50 }, defaultValue: `${l.quantity}`, placeholder: '0', label: "Quantidade", onChangeText: text => { setOrders(orders.total = 0);l.quantity = text}, keyboardType: "numeric", }}
+                input={{ inputContainerStyle: { width: 50 }, defaultValue: `${l.quantity}`, placeholder: '0', label: "Quantidade", onChangeText: text => { setChanged(true); l.quantity = text }, keyboardType: "numeric", }}
                 subtitle={`R$ ${l.product.price}`}
                 //checkBox={ { onPress:()=> state(l._id,l), }}
                 rightIcon={{ name: 'clear', onPress: () => productRemove(l.product._id) }}
@@ -256,7 +263,7 @@ export default function Home({ navigation }) {
                 key={i}
                 leftAvatar={<Icon name='restaurant' />}
                 title={l.drinkable.name}
-                input={{ inputContainerStyle: { width: 50 }, defaultValue: `${l.quantity}`, placeholder: '0', label: "Quantidade", onChangeText: text => { setOrders(orders.total = 0);l.quantity = text }, keyboardType: "numeric", }}
+                input={{ inputContainerStyle: { width: 50 }, defaultValue: `${l.quantity}`, placeholder: '0', label: "Quantidade", onChangeText: text => { setChanged(true); l.quantity = text }, keyboardType: "numeric", }}
                 subtitle={`R$ ${l.drinkable.price}`}
                 rightIcon={{ name: 'clear', onPress: () => drinkableRemove(l.drinkable._id) }}
 
@@ -265,8 +272,6 @@ export default function Home({ navigation }) {
             ))
 
           }
-          <Text>Observações:{orders.note}</Text>
-
 
         </ScrollView>
       </View>
@@ -279,12 +284,6 @@ export default function Home({ navigation }) {
             label="Adicionar"
             onPress={() => navigation.navigate('ListaItens', { listaProduc, listaDrink })}
           />
-          <BottomNavigation.Action
-            key="Pedido"
-            icon="delete"
-            label="Remover"
-            onPress={() => alert('Sou o remover')}
-          />
         </BottomNavigation>
         <Header containerStyle={{ backgroundColor: '#fff' }}
           leftComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#a46810' name='monetization-on' onPress={() => setShowPay(true)} />}
@@ -292,22 +291,22 @@ export default function Home({ navigation }) {
           rightComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#7b1b53' name='send' onPress={() => sendOrder()} />}
         />
       </View>
-      
-        <Overlay isVisible={showPay}>
-          <Text style={{marginTop:40,textAlign:"center",fontSize:20, marginBottom:50}}>Pagamento</Text>
-          <Badge status="success" value={<Text style={{color:"white", fontSize:16}}> Total: R${(orders.total == undefined) ? "0" : orders.total.toFixed(2)} </Text>}/>
-          <CheckBox title="Dinheiro" value="Dinheiro" checked={checked} onPress= {() => selected(1)}></CheckBox>
-          <CheckBox title="Cartão" checked={checked2} onPress= {() =>selected(2)}></CheckBox>
-          <Button buttonStyle={{marginTop:70, backgroundColor:"green"}} type="solid" icon={{name: "send", size: 15, color:"white"}} title="Efetuar" onPress={() => payment()} />
-          <Button buttonStyle={{marginTop:5, backgroundColor:"red"}} type="solid" icon={{name: "close", size: 15, color:"white"}} title="Cancelar" onPress={() => setShowPay(false)} />
-        </Overlay>
 
-        <Overlay isVisible={showConfigs} overlayStyle={{height:350, justifyContent:"center"}}>
-          <Text style={{marginTop:60,textAlign:"center",fontSize:20, marginBottom:50}}>Configurar IP de Rota</Text>
-          <Input keyboardType="numeric" placeholder='Exemplo 192.168.0.1' onChangeText={(text)=> setIp(text)}/>
-          <Button buttonStyle={{marginTop:40}} type="solid" title="Salvar" onPress={() => config()} />
-        </Overlay>
-      
+      <Overlay isVisible={showPay}>
+        <Text style={{ marginTop: 40, textAlign: "center", fontSize: 20, marginBottom: 50 }}>Pagamento</Text>
+        <Badge status="success" value={<Text style={{ color: "white", fontSize: 16 }}> Total: R${(orders.total == undefined) ? "0" : orders.total.toFixed(2)} </Text>} />
+        <CheckBox title="Dinheiro" value="Dinheiro" checked={checked} onPress={() => selected(1)}></CheckBox>
+        <CheckBox title="Cartão" checked={checked2} onPress={() => selected(2)}></CheckBox>
+        <Button buttonStyle={{ marginTop: 70, backgroundColor: "green" }} type="solid" icon={{ name: "send", size: 15, color: "white" }} title="Efetuar" onPress={() => payment()} />
+        <Button buttonStyle={{ marginTop: 5, backgroundColor: "red" }} type="solid" icon={{ name: "close", size: 15, color: "white" }} title="Cancelar" onPress={() => setShowPay(false)} />
+      </Overlay>
+
+      <Overlay isVisible={showConfigs} overlayStyle={{ height: 350, justifyContent: "center" }}>
+        <Text style={{ marginTop: 60, textAlign: "center", fontSize: 20, marginBottom: 50 }}>Configurar IP de Rota</Text>
+        <Input keyboardType="numeric" placeholder='Exemplo 192.168.0.1' onChangeText={(text) => setIp(text)} />
+        <Button buttonStyle={{ marginTop: 40 }} type="solid" title="Salvar" onPress={() => config()} />
+      </Overlay>
+
     </View>
   );
 }
@@ -324,4 +323,28 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffe"
   },
+  note:{
+    fontWeight:'bold',
+    color:'#444',
+    marginBottom:8,
+    marginLeft:5,
+
+  },
+  form:{
+    alignSelf:'stretch',
+    backgroundColor: "#fff",
+    marginTop:5,
+    marginBottom:0,
+
+  },
+  input:{
+    borderWidth: 1,
+    borderColor: '#ddd',
+    fontSize:12,
+    borderRadius:2,
+    paddingHorizontal:20,
+    marginHorizontal:5,
+    marginBottom:10,
+    height:44
+  }
 });
