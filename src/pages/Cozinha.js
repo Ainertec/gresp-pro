@@ -13,6 +13,8 @@ export default function Cozinha({ navigation }) {
   const [products, setProducts] = useState([]);
   const [note, setNote] = useState('');
 
+  const [ip, setIp] = useState('');
+
   const [showModal, setShowModal] = useState(false);
 
   function showInformations(l) {
@@ -46,13 +48,19 @@ export default function Cozinha({ navigation }) {
       setOpenOrders(response.data);
 
       setFinishedOrders(responsefinisheds.data);
+
+      const ip = await AsyncStorage.getItem('ip');
+      setIp(ip);
     }
     loadOrders();
   }, []);
-  const ip = useMemo(async ()=> await AsyncStorage.getItem('ip'),[]);
-  const socket = useMemo(()  => socketio(`http://${ip}:3333`),[]);
+
+
+  const socket = useMemo(() => socketio.connect(`http://${ip}:3333`), [ip, socket]);
+
 
   useEffect(() => {
+
     socket.on('newOrder', data => {
       let temporary = [];
       let contains = false;
@@ -66,8 +74,37 @@ export default function Cozinha({ navigation }) {
       }
       if (!contains)
         temporary.push(data);
-      setOpenOrders( temporary);
+      setOpenOrders(temporary);
     });
+  }, [openOrders, socket])
+
+  useEffect(() => {
+    socket.on('payment', data => {
+      let position;
+      for (const element of openOrders) {
+        if (element.identification === data.identification)
+          position = openOrders.indexOf(element);
+      }
+      if (position != undefined) {
+        openOrders.splice(position, 1);
+        setOpenOrders(openOrders.slice());
+      } else {
+        let position;
+        for (const element of finishedOrders) {
+          if (element.identification === data.identification)
+            position = finishedOrders.indexOf(element);
+        }
+        if (position != undefined) {
+          finishedOrders.splice(position, 1);
+          setFinishedOrders(finishedOrders.slice());
+        }
+      }
+
+
+
+
+
+    })
   }, [openOrders, socket])
   return (
     <View style={styles.container}>
@@ -119,7 +156,7 @@ export default function Cozinha({ navigation }) {
 
       </View>
       <Overlay isVisible={showModal} >
-        <View style={{flex:1}}>
+        <View style={{ flex: 1 }}>
           <Text style={{ marginTop: 10, textAlign: "center", fontSize: 20, marginBottom: 30 }}>Pedido</Text>
           <ScrollView style={{ flex: 1, backgroundColor: "#ffe" }}>
             <Text style={{ fontSize: 18, marginTop: 5, marginBottom: 10 }}>Descrição do pedido</Text>
@@ -134,7 +171,7 @@ export default function Cozinha({ navigation }) {
                     title={` ${l.product.name}`}
                     subtitle={`Quantidade: ${l.quantity}\nDescrição: ${l.product.description}`}
                     bottomDivider
-                  
+
                   />
                 ))
               }
