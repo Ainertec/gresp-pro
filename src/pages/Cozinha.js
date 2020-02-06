@@ -23,7 +23,7 @@ export default function Cozinha({ navigation }) {
 
   }
   async function finished(id) {
-    const Api = api();
+    const Api = await api();
     var identification = Number.parseInt(id);
     let position;
     const response = await Api.post("/kitchen/", {
@@ -36,7 +36,6 @@ export default function Cozinha({ navigation }) {
     }
     openOrders.splice(position, 1);
     setOpenOrders(openOrders.slice());
-
 
   }
   useEffect(() => {

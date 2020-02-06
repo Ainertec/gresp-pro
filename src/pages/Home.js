@@ -177,13 +177,19 @@ export default function Home({ navigation }) {
     const Api = await api();
     if (orders.total === undefined || changed === true)
       return Alert.alert("Ops!", "Crie ou atualize o pedido para paga-lo!");
+     
     const identification = await AsyncStorage.getItem("id");
+    if(identification == null) 
+      return Alert.alert("identificação invalida!");
     
     const response = await Api.delete(`/orders/${identification}/${paymentKind}`);
     
     setShowPay(false);
     await AsyncStorage.removeItem('id');
     Alert.alert("Pedido Pago!", `Número:${identification}`);
+    setOrders([]);
+    setListaDrink([]);
+    setListaProduc([]);
   }
 
   useEffect(() => {
@@ -290,6 +296,10 @@ export default function Home({ navigation }) {
             label="Adicionar"
             onPress={() => navigation.navigate('ListaItens', { listaProduc, listaDrink })}
           />
+          <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+        <Text style={{fontWeight:'bold'}}>Pedido N°: {orders.identification}</Text>
+
+          </View> 
         </BottomNavigation>
         <Header containerStyle={{ backgroundColor: '#fff' }}
           leftComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#a46810' name='monetization-on' onPress={() => setShowPay(true)} />}
