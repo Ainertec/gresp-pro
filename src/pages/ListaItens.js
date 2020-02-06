@@ -15,14 +15,15 @@ export default function ListaItens({ navigation }) {
   var drinkableList = null;
 
   async function search() {
+    const Api = await api();
     if (selectedType == 1) {
-      const response = await api.get("/products", {
+      const response = await Api.get("/products", {
         params: { name },
       });
 
       setList(response.data);
     } else {
-      const response = await api.get("/drinkables", {
+      const response = await Api.get("/drinkables", {
         params: { name },
       });
       setList(response.data);
@@ -33,8 +34,6 @@ export default function ListaItens({ navigation }) {
       producList = navigation.getParam('listaProduc', []);
     if (drinkableList == null)
       drinkableList = navigation.getParam('listaDrink', []);
-
-    console.log("teste da lista produto: ", producList);
 
     if (l.quantity == undefined) {
       return Alert.alert("Atenção!","Selecione a quantidade!")
@@ -52,7 +51,6 @@ export default function ListaItens({ navigation }) {
         }
       }
       producList.push(obj);
-      console.log("lista produto adicionada:", producList);
       return Alert.alert("Tudo Certo!",`O item ${l.name} foi adicionado!`);
     } else {
       var obj = {
@@ -65,35 +63,23 @@ export default function ListaItens({ navigation }) {
         }
       }
       drinkableList.push(obj);
-      console.log("lista bebida adicionada:", drinkableList);
       return Alert.alert(
         "Tudo Certo!",
         `O item ${l.name} foi adicionado!`
         );
     }
 
-
-
   }
   async function ending() {
     navigation.navigate('Home', { producList, drinkableList });
   }
-  function checked(l) {
-    if (producList == null)
-      producList = navigation.getParam('listaProduc', []);
-    if (drinkableList == null)
-      drinkableList = navigation.getParam('listaDrink', []);
-    if(producList.find(l))
-      console.log("achei o danado");
-
-
-  }
-
 
   useEffect(() => {
     async function load() {
-      const responseDrink = await api.get('/drinkables');
-      const responseProduct = await api.get('/products');
+      const Api = await api();
+      const responseDrink = await Api.get('/drinkables');
+      const responseProduct = await Api.get('/products');
+    
       setDrink(responseDrink.data);
       setProduct(responseProduct.data);
       
@@ -104,11 +90,9 @@ export default function ListaItens({ navigation }) {
       load();
     }
     if (selectedType == 2) {
-      //console.log("bebidas", drink);
       setList(drink);
     }
     if (selectedType == 1) {
-      //console.log("produtos", product);
       setList(product);
     }
   }, [selectedType]);
