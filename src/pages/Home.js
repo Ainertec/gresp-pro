@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useMemo } from 'react';
 import { View, StyleSheet, AsyncStorage, Image, ScrollView, Text, Alert, TextInput } from 'react-native';
 import { BottomNavigation } from 'react-native-material-ui';
 import { Header, Icon, ListItem, Overlay, Input, Button, Badge, CheckBox } from 'react-native-elements';
@@ -20,11 +20,11 @@ export default function Home({ navigation }) {
   const [note, setNote] = useState('');
   const [changed, setChanged] = useState(false);
 
-
   async function config() {
-    alert(ip);
     await AsyncStorage.setItem("ip", ip);
+    Alert.alert("Ip configurado");
     setShowConfigs(false);
+    Location.reload();
   }
   function selected(number) {
     if (number === 1) {
@@ -45,7 +45,6 @@ export default function Home({ navigation }) {
       }
     }
     await listaProduc.splice(position, 1);
-    console.log("Lista product Home:", listaProduc);
     setListaProduc(listaProduc.slice());
     setOrders(orders.total = 0);
 
@@ -85,6 +84,7 @@ export default function Home({ navigation }) {
     const identification = Number.parseInt(await AsyncStorage.getItem('id'));
     const newOrder = await AsyncStorage.getItem("newOrder");
     await AsyncStorage.removeItem("newOrder");
+    const Api = await api();
 
     let haveDrink = drinkables.toString();
     let haveProduct = products.toString();
@@ -96,7 +96,7 @@ export default function Home({ navigation }) {
     var response;
 
     if (newOrder) {
-      response = await api.post("/orders/", {
+      response = await Api.post("/orders/", {
         identification,
         products,
         drinkables,
@@ -113,7 +113,7 @@ export default function Home({ navigation }) {
         Alert.alert("ocorreu um erro!");
 
     } else {
-      response = await api.put(`/orders/${identification}`, {
+      response = await Api.put(`/orders/${identification}`, {
 
         products,
         drinkables,
@@ -137,8 +137,6 @@ export default function Home({ navigation }) {
   async function getDrinkablesAndProducts(drinkables, products) {
     var temporaryListDrink = [];
     var temporaryListProduc = [];
-    console.log("chegou as bebidas:", drinkables);
-    console.log("chegou os produtos:", products);
     if (drinkables == undefined || drinkables == null)
       drinkables = [];
     if (products == undefined || products == null)
@@ -158,12 +156,12 @@ export default function Home({ navigation }) {
   }
   async function loadOrders() {
     const identification = await AsyncStorage.getItem("id");
-
-    const response = await api.get('/order/', {
+    const Api = await api();
+    const response = await Api.get('/order/', {
       params: { identification }
     })
+    
 
-    console.log("resposta: ", response.data);
     if (response.data == null) {
       await AsyncStorage.setItem("newOrder", "true");
       response.data = [];
@@ -176,13 +174,13 @@ export default function Home({ navigation }) {
 
   }
   async function payment() {
+    const Api = await api();
     if (orders.total === undefined || changed === true)
       return Alert.alert("Ops!", "Crie ou atualize o pedido para paga-lo!");
     const identification = await AsyncStorage.getItem("id");
-    console.log("identification", identification);
-    console.log("paymentKind", paymentKind);
-    const response = await api.delete(`/orders/${identification}/${paymentKind}`);
-    console.log("response pagamento", response);
+    
+    const response = await Api.delete(`/orders/${identification}/${paymentKind}`);
+    
     setShowPay(false);
     await AsyncStorage.removeItem('id');
     Alert.alert("Pedido Pago!", `Número:${identification}`);
@@ -191,12 +189,12 @@ export default function Home({ navigation }) {
   useEffect(() => {
     const teste = navigation.getParam('producList', null);
     const teste2 = navigation.getParam('drinkableList', null);
-    console.log(teste);
+    
     if (teste == null)
       loadOrders();
     else
       getDrinkablesAndProducts(teste2, teste);
-    console.log("-------");
+    
 
 
   }, []);
