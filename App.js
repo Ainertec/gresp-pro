@@ -5,7 +5,8 @@ import Dialog from 'react-native-dialog'
 
 YellowBox.ignoreWarnings([
   'Unrecognized WebSocket',
-  'componentWillReceiveProps'
+  'componentWillReceiveProps',
+  'Possible Unhandled Promise',
 ])
 export default function App() {
   return <Routes/>
