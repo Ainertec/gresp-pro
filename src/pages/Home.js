@@ -18,9 +18,9 @@ export default function Home({ navigation }) {
   const [paymentKind, setPaymentKind] = useState('Dinheiro');
   const [ip, setIp] = useState('');
   const [note, setNote] = useState('');
-  const [changed,setChanged] = useState(false);
+  const [changed, setChanged] = useState(false);
 
-  
+
   async function config() {
     alert(ip);
     await AsyncStorage.setItem("ip", ip);
@@ -88,11 +88,11 @@ export default function Home({ navigation }) {
 
     let haveDrink = drinkables.toString();
     let haveProduct = products.toString();
-      
+
     if (!identification)
       return Alert.alert("Ops!", "É necessário informar o número do pedido.");
     if ((haveDrink == '') && (haveProduct == ''))
-      return Alert.alert("Ops!","É necessário informar uma bebida ou produto.");
+      return Alert.alert("Ops!", "É necessário informar uma bebida ou produto.");
     var response;
 
     if (newOrder) {
@@ -237,11 +237,11 @@ export default function Home({ navigation }) {
 
       </View>
       <View style={styles.form}>
-          <Text style={styles.note}>Observação:</Text>
-          <TextInput style={styles.input} 
-          placeholder="Digite uma observação" 
+        <Text style={styles.note}>Observação:</Text>
+        <TextInput style={styles.input}
+          placeholder="Digite uma observação"
           defaultValue={orders.note}
-          onChangeText={(text)=> setNote(text)}
+          onChangeText={(text) => setNote(text)}
           multiline={true} numberOfLines={3} editable={true}></TextInput>
       </View>
 
@@ -301,21 +301,25 @@ export default function Home({ navigation }) {
       </View>
 
       <Overlay isVisible={showPay}>
-        <Text style={{ marginTop: 40, textAlign: "center", fontSize: 20, marginBottom: 50 }}>Pagamento</Text>
-        <Badge status="success" value={<Text style={{ color: "white", fontSize: 16 }}> Total: R${(orders.total == undefined) ? "0" : orders.total.toFixed(2)} </Text>} />
-        <CheckBox title="Dinheiro" value="Dinheiro" checked={checked} onPress={() => selected(1)}></CheckBox>
-        <CheckBox title="Cartão" checked={checked2} onPress={() => selected(2)}></CheckBox>
-        <Button buttonStyle={{ marginTop: 70, backgroundColor: "green" }} type="solid" icon={{ name: "send", size: 15, color: "white" }} title="Efetuar" onPress={() => payment()} />
-        <Button buttonStyle={{ marginTop: 5, backgroundColor: "red" }} type="solid" icon={{ name: "close", size: 15, color: "white" }} title="Cancelar" onPress={() => setShowPay(false)} />
+        <View>
+          <Text style={{ marginTop: 40, textAlign: "center", fontSize: 20, marginBottom: 50 }}>Pagamento</Text>
+          <Badge status="success" value={<Text style={{ color: "white", fontSize: 16 }}> Total: R${(orders.total == undefined) ? "0" : orders.total.toFixed(2)} </Text>} />
+          <CheckBox title="Dinheiro" value="Dinheiro" checked={checked} onPress={() => selected(1)}></CheckBox>
+          <CheckBox title="Cartão" checked={checked2} onPress={() => selected(2)}></CheckBox>
+          <Button buttonStyle={{ marginTop: 70, backgroundColor: "green" }} type="solid" icon={{ name: "send", size: 15, color: "white" }} title="Efetuar" onPress={() => payment()} />
+          <Button buttonStyle={{ marginTop: 5, backgroundColor: "red" }} type="solid" icon={{ name: "close", size: 15, color: "white" }} title="Cancelar" onPress={() => setShowPay(false)} />
+        </View>
       </Overlay>
 
       <Overlay isVisible={showConfigs} overlayStyle={{ height: 350, justifyContent: "center" }}>
-        <Text style={{ marginTop: 60, textAlign: "center", fontSize: 20, marginBottom: 50 }}>Configurar IP de Rota</Text>
-        <Input keyboardType="numeric" placeholder='Exemplo 192.168.0.1' onChangeText={(text) => setIp(text)} />
-        <Button buttonStyle={{ marginTop: 40 }} type="solid" title="Salvar" onPress={() => config()} />
+        <View>
+          <Text style={{ marginTop: 60, textAlign: "center", fontSize: 20, marginBottom: 50 }}>Configurar IP de Rota</Text>
+          <Input keyboardType="numeric" placeholder='Exemplo 192.168.0.1' onChangeText={(text) => setIp(text)} />
+          <Button buttonStyle={{ marginTop: 40 }} type="solid" title="Salvar" onPress={() => config()} />
+        </View>
       </Overlay>
 
-    </View>
+    </View >
   );
 }
 
@@ -331,28 +335,28 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffe"
   },
-  note:{
-    fontWeight:'bold',
-    color:'#444',
-    marginBottom:8,
-    marginLeft:5,
+  note: {
+    fontWeight: 'bold',
+    color: '#444',
+    marginBottom: 8,
+    marginLeft: 5,
 
   },
-  form:{
-    alignSelf:'stretch',
+  form: {
+    alignSelf: 'stretch',
     backgroundColor: "#fff",
-    marginTop:5,
-    marginBottom:0,
+    marginTop: 5,
+    marginBottom: 0,
 
   },
-  input:{
+  input: {
     borderWidth: 1,
     borderColor: '#ddd',
-    fontSize:12,
-    borderRadius:2,
-    paddingHorizontal:20,
-    marginHorizontal:5,
-    marginBottom:10,
-    height:44
+    fontSize: 12,
+    borderRadius: 2,
+    paddingHorizontal: 20,
+    marginHorizontal: 5,
+    marginBottom: 10,
+    height: 44
   }
 });
