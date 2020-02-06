@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, StyleSheet, ScrollView, Text, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, AsyncStorage } from 'react-native';
 import { Header, Icon, ListItem, Button, Overlay } from 'react-native-elements';
 
 import socketio from 'socket.io-client';
@@ -23,10 +23,10 @@ export default function Cozinha({ navigation }) {
 
   }
   async function finished(id) {
-
+    const Api = api();
     var identification = Number.parseInt(id);
     let position;
-    const response = await api.post("/kitchen/", {
+    const response = await Api.post("/kitchen/", {
       identification,
     });
     setFinishedOrders([...finishedOrders, response.data]);
@@ -41,22 +41,33 @@ export default function Cozinha({ navigation }) {
   }
   useEffect(() => {
     async function loadOrders() {
-      const response = await api.get("orders");
-      const responsefinisheds = await api.get("/kitchen/");
+      const Api = await api();
+      const response = await Api.get("orders");
+      const responsefinisheds = await Api.get("/kitchen/");
       setOpenOrders(response.data);
 
       setFinishedOrders(responsefinisheds.data);
     }
     loadOrders();
   }, []);
-
-  const socket = useMemo(() => socketio('http://192.168.3.100:3333'), []);
+  const ip = useMemo(async ()=> await AsyncStorage.getItem('ip'),[]);
+  const socket = useMemo(()  => socketio(`http://${ip}:3333`),[]);
 
   useEffect(() => {
     socket.on('newOrder', data => {
-      setOpenOrders([...openOrders, data]);
-
-
+      let temporary = [];
+      let contains = false;
+      for (const element of openOrders) {
+        if (element._id === data._id) {
+          contains = true;
+          temporary.push(data);
+        } else {
+          temporary.push(element);
+        }
+      }
+      if (!contains)
+        temporary.push(data);
+      setOpenOrders( temporary);
     });
   }, [openOrders, socket])
   return (
@@ -109,7 +120,7 @@ export default function Cozinha({ navigation }) {
 
       </View>
       <Overlay isVisible={showModal} >
-        <View>
+        <View style={{flex:1}}>
           <Text style={{ marginTop: 10, textAlign: "center", fontSize: 20, marginBottom: 30 }}>Pedido</Text>
           <ScrollView style={{ flex: 1, backgroundColor: "#ffe" }}>
             <Text style={{ fontSize: 18, marginTop: 5, marginBottom: 10 }}>Descrição do pedido</Text>
@@ -124,7 +135,7 @@ export default function Cozinha({ navigation }) {
                     title={` ${l.product.name}`}
                     subtitle={`Quantidade: ${l.quantity}\nDescrição: ${l.product.description}`}
                     bottomDivider
-                  //onPress={() => showInformations(l)}
+                  
                   />
                 ))
               }
