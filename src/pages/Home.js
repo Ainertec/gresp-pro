@@ -85,6 +85,14 @@ export default function Home({ navigation }) {
     const identification = Number.parseInt(await AsyncStorage.getItem('id'));
     const newOrder = await AsyncStorage.getItem("newOrder");
     await AsyncStorage.removeItem("newOrder");
+
+    let haveDrink = drinkables.toString();
+    let haveProduct = products.toString();
+      
+    if (!identification)
+      return Alert.alert("Ops!", "É necessário informar o número do pedido.");
+    if ((haveDrink == '') && (haveProduct == ''))
+      return Alert.alert("Ops!","É necessário informar uma bebida ou produto.");
     var response;
 
     if (newOrder) {
