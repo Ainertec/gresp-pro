@@ -212,7 +212,7 @@ export default function Home({ navigation }) {
       <View style={{ height: 60, justifyContent: "center", marginTop: 10 }}>
         <Header
           leftComponent={<Image style={{ width: 100, height: 30 }} source={require('../../img/logo.png')} />}
-          rightComponent={<Icon name='settings-applications' color='#fff' onPress={() => setShowConfigs(true)} />}
+          rightComponent={<Icon name='leak-add' color='#fff' onPress={() => setShowConfigs(true)} />}
           containerStyle={{ backgroundColor: '#3F173F', justifyContent: 'space-around' }} />
 
       </View>
@@ -319,11 +319,13 @@ export default function Home({ navigation }) {
         </View>
       </Overlay>
 
-      <Overlay isVisible={showConfigs} overlayStyle={{ height: 350, justifyContent: "center" }}>
+      <Overlay isVisible={showConfigs} overlayStyle={{ height: 400, justifyContent: "center" }}>
         <View>
-          <Text style={{ marginTop: 60, textAlign: "center", fontSize: 20, marginBottom: 50 }}>Configurar IP de Rota</Text>
-          <Input keyboardType="numeric" placeholder='Exemplo 192.168.0.1' onChangeText={(text) => setIp(text)} />
+          <Text style={{ marginTop: 5, textAlign: "center", fontSize: 20, marginBottom: 30 }}>Configurar IP de Rota</Text>
+          <Text style={{textAlign:"center", color: "red", fontSize: 16, marginBottom:30 }}> Atenção, esta configuração interfere no servidor ! </Text>
+          <Input placeholder='Exemplo 192.168.0.1' onChangeText={(text) => setIp(text)} />
           <Button buttonStyle={{ marginTop: 40 }} type="solid" title="Salvar" onPress={() => config()} />
+          <Button buttonStyle={{ marginTop: 5, backgroundColor: "red" }} type="solid" title="Cancelar" onPress={() => setShowConfigs(false)} />
         </View>
       </Overlay>
 
