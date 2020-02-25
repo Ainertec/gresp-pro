@@ -32,7 +32,7 @@ export default function LeituraQrCode({navigation}) {
     <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-start'}}>
       <Header 
           leftComponent={<Image style={{ width: 100, height: 30}} source={require('../../img/logo.png')}/>} 
-          rightComponent={<Icon name='arrow-forward' color='#fff' onPress={() => navigation.navigate('Home')}/>} 
+          rightComponent={<View><Icon name='arrow-forward' color='#fff' onPress={() => navigation.navigate('Home')}/><Text style={{color:"#fff"}} onPress={() => navigation.navigate('Home')}>Voltar</Text></View>} 
           containerStyle={{ backgroundColor: '#3F173F', justifyContent: 'space-around'}}/>
       <BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} style={{height:450, marginTop:30}}/>
       {/* <View style={{marginTop:15, alignItems:"center"}}>
