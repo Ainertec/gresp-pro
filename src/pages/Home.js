@@ -103,6 +103,9 @@ export default function Home({ navigation }) {
         note
 
       });
+
+      await Api.get("/printer/?identification="+identification+"&type=Novo");
+
       if (response.alert) {
         Alert.alert(`${response.alert}`);
       }
@@ -120,6 +123,9 @@ export default function Home({ navigation }) {
         note
 
       });
+
+      await Api.get("/printer/?identification="+identification+"&type=Atualizada");
+
       if (response.alert) {
         Alert.alert(`${response.alert}`);
       }
