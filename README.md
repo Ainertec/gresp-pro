@@ -1,7 +1,7 @@
-# gresp-pro-mobile
- Parte Mobile
+# gresp-pro-mobile-finally
+ Parte Mobile final
 
-Bibliotecas de interface grafica 
+Bibliotecas de dependencia grafica 
 
 Material IO
 
@@ -19,10 +19,4 @@ React Natives Elements
 npm install react-native-elements
 
 ```
-
-Telas de interface:
-
-```
- app.js
- telas/home.js
-```
+Código final e atualizado, sistema OK.
