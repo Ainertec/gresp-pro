@@ -104,7 +104,7 @@ export default function Home({ navigation }) {
 
       });
 
-      await Api.get("/printer/?identification="+identification+"&type=Novo");
+      await Api.get(`/printer/?identification=${identification}`);
 
       if (response.alert) {
         Alert.alert(`${response.alert}`);
@@ -116,6 +116,8 @@ export default function Home({ navigation }) {
         Alert.alert("ocorreu um erro!");
 
     } else {
+      var jsonDid = await Api.get(`/order/?identification=${identification}`);
+
       response = await Api.put(`/orders/${identification}`, {
 
         products,
@@ -124,7 +126,7 @@ export default function Home({ navigation }) {
 
       });
 
-      await Api.get("/printer/?identification="+identification+"&type=Atualizada");
+      await Api.put(`/printerupdate/?identification=${identification}`,jsonDid.data);
 
       if (response.alert) {
         Alert.alert(`${response.alert}`);
