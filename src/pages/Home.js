@@ -1,10 +1,17 @@
-import React, { useState, useEffect,useMemo } from 'react';
-import { View, StyleSheet, AsyncStorage, Image, ScrollView, Text, Alert, TextInput } from 'react-native';
-import { BottomNavigation } from 'react-native-material-ui';
-import { Header, Icon, ListItem, Overlay, Input, Button, Badge, CheckBox } from 'react-native-elements';
+import React, { useState, useEffect, } from 'react';
+import { View, StyleSheet, AsyncStorage, ScrollView, Alert, } from 'react-native';
+
+
+
 
 import api from '../services/api'
 
+import PaymentModal from '../components/PaymentModal';
+import ConfigModal from '../components/ConfigModal';
+import Footer from '../components/Footer';
+import Header from '../components/HomeHeader';
+import Observation from '../components/Observation';
+import ItemList from '../components/ItemList';
 
 
 export default function Home({ navigation }) {
@@ -104,7 +111,7 @@ export default function Home({ navigation }) {
 
       });
 
-      await Api.get(`/printer/?identification=${identification}`);
+      // await Api.get(`/printer/?identification=${identification}`);
 
       if (response.alert) {
         Alert.alert(`${response.alert}`);
@@ -116,7 +123,7 @@ export default function Home({ navigation }) {
         Alert.alert("ocorreu um erro!");
 
     } else {
-      var jsonDid = await Api.get(`/order/?identification=${identification}`);
+      // var jsonDid = await Api.get(`/order/?identification=${identification}`);
 
       response = await Api.put(`/orders/${identification}`, {
 
@@ -126,7 +133,7 @@ export default function Home({ navigation }) {
 
       });
 
-      await Api.put(`/printerupdate/?identification=${identification}`,jsonDid.data);
+      // await Api.put(`/printerupdate/?identification=${identification}`, jsonDid.data);
 
       if (response.alert) {
         Alert.alert(`${response.alert}`);
@@ -168,7 +175,7 @@ export default function Home({ navigation }) {
     const response = await Api.get('/order/', {
       params: { identification }
     })
-    
+
 
     if (response.data == null) {
       await AsyncStorage.setItem("newOrder", "true");
@@ -185,13 +192,13 @@ export default function Home({ navigation }) {
     const Api = await api();
     if (orders.total === undefined || changed === true)
       return Alert.alert("Ops!", "Crie ou atualize o pedido para paga-lo!");
-     
+
     const identification = await AsyncStorage.getItem("id");
-    if(identification == null) 
+    if (identification == null)
       return Alert.alert("identificação invalida!");
-    
+
     const response = await Api.delete(`/orders/${identification}/${paymentKind}`);
-    
+
     setShowPay(false);
     await AsyncStorage.removeItem('id');
     Alert.alert("Pedido Pago!", `Número:${identification}`);
@@ -203,12 +210,12 @@ export default function Home({ navigation }) {
   useEffect(() => {
     const teste = navigation.getParam('producList', null);
     const teste2 = navigation.getParam('drinkableList', null);
-    
+
     if (teste == null)
       loadOrders();
     else
       getDrinkablesAndProducts(teste2, teste);
-    
+
 
 
   }, []);
@@ -217,77 +224,40 @@ export default function Home({ navigation }) {
   return (
 
     <View style={styles.container}>
-      <View style={{ height: 60, justifyContent: "center", marginTop: 10 }}>
-        <Header
-          leftComponent={<Image style={{ width: 100, height: 30 }} source={require('../../img/logo.png')} />}
-          rightComponent={<Icon name='leak-add' color='#fff' onPress={() => setShowConfigs(true)} />}
-          containerStyle={{ backgroundColor: '#3F173F', justifyContent: 'space-around' }} />
 
-      </View>
-      <View style={{ marginTop: 10 }}>
-        <BottomNavigation hidden={false}>
-          <BottomNavigation.Action
-            key="Ler"
-            icon="center-focus-strong"
-            onPress={() => navigation.navigate('LeituraQrCode')}
-          />
-          <BottomNavigation.Action
-            key="Pedido"
-            icon="kitchen"
-            onPress={() => navigation.navigate('Cozinha')}
-          />
-          <BottomNavigation.Action
-            key="Digitar"
-            icon="create"
-            onPress={() => navigation.navigate('Identificator')
+      <Header
+        navigation={navigation}
+        setShowConfigs={setShowConfigs}
+      />
 
-            }
+      <Observation
+        orders={orders}
+        setNote={setNote}
+      />
 
-          />
-
-        </BottomNavigation>
-
-      </View>
-      <View style={styles.form}>
-        <Text style={styles.note}>Observação:</Text>
-        <TextInput style={styles.input}
-          placeholder="Digite uma observação"
-          defaultValue={orders.note}
-          onChangeText={(text) => setNote(text)}
-          multiline={true} numberOfLines={3} editable={true}></TextInput>
-      </View>
 
       <View style={{ flex: 1, marginTop: 5 }}>
+  
         <ScrollView style={{ flex: 1, backgroundColor: "#ffe" }}>
           {
-
             listaProduc.map((l, i) => (
-              <ListItem
-                key={i}
-                leftAvatar={<Icon name='restaurant' />}
-                title={l.product.name}
-                input={{ inputContainerStyle: { width: 50 }, defaultValue: `${l.quantity}`, placeholder: '0', label: "Quantidade", onChangeText: text => { setChanged(true); l.quantity = text }, keyboardType: "numeric", }}
-                subtitle={`R$ ${l.product.price}`}
-                //checkBox={ { onPress:()=> state(l._id,l), }}
-                rightIcon={{ name: 'clear', onPress: () => productRemove(l.product._id) }}
-
-
-                bottomDivider
+              <ItemList 
+              key={i}
+              listType={l.product}
+              list={l}
+              itemRemove={productRemove}
+              setChanged={setChanged}
               />
             ))
-
           }
           {
             listaDrink.map((l, i) => (
-              <ListItem
-                key={i}
-                leftAvatar={<Icon name='restaurant' />}
-                title={l.drinkable.name}
-                input={{ inputContainerStyle: { width: 50 }, defaultValue: `${l.quantity}`, placeholder: '0', label: "Quantidade", onChangeText: text => { setChanged(true); l.quantity = text }, keyboardType: "numeric", }}
-                subtitle={`R$ ${l.drinkable.price}`}
-                rightIcon={{ name: 'clear', onPress: () => drinkableRemove(l.drinkable._id) }}
-
-                bottomDivider
+              <ItemList 
+              key={i}
+              listType={l.drinkable}
+              list={l}
+              itemRemove={drinkableRemove}
+              setChanged={setChanged}
               />
             ))
 
@@ -296,46 +266,31 @@ export default function Home({ navigation }) {
         </ScrollView>
       </View>
 
-      <View>
-        <BottomNavigation hidden={true}>
-          <BottomNavigation.Action
-            key="Ler"
-            icon="add-circle"
-            label="Adicionar"
-            onPress={() => navigation.navigate('ListaItens', { listaProduc, listaDrink })}
-          />
-          <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-        <Text style={{fontWeight:'bold'}}>Pedido N°: {orders.identification}</Text>
+      <Footer
+        navigation={navigation}
+        listaProduc={listaProduc}
+        listaDrink={listaDrink}
+        orders={orders}
+        setShowPay={setShowPay}
+        sendOrder={sendOrder}
+      />
 
-          </View> 
-        </BottomNavigation>
-        <Header containerStyle={{ backgroundColor: '#fff' }}
-          leftComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#a46810' name='monetization-on' onPress={() => setShowPay(true)} />}
-          centerComponent={<Text>Total: R${(orders.total == undefined) ? "0" : orders.total.toFixed(2)} </Text>}
-          rightComponent={<Icon style={{ marginBottom: 10 }} reverse raised color='#7b1b53' name='send' onPress={() => sendOrder()} />}
-        />
-      </View>
 
-      <Overlay isVisible={showPay}>
-        <View>
-          <Text style={{ marginTop: 40, textAlign: "center", fontSize: 20, marginBottom: 50 }}>Pagamento</Text>
-          <Badge status="success" value={<Text style={{ color: "white", fontSize: 16 }}> Total: R${(orders.total == undefined) ? "0" : orders.total.toFixed(2)} </Text>} />
-          <CheckBox title="Dinheiro" value="Dinheiro" checked={checked} onPress={() => selected(1)}></CheckBox>
-          <CheckBox title="Cartão" checked={checked2} onPress={() => selected(2)}></CheckBox>
-          <Button buttonStyle={{ marginTop: 70, backgroundColor: "green" }} type="solid" icon={{ name: "send", size: 15, color: "white" }} title="Efetuar" onPress={() => payment()} />
-          <Button buttonStyle={{ marginTop: 5, backgroundColor: "red" }} type="solid" icon={{ name: "close", size: 15, color: "white" }} title="Cancelar" onPress={() => setShowPay(false)} />
-        </View>
-      </Overlay>
-
-      <Overlay isVisible={showConfigs} overlayStyle={{ height: 400, justifyContent: "center" }}>
-        <View>
-          <Text style={{ marginTop: 5, textAlign: "center", fontSize: 20, marginBottom: 30 }}>Configurar IP de Rota</Text>
-          <Text style={{textAlign:"center", color: "red", fontSize: 16, marginBottom:30 }}> Atenção, esta configuração interfere no servidor ! </Text>
-          <Input placeholder='Exemplo 192.168.0.1' onChangeText={(text) => setIp(text)} />
-          <Button buttonStyle={{ marginTop: 40 }} type="solid" title="Salvar" onPress={() => config()} />
-          <Button buttonStyle={{ marginTop: 5, backgroundColor: "red" }} type="solid" title="Cancelar" onPress={() => setShowConfigs(false)} />
-        </View>
-      </Overlay>
+      <PaymentModal
+        showPay={showPay}
+        orders={orders}
+        selected={selected}
+        payment={payment}
+        setShowPay={setShowPay}
+        checked={checked}
+        checked2={checked2}
+      />
+      <ConfigModal
+        showConfigs={showConfigs}
+        setIp={setIp}
+        config={config}
+        setShowConfigs={setShowConfigs}
+      />
 
     </View >
   );
@@ -353,28 +308,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffe"
   },
-  note: {
-    fontWeight: 'bold',
-    color: '#444',
-    marginBottom: 8,
-    marginLeft: 5,
 
-  },
-  form: {
-    alignSelf: 'stretch',
-    backgroundColor: "#fff",
-    marginTop: 5,
-    marginBottom: 0,
-
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    fontSize: 12,
-    borderRadius: 2,
-    paddingHorizontal: 20,
-    marginHorizontal: 5,
-    marginBottom: 10,
-    height: 44
-  }
 });
