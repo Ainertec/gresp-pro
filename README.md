@@ -1,6 +1,8 @@
 # gresp-pro-mobile-finally
  Parte Mobile final
 
+Sistema para Gerenciamento de Resturantes GRESP PRO (Parte Mobile)
+
 Bibliotecas de dependencia grafica 
 
 Material IO
