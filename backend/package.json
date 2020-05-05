@@ -1,0 +1,30 @@
+{
+  "name": "gresp-pro",
+  "version": "0.0.0",
+  "description": "O Gresp pro é um software para tormar mais eficaz e mais rápido o atendimento de um determinado\r     estabelecimentos, sendo esses, atuando no nicho da alimentção. O software permite que o garçon por exemplo, quando for atender um cliente, acesse o aplicativo em um dispositivo movél(celular ou tablet), anotando o pedido do cliente, esse pedido aparecerá em tempo real na cozinha do estabelecimento.\r    ### Dentre algumas funcinalidades estão: \r    -   fechar pedido.\r      O software calcula total consumido pelo cliente, armazenando-o no banco de dados, no final quando for requerido o pagamento, o software mostra uma tela com o total e a nota fiscal.\r    -   Histórico de vendas por mês.\r         E guardado no banco de dados um histórico do mês com o total de vendas e o lucro ganho.\r     CRUD de produtos, bebidas e mesas.\r         O sistema permite o cadastramento, a exclusão, atualização e listagem dos produtos, bebidas e mesas.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cleitonbalonekr/Gresp-Pro.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cleitonbalonekr/Gresp-Pro/issues"
+  },
+  "homepage": "https://github.com/cleitonbalonekr/Gresp-Pro#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.8.1",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="fontawesome-free/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Gresp Pro</title>
+    <link rel="stylesheet" type="text/css" href="./bootstrap/css/escopo-css-pagina.css">
+  </head>
+  <body>
+
+    <nav id="navbarTotal" class="navbar navCor">
+      <img src="logo.png" class="navbar-brand" style="width: 100px;" alt="...">
+      <div id="mensagemDeErro" class="justify-content-center"></div>
+      <ul class="nav justify-content-end">    
+          <li class="nav-item" id="statusLogin"></li>
+          <li class="nav-item">
+            <a id="opClose" class="nav-link text-light" href="javascript:window.close()"><span class="fas fa-times iconsTam"></span> Fechar</a>
+          </li>
+      </ul>
+    </nav>
+    
+    <div id="janelaTotal" class="container">
+
+      <hr class="my-6 bg-dark">
+      
+      <div class="row">
+      
+        <section class="col-3 bg.bg-transparent" style="height: 530px;">
+            <h5 class="text-center" style="margin-top: 15px;">Menu</h5>
+            <ul class="list-group list-group-flush">
+                <a onclick="menuPedido();" class="list-group-item list-group-item-action list-group-item-dark" href="#"><span class="fas fa-file-signature iconsTam"></span> Pedido</a>
+                <a onclick="menuPagamentoPedido();" class="list-group-item list-group-item-action list-group-item-dark" href="#"><span class="fas fa-donate iconsTam"></span> Pagamento</a>
+                <a onclick="menuImpressao();" class="list-group-item list-group-item-action list-group-item-dark" href="#"><span class="fas fa-print iconsTam"></span> Impressão</a>
+                <a onclick="telaRelatorioDeCaixa();" class="list-group-item list-group-item-action list-group-item-dark" href="#"><span class="fas fa-chart-line iconsTam"></span> Relatório Caixa</a>
+                <a onclick="menuProdutoeBebida();" class="list-group-item list-group-item-action list-group-item-dark" href="#"><span class="fas fa-cart-plus iconsTam"></span> Produto e Bebida</a>
+                <a onclick="telaDeBuscarBebidasEstoque();" class="list-group-item list-group-item-action list-group-item-dark" href="#"><span class="fas fa-dolly iconsTam"></span> Estoque</a>
+                <a onclick="menuConfiguracaoAdmin();" class="list-group-item list-group-item-action list-group-item-dark" href="#"><span class="fas fa-user-tie iconsTam"></span> Administrador</a>
+            </ul>
+        </section>
+      
+        <main class="col-9">
+          <div class="col-11 layer1" style="position: absolute; height: 530px; z-index: 1; overflow: scroll;">
+            <div id="janela2" style="margin-top: 10px;">
+              <h1 style="background-color:#42173f"><img src="logo.png" class="rounded mx-auto d-block" style="width: 100px; margin-top:200px" alt="..."></h1>
+              <h3 class="text-center">Bem Vindo</h3>
+            </div>
+          </div>
+        </main>
+      
+      </div>
+      
+
+      <hr class="my-6 bg-dark">
+
+      <footer style="margin-top: 10px;">
+        <a class="nav-link text-dark" href="serial/serial.html"><span class="fab fa-dev iconsTam rounded float-right"> Ainertec</span></a>
+      </footer>
+
+    </div>
+
+
+    <script src="./axios/axios.js"></script>
+    <script src="./bootstrap/js/jquery.min.js"></script>
+    <script src="./bootstrap/js/qrcode.js"></script>
+    <script src="./bootstrap/js/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="./bootstrap/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="./bootstrap/js/instascan.min.js"></script>
+    <script src="./bootstrap/js/highchartsgrafico.js"></script>
+
+
+    <script src="./classes/Bebida.js"></script>
+    <script src="./classes/Funcionalidade.js"></script>
+    <script src="./classes/Login.js"></script>
+    <script src="./classes/Pagamento.js"></script>
+    <script src="./classes/Produto.js"></script>
+    <script src="./classes/Relatorio.js"></script>
+    <script src="./classes/Requisicao.js"></script>
+    <script src="./classes/SubMenu.js"></script>
+    <script src="./classes/Pedido.js"></script>
+    <script src="./classes/Estoque.js"></script>
+    <script src="./classes/RelatorioCaixa.js"></script>
+
+  </body>
+</html>
