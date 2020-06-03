@@ -22,3 +22,16 @@ npm install react-native-elements
 
 ```
 Código final e atualizado, sistema OK.
+
+## atualizações
+
+[] add eslint + prettier
+[] add styled-components
+[] add unform *
+[] aplicar componentização
+[] add react navigation v5
+[] corrigir alertas navigations buttons are deprecated
+[] se não for necessário não mexer nas funções
+[] upgrade de interface (cores)
+[] usar dafault baseUrl para services
+[] add typescript se tiver tempo
