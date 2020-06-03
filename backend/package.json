@@ -4,8 +4,9 @@
   "description": "O Gresp pro é um software para tormar mais eficaz e mais rápido o atendimento de um determinado\r     estabelecimentos, sendo esses, atuando no nicho da alimentção. O software permite que o garçon por exemplo, quando for atender um cliente, acesse o aplicativo em um dispositivo movél(celular ou tablet), anotando o pedido do cliente, esse pedido aparecerá em tempo real na cozinha do estabelecimento.\r    ### Dentre algumas funcinalidades estão: \r    -   fechar pedido.\r      O software calcula total consumido pelo cliente, armazenando-o no banco de dados, no final quando for requerido o pagamento, o software mostra uma tela com o total e a nota fiscal.\r    -   Histórico de vendas por mês.\r         E guardado no banco de dados um histórico do mês com o total de vendas e o lucro ganho.\r     CRUD de produtos, bebidas e mesas.\r         O sistema permite o cadastramento, a exclusão, atualização e listagem dos produtos, bebidas e mesas.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/server.js"
+    "tsdev": "ts-node-dev src/server.ts",
+    "dev": "nodemon src/server.js",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,27 @@
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "@shelf/jest-mongodb": "^1.1.5",
+    "@types/express": "^4.17.6",
+    "@types/factory-girl": "^5.0.2",
+    "@types/jest": "^25.2.3",
+    "@types/mongoose": "^5.7.21",
+    "@types/supertest": "^2.0.9",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-prettier": "^3.1.3",
+    "factory-girl": "^5.0.4",
+    "jest": "^26.0.1",
+    "nodemon": "^2.0.2",
+    "prettier": "^2.0.5",
+    "supertest": "^4.0.2",
+    "ts-jest": "^26.1.0",
+    "ts-node": "^8.10.2",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.9.3"
   }
 }
