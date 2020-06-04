@@ -1,14 +1,14 @@
 import { Router } from 'express';
 
 import UserController from './controllers/UserController';
+import SessionController from './controllers/SessionController';
 
 const routes = Router();
 
-const teste = [1, 2, 3];
+// Session
+routes.post('/sessions', SessionController.create);
 
-for (var ele of teste) {
-}
-
+// User
 routes.get('/users', UserController.index);
 
 routes.post('/users', UserController.create);

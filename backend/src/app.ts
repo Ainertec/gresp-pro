@@ -1,7 +1,12 @@
 import express from 'express';
 
 import mongoose from 'mongoose';
-import routes from './app.routes';
+import routes from './routes';
+
+// const app = express();
+
+// app.use(express.json());
+// app.use(routes);
 
 class App {
   public express: express.Application;
@@ -9,7 +14,7 @@ class App {
   public constructor() {
     this.express = express();
     this.middlewares();
-    this.database();
+    // this.database();
     this.routes();
   }
 
