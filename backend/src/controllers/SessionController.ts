@@ -7,17 +7,19 @@ class SessionController {
 
     const user = await User.findOne({ name });
 
-    if (user) {
-      const correctPassword = await user.checkPassword(password);
-
-      if (correctPassword) {
-        return response.json(user);
-      } else {
-        return response.status(401).json('incorrent password');
-      }
+    if (!user) {
+      return response.status(401).json('user does not exist');
     }
+    const correctPassword = await user.checkPassword(password);
 
-    return response.status(401).json('user does not exist');
+    if (!correctPassword) {
+      return response.status(401).json('incorrent password');
+    }
+    const token = user.generateToken();
+    return response.json({
+      user,
+      token,
+    });
   }
 }
 

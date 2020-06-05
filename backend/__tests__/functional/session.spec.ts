@@ -12,6 +12,7 @@ interface UserInterface extends Document {
   question: string;
   response: string;
   admin: boolean;
+  generateToken(): string;
 }
 
 describe('Session Tests', () => {
@@ -26,7 +27,7 @@ describe('Session Tests', () => {
   });
 
   it('it should authenticate a user', async () => {
-    const user = await factory.create<UserInterface>('User', {
+    await factory.create<UserInterface>('User', {
       name: 'Cleiton',
       password: '123456',
     });
@@ -38,8 +39,9 @@ describe('Session Tests', () => {
 
     expect(response.status).toBe(200);
   });
-  it('it should not authenticate a user with invalid credential', async () => {
-    const user = await factory.create<UserInterface>('User', {
+
+  it('it should not authenticate a user with invalid password', async () => {
+    await factory.create<UserInterface>('User', {
       name: 'Cleiton',
       password: '123456',
     });
@@ -50,5 +52,48 @@ describe('Session Tests', () => {
     });
 
     expect(response.status).toBe(401);
+  });
+
+  it('it should not authenticate a user with invalid name', async () => {
+    await factory.create<UserInterface>('User', {
+      name: 'Cleiton',
+      password: '123456',
+    });
+
+    const response = await request(app).post('/sessions').send({
+      name: 'Marcos',
+      password: '123456',
+    });
+
+    expect(response.status).toBe(401);
+  });
+
+  it('it should return a Jwt token when authenticate', async () => {
+    await factory.create<UserInterface>('User', {
+      name: 'Cleiton',
+      password: '123456',
+    });
+
+    const response = await request(app).post('/sessions').send({
+      name: 'Cleiton',
+      password: '123456',
+    });
+
+    expect(response.body).toHaveProperty('token');
+    expect(response.status).toBe(200);
+  });
+
+  it('it should to be able to access private routes', async () => {
+    const user = await factory.create<UserInterface>('User', {
+      name: 'Cleiton',
+      password: '123456',
+    });
+
+    const response = await request(app)
+      .get('/users')
+      .set('Authorization', `Bearer ${user.generateToken()}`);
+
+    console.log('users', response.body);
+    expect(response.status).toBe(200);
   });
 });

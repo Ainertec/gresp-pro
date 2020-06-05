@@ -1,5 +1,6 @@
 import { Schema, model, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 interface UserInterface extends Document {
   name: string;
@@ -7,6 +8,7 @@ interface UserInterface extends Document {
   response: string;
   admin: boolean;
   checkPassword(password: string): Promise<boolean>;
+  generateToken(): string;
 }
 interface UserSchemaInterface extends UserInterface {
   password: string;
@@ -25,13 +27,14 @@ const Questions = Object.freeze({
   },
 });
 
-const UserSchema: Schema = new Schema({
+const UserSchema = new Schema<UserSchemaInterface>({
   name: {
     type: String,
     required: true,
   },
   password_hash: {
     type: String,
+    // select: false,
   },
   question: {
     type: String,
@@ -66,8 +69,8 @@ UserSchema.methods.checkPassword = function (password: string): Promise<boolean>
   return bcrypt.compare(password, this.password_hash);
 };
 
-// UserSchema.method('generateToken', function () {
-//   return jwt.sign({ id: this._id }, process.env.APP_SECRET);
-// });
+UserSchema.methods.generateToken = function () {
+  return jwt.sign({ id: this._id }, String(process.env.APP_SECRET));
+};
 
 export default model<UserInterface>('User', UserSchema);
