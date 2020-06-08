@@ -59,15 +59,16 @@ class UserController {
       password,
       question,
       response,
-      admin: Boolean(authUser?.admin),
+      admin: authUser?.admin ? admin : false,
     });
 
     return res.json(user);
   }
 
-  public async update(req: Request, res: Response): Promise<Response> {
+  public async update(req: CustomRequest, res: Response): Promise<Response> {
     const { question, name, password, response, admin } = req.body;
     const { id } = req.params;
+    const userId = req.userId;
 
     const isValidQuestion = Questions.getQuestions().includes(question);
 
@@ -81,14 +82,14 @@ class UserController {
         return res.status(400).json('The name already been used');
       }
     }
+    const authUser = await User.findOne({ _id: userId });
 
     const user = await User.findOneAndUpdate(
       { _id: id },
       {
-        password,
         question,
         response,
-        admin,
+        admin: authUser?.admin ? admin : false,
       },
       {
         new: true,

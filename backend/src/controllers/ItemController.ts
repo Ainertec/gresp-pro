@@ -10,7 +10,15 @@ class ItemController {
     return res.json(items);
   }
   public async index(req: Request, res: Response) {
-    const items = await Item.find();
+    const { page = 1 } = req.query;
+
+    const count = await Item.countDocuments({});
+
+    const items = await Item.find()
+      .skip((Number(page) - 1) * 10)
+      .limit(10);
+
+    res.header('X-Total-Count', String(count));
 
     return res.json(items);
   }

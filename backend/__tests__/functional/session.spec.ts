@@ -1,19 +1,11 @@
 import request from 'supertest';
 import app from '../../src/app';
 
+import { UserInterface } from '../../src/interfaces/base';
+
 import { closeConnection, openConnection } from '../utils/connection';
 import factory from '../factories';
 import User from '../../src/models/User';
-
-interface UserInterface extends Document {
-  name: string;
-  password_hash: string;
-  password: string;
-  question: string;
-  response: string;
-  admin: boolean;
-  generateToken(): string;
-}
 
 describe('Session Tests', () => {
   beforeAll(() => {

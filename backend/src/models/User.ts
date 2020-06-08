@@ -2,15 +2,8 @@ import { Schema, model, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-interface UserInterface extends Document {
-  name: string;
-  question: string;
-  response: string;
-  admin: boolean;
-  password?: string;
-  checkPassword(password: string): Promise<boolean>;
-  generateToken(): string;
-}
+import { UserInterface } from '../../src/interfaces/base';
+
 interface UserSchemaInterface extends UserInterface {
   password_hash: string;
 }

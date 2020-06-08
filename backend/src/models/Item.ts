@@ -1,12 +1,5 @@
 import { Schema, model, Document } from 'mongoose';
-
-interface ItemInterface extends Document {
-  name: string;
-  price: number;
-  decription?: string;
-  stock?: number;
-  drink?: boolean;
-}
+import { ItemInterface } from '../../src/interfaces/base';
 
 const ItemSchema = new Schema(
   {
@@ -36,4 +29,4 @@ const ItemSchema = new Schema(
   }
 );
 
-export default model<ItemInterface>('Product', ItemSchema);
+export default model<ItemInterface>('Item', ItemSchema);

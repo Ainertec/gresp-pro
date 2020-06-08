@@ -1,20 +1,13 @@
 import request from 'supertest';
-import { Document } from 'mongoose';
+
+import { ItemInterface } from '../../src/interfaces/base';
 import app from '../../src/app';
 
 import { closeConnection, openConnection } from '../utils/connection';
 import factory from '../factories';
 import Token from '../utils/getToken';
-import Item from '../../src/models/User';
+import Item from '../../src/models/Item';
 import User from '../../src/models/User';
-
-interface ItemInterface extends Document {
-  name: string;
-  price: number;
-  decription?: string;
-  stock?: number;
-  drink?: boolean;
-}
 
 describe('Item Tests', () => {
   beforeAll(() => {
@@ -74,31 +67,34 @@ describe('Item Tests', () => {
     expect(response.status).toBe(200);
   });
 
+  it('should list all items by page ', async () => {
+    const token = await Token;
+
+    await factory.createMany<ItemInterface>('Item', 10, {
+      name: 'CLeiton',
+    });
+    await factory.createMany<ItemInterface>('Item', 10, {
+      name: 'Aldair',
+    });
+
+    const response = await request(app)
+      .get(`/items`)
+      .set('Authorization', `Bearer ${token}`)
+      .query({
+        page: 2,
+      });
+
+    expect(response.status).toBe(200);
+  });
+
   it('should list items by name', async () => {
     const token = await Token;
 
     await factory.create<ItemInterface>('Item', {
       name: 'pizza',
     });
-    await factory.create<ItemInterface>('Item', {
-      name: 'coca',
-    });
-    await factory.create<ItemInterface>('Item', {
-      name: 'pastel',
-    });
 
     const response = await request(app).get(`/items/p`).set('Authorization', `Bearer ${token}`);
-
-    expect(response.status).toBe(200);
-  });
-
-  it('should list all items ', async () => {
-    const token = await Token;
-
-    await factory.createMany<ItemInterface>('Item', 5);
-
-    const response = await request(app).get(`/items`).set('Authorization', `Bearer ${token}`);
-    console.log(response.body);
 
     expect(response.status).toBe(200);
   });

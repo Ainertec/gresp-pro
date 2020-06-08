@@ -1,23 +1,13 @@
 import request from 'supertest';
 import app from '../../src/app';
-import { Document } from 'mongoose';
+
+import { UserInterface } from '../../src/interfaces/base';
 
 import { closeConnection, openConnection } from '../utils/connection';
 import Token from '../utils/getToken';
 import factory from '../factories';
 import User from '../../src/models/User';
 import { Questions } from '../../src/models/User';
-
-interface UserInterface extends Document {
-  name: string;
-  password_hash: string;
-  password: string;
-  question: string;
-  response: string;
-  admin: boolean;
-  generateToken(): string;
-  checkPassword(password: string): Promise<boolean>;
-}
 
 describe('User Tests', () => {
   beforeAll(() => {
@@ -218,19 +208,6 @@ describe('User Tests', () => {
       .set('Authorization', `Bearer ${user.generateToken()}`);
 
     expect(response.status).toBe(200);
-  });
-
-  it('should not list all users if authenticate user do not be admin', async () => {
-    const user = await factory.create<UserInterface>('User', {
-      admin: false,
-    });
-
-    await factory.createMany<UserInterface>('User', 5);
-
-    const response = await request(app)
-      .get(`/users/`)
-      .set('Authorization', `Bearer ${user.generateToken()}`);
-    expect(response.status).toBe(401);
   });
 
   it('should show a expecific user', async () => {

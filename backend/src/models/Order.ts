@@ -1,44 +1,15 @@
 import { Schema, model, Document } from 'mongoose';
+import { OrderInterface, ItemInterface } from '../interfaces/base';
 
-interface ProductInterface extends Document {
-  name: String;
-  price: Number;
-  decription?: String;
-}
-interface DrinkableInterface extends Document {
-  name: String;
-  price: Number;
-  decription?: String;
-  stock?: Number;
-}
-
-interface OrderInterface extends Document {
-  identification: Number;
-  total: Number;
-  note?: String;
-  closed?: Boolean;
-  finished?: Boolean;
-  payment?: String;
-  products?: Array<ProductInterface>;
-  drinkables?: Array<DrinkableInterface>;
-}
-
-const ProductSchema = new Schema({
+const ItemSchema = new Schema({
   product: {
     type: Schema.Types.ObjectId,
-    ref: 'Product',
+    ref: 'Item',
+    required: true,
   },
   quantity: {
     type: Number,
-  },
-});
-const DrinkableSchema = new Schema({
-  drinkable: {
-    type: Schema.Types.ObjectId,
-    ref: 'Drinkable',
-  },
-  quantity: {
-    type: Number,
+    required: true,
   },
 });
 
@@ -67,8 +38,7 @@ const OrderSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    products: [ProductSchema],
-    drinkables: [DrinkableSchema],
+    items: [ItemSchema],
   },
   {
     timestamps: true,
