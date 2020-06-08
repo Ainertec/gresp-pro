@@ -83,17 +83,37 @@ describe('Session Tests', () => {
     expect(response.status).toBe(200);
   });
 
-  it('it should to be able to access private routes', async () => {
+  it('it should be able to access private routes', async () => {
+    const user = await factory.create<UserInterface>('User', {
+      name: 'Cleiton',
+      password: '123456',
+    });
+    const response = await request(app)
+      .get('/users')
+      .set('Authorization', `Bearer ${user.generateToken()}`);
+
+    expect(response.status).toBe(200);
+  });
+
+  it('it should not be able to access private routes without a jwt token', async () => {
     const user = await factory.create<UserInterface>('User', {
       name: 'Cleiton',
       password: '123456',
     });
 
-    const response = await request(app)
-      .get('/users')
-      .set('Authorization', `Bearer ${user.generateToken()}`);
+    const response = await request(app).get('/users');
 
-    console.log('users', response.body);
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(401);
+  });
+
+  it('it should not be able to access private routes with invalid jwt token', async () => {
+    const user = await factory.create<UserInterface>('User', {
+      name: 'Cleiton',
+      password: '123456',
+    });
+
+    const response = await request(app).get('/users').set('Authorization', `askfhi34ax}`);
+
+    expect(response.status).toBe(401);
   });
 });

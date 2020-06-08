@@ -16,8 +16,13 @@ class SessionController {
       return response.status(401).json('incorrent password');
     }
     const token = user.generateToken();
+
+    const serializadedUser = {
+      ...user.toObject(),
+      password_hash: undefined,
+    };
     return response.json({
-      user,
+      user: serializadedUser,
       token,
     });
   }

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
-import { Request, Response, NextFunction, RequestParamHandler } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 interface VerifyResponse {
   id: string;
