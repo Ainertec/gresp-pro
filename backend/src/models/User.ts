@@ -7,22 +7,22 @@ interface UserInterface extends Document {
   question: string;
   response: string;
   admin: boolean;
+  password?: string;
   checkPassword(password: string): Promise<boolean>;
   generateToken(): string;
 }
 interface UserSchemaInterface extends UserInterface {
-  password: string;
   password_hash: string;
 }
 
 const Questions = Object.freeze({
-  primeira: 'Qual o modelo do seu primeiro carro?',
-  segunda: 'Qual o nome do seu melhor amigo de infância?',
-  terceira: 'Qual o nome do seu primeiro animal de estimação?',
-  quarta: 'Qual o nome da sua mãe?',
-  quinta: 'Qual sua cor preferida?',
+  first: 'Qual o modelo do seu primeiro carro?',
+  second: 'Qual o nome do seu melhor amigo de infância?',
+  third: 'Qual o nome do seu primeiro animal de estimação?',
+  fourth: 'Qual o nome da sua mãe?',
+  fifth: 'Qual sua cor preferida?',
   getQuestions() {
-    const ques = [this.primeira, this.segunda, this.terceira, this.quarta, this.quinta];
+    const ques = [this.first, this.second, this.third, this.fourth, this.fifth];
     return ques;
   },
 });
@@ -72,5 +72,7 @@ UserSchema.methods.checkPassword = function (password: string): Promise<boolean>
 UserSchema.methods.generateToken = function () {
   return jwt.sign({ id: this._id }, String(process.env.APP_SECRET));
 };
+
+export { Questions };
 
 export default model<UserInterface>('User', UserSchema);
