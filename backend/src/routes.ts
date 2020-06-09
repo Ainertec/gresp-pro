@@ -6,6 +6,7 @@ import SessionController from './controllers/SessionController';
 import ItemController from './controllers/ItemController';
 import ForgotPasswordController from './controllers/ForgotPasswordController';
 import OrderController from './controllers/OrderController';
+import KitchenController from './controllers/KitchenController';
 
 import Authentication from './middlewares/Authentication';
 import Authorization from './middlewares/Authorization';
@@ -61,7 +62,16 @@ routes.delete('/items/:id', ItemController.delete);
 
 // Order
 
+routes.get('/orders', OrderController.index);
+routes.get('/orders/:identification', OrderController.show);
 routes.post('/orders', OrderController.create);
+routes.put('/orders/:identification', OrderController.update);
+routes.delete('/orders/:identification/:payment', OrderController.delete);
+
+// Kitchen
+
+routes.post('/kitchen', KitchenController.store);
+routes.get('/kitchen', KitchenController.index);
 
 routes.use(Authorization);
 
