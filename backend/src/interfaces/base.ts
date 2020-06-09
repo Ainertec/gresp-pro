@@ -7,6 +7,10 @@ export interface ItemInterface extends Document {
   stock?: number;
   drink?: boolean;
 }
+interface ItemsIterface {
+  product: ItemInterface;
+  quantity: number;
+}
 
 export interface UserInterface extends Document {
   name: string;
@@ -26,5 +30,5 @@ export interface OrderInterface extends Document {
   closed?: Boolean;
   finished?: Boolean;
   payment?: String;
-  items?: Array<ItemInterface>;
+  items?: Array<ItemsIterface>;
 }

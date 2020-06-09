@@ -17,7 +17,7 @@ class OrderController {
     this.update = this.update.bind(this);
   }
 
-  public async getTotal(items: ItemsIterface[]) {
+  private async getOrderTotalAndAlert(items: ItemsIterface[]) {
     let total = 0;
     const alert = Array<string>();
     await Promise.all(
@@ -38,7 +38,7 @@ class OrderController {
     if (await Order.findOne({ identification, closed: false }))
       return res.status(400).json('Order aready exist');
 
-    const total = await this.getTotal(items);
+    const total = await this.getOrderTotalAndAlert(items);
     const finalPrice = total.total;
 
     const order = await Order.create({
@@ -57,13 +57,12 @@ class OrderController {
       stockAlert: total.alert.length === 0 ? undefined : total.alert,
     });
   }
+
   public async update(req: Request, res: Response) {
-    const { identification, items, note } = req.body;
+    const { items, note } = req.body;
+    const identification = Number(req.params.identification);
 
-    if (await Order.findOne({ identification, closed: false }))
-      return res.status(400).json('Order aready exist');
-
-    const total = await this.getTotal(items);
+    const total = await this.getOrderTotalAndAlert(items);
     const finalPrice = total.total;
 
     const order = await Order.findOneAndUpdate(
@@ -73,7 +72,6 @@ class OrderController {
         items,
         total: Number(finalPrice.toFixed(2)),
         note,
-        finished: false,
       },
       {
         new: true,
@@ -89,6 +87,32 @@ class OrderController {
       order,
       stockAlert: total.alert.length === 0 ? undefined : total.alert,
     });
+  }
+
+  public async delete(req: Request, res: Response) {
+    const identification = Number(req.params.identification);
+    const { payment } = req.params;
+
+    const order = await Order.findOneAndUpdate(
+      { identification, closed: false },
+      { closed: true, payment: payment },
+      { new: true }
+    );
+    // req.io.emit('payment', order);
+    return res.json('Order was closed with success!');
+  }
+
+  public async index(req: Request, res: Response) {
+    const orders = await Order.find({ closed: false }).populate('itens.product');
+
+    return res.json(orders);
+  }
+
+  public async show(req: Request, res: Response) {
+    const identification = Number(req.params.identification);
+    const order = await Order.findOne({ identification, closed: false }).populate('itens.product');
+
+    return res.json(order);
   }
 }
 
