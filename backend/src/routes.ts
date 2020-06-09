@@ -7,11 +7,17 @@ import ItemController from './controllers/ItemController';
 import ForgotPasswordController from './controllers/ForgotPasswordController';
 import OrderController from './controllers/OrderController';
 import KitchenController from './controllers/KitchenController';
+import SerialController from './controllers/SerialController';
+import PrinterController from './controllers/PrinterController';
 
 import Authentication from './middlewares/Authentication';
 import Authorization from './middlewares/Authorization';
 
 const routes = Router();
+
+// Serial Printer
+
+routes.get('/serial_false/', SerialController.exit);
 
 // Session
 routes.post('/sessions', SessionController.create);
@@ -72,6 +78,10 @@ routes.delete('/orders/:identification/:payment', OrderController.delete);
 
 routes.post('/kitchen', KitchenController.store);
 routes.get('/kitchen', KitchenController.index);
+
+// Printer
+
+routes.get('/printer', PrinterController.create);
 
 routes.use(Authorization);
 
