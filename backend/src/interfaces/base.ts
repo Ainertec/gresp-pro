@@ -7,7 +7,7 @@ export interface ItemInterface extends Document {
   stock?: number;
   drink?: boolean;
 }
-interface ItemsIterface {
+export interface ItemsIterface {
   product: ItemInterface;
   quantity: number;
 }
