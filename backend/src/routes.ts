@@ -9,82 +9,98 @@ import OrderController from './controllers/OrderController';
 import KitchenController from './controllers/KitchenController';
 import SerialController from './controllers/SerialController';
 import PrinterController from './controllers/PrinterController';
+import ReportController from './controllers/ReportController';
 
 import Authentication from './middlewares/Authentication';
 import Authorization from './middlewares/Authorization';
+
+// Validations
+
+import session from './validations/sessionSchema';
+import serial from './validations/serialSchema';
+import { get, post } from './validations/forgotSchema';
+import { paramIdUser, user } from './validations/userSchema';
+import { item, paramIdItem, paramNameItem } from './validations/itemSchema';
+import {
+  order,
+  orderUpdate,
+  paramIdenPayment,
+  paramIdentification,
+} from './validations/orderSchema';
+import kitchen from './validations/kitchenSchema';
+import printer from './validations/printerValidation';
+import report from './validations/reportSchema';
 
 const routes = Router();
 
 // Serial Printer
 
-routes.get('/serial_false/', SerialController.exit);
+routes.get('/serial_false/', celebrate({ body: serial }), SerialController.exit);
 
 // Session
-routes.post('/sessions', SessionController.create);
-routes.get('/users/questions', UserController.getQuestions);
+routes.post('/sessions', celebrate({ body: session }), SessionController.create);
 
 // Forgot Password
 
-routes.get(
-  '/forgot',
-  celebrate({
-    [Segments.QUERY]: {
-      name: Joi.string().required(),
-    },
-  }),
-  ForgotPasswordController.show
-);
-routes.post(
-  '/forgot',
-  celebrate({
-    [Segments.BODY]: Joi.object().keys({
-      name: Joi.string().required().exist(),
-      response: Joi.string().required(),
-      password: Joi.string().required(),
-    }),
-  }),
-  ForgotPasswordController.store
-);
+routes.get('/forgot', celebrate({ query: get }), ForgotPasswordController.show);
 
-routes.get('/users_questions', UserController.getQuestions);
+routes.post('/forgot', celebrate({ body: post }), ForgotPasswordController.store);
+
+routes.get('/users/questions', UserController.getQuestions);
 
 routes.use(Authentication);
 
 // User
 
 routes.get('/users', UserController.index);
-routes.get('/users/:id', UserController.show);
-routes.post('/users', UserController.create);
-routes.put('/users/:id', UserController.update);
-routes.delete('/users/:id', UserController.delete);
+routes.get('/users/:id', celebrate({ params: paramIdUser }), UserController.show);
+routes.post('/users', celebrate({ body: user }), UserController.create);
+routes.put('/users/:id', celebrate({ params: paramIdUser, body: user }), UserController.update);
+routes.delete('/users/:id', celebrate({ params: paramIdUser }), UserController.delete);
 
 // Item
 
-routes.get('/items/:name', ItemController.show);
+routes.get('/items/:name', celebrate({ params: paramNameItem }), ItemController.show);
 routes.get('/items', ItemController.index);
-routes.post('/items', ItemController.create);
-routes.put('/items/:id', ItemController.update);
-routes.delete('/items/:id', ItemController.delete);
+routes.post('/items', celebrate({ body: item }), ItemController.create);
+routes.put('/items/:id', celebrate({ body: item, params: paramIdItem }), ItemController.update);
+routes.delete('/items/:id', celebrate({ params: paramIdItem }), ItemController.delete);
 
 // Order
 
 routes.get('/orders', OrderController.index);
-routes.get('/orders/:identification', OrderController.show);
-routes.post('/orders', OrderController.create);
-routes.put('/orders/:identification', OrderController.update);
-routes.delete('/orders/:identification/:payment', OrderController.delete);
+routes.get(
+  '/orders/:identification',
+  celebrate({ params: paramIdentification }),
+  OrderController.show
+);
+routes.post('/orders', celebrate({ body: order }), OrderController.create);
+routes.put(
+  '/orders/:identification',
+  celebrate({ body: orderUpdate, params: paramIdentification }),
+  OrderController.update
+);
+routes.delete(
+  '/orders/:identification/:payment',
+  celebrate({ params: paramIdenPayment }),
+  OrderController.delete
+);
 
 // Kitchen
 
-routes.post('/kitchen', KitchenController.store);
+routes.post('/kitchen', celebrate({ body: kitchen }), KitchenController.store);
 routes.get('/kitchen', KitchenController.index);
 
 // Printer
 
-routes.get('/printer', PrinterController.create);
+routes.get('/printer', celebrate({ body: printer }), PrinterController.create);
 
 routes.use(Authorization);
 
-// User
+// Report
+
+routes.get('/reports', celebrate({ query: report }), ReportController.show);
+routes.get('/reports/all', ReportController.index);
+routes.get('/reports/products', ReportController.totalSoldProducts);
 
 export default routes;
