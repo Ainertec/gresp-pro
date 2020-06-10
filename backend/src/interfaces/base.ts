@@ -24,11 +24,11 @@ export interface UserInterface extends Document {
 }
 
 export interface OrderInterface extends Document {
-  identification: Number;
-  total: Number;
-  note?: String;
-  closed?: Boolean;
-  finished?: Boolean;
-  payment?: String;
+  identification: number;
+  total: number;
+  note?: string;
+  closed?: boolean;
+  finished?: boolean;
+  payment?: string;
   items?: Array<ItemsIterface>;
 }
