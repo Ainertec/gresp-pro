@@ -1,0 +1,27 @@
+
+      ----------------------
+
+      >>>>>> Comanda <<<<<<<
+
+
+      Número: 376
+
+      Tipo: fiscal
+
+
+      ====== Produtos ======
+
+      
+      ======= Bebidas ======
+
+      
+        * Ergonomic Frozen Pants
+        - Quantidade: 2
+
+      ===== Observação =====
+
+      - Tasty
+
+
+      ======================
+      
