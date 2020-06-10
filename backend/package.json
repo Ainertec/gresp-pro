@@ -4,8 +4,7 @@
   "description": "O Gresp pro é um software para tormar mais eficaz e mais rápido o atendimento de um determinado\r     estabelecimentos, sendo esses, atuando no nicho da alimentção. O software permite que o garçon por exemplo, quando for atender um cliente, acesse o aplicativo em um dispositivo movél(celular ou tablet), anotando o pedido do cliente, esse pedido aparecerá em tempo real na cozinha do estabelecimento.\r    ### Dentre algumas funcinalidades estão: \r    -   fechar pedido.\r      O software calcula total consumido pelo cliente, armazenando-o no banco de dados, no final quando for requerido o pagamento, o software mostra uma tela com o total e a nota fiscal.\r    -   Histórico de vendas por mês.\r         E guardado no banco de dados um histórico do mês com o total de vendas e o lucro ganho.\r     CRUD de produtos, bebidas e mesas.\r         O sistema permite o cadastramento, a exclusão, atualização e listagem dos produtos, bebidas e mesas.",
   "main": "index.js",
   "scripts": {
-    "tsdev": "ts-node-dev src/server.ts",
-    "dev": "nodemon src/server.js",
+    "dev": "ts-node-dev src/server.ts",
     "test": "cross-env NODE_ENV=test jest"
   },
   "repository": {

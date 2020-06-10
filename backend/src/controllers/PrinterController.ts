@@ -53,9 +53,10 @@ class PrinterController {
       - ${order.note}\n\n
       ======================
       `;
-      const dir = process.env.NODE_ENV
-        ? path.resolve(__dirname, '..', '..', '__tests__', 'recipes')
-        : process.env.DIR_PRODUCTION;
+      const dir =
+        process.env.NODE_ENV === 'test'
+          ? path.resolve(__dirname, '..', '..', '__tests__', 'recipes')
+          : process.env.DIR_PRODUCTION;
 
       await fs.writeFile(
         `${dir}/${identification}.txt`,

@@ -19,7 +19,7 @@ import Authorization from './middlewares/Authorization';
 import session from './validations/sessionSchema';
 import serial from './validations/serialSchema';
 import { get, post } from './validations/forgotSchema';
-import { paramIdUser, user } from './validations/userSchema';
+import { paramIdUser, user, userUpdate } from './validations/userSchema';
 import { item, paramIdItem, paramNameItem } from './validations/itemSchema';
 import {
   order,
@@ -33,9 +33,11 @@ import report from './validations/reportSchema';
 
 const routes = Router();
 
-// Serial Printer
+routes.post('/users/first', celebrate({ body: user }), UserController.store);
 
-routes.get('/serial_false/', celebrate({ body: serial }), SerialController.exit);
+// Serial
+
+routes.get('/serial_false', celebrate({ query: serial }), SerialController.exit);
 
 // Session
 routes.post('/sessions', celebrate({ body: session }), SessionController.create);
@@ -55,7 +57,11 @@ routes.use(Authentication);
 routes.get('/users', UserController.index);
 routes.get('/users/:id', celebrate({ params: paramIdUser }), UserController.show);
 routes.post('/users', celebrate({ body: user }), UserController.create);
-routes.put('/users/:id', celebrate({ params: paramIdUser, body: user }), UserController.update);
+routes.put(
+  '/users/:id',
+  celebrate({ params: paramIdUser, body: userUpdate }),
+  UserController.update
+);
 routes.delete('/users/:id', celebrate({ params: paramIdUser }), UserController.delete);
 
 // Item
@@ -93,7 +99,7 @@ routes.get('/kitchen', KitchenController.index);
 
 // Printer
 
-routes.get('/printer', celebrate({ body: printer }), PrinterController.create);
+routes.get('/printer', celebrate({ query: printer }), PrinterController.create);
 
 routes.use(Authorization);
 

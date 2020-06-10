@@ -38,8 +38,8 @@ class OrderController {
     if (await Order.findOne({ identification, closed: false }))
       return res.status(400).json('Order aready exist');
 
-    const total = await this.getOrderTotalAndAlert(items);
-    const finalPrice = total.total;
+    const orderInformations = await this.getOrderTotalAndAlert(items);
+    const finalPrice = orderInformations.total;
 
     const order = await Order.create({
       identification,
@@ -54,7 +54,7 @@ class OrderController {
     // req.io.emit('newOrder',order);
     return res.json({
       order,
-      stockAlert: total.alert.length === 0 ? undefined : total.alert,
+      stockAlert: orderInformations.alert.length === 0 ? undefined : orderInformations.alert,
     });
   }
 
@@ -62,8 +62,8 @@ class OrderController {
     const { items, note } = req.body;
     const identification = Number(req.params.identification);
 
-    const total = await this.getOrderTotalAndAlert(items);
-    const finalPrice = total.total;
+    const orderInformations = await this.getOrderTotalAndAlert(items);
+    const finalPrice = orderInformations.total;
 
     const order = await Order.findOneAndUpdate(
       { identification, closed: false },
@@ -85,7 +85,7 @@ class OrderController {
     // req.io.emit('newOrder',order);
     return res.json({
       order,
-      stockAlert: total.alert.length === 0 ? undefined : total.alert,
+      stockAlert: orderInformations.alert.length === 0 ? undefined : orderInformations.alert,
     });
   }
 
@@ -103,14 +103,14 @@ class OrderController {
   }
 
   public async index(req: Request, res: Response) {
-    const orders = await Order.find({ closed: false }).populate('itens.product');
+    const orders = await Order.find({ closed: false }).populate('items.product');
 
     return res.json(orders);
   }
 
   public async show(req: Request, res: Response) {
     const identification = Number(req.params.identification);
-    const order = await Order.findOne({ identification, closed: false }).populate('itens.product');
+    const order = await Order.findOne({ identification, closed: false }).populate('items.product');
 
     return res.json(order);
   }

@@ -1,6 +1,7 @@
 import 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
+import { errors } from 'celebrate';
 
 import routes from './routes';
 
@@ -15,7 +16,7 @@ class App {
   public constructor() {
     this.express = express();
     this.middlewares();
-    // this.database();
+    if (!(process.env.NODE_ENV === 'test')) this.database();
     this.routes();
   }
 
@@ -24,7 +25,7 @@ class App {
   }
 
   private database(): void {
-    mongoose.connect('mongodb://localhost:27017/gresp', {
+    mongoose.connect('mongodb://localhost:27017/gresp_pro', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
@@ -33,6 +34,7 @@ class App {
 
   private routes(): void {
     this.express.use(routes);
+    this.express.use(errors());
   }
 }
 

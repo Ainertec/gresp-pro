@@ -20,6 +20,7 @@ class SessionController {
     const serializadedUser = {
       ...user.toObject(),
       password_hash: undefined,
+      response: undefined,
     };
     return response.json({
       user: serializadedUser,

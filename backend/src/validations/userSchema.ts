@@ -8,6 +8,13 @@ export const user = Joi.object().keys({
   response: Joi.string().required(),
   admin: Joi.boolean(),
 });
+export const userUpdate = Joi.object().keys({
+  name: Joi.string(),
+  password: Joi.string(),
+  question: Joi.string().required(),
+  response: Joi.string().required(),
+  admin: Joi.boolean(),
+});
 
 export const paramIdUser = {
   id: Joi.custom(validObjectId, 'valid id').required(),
