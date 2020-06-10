@@ -94,10 +94,32 @@ describe('User Tests', () => {
     expect(response.status).toBe(400);
   });
 
-  it('should not update a user name if it already exist', async () => {
+  it('should not update another user without admin privileges', async () => {
     const token = await Token;
     const user = await factory.create<UserInterface>('User', {
       name: 'Cleiton',
+    });
+    const user2 = await factory.create<UserInterface>('User', {
+      name: 'Luciano',
+      admin: false,
+    });
+
+    const response = await request(app)
+      .put(`/users/${user._id}`)
+      .send({
+        password: '123123',
+        admin: true,
+        question: Questions.first,
+        response: 'Num sei',
+      })
+      .set('Authorization', `Bearer ${user2.generateToken()}`);
+    expect(response.status).toBe(401);
+  });
+
+  it('should update a user', async () => {
+    // const token = await Token;
+    const user = await factory.create<UserInterface>('User', {
+      admin: false,
     });
 
     const response = await request(app)
@@ -109,25 +131,7 @@ describe('User Tests', () => {
         question: Questions.first,
         response: 'Num sei',
       })
-      .set('Authorization', `Bearer ${token}`);
-
-    expect(response.status).toBe(400);
-  });
-
-  it('should update a user', async () => {
-    const token = await Token;
-    const user = await factory.create<UserInterface>('User');
-
-    const response = await request(app)
-      .put(`/users/${user._id}`)
-      .send({
-        name: 'Cleiton',
-        password: '123123',
-        admin: true,
-        question: Questions.first,
-        response: 'Num sei',
-      })
-      .set('Authorization', `Bearer ${token}`);
+      .set('Authorization', `Bearer ${user.generateToken()}`);
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
@@ -140,6 +144,9 @@ describe('User Tests', () => {
   it('should update a user without user provider', async () => {
     const token = await Token;
     const user = await factory.create<UserInterface>('User');
+    const user2 = await factory.create<UserInterface>('User', {
+      admin: true,
+    });
 
     const response = await request(app)
       .put(`/users/${user._id}`)
@@ -149,10 +156,9 @@ describe('User Tests', () => {
         question: Questions.first,
         response: 'Num sei',
       })
-      .set('Authorization', `Bearer ${token}`);
+      .set('Authorization', `Bearer ${user2.generateToken()}`);
 
     expect(response.status).toBe(200);
-
     expect(response.body).toEqual(
       expect.objectContaining({
         name: user.name,
@@ -164,6 +170,9 @@ describe('User Tests', () => {
   it('should update a user without password provider', async () => {
     const token = await Token;
     const user = await factory.create<UserInterface>('User');
+    const user2 = await factory.create<UserInterface>('User', {
+      admin: true,
+    });
 
     const response = await request(app)
       .put(`/users/${user._id}`)
@@ -173,8 +182,7 @@ describe('User Tests', () => {
         question: Questions.first,
         response: 'Num sei',
       })
-      .set('Authorization', `Bearer ${token}`);
-
+      .set('Authorization', `Bearer ${user2.generateToken()}`);
     expect(response.status).toBe(200);
 
     expect(response.body).toEqual(
