@@ -9,7 +9,7 @@ todos os teste feitos para seu insomina.
 
 - Basta clicar no botão abaixo:
 
-[![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=Gresp%20Pro&uri=https%3A%2F%2Fraw.githubusercontent.com%2Fainertec-developer%2Fgresp-pro%2Fmaster%2Fbackend%2FInsomnia_2020-06-10.json%3Ftoken%3DAN7JRRQU2NLZHYEIL47KW2S64IRYM)
+[![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=Gresp%20Pro&uri=https%3A%2F%2Fraw.githubusercontent.com%2Fainertec-developer%2Fgresp-pro%2Fmaster%2Fbackend%2FInsomnia_2020-06-10.json)
 
 
 
