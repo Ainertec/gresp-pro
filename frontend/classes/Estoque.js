@@ -1,84 +1,129 @@
-// --------------------------------------------- TELA INICIAL -----------------------------------------------------
+// --------------------------------------------- Classe Estoque -----------------------------------------------------
 
-//funcao para gerar tela de busca de bebidas
-function telaDeBuscarBebidasEstoque(){
-    escopoTelaDeBusca("requisicaoBebida()","requisicaoTodasBebidas()",'janela2');
-}
 
-// --------------------------------------------- REQUISICAO -----------------------------------------------------
+let VETORDEITENSESTOQUE = [];
 
-//funcao para fazer busca via GET de bebida
-async function requisicaoTodasBebidas(){
-    gerarTabelaDeRespostaBebidasEstoque(await requisicaoGET("drinkables/?name="+$("#nome").val()));
-}
 
-//funcao para fazer busca via GET de todas as bebidas
-async function requisicaoBebida(){
-    gerarTabelaDeRespostaBebidasEstoque(await requisicaoGET("drinkables/"));
-}
-
-//funcao para salvar atualizar quantidade de produtos no estoque
-async function requisicaoPUTEstoque(id){
-    await requisicaoPUT("drinkables/"+id,{"name":$('#'+id+'name').val(),"price":$('#'+id+'price').val(),"description":$('#'+id+'description').val(),"stock":$('#quantidade'+id).val()});
-    mensagemDeAviso("Atualizado com sucesso!");
+//funcao responsavel por fazer a ligação necessaria com a tela de estoque
+function ligacaoEstoqueFacede() {
     telaDeBuscarBebidasEstoque();
 }
 
-// --------------------------------------------- TELA DE RESPOSTA -----------------------------------------------------
 
-//funcao para gerar tabela de resposta de requisicao
-function gerarTabelaDeRespostaBebidasEstoque(json){
-        var codigoHTML, cont=0;
 
-        codigoHTML='<div id="grafico" style="margin-top:10px"></div>'
-        codigoHTML+='<h5 class="text-center" style="margin-top:25px">Atualizar estoque</h5>'
-        codigoHTML+='<table class="table table-light" style="margin-top:10px">'
-        codigoHTML+='<thead><tr><th scope="col">Nome</th><th scope="col">Quantidade</th><th scope="col">#</th></tr></thead>'
-        codigoHTML+='<tbody>'
-        while(json.data[cont]){
-            codigoHTML+='<tr class="table-secondary text-dark">'
-                codigoHTML+='<td class="col-md-3"><input hidden id="'+json.data[cont]._id+'name" value="'+json.data[cont].name+'"/>'+json.data[cont].name+'</td>'
-                codigoHTML+='<td class="col-md-5"><input class="col-md" type="Number" id="quantidade'+json.data[cont]._id+'" value="'+json.data[cont].stock+'"/></td>'
-                codigoHTML+='<td class="col-md-2"><button onclick="requisicaoPUTEstoque(this.value)" value="'+json.data[cont]._id+'" class="btn btn-outline-primary"><span class="fas fa-sync"></span></button></td>'
-                codigoHTML+='<td class="col-md-1"><input hidden id="'+json.data[cont]._id+'price" value="'+json.data[cont].price+'"/></td>'
-                codigoHTML+='<td class="col-md-1"><input hidden id="'+json.data[cont]._id+'description" value="'+json.data[cont].description+'"/></td>'
-            codigoHTML+='</tr>'
+//funcao para gerar tela de busca de bebidas
+function telaDeBuscarBebidasEstoque() {
+    let codigoHTML = '';
 
-            cont++;
-        }
-        codigoHTML+='</tbody>'
-    codigoHTML+='</table>'
+    codigoHTML += '<h4 class="text-center">Buscar</h4>'
+    codigoHTML += '<div class="card-deck col-8 mx-auto d-block">'
+    codigoHTML += '<div class="input-group mb-3">'
+    codigoHTML += '<input id="nome" type="text" class="form-control mousetrap" placeholder="Nome Produto">'
+    codigoHTML += `<button onclick="if(validaDadosCampo(['#nome'])){buscarBebidaEstoque('nome');}else{mensagemDeErro('Preencha o campo nome!'); mostrarCamposIncorrreto(['nome']);}" type="button" class="btn btn-outline-info">`
+    codigoHTML += '<span class="fas fa-search"></span> Buscar'
+    codigoHTML += '</button>'
+    codigoHTML += '<br/>'
+    codigoHTML += `<button onclick="buscarBebidaEstoque('todos');" type="button" class="btn btn-outline-info btn-block" style="margin-top:10px;">`
+    codigoHTML += '<span class="fas fa-search-plus"></span> Exibir todos'
+    codigoHTML += '</button>'
+    codigoHTML += '</div>'
+    codigoHTML += '</div>'
+    codigoHTML += '<div id="resposta"></div>'
 
-    document.getElementById('resposta').innerHTML = codigoHTML;
-    gerarGraficoEstoque(json);
+    document.getElementById('janela2').innerHTML = codigoHTML;
 }
 
-//function para gerar grafico de estoque
-function gerarGraficoEstoque(json){
-    var cont=0, vetorNome=[],vetorQuantidade=[];
 
-    while(json.data[cont]){
-        vetorNome[cont]=json.data[cont].name;
-        vetorQuantidade[cont]=json.data[cont].stock;
-        cont++;
+
+//funcao para fazer busca via GET de todas as bebidas
+async function buscarBebidaEstoque(tipoBusca) {
+    let codigoHTML = '', json = null;
+
+    if (tipoBusca == 'nome') {
+        json = await requisicaoGET("drinkables/?name=" + $("#nome").val())
+    } else if (tipoBusca == 'todos') {
+        json = await requisicaoGET("drinkables/")
     }
 
-    Highcharts.chart('grafico',{
-        chart:{
-            type:'bar'
+    VETORDEITENSESTOQUE = [];
+
+    codigoHTML += '<div id="grafico" class="col-10 mx-auto" style="margin-top:30px; height: 50vh"></div>'
+
+    codigoHTML += '<h5 class="text-center" style="margin-top:50px">Atualizar estoque</h5>'
+    codigoHTML += '<table class="table table-bordered table-sm col-12 mx-auto" style="margin-top:10px">'
+    codigoHTML += '<thead class="thead-dark"><tr><th scope="col">Nome</th><th scope="col">Descrição</th><th scope="col">Quantidade</th><th scope="col">Adicionar</th><th scope="col">#</th></tr></thead>'
+    codigoHTML += '<tbody>'
+    json.data.forEach(function (item) {
+        VETORDEITENSESTOQUE.push(item);
+        codigoHTML += '<tr>'
+        codigoHTML += `<td class="table-secondary text-dark"><strong>${corrigirTamanhoString(20, item.name)}</strong></td>`
+        codigoHTML += `<td class="table-secondary text-dark">${corrigirTamanhoString(40, item.description)}</td>`
+        if (parseInt(item.stock) > 5) {
+            codigoHTML += `<td class="table-success text-dark text-center"><strong>${item.stock}</strong></td>`
+        } else {
+            codigoHTML += `<td class="table-danger text-dark text-center"><strong>${item.stock}</strong></td>`
+        }
+        codigoHTML += `<td class="table-warning text-dark"><input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=1 /></td>`
+        codigoHTML += `<td class="table-secondary text-dark"><button onclick="if(validaDadosCampo(['#quantidade${item._id}']) && validaValoresCampo(['#quantidade${item._id}'])){confirmarAcao('Atualizar quantidade!', 'atualizarEstoque(this.value)', '${item._id}');}else{mensagemDeErro('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorrreto(['quantidade${item._id}']);}" class="btn btn-success"><span class="fas fa-sync"></span></button></td>`
+        codigoHTML += '</tr>'
+    });
+    codigoHTML += '</tbody>'
+    codigoHTML += '</table>'
+
+    document.getElementById('resposta').innerHTML = codigoHTML;
+    setTimeout(function () { gerarGraficoEstoque(json); }, 300)
+}
+
+
+
+//funcao para salvar atualizar quantidade de produtos no estoque
+async function atualizarEstoque(id) {
+    let json = null;
+
+    try {
+        VETORDEITENSESTOQUE.forEach(function (item) {
+            if ((item._id).toString() == (id).toString()) {
+                json = item;
+            }
+        });
+
+        json.stock = parseInt(json.stock) + parseInt($('#quantidade' + id).val())
+
+        await requisicaoPUT('drinkables/' + id, json);
+        mensagemDeAviso('Atualizado com sucesso!');
+        telaDeBuscarBebidasEstoque();
+    } catch (error) {
+        mensagemDeErro('Não foi possível atualizar a quantidade do produto!')
+    }
+}
+
+
+
+//function para gerar grafico de estoque
+function gerarGraficoEstoque(json) {
+    let vetorNome = [], vetorQuantidade = [];
+
+    json.data.forEach(function (item) {
+        vetorNome.push(corrigirTamanhoString(10, item.name))
+        vetorQuantidade.push(item.stock)
+    });
+
+    Highcharts.chart('grafico', {
+        chart: {
+            type: 'bar'
         },
-        title:{
-            text:'Gráfico Estoque'
+        title: {
+            text: 'Gráfico Estoque'
         },
-        xAxis:{
-            categories:vetorNome
+        xAxis: {
+            categories: vetorNome
         },
-        yAxis:{
-            title:'Quantidade'
+        yAxis: {
+            title: 'Quantidade'
         },
-        series:[{
-            name:'Quantidade',
-            data:vetorQuantidade
+        series: [{
+            name: 'Quantidade',
+            data: vetorQuantidade
         }]
     });
 }
