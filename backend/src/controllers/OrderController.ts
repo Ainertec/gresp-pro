@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { Document } from 'mongoose';
-import { ItemInterface } from '../../src/interfaces/base';
+import { ItemInterface, CustomRequest } from '../../src/interfaces/base';
 
 import Order from '../models/Order';
 import Item from '../models/Item';
@@ -32,7 +32,7 @@ class OrderController {
     return { total, alert };
   }
 
-  public async create(req: Request, res: Response) {
+  public async create(req: CustomRequest, res: Response) {
     const { identification, items, note } = req.body;
 
     if (await Order.findOne({ identification, closed: false }))
@@ -51,14 +51,14 @@ class OrderController {
 
     await order.populate('items.product').execPopulate();
 
-    // req.io.emit('newOrder',order);
+    req.io.emit('newOrder', order);
     return res.json({
       order,
       stockAlert: orderInformations.alert.length === 0 ? undefined : orderInformations.alert,
     });
   }
 
-  public async update(req: Request, res: Response) {
+  public async update(req: CustomRequest, res: Response) {
     const { items, note } = req.body;
     const identification = Number(req.params.identification);
 
@@ -82,14 +82,14 @@ class OrderController {
 
     await order.populate('items.product').execPopulate();
 
-    // req.io.emit('newOrder',order);
+    req.io.emit('newOrder', order);
     return res.json({
       order,
       stockAlert: orderInformations.alert.length === 0 ? undefined : orderInformations.alert,
     });
   }
 
-  public async delete(req: Request, res: Response) {
+  public async delete(req: CustomRequest, res: Response) {
     const identification = Number(req.params.identification);
     const { payment } = req.params;
 
@@ -98,7 +98,7 @@ class OrderController {
       { closed: true, payment: payment },
       { new: true }
     );
-    // req.io.emit('payment', order);
+    req.io.emit('payment', order);
     return res.json('Order was closed with success!');
   }
 

@@ -1,4 +1,5 @@
 import { Document } from 'mongoose';
+import { Request } from 'express';
 
 export interface ItemInterface extends Document {
   name: string;
@@ -31,4 +32,8 @@ export interface OrderInterface extends Document {
   finished?: boolean;
   payment?: string;
   items?: Array<ItemsIterface>;
+}
+
+export interface CustomRequest extends Request {
+  [io: string]: any;
 }

@@ -1,20 +1,24 @@
 import 'dotenv';
-import express from 'express';
+import express, { Request } from 'express';
 import mongoose from 'mongoose';
 import { errors } from 'celebrate';
+import cors from 'cors';
+import socketio from 'socket.io';
+import http from 'http';
 
 import routes from './routes';
-
-// const app = express();
-
-// app.use(express.json());
-// app.use(routes);
+import { CustomRequest } from './interfaces/base';
 
 class App {
   public express: express.Application;
+  public server: http.Server;
+  public io: socketio.Server;
 
   public constructor() {
     this.express = express();
+    this.server = new http.Server(this.express);
+    this.io = socketio(this.server);
+    this.webSocket();
     this.middlewares();
     if (!(process.env.NODE_ENV === 'test')) this.database();
     this.routes();
@@ -36,6 +40,13 @@ class App {
     this.express.use(routes);
     this.express.use(errors());
   }
+  private webSocket() {
+    this.io.on('connection', (socket) => {});
+    this.express.use((req: CustomRequest, res, next) => {
+      req.io = this.io;
+      return next();
+    });
+  }
 }
 
-export default new App().express;
+export default new App();
