@@ -6,17 +6,29 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
+import { Icon } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
 
-import api from '../services/api';
+import api from '../../services/api';
 
-import PaymentModal from '../components/PaymentModal';
-import ConfigModal from '../components/ConfigModal';
-import Footer from '../components/Footer';
-import Header from '../components/HomeHeader';
-import Observation from '../components/Observation';
-import ItemList from '../components/ItemList';
+import PaymentModal from '../../components/PaymentModal';
+import ConfigModal from '../../components/ConfigModal';
+import Footer from '../../components/Footer';
+import ItemList from '../../components/ItemList';
 
-export default function Home({ navigation }) {
+import {
+  Container,
+  ObsevationContainer,
+  ObservationInput,
+  ObservationNote,
+  FooterContainer,
+  FooterItems,
+  FooterNavigation,
+  OrderNumber,
+  Total,
+} from './styles';
+
+export default function Home() {
   const [orders, setOrders] = useState([]);
   const [listaDrink, setListaDrink] = useState([]);
   const [listaProduc, setListaProduc] = useState([]);
@@ -28,6 +40,8 @@ export default function Home({ navigation }) {
   const [ip, setIp] = useState('');
   const [note, setNote] = useState('');
   const [changed, setChanged] = useState(false);
+
+  const navigation = useNavigation();
 
   async function config() {
     await AsyncStorage.setItem('ip', ip);
@@ -211,10 +225,19 @@ export default function Home({ navigation }) {
   // }, []);
 
   return (
-    <View style={styles.container}>
-      {/* <Header navigation={navigation} setShowConfigs={setShowConfigs} /> */}
-
-      <Observation orders={orders} setNote={setNote} />
+    <Container>
+      <ObsevationContainer>
+        <ObservationNote>Observação:</ObservationNote>
+        <ObservationInput
+          style={styles.input}
+          placeholder='Digite uma observação'
+          defaultValue={orders.note}
+          onChangeText={(text) => setNote(text)}
+          multiline={true}
+          numberOfLines={3}
+          editable={true}
+        ></ObservationInput>
+      </ObsevationContainer>
 
       <View style={{ flex: 1, marginTop: 5 }}>
         <ScrollView style={{ flex: 1, backgroundColor: '#ffe' }}>
@@ -239,14 +262,56 @@ export default function Home({ navigation }) {
         </ScrollView>
       </View>
 
-      <Footer
+      {/* <Footer
         navigation={navigation}
         listaProduc={listaProduc}
         listaDrink={listaDrink}
         orders={orders}
         setShowPay={setShowPay}
         sendOrder={sendOrder}
-      />
+      /> */}
+
+      <FooterContainer>
+        <FooterItems
+          style={{
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 3 },
+            shadowOpacity: 0.5,
+            shadowRadius: 2,
+            elevation: 2,
+          }}
+        >
+          <Icon
+            style={{ marginBottom: 10 }}
+            color='grey'
+            size={26}
+            name='add-circle'
+            onPress={() =>
+              navigation.navigate('Items', { listaProduc, listaDrink })
+            }
+          />
+          <OrderNumber>Pedido N°</OrderNumber>
+        </FooterItems>
+        <FooterNavigation>
+          <Icon
+            style={{ marginBottom: 10 }}
+            reverse
+            raised
+            color='#a46810'
+            name='monetization-on'
+            onPress={() => setShowPay(true)}
+          />
+          <Total>Total: R$ 10,00</Total>
+          <Icon
+            style={{ marginBottom: 10 }}
+            reverse
+            raised
+            color='#7b1b53'
+            name='send'
+            onPress={() => sendOrder()}
+          />
+        </FooterNavigation>
+      </FooterContainer>
 
       <PaymentModal
         showPay={showPay}
@@ -263,16 +328,11 @@ export default function Home({ navigation }) {
         config={config}
         setShowConfigs={setShowConfigs}
       />
-    </View>
+    </Container>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#3F173F',
-    justifyContent: 'flex-start',
-  },
   list: {
     flex: 1,
     backgroundColor: '#ffe',

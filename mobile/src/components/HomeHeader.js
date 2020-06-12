@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image } from 'react-native';
-import { BottomNavigation } from 'react-native-material-ui';
+// import { BottomNavigation } from 'react-native-material-ui';
 import { Header, Icon } from 'react-native-elements';
 
 export default function HomeHeader({ navigation, left, setShowConfigs }) {
