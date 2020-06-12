@@ -22,13 +22,12 @@ export default function Cozinha({ navigation }) {
     setDrinks(l.drinkables);
     setProducts(l.products);
     setShowModal(true);
-
   }
   async function finished(id) {
     const Api = await api();
     var identification = Number.parseInt(id);
     let position;
-    const response = await Api.post("/kitchen/", {
+    const response = await Api.post('/kitchen/', {
       identification,
     });
     setFinishedOrders([...finishedOrders, response.data]);
@@ -38,13 +37,12 @@ export default function Cozinha({ navigation }) {
     }
     openOrders.splice(position, 1);
     setOpenOrders(openOrders.slice());
-
   }
   useEffect(() => {
     async function loadOrders() {
       const Api = await api();
-      const response = await Api.get("orders");
-      const responsefinisheds = await Api.get("/kitchen/");
+      const response = await Api.get('orders');
+      const responsefinisheds = await Api.get('/kitchen/');
       setOpenOrders(response.data);
 
       setFinishedOrders(responsefinisheds.data);
@@ -55,13 +53,13 @@ export default function Cozinha({ navigation }) {
     loadOrders();
   }, []);
 
-
-  const socket = useMemo(() => socketio.connect(`http://${ip}:3333`), [ip, socket]);
-
+  const socket = useMemo(() => socketio.connect(`http://${ip}:3333`), [
+    ip,
+    socket,
+  ]);
 
   useEffect(() => {
-
-    socket.on('newOrder', data => {
+    socket.on('newOrder', (data) => {
       let temporary = [];
       let contains = false;
       for (const element of openOrders) {
@@ -72,14 +70,13 @@ export default function Cozinha({ navigation }) {
           temporary.push(element);
         }
       }
-      if (!contains)
-        temporary.push(data);
+      if (!contains) temporary.push(data);
       setOpenOrders(temporary);
     });
-  }, [openOrders, socket])
+  }, [openOrders, socket]);
 
   useEffect(() => {
-    socket.on('payment', data => {
+    socket.on('payment', (data) => {
       let position;
       for (const element of openOrders) {
         if (element.identification === data.identification)
@@ -99,103 +96,113 @@ export default function Cozinha({ navigation }) {
           setFinishedOrders(finishedOrders.slice());
         }
       }
-
-
-
-
-
-    })
-  }, [openOrders, socket])
+    });
+  }, [openOrders, socket]);
   return (
     <View style={styles.container}>
-      <View>
+      {/* <View>
         <Header
           leftComponent={<Icon name='arrow-back' color='#fff' onPress={() => navigation.navigate('Home')} />}
           centerComponent={<Text style={{ color: "white", textAlign: "center", fontSize: 22 }}>Cozinha</Text>}
           containerStyle={{ backgroundColor: '#3F173F', justifyContent: 'space-around' }} />
-      </View>
+      </View> */}
 
       <View style={{ flex: 1, marginTop: 15 }}>
-        <Text style={{ color: "white" }}>Em andamento</Text>
-        <ScrollView style={{ flex: 1, backgroundColor: "#ffe" }}>
-          {
-            openOrders.map((l, i) => (
-              <ListItem
-                key={i}
-                leftAvatar={<Icon name='touch-app' />}
-                title={`Pedido N°: ${l.identification}`}
-                subtitle={`Total: ${l.total.toFixed(2)}`}
-                rightIcon={{ name: 'close', onPress: () => finished(l.identification) }}
-                bottomDivider
-                onPress={() => showInformations(l)}
-              />
-            ))
-          }
+        <Text style={{ color: 'white' }}>Em andamento</Text>
+        <ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
+          {openOrders.map((l, i) => (
+            <ListItem
+              key={i}
+              leftAvatar={<Icon name='touch-app' />}
+              title={`Pedido N°: ${l.identification}`}
+              subtitle={`Total: ${l.total.toFixed(2)}`}
+              rightIcon={{
+                name: 'close',
+                onPress: () => finished(l.identification),
+              }}
+              bottomDivider
+              onPress={() => showInformations(l)}
+            />
+          ))}
         </ScrollView>
       </View>
       <View style={{ flex: 1, marginTop: 15 }}>
-        <Text style={{ color: "white" }}>Finalizado</Text>
-        <ScrollView style={{ flex: 1, backgroundColor: "#ffe" }}>
-          {
-            finishedOrders.map((l, i) => (
-              <ListItem
-                key={i}
-                leftAvatar={<Icon name='touch-app' />}
-                title={`Pedido N°: ${l.identification}`}
-                subtitle={`Total: ${l.total.toFixed(2)}`}
-                //rightIcon={{name:'close', onPress: ()=> finished(l._id) }}
-                bottomDivider
-                onPress={() => showInformations(l)}
-
-              />
-            ))
-          }
+        <Text style={{ color: 'white' }}>Finalizado</Text>
+        <ScrollView style={{ flex: 1, backgroundColor: '#ffe' }}>
+          {finishedOrders.map((l, i) => (
+            <ListItem
+              key={i}
+              leftAvatar={<Icon name='touch-app' />}
+              title={`Pedido N°: ${l.identification}`}
+              subtitle={`Total: ${l.total.toFixed(2)}`}
+              //rightIcon={{name:'close', onPress: ()=> finished(l._id) }}
+              bottomDivider
+              onPress={() => showInformations(l)}
+            />
+          ))}
         </ScrollView>
       </View>
-      <View style={{ marginTop: 15, backgroundColor: "#3F173F" }}>
-
-      </View>
-      <Overlay isVisible={showModal} >
+      <View style={{ marginTop: 15, backgroundColor: '#3F173F' }}></View>
+      <Overlay isVisible={showModal}>
         <View style={{ flex: 1 }}>
-          <Text style={{ marginTop: 10, textAlign: "center", fontSize: 20, marginBottom: 30 }}>Pedido</Text>
-          <ScrollView style={{ flex: 1, backgroundColor: "#ffe" }}>
-            <Text style={{ fontSize: 18, marginTop: 5, marginBottom: 10 }}>Descrição do pedido</Text>
-            <View style={{ borderBottomColor: 'black', borderBottomWidth: 1 }} />
+          <Text
+            style={{
+              marginTop: 10,
+              textAlign: 'center',
+              fontSize: 20,
+              marginBottom: 30,
+            }}
+          >
+            Pedido
+          </Text>
+          <ScrollView style={{ flex: 1, backgroundColor: '#ffe' }}>
+            <Text style={{ fontSize: 18, marginTop: 5, marginBottom: 10 }}>
+              Descrição do pedido
+            </Text>
+            <View
+              style={{ borderBottomColor: 'black', borderBottomWidth: 1 }}
+            />
             <Text style={{ marginTop: 10, fontSize: 18 }}>Produtos:</Text>
-            <ScrollView style={{ flex: 1, backgroundColor: "#ffe" }}>
-              {
-                products.map((l, i) => (
-                  <ListItem
-                    key={i}
-                    leftAvatar={<Icon name='touch-app' />}
-                    title={` ${l.product.name}`}
-                    subtitle={`Quantidade: ${l.quantity}\nDescrição: ${l.product.description}`}
-                    bottomDivider
-
-                  />
-                ))
-              }
+            <ScrollView style={{ flex: 1, backgroundColor: '#ffe' }}>
+              {products.map((l, i) => (
+                <ListItem
+                  key={i}
+                  leftAvatar={<Icon name='touch-app' />}
+                  title={` ${l.product.name}`}
+                  subtitle={`Quantidade: ${l.quantity}\nDescrição: ${l.product.description}`}
+                  bottomDivider
+                />
+              ))}
             </ScrollView>
             <Text style={{ marginTop: 10, fontSize: 18 }}>Bebidas:</Text>
-            <ScrollView style={{ flex: 1, backgroundColor: "#ffe" }}>
-              {
-                drinks.map((l, i) => (
-                  <ListItem
-                    key={i}
-                    leftAvatar={<Icon name='touch-app' />}
-                    title={` ${l.drinkable.name}`}
-                    subtitle={`Quantidade: ${l.quantity}\nDescrição: ${l.drinkable.description}`}
-                    bottomDivider
+            <ScrollView style={{ flex: 1, backgroundColor: '#ffe' }}>
+              {drinks.map((l, i) => (
+                <ListItem
+                  key={i}
+                  leftAvatar={<Icon name='touch-app' />}
+                  title={` ${l.drinkable.name}`}
+                  subtitle={`Quantidade: ${l.quantity}\nDescrição: ${l.drinkable.description}`}
+                  bottomDivider
                   //onPress={() => showInformations(l)}
-                  />
-                ))
-              }
+                />
+              ))}
             </ScrollView>
-            <View style={{ borderBottomColor: 'black', borderBottomWidth: 1, marginTop: 10 }} />
+            <View
+              style={{
+                borderBottomColor: 'black',
+                borderBottomWidth: 1,
+                marginTop: 10,
+              }}
+            />
             <Text style={{ marginTop: 10, fontSize: 18 }}>Observação:</Text>
             <Text style={{ fontSize: 16, marginBottom: 10 }}>{note}</Text>
           </ScrollView>
-          <Button buttonStyle={{ marginTop: 40 }} type="outline" title="Fechar" onPress={() => setShowModal(false)} />
+          <Button
+            buttonStyle={{ marginTop: 40 }}
+            type='outline'
+            title='Fechar'
+            onPress={() => setShowModal(false)}
+          />
         </View>
       </Overlay>
     </View>
@@ -206,6 +213,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#3F173F',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
 });

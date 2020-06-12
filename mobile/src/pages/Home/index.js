@@ -5,15 +5,15 @@ import {
   AsyncStorage,
   ScrollView,
   Alert,
+  FlatList,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
 import api from '../../services/api';
 
-import PaymentModal from '../../components/PaymentModal';
+import PaymentModal from './paymentModal';
 import ConfigModal from '../../components/ConfigModal';
-import Footer from '../../components/Footer';
 import ItemList from '../../components/ItemList';
 
 import {
@@ -34,32 +34,12 @@ export default function Home() {
   const [listaProduc, setListaProduc] = useState([]);
   const [showPay, setShowPay] = useState(false);
   const [showConfigs, setShowConfigs] = useState(false);
-  const [checked, setChecked] = useState(true);
-  const [checked2, setChecked2] = useState(false);
-  const [paymentKind, setPaymentKind] = useState('Dinheiro');
   const [ip, setIp] = useState('');
   const [note, setNote] = useState('');
   const [changed, setChanged] = useState(false);
 
   const navigation = useNavigation();
 
-  async function config() {
-    await AsyncStorage.setItem('ip', ip);
-    Alert.alert('Ip configurado');
-    setShowConfigs(false);
-    Location.reload();
-  }
-  function selected(number) {
-    if (number === 1) {
-      setChecked2(false);
-      setChecked(true);
-      setPaymentKind('Dinheiro');
-    } else {
-      setChecked(false);
-      setChecked2(true);
-      setPaymentKind('Cartão');
-    }
-  }
   async function productRemove(id) {
     var position;
     for (var element of listaProduc) {
@@ -177,12 +157,17 @@ export default function Home() {
     setListaDrink(temporaryListDrink);
     setListaProduc(temporaryListProduc);
   }
+
+  async function handlePayment() {
+    // if (orders.total === undefined || changed === true)
+    //   return Alert.alert('Ops!', 'Crie ou atualize o pedido para paga-lo!');
+    setShowPay(true);
+  }
+
   async function loadOrders() {
     const identification = await AsyncStorage.getItem('id');
     const Api = await api();
-    const response = await Api.get('/order/', {
-      params: { identification },
-    });
+    const response = await Api.get('/orders/4');
 
     if (response.data == null) {
       await AsyncStorage.setItem('newOrder', 'true');
@@ -193,36 +178,29 @@ export default function Home() {
       response.data.drinkables,
       response.data.products
     );
+    console.log('teste');
+    console.log(response.data);
 
     setOrders(response.data);
   }
-  async function payment() {
-    const Api = await api();
-    if (orders.total === undefined || changed === true)
-      return Alert.alert('Ops!', 'Crie ou atualize o pedido para paga-lo!');
 
-    const identification = await AsyncStorage.getItem('id');
-    if (identification == null) return Alert.alert('identificação invalida!');
+  useEffect(() => {
+    if (!showPay) {
+      setOrders([]);
+      setListaDrink([]);
+      setListaProduc([]);
+    }
+  }, [showPay]);
 
-    const response = await Api.delete(
-      `/orders/${identification}/${paymentKind}`
-    );
+  useEffect(() => {
+    // const teste = navigation.getParam('producList', null);
+    // const teste2 = navigation.getParam('drinkableList', null);
 
-    setShowPay(false);
-    await AsyncStorage.removeItem('id');
-    Alert.alert('Pedido Pago!', `Número:${identification}`);
-    setOrders([]);
-    setListaDrink([]);
-    setListaProduc([]);
-  }
+    // if (teste == null) loadOrders();
+    // else getDrinkablesAndProducts(teste2, teste);
 
-  // useEffect(() => {
-  //   const teste = navigation.getParam('producList', null);
-  //   const teste2 = navigation.getParam('drinkableList', null);
-
-  //   if (teste == null) loadOrders();
-  //   else getDrinkablesAndProducts(teste2, teste);
-  // }, []);
+    loadOrders();
+  }, []);
 
   return (
     <Container>
@@ -262,15 +240,6 @@ export default function Home() {
         </ScrollView>
       </View>
 
-      {/* <Footer
-        navigation={navigation}
-        listaProduc={listaProduc}
-        listaDrink={listaDrink}
-        orders={orders}
-        setShowPay={setShowPay}
-        sendOrder={sendOrder}
-      /> */}
-
       <FooterContainer>
         <FooterItems
           style={{
@@ -299,7 +268,7 @@ export default function Home() {
             raised
             color='#a46810'
             name='monetization-on'
-            onPress={() => setShowPay(true)}
+            onPress={handlePayment}
           />
           <Total>Total: R$ 10,00</Total>
           <Icon
@@ -315,18 +284,8 @@ export default function Home() {
 
       <PaymentModal
         showPay={showPay}
-        orders={orders}
-        selected={selected}
-        payment={payment}
+        total={orders.total}
         setShowPay={setShowPay}
-        checked={checked}
-        checked2={checked2}
-      />
-      <ConfigModal
-        showConfigs={showConfigs}
-        setIp={setIp}
-        config={config}
-        setShowConfigs={setShowConfigs}
       />
     </Container>
   );
