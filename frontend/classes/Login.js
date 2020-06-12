@@ -134,7 +134,7 @@ async function efetuarLogin() {
 }
 
 //funcao para autenticacao e liberacao de sessao
-async function autenticacaoLogin() {
+function autenticacaoLogin() {
     if (sessionStorage.getItem('login') == null) {
         mensagemDeErro('Usuário não autenticado!')
         return telaAutenticacao()
