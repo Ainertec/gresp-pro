@@ -52,7 +52,7 @@ async function buscarProdutos(tipoBusca) {
     codigoHTML += '<h4 class="text-center" style="margin-top:40px;">Lista</h4>'
     codigoHTML += '<table style="margin-top:10px;" class="table table-light table-sm">'
     codigoHTML += '<thead class="thead-dark">'
-    codigoHTML += '<tr><th scope="col">Name</th><th scope="col">Descrição</th><th scope="col">Preço</th><th scope="col">Editar</th><th scope="col">Excluir</th></tr>'
+    codigoHTML += '<tr><th scope="col">Name</th><th scope="col">Descrição</th><th scope="col">Quantidade</th><th scope="col">Preço</th><th scope="col">Editar</th><th scope="col">Excluir</th></tr>'
     codigoHTML += '</thead>'
     codigoHTML += '<tbody>'
     json.data.forEach(function (item) {
@@ -61,6 +61,11 @@ async function buscarProdutos(tipoBusca) {
             codigoHTML += '<tr>'
             codigoHTML += `<th class="table-info">${corrigirTamanhoString(20, item.name)}</th>`
             codigoHTML += `<td class="table-info">${corrigirTamanhoString(40, item.description)}</td>`
+            if (item.stock != null) {
+                codigoHTML += `<td class="table-primary"><strong>${item.stock}</strong></td>`
+            } else {
+                codigoHTML += `<td class="table-primary text-danger"><strong>0</strong></td>`
+            }
             codigoHTML += `<td class="table-warning text-danger"><strong>R$${(item.price).toFixed(2)}<strong></td>`
             codigoHTML += `<th class="table-light"><button class="btn btn-primary" onclick="telaProduto('atualizar', '${item._id}'); carregarDadosProduto('${item._id}');"><span class="fas fa-pencil-alt iconsTam"></span></button></td>`
             codigoHTML += `<th class="table-light"><button class="btn btn-outline-danger" onclick="confirmarAcao('Excluir os dados do produto permanentemente!', 'deletarProduto(this.value)', '${item._id}');" ><span class="fas fa-trash-alt iconsTam"></span></button></td>`
@@ -106,9 +111,9 @@ function telaProduto(tipoRequisicao, id) {
     codigoHTML += '</div>'
 
     if (tipoRequisicao == 'cadastrar') {
-        codigoHTML += `<button onclick="if(validaDadosCampo(['#nome','#preco','#descricao']) && validaValoresCampo(['#preco'])){cadastrarProduto();}else{mensagemDeErro('Preencha os campos nome e preço com valores válidos!'); mostrarCamposIncorrreto(['nome', 'preco', 'descricao']);}" type="button" class="btn btn-primary" style="margin:15px"><span class="fas fa-save"></span> Salvar</button>`
+        codigoHTML += `<button onclick="if(validaDadosCampo(['#nome','#preco','#descricao']) && validaValoresCampo(['#preco','#quantidade'])){cadastrarProduto();}else{mensagemDeErro('Preencha os campos nome e preço com valores válidos!'); mostrarCamposIncorrreto(['nome','preco','descricao','quantidade']);}" type="button" class="btn btn-primary" style="margin:15px"><span class="fas fa-save"></span> Salvar</button>`
     } else {
-        codigoHTML += `<button onclick="if(validaDadosCampo(['#nome','#preco','#descricao']) && validaValoresCampo(['#preco'])){confirmarAcao('Atualizar os dados do produto!', 'atualizaProduto(this.value)','${id}');}else{mensagemDeErro('Preencha todos os campos com valores válidos!');  mostrarCamposIncorrreto(['nome', 'preco','descricao']);}" type="button" class="btn btn-success" style="margin:15px"><span class="fas fa-pencil-alt"></span> Atualizar</button>`
+        codigoHTML += `<button onclick="if(validaDadosCampo(['#nome','#preco','#descricao']) && validaValoresCampo(['#preco','#quantidade'])){confirmarAcao('Atualizar os dados do produto!', 'atualizaProduto(this.value)','${id}');}else{mensagemDeErro('Preencha todos os campos com valores válidos!');  mostrarCamposIncorrreto(['nome', 'preco','descricao','quantidade']);}" type="button" class="btn btn-success" style="margin:15px"><span class="fas fa-pencil-alt"></span> Atualizar</button>`
         codigoHTML += `<button onclick="confirmarAcao('Excluir os dados do produto permanentemente!', 'deletarProduto(this.value)', '${id}');" type="button" class="btn btn-outline-danger" style="margin:15px"><span class="fas fa-trash-alt"></span> Excluir</button>`
     }
 

@@ -44,9 +44,9 @@ async function buscarBebida(tipoBusca) {
     let codigoHTML = '', json = null;
 
     if (tipoBusca == 'nome') {
-        json = await requisicaoGET("drinkables/?name=" + $('#nome').val())
+        json = await requisicaoGET("items/" + $('#nome').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     } else if (tipoBusca == 'todos') {
-        json = await requisicaoGET("drinkables/")
+        json = await requisicaoGET("items", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     }
 
     codigoHTML += '<h4 class="text-center" style="margin-top:40px;">Lista</h4>'
@@ -56,15 +56,21 @@ async function buscarBebida(tipoBusca) {
     codigoHTML += '</thead>'
     codigoHTML += '<tbody>'
     json.data.forEach(function (item) {
-        VETORDEBEBIDASCLASSEBEBIDA.push(item)
-        codigoHTML += '<tr>'
-        codigoHTML += `<th class="table-info">${corrigirTamanhoString(20, item.name)}</th>`
-        codigoHTML += `<td class="table-info">${corrigirTamanhoString(40, item.description)}</td>`
-        codigoHTML += `<td class="table-primary"><strong>${item.stock}</strong></td>`
-        codigoHTML += `<td class="table-warning text-danger"><strong>R$${(item.price).toFixed(2)}<strong></td>`
-        codigoHTML += `<th class="table-light"><button class="btn btn-primary" onclick="telaBebida('atualizar', '${item._id}'); carregarDadosBebida('${item._id}')"><span class="fas fa-pencil-alt iconsTam"></span></button></td>`
-        codigoHTML += `<th class="table-light"><button class="btn btn-outline-danger" onclick="confirmarAcao('Excluir os dados da bebida permanentemente!', 'deleteBebida(this.value)', '${item._id}');" ><span class="fas fa-trash-alt iconsTam"></span></button></td>`
-        codigoHTML += '</tr>'
+        if (item.drink) {
+            VETORDEBEBIDASCLASSEBEBIDA.push(item)
+            codigoHTML += '<tr>'
+            codigoHTML += `<th class="table-info">${corrigirTamanhoString(20, item.name)}</th>`
+            codigoHTML += `<td class="table-info">${corrigirTamanhoString(40, item.description)}</td>`
+            if (item.stock != null) {
+                codigoHTML += `<td class="table-primary"><strong>${item.stock}</strong></td>`
+            } else {
+                codigoHTML += `<td class="table-primary text-danger"><strong>0</strong></td>`
+            }
+            codigoHTML += `<td class="table-warning text-danger"><strong>R$${(item.price).toFixed(2)}<strong></td>`
+            codigoHTML += `<th class="table-light"><button class="btn btn-primary" onclick="telaBebida('atualizar', '${item._id}'); carregarDadosBebida('${item._id}')"><span class="fas fa-pencil-alt iconsTam"></span></button></td>`
+            codigoHTML += `<th class="table-light"><button class="btn btn-outline-danger" onclick="confirmarAcao('Excluir os dados da bebida permanentemente!', 'deleteBebida(this.value)', '${item._id}');" ><span class="fas fa-trash-alt iconsTam"></span></button></td>`
+            codigoHTML += '</tr>'
+        }
     });
     codigoHTML += '</tbody>'
     codigoHTML += '</table>'
@@ -99,14 +105,14 @@ function telaBebida(tipoRequisicao, id) {
     codigoHTML += '</div>'
     codigoHTML += '<div class="row">'
     codigoHTML += '<div class="col" style="margin-top:25px">'
-    codigoHTML += '<label>Descrição: </label><textArea type="text" id="descricao" class="form-control mousetrap" placeholder="Descrição"></textArea>'
+    codigoHTML += '<label>Descrição: </label><textArea type="text" id="descricao" class="form-control mousetrap" placeholder="Descrição">Nenhuma.</textArea>'
     codigoHTML += '</div>'
     codigoHTML += '</div>'
 
     if (tipoRequisicao == 'cadastrar') {
-        codigoHTML += `<button onclick="if(validaDadosCampo(['#nome','#preco','#quantidade']) && validaValoresCampo(['#preco','#quantidade'])){cadastrarBebida();}else{mensagemDeErro('Preencha os campos nome, preço e estoque com valores válidos!'); mostrarCamposIncorrreto(['nome','preco','quantidade']);}" type="button" class="btn btn-primary" style="margin:15px"><span class="fas fa-save"></span> Salvar</button>`
+        codigoHTML += `<button onclick="if(validaDadosCampo(['#nome','#preco','#descricao']) && validaValoresCampo(['#preco','#quantidade'])){cadastrarBebida();}else{mensagemDeErro('Preencha os campos nome, preço e estoque com valores válidos!'); mostrarCamposIncorrreto(['nome','preco','quantidade','descricao']);}" type="button" class="btn btn-primary" style="margin:15px"><span class="fas fa-save"></span> Salvar</button>`
     } else {
-        codigoHTML += `<button onclick="if(validaDadosCampo(['#nome','#preco','#quantidade']) && validaValoresCampo(['#preco','#quantidade'])){confirmarAcao('Atualizar os dados da bebida!','atualizaBebida(this.value)', '${id}');}else{mensagemDeErro('Preencha os campos nome, preço e estoque com valores válidos!'); mostrarCamposIncorrreto(['nome','preco','quantidade']);}" type="button" class="btn btn-success" style="margin:15px"><span class="fas fa-pencil-alt"></span> Atualizar</button>`
+        codigoHTML += `<button onclick="if(validaDadosCampo(['#nome','#preco','#descricao']) && validaValoresCampo(['#preco','#quantidade'])){confirmarAcao('Atualizar os dados da bebida!','atualizaBebida(this.value)', '${id}');}else{mensagemDeErro('Preencha os campos nome, preço e estoque com valores válidos!'); mostrarCamposIncorrreto(['nome','preco','quantidade','descricao']);}" type="button" class="btn btn-success" style="margin:15px"><span class="fas fa-pencil-alt"></span> Atualizar</button>`
         codigoHTML += `<button onclick="confirmarAcao('Excluir os dados da bebida permanentemente!', 'deleteBebida(this.value)', '${id}');" type="button" class="btn btn-outline-danger" style="margin:15px"><span class="fas fa-trash-alt"></span> Excluir</button>`
     }
 
@@ -121,8 +127,8 @@ function carregarDadosBebida(id) {
         if (item._id == id) {
             setTimeout(function () {
                 document.getElementById('nome').value = item.name
-                document.getElementById('quantidade').value = item.stock
                 document.getElementById('preco').value = item.price
+                document.getElementById('quantidade').value = item.stock
                 document.getElementById('descricao').value = item.description
             }, 300)
         }
@@ -134,7 +140,7 @@ function deleteBebida(id) {
 
     if (id != null) {
         try {
-            requisicaoDELETE('drinkables/', (id).toString());
+            requisicaoDELETE('items/', (id).toString(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
             mensagemDeAviso('Excluido com sucesso!');
             telaBuscarBebida();
         } catch (error) {
@@ -150,10 +156,13 @@ async function cadastrarBebida() {
     try {
         var json = `{"name": "${($('#nome').val()).toString()}",`
         json += `"price": ${parseFloat($('#preco').val())},`
-        json += `"description": "${($('#descricao').val()).toString()}",`
-        json += `"stock": ${parseInt($('#quantidade').val())}}`
+        json += `"drink": true,`
+        if (validaDadosCampo(['#quantidade']) && validaValoresCampo(['#quantidade'])) {
+            json += `"stock": ${parseInt($('#quantidade').val())},`
+        }
+        json += `"description": "${($('#descricao').val()).toString()}"}`
 
-        await requisicaoPOST('drinkables/', JSON.parse(json));
+        await requisicaoPOST('items', JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         mensagemDeAviso('Cadastrado com sucesso!');
         telaBebida('cadastrar', null);
     } catch (error) {
@@ -167,10 +176,13 @@ async function atualizaBebida(id) {
     try {
         var json = `{"name": "${($('#nome').val()).toString()}",`
         json += `"price": ${parseFloat($('#preco').val())},`
-        json += `"description": "${($('#descricao').val()).toString()}",`
-        json += `"stock": ${parseInt($('#quantidade').val())}}`
+        json += `"drink": true,`
+        if (validaDadosCampo(['#quantidade']) && validaValoresCampo(['#quantidade'])) {
+            json += `"stock": ${parseInt($('#quantidade').val())},`
+        }
+        json += `"description": "${($('#descricao').val()).toString()}"}`
 
-        await requisicaoPUT('drinkables/' + id, JSON.parse(json));
+        await requisicaoPUT('items/' + id, JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         mensagemDeAviso('Atualizado com sucesso!');
         telaBuscarBebida();
     } catch (error) {
