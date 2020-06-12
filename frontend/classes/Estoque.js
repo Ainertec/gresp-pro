@@ -4,7 +4,7 @@ let VETORDEITENSESTOQUE = [];
 
 //funcao responsavel por fazer a ligação necessaria com a tela de estoque
 function ligacaoEstoqueFacede() {
-    const situacao = autenticacaoLogin()
+    const situacao = autenticacaoLogin();
 
     if (JSON.parse(situacao).tipo == 'Administrador' || JSON.parse(situacao).tipo == 'Comum') {
         telaDeBuscarBebidasEstoque();
@@ -40,9 +40,9 @@ async function buscarBebidaEstoque(tipoBusca) {
     let codigoHTML = '', json = null;
 
     if (tipoBusca == 'nome') {
-        json = await requisicaoGET("drinkables/?name=" + $("#nome").val())
+        json = await requisicaoGET("items/" + $("#nome").val())
     } else if (tipoBusca == 'todos') {
-        json = await requisicaoGET("drinkables/")
+        json = await requisicaoGET("items")
     }
 
     VETORDEITENSESTOQUE = [];
