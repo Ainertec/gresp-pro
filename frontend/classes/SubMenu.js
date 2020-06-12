@@ -1,7 +1,5 @@
 // --------------------------------------------- SUB MENU IMPRESSÃO -----------------------------------------------------
 
-
-
 // funcao menu de opcoes para impressao
 function menuImpressao() {
 
@@ -53,11 +51,7 @@ function menuImpressao() {
 
 }
 
-
-
 // --------------------------------------------- SUB MENU PRODUTOS E BEBIDAS -----------------------------------------------------
-
-
 
 //funcao menu de opcoes para produto
 function menuProdutoeBebida() {
@@ -87,11 +81,7 @@ function menuProdutoeBebida() {
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
 
-
-
 // --------------------------------------------- SUB MENU ADMIN -----------------------------------------------------
-
-
 
 //funcao menu de opoes para admin
 function menuConfiguracaoAdmin() {
@@ -117,11 +107,7 @@ function menuConfiguracaoAdmin() {
     }
 }
 
-
-
 // --------------------------------------------- SUB MENU PEDIDO -----------------------------------------------------
-
-
 
 //funcao menu de opcaoes para pedido
 function menuPedido() {
@@ -143,12 +129,7 @@ function menuPedido() {
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
 
-
-
-
 // --------------------------------------------- SUB MENU PAGAMENTO -----------------------------------------------------
-
-
 
 //funcao menu de opcaoes para pedido
 function menuPagamentoPedido() {

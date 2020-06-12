@@ -1,11 +1,9 @@
 //---------------------------------- Classe funcionalidades-----------------------------------------
 
-
 //funcao de incializacao basica funcionalidade
 $(document).ready(function () {
     limparTelaDeMensagem();
 })
-
 
 //funcao para gerar mensagem de erro
 function mensagemDeErro(mensagem) {
@@ -14,7 +12,6 @@ function mensagemDeErro(mensagem) {
     limparTelaDeMensagem();
 }
 
-
 //funcao para gerar mensagem de aviso
 function mensagemDeAviso(mensagem) {
     document.getElementById('mensagemDeErro').innerHTML = `<span class="badge badge-success h5">${mensagem}</span>`
@@ -22,14 +19,12 @@ function mensagemDeAviso(mensagem) {
     limparTelaDeMensagem();
 }
 
-
 //funcao para limpar tela de mensagens
 function limparTelaDeMensagem() {
     setTimeout(function () {
         $('#mensagemDeErro').animate({ width: 'hide' })
     }, 3000)
 }
-
 
 //funcao responsavel por imprimir na impressora
 function imprimirImpressora(idReferencia) {
@@ -57,19 +52,16 @@ function imprimirImpressora(idReferencia) {
     });
 }
 
-
 //funcao responsavel por limpar o modal de impressao
 function limparModal() {
     document.getElementById('modal').innerHTML = '';
 }
-
 
 //funcao de animacao da janela2
 function animacaoJanela2() {
     $('#janela2').fadeOut(100);
     $('#janela2').fadeIn(100);
 }
-
 
 //funcao responsavel por validar os dados preenchidos nos campos
 function validaDadosCampo(campo) {
@@ -82,7 +74,6 @@ function validaDadosCampo(campo) {
     return validacao;
 }
 
-
 //funcao responsavel por validar valores invalidos nos campos(valores negativos)
 function validaValoresCampo(campo) {
     var validacao = true;
@@ -94,6 +85,10 @@ function validaValoresCampo(campo) {
     return validacao;
 }
 
+// funcao responsavel por buscar a sessao do usuario
+function buscarSessionUser() {
+    return JSON.parse(sessionStorage.getItem('login'))
+}
 
 //funcao reponsavel por alertar o usuario sobre executar determinada acao
 function confirmarAcao(mensagem, funcao, value) {
@@ -124,7 +119,6 @@ function confirmarAcao(mensagem, funcao, value) {
     $('#modalAviso').modal('show');
 }
 
-
 //funcao resopnsavel por gerenciar o tamanho da janela
 function janelaTamanho() {
     if ((document.fullScreenElement && document.fullScreenElement !== null) ||
@@ -147,7 +141,6 @@ function janelaTamanho() {
     }
 }
 
-
 //funcao responsavel por manipular o tamanho da string de exibição(caso seja muito grande)
 function corrigirTamanhoString(tamMax, texto) {
     if (texto.toString().length > tamMax) {
@@ -156,7 +149,6 @@ function corrigirTamanhoString(tamMax, texto) {
     }
     return texto
 }
-
 
 //funcao resopnsavel por exibir cor defente no campo incorreto
 function mostrarCamposIncorrreto(campo) {
@@ -170,14 +162,12 @@ function mostrarCamposIncorrreto(campo) {
     });
 }
 
-
 //funcao de animacao slideUp
 function animacaoSlideUp(idReferencia) {
     idReferencia.forEach(function (item) {
         $(item).slideUp(300)
     });
 }
-
 
 //funcao animacao slideDown
 function animacaoSlideDown(idReferencia) {
@@ -186,13 +176,12 @@ function animacaoSlideDown(idReferencia) {
     });
 }
 
-
 //funcao responsavel por controlar a ativação e desativação de um botão
-function ativaDesativaBotao(campo) {
+function ativaDesativaBotao(campo, tempo) {
     campo.forEach(function (item) {
         document.getElementById(item).disabled = true;
         setTimeout(function () {
             document.getElementById(item).disabled = false;
-        }, 500)
+        }, tempo)
     });
 }

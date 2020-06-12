@@ -1,13 +1,15 @@
 // --------------------------------------------- Classe Relatorio -----------------------------------------------------
 
-
-
 //funcao responsavel por fazer a ligação necessaria com a tela de relatorio de caixa
 function ligacaoRelatorioCaixaFacede() {
-    telaRelatorioDeCaixa();
+    const situacao = autenticacaoLogin()
+
+    if (JSON.parse(situacao).tipo == 'Administrador') {
+        telaRelatorioDeCaixa();
+    } else {
+        mensagemDeErro('Usuário não autorizado!')
+    }
 }
-
-
 
 //funcao para gerar tela de busca de relatorio de caixa
 function telaRelatorioDeCaixa() {
@@ -40,8 +42,6 @@ function telaRelatorioDeCaixa() {
         telaAutenticacao();
     }
 }
-
-
 
 //funcao para gerar tabela com todos os pedidos registrados no caixa
 async function tabelaDeRelatorioCaixa() {
@@ -80,8 +80,6 @@ async function tabelaDeRelatorioCaixa() {
 
     document.getElementById('listaItens').innerHTML = codigoHTML;
 }
-
-
 
 //funcao responsavel por gerar o relatorio de lucro total
 function gerarGraficoLucroTotal() {
@@ -143,8 +141,6 @@ function gerarGraficoLucroTotal() {
     });
 }
 
-
-
 //funcao responsasvel por gerar o relatorio de quantidade venda de produtos
 function gerarGraficoDemonstrativoVendaPorItem() {
     Highcharts.chart('grafico1', {
@@ -194,8 +190,6 @@ function gerarGraficoDemonstrativoVendaPorItem() {
         }]
     });
 }
-
-
 
 //funcao responsavel por gerar o relatorio de lucro mensal
 function gerarGraficoLucroMensal() {

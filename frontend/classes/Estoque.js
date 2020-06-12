@@ -1,15 +1,17 @@
 // --------------------------------------------- Classe Estoque -----------------------------------------------------
 
-
 let VETORDEITENSESTOQUE = [];
-
 
 //funcao responsavel por fazer a ligação necessaria com a tela de estoque
 function ligacaoEstoqueFacede() {
-    telaDeBuscarBebidasEstoque();
+    const situacao = autenticacaoLogin()
+
+    if (JSON.parse(situacao).tipo == 'Administrador' || JSON.parse(situacao).tipo == 'Comum') {
+        telaDeBuscarBebidasEstoque();
+    } else {
+        mensagemDeErro('Usuário não autorizado!')
+    }
 }
-
-
 
 //funcao para gerar tela de busca de bebidas
 function telaDeBuscarBebidasEstoque() {
@@ -32,8 +34,6 @@ function telaDeBuscarBebidasEstoque() {
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
-
-
 
 //funcao para fazer busca via GET de todas as bebidas
 async function buscarBebidaEstoque(tipoBusca) {
@@ -74,8 +74,6 @@ async function buscarBebidaEstoque(tipoBusca) {
     setTimeout(function () { gerarGraficoEstoque(json); }, 300)
 }
 
-
-
 //funcao para salvar atualizar quantidade de produtos no estoque
 async function atualizarEstoque(id) {
     let json = null;
@@ -96,8 +94,6 @@ async function atualizarEstoque(id) {
         mensagemDeErro('Não foi possível atualizar a quantidade do produto!')
     }
 }
-
-
 
 //function para gerar grafico de estoque
 function gerarGraficoEstoque(json) {

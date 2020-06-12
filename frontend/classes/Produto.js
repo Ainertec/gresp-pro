@@ -1,24 +1,21 @@
-//------------------------------------------ SELECT -----------------------------------------------------------
-
-
+//------------------------------------------ Classe Produto -----------------------------------------------------------
 
 let VETORDEPRODUTOSCLASSEPRODUTO = [];
 
-
-
-
 //funcao responsavel por fazer a ligação necessaria com a tela de produtos
 function ligacaoProdutoFacede(tipo) {
-    if (tipo == 'cadastrar') {
-        telaProduto(tipo, null)
-    } else if (tipo == 'atualizar') {
-        telaBuscarProduto();
+    const situacao = autenticacaoLogin()
+
+    if (JSON.parse(situacao).tipo == 'Administrador' || JSON.parse(situacao).tipo == 'Comum') {
+        if (tipo == 'cadastrar') {
+            telaProduto(tipo, null)
+        } else if (tipo == 'atualizar') {
+            telaBuscarProduto();
+        }
+    } else {
+        mensagemDeErro('Usuário não autorizado!')
     }
 }
-
-
-
-
 
 // tela de visualizacao da lista de produto
 function telaBuscarProduto() {
@@ -41,10 +38,6 @@ function telaBuscarProduto() {
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
-
-
-
-
 
 //funcao responsavel por buscar os produtos selecionados
 async function buscarProdutos(tipoBusca) {
@@ -83,10 +76,6 @@ async function buscarProdutos(tipoBusca) {
 
 }
 
-
-
-
-
 //funcao responsavel por gerar a tela de dados do produto
 function telaProduto(tipoRequisicao, id) {
     let codigoHTML = '';
@@ -123,10 +112,6 @@ function telaProduto(tipoRequisicao, id) {
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
 
-
-
-
-
 //funcao responsavel por carregar os dados do produto
 function carregarDadosProduto(id) {
     VETORDEPRODUTOSCLASSEPRODUTO.forEach(function (item) {
@@ -139,11 +124,6 @@ function carregarDadosProduto(id) {
         }
     });
 }
-
-
-
-
-
 
 //chamada de funcao de requisicao delete enviando Id da opcao selecionada
 function deletarProduto(id) {
@@ -160,11 +140,6 @@ function deletarProduto(id) {
     }
 }
 
-
-
-
-
-
 //chamada de funcao de requisicao create enviando dados em formato JSON para gravura
 async function cadastrarProduto() {
     try {
@@ -180,11 +155,6 @@ async function cadastrarProduto() {
     }
 }
 
-
-
-
-
-
 //chamada de funcao de requisicao put enviando os dados e o Id da opcao selecionada
 async function atualizaProduto(id) {
     try {
@@ -199,5 +169,3 @@ async function atualizaProduto(id) {
         mensagemDeErro('Não foi possível atualizar!')
     }
 }
-
-

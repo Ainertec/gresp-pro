@@ -1,21 +1,21 @@
 // --------------------------------------------- Classe Bebida -----------------------------------------------------
 
-
-
 let VETORDEBEBIDASCLASSEBEBIDA = []
-
-
 
 //funcao responsavel por fazer a ligação necessaria com a tela de bebida
 function ligacaoBebidaFacede(tipo) {
-    if (tipo == 'cadastrar') {
-        telaBebida(tipo, null);
-    } else if (tipo == 'atualizar') {
-        telaBuscarBebida();
+    const situacao = autenticacaoLogin()
+
+    if (JSON.parse(situacao).tipo == 'Administrador' || JSON.parse(situacao).tipo == 'Comum') {
+        if (tipo == 'cadastrar') {
+            telaBebida(tipo, null);
+        } else if (tipo == 'atualizar') {
+            telaBuscarBebida();
+        }
+    } else {
+        mensagemDeErro('Usuário não autorizado!')
     }
 }
-
-
 
 // tela de visualizacao de bebida
 function telaBuscarBebida() {
@@ -38,8 +38,6 @@ function telaBuscarBebida() {
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
-
-
 
 //funcao responsavel por buscar as bebidas e exibir a lista
 async function buscarBebida(tipoBusca) {
@@ -77,8 +75,6 @@ async function buscarBebida(tipoBusca) {
         animacaoSlideDown(['#resposta'])
     })
 }
-
-
 
 //funcao responsavel por gerar a tela de dados da bebida
 function telaBebida(tipoRequisicao, id) {
@@ -119,8 +115,6 @@ function telaBebida(tipoRequisicao, id) {
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
 
-
-
 //funcao responsavel por carregar os dados da bebida
 function carregarDadosBebida(id) {
     VETORDEBEBIDASCLASSEBEBIDA.forEach(function (item) {
@@ -134,9 +128,6 @@ function carregarDadosBebida(id) {
         }
     });
 }
-
-
-
 
 //chamada de funcao de requisicao delete enviando Id da opcao selecionada
 function deleteBebida(id) {
@@ -154,9 +145,6 @@ function deleteBebida(id) {
     }
 }
 
-
-
-
 //chamada de funcao de requisicao create enviando dados em formato JSON para gravura
 async function cadastrarBebida() {
     try {
@@ -173,9 +161,6 @@ async function cadastrarBebida() {
     }
 
 }
-
-
-
 
 //chamada de funcao de requisicao put enviando os dados e o Id da opcao selecionada
 async function atualizaBebida(id) {

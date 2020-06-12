@@ -1,28 +1,31 @@
 // --------------------------------------------- Classe Pedido -----------------------------------------------------
 
-
 let VETORDEITENSCLASSEPEDIDO = [];
-
 
 //funcao responsavel por fazer a ligacao necessaria com a tela de pedido
 function ligacaoPedidoFacede(tipo) {
+    const situacao = autenticacaoLogin()
 
-    $('#submenu').slideUp(1000);
-    animacaoSlideUp(['#mensagemSubMenu']);
-    setTimeout(function () { document.getElementById('mensagemSubMenu').innerHTML = '<p>Para liberar o menu pressione duas vezes a tecla "B" ou clique no botão abaixo!</p><button onclick="liberarSubMenu();" type="button" class="btn btn-outline-dark"><span class="fas fa-list-ul iconsTam"></span> Menu <span class="fas fa-caret-down iconsTam"></span></button>'; animacaoSlideDown(['#mensagemSubMenu']) }, 1000);
-    pausarAtalhos();
-    atalhoTeclaPedido();
+    if (JSON.parse(situacao).tipo == 'Administrador' || JSON.parse(situacao).tipo == 'Comum') {
 
-    if (tipo == 'digitar') {
-        telaDigitarPedido(null);
-    } else if (tipo == 'qrcode') {
-        telaLeituraDeQrCodePedido();
-    } else if ('lista') {
-        telaExibirTodosOsPedidos();
+        $('#submenu').slideUp(1000);
+        animacaoSlideUp(['#mensagemSubMenu']);
+        setTimeout(function () { document.getElementById('mensagemSubMenu').innerHTML = '<p>Para liberar o menu pressione duas vezes a tecla "B" ou clique no botão abaixo!</p><button onclick="liberarSubMenu();" type="button" class="btn btn-outline-dark"><span class="fas fa-list-ul iconsTam"></span> Menu <span class="fas fa-caret-down iconsTam"></span></button>'; animacaoSlideDown(['#mensagemSubMenu']) }, 1000);
+        pausarAtalhos();
+        atalhoTeclaPedido();
+
+        if (tipo == 'digitar') {
+            telaDigitarPedido(null);
+        } else if (tipo == 'qrcode') {
+            telaLeituraDeQrCodePedido();
+        } else if ('lista') {
+            telaExibirTodosOsPedidos();
+        }
+
+    } else {
+        mensagemDeErro('Usuário não autorizado!')
     }
 }
-
-
 
 //funcao tela de digitar identificacao do pedido
 function telaDigitarPedido(identificacao) {
@@ -91,8 +94,6 @@ function telaDigitarPedido(identificacao) {
 
 }
 
-
-
 //funcao para gerar tela de leitura de qrCode
 function telaLeituraDeQrCodePedido() {
     let codigoHTML = '';
@@ -122,8 +123,6 @@ function telaLeituraDeQrCodePedido() {
     setTimeout(function () { scanner.stop(); }, 10000);
 }
 
-
-
 //funcao para exibir lista com todos os pedidos
 async function telaExibirTodosOsPedidos() {
 
@@ -148,7 +147,6 @@ async function telaExibirTodosOsPedidos() {
 
     animacaoSlideDown(['#janela2'])
 }
-
 
 //funcao para verificar se pedido existe
 async function buscarPedido() {
@@ -179,8 +177,6 @@ async function buscarPedido() {
     }, 300)
 }
 
-
-
 //funcao para criar sub menu de opcoes
 function botaoDeConfirmaçãoDePedido(funcao) {
     let codigoHTML = '';
@@ -192,7 +188,6 @@ function botaoDeConfirmaçãoDePedido(funcao) {
     document.getElementById('botaoFinalizarPedido').innerHTML = codigoHTML;
 
 }
-
 
 //funcao responsavel por adicionar o produto/bebida na tabela do pedido
 async function adicionarItemaoPedido(itemTipo, idItem, quantidadeItem, pedidoTipo) {
@@ -228,7 +223,6 @@ async function adicionarItemaoPedido(itemTipo, idItem, quantidadeItem, pedidoTip
     }
 }
 
-
 //funcao responsavel por criar a tabela com os itens inseridos
 function gerarTabeladeItensInseridos(json, quantidadeItem, pedidoTipo) {
     let codigoHTML = '';
@@ -257,7 +251,6 @@ function gerarTabeladeItensInseridos(json, quantidadeItem, pedidoTipo) {
     }
 }
 
-
 //funcao responsavel por remover o item do pedido
 function removerItem(identification) {
     VETORDEITENSCLASSEPEDIDO.forEach(function (item, indice) {
@@ -274,7 +267,6 @@ function removerItem(identification) {
         }
     });
 }
-
 
 //funcao responsavel por liberar o menu lateral
 function liberarSubMenu() {
@@ -300,7 +292,6 @@ function liberarSubMenu() {
 
     $('#modalDesbloquearSubMenu').modal('show');
 }
-
 
 //funcao responsavel por gerar a tela de busca de novo itens para o pedido
 function telaBuscaeExibirItens() {
@@ -348,7 +339,6 @@ function telaBuscaeExibirItens() {
 
     $('#modalListaItensPedido').modal('show');
 }
-
 
 //funcao para criar lista de produtos para adicionar
 async function listaItens(tipoBusca) {
@@ -404,7 +394,6 @@ async function listaItens(tipoBusca) {
     $('#respostaBebida').slideDown(300);
 
 }
-
 
 //funcao para requisicao via post com JSON com todos os dados para gravura do arquivo
 async function cadastrarAtualizarPedido(tipoRequisicao) {
@@ -482,7 +471,6 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
     }
 }
 
-
 //funcao para inicializar/zerar todos os componentes da tela
 function recarregarPagina() {
     document.getElementById('tabelaProdutos').innerHTML = '';
@@ -492,7 +480,6 @@ function recarregarPagina() {
     document.getElementById('observacao').innerHTML = '';
     VETORDEITENSCLASSEPEDIDO = [];
 }
-
 
 //funcao responsavel por iniciar os efeitos da pagina pedido
 function efeitoPaginaPedido() {

@@ -1,8 +1,4 @@
-
-
-
-// ------------------------------------------- EXTRA -------------------------------------------------------
-
+// ------------------------------------------- Classe Login -------------------------------------------------------
 
 //tela de login
 function telaAutenticacao() {
@@ -28,8 +24,6 @@ function telaAutenticacao() {
     atalhosTeclaLogin();
 
 }
-
-
 
 //funcao responsavel por gerar a tela de recuperacao de senha
 async function telaRecuperarSenha() {
@@ -61,8 +55,6 @@ async function telaRecuperarSenha() {
     }
 }
 
-
-
 //funcao responsavel por recuperar a senha
 async function recuperarSenha() {
     if (validaDadosCampo(['#login', '#pergunta', '#novaSenha'])) {
@@ -83,7 +75,6 @@ async function recuperarSenha() {
     }
 }
 
-
 //funcao para fazer logout
 function logout() {
     if (sessionStorage.getItem('login')) {
@@ -91,7 +82,6 @@ function logout() {
         mensagemDeAviso('Logout com sucesso!')
     }
 }
-
 
 //funcao responsavel por efetuar o login
 async function efetuarLogin() {
@@ -143,8 +133,6 @@ async function efetuarLogin() {
     }, 1000)
 }
 
-
-
 //funcao para autenticacao e liberacao de sessao
 async function autenticacaoLogin() {
     if (sessionStorage.getItem('login') == null) {
@@ -153,8 +141,6 @@ async function autenticacaoLogin() {
     }
     return sessionStorage.getItem('login')
 }
-
-
 
 //inicializações basicas login
 $(document).ready(function () {

@@ -1,6 +1,5 @@
 //-------------------------------------------- Classe Administrador -----------------------------------------------
 
-
 //funcao responsavel por fazer as ligações internas da classe administrador
 function ligacaoAdministradorFacede(tipoRequisicao) {
 
@@ -16,8 +15,6 @@ function ligacaoAdministradorFacede(tipoRequisicao) {
         telaAutenticacao();
     }
 }
-
-
 
 //funcao responsavel por gerar a tela de administrador
 function telaAdministrador(tipoRequisicao, id) {
@@ -50,15 +47,11 @@ function telaAdministrador(tipoRequisicao, id) {
 
 }
 
-
-
 //funcao responsavel por adicionar os dados para atualizacao
 function carregarDadosAdministrador(json) {
     document.getElementById('login').value = json.login;
     document.getElementById('password').value = json.password;
 }
-
-
 
 //chamada de funcao de requisicao create enviando dados em formato JSON para gravura
 async function cadastrarAdmin() {
@@ -73,8 +66,6 @@ async function cadastrarAdmin() {
     }
 }
 
-
-
 //chamada de funcao de requisicao update enviando dados em formato JSON para gravura
 async function atualizarAdmin(id) {
     try {
@@ -84,8 +75,6 @@ async function atualizarAdmin(id) {
         mensagemDeErro('Não foi possível atualizar!')
     }
 }
-
-
 
 //funcao para chamar metodo delete para deletar Admin
 async function deletarAdmin(id) {

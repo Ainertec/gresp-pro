@@ -1,18 +1,21 @@
 // --------------------------------------------- Classe pagamento -----------------------------------------------------
 
-
-
 //funcao responsavel por fazer a ligação necessaria com a tela de pagamento
 function ligacaoPagamentoFacede(tipo) {
-    if (tipo == 'digitar') {
-        telaPagamento();
-    } else if (tipo == 'qrcode') {
-        telaLeituraDeQrCodePagamento();
+    const situacao = autenticacaoLogin()
+
+    if (JSON.parse(situacao).tipo == 'Administrador' || JSON.parse(situacao).tipo == 'Comum') {
+        if (tipo == 'digitar') {
+            telaPagamento();
+        } else if (tipo == 'qrcode') {
+            telaLeituraDeQrCodePagamento();
+        } else {
+            telaExibirTodosOsPedidosPagamento();
+        }
     } else {
-        telaExibirTodosOsPedidosPagamento();
+        mensagemDeErro('Usuário não autorizado!')
     }
 }
-
 
 //funcao tela de pagamento
 function telaPagamento(identificacao) {
@@ -39,7 +42,6 @@ function telaPagamento(identificacao) {
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
-
 
 //funcao para gerar tela de leitura de qrCode
 function telaLeituraDeQrCodePagamento() {
@@ -70,7 +72,6 @@ function telaLeituraDeQrCodePagamento() {
     setTimeout(function () { scanner.stop(); }, 10000);
 }
 
-
 //funcao para exibir lista com todos os pedidos
 async function telaExibirTodosOsPedidosPagamento() {
 
@@ -95,7 +96,6 @@ async function telaExibirTodosOsPedidosPagamento() {
 
     animacaoSlideDown(['#janela2']);
 }
-
 
 //funcao para gerar tela de resposta contendo todos os itens produtos e bebidas
 async function buscarDadosDoPedidoParaPagamento() {
@@ -157,7 +157,6 @@ async function buscarDadosDoPedidoParaPagamento() {
         }, 400)
     }
 }
-
 
 //funcao para efetuar o pagamento
 function efetuarPagamento() {
