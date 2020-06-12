@@ -1,64 +1,109 @@
-// --------------------------------------------- REQUISICAO VIA GET -----------------------------------------------------
+// /----------------------------------------------------setor requisicao --------------------------------------------------------
 
-//funcao de requisicao get sem paramentro JSON
-async function requisicaoGET(url){
+// funcao de requisicao get sem paramentro JSON
+async function requisicaoGET(url, authorization) {
+	let retorno
 
-	var retorno;
-	
-	await axios.get('http://localhost:3333/'+url)
-		.then(function(response){
-			if(response.status==200){
-				retorno=response;
-			}else{
-				mensagemDeErro(response);
+	await axios
+		.get(`http://localhost:3333/${url}`, authorization)
+		.then(function (response) {
+			if (response.status == 200) {
+				retorno = response
+			} else {
+				setTimeout(function () {
+					mensagemDeErro(`Erro: ${response}`)
+				}, 4000)
 			}
 		})
-		.catch(function(error){
-			mensagemDeErro(error);
-		});
+		.catch(function (error) {
+			if (error.response) {
+				setTimeout(function () {
+					mensagemDeErro(`Erro: ${error.response.data.message}`)
+				}, 4000)
+			} else {
+				setTimeout(function () {
+					mensagemDeErro(`Erro: ${error}`)
+				}, 4000)
+			}
+		})
 
-	return retorno;
+	return retorno
 }
 
-// --------------------------------------------- REQUISICAO VIA DELETE -----------------------------------------------------
-
-//funcao de requisicao get sem paramentro JSON
-async function requisicaoDELETE(url,json){
-	var requisicao;
-
-	if(json==null){
-		requisicao = await axios.delete('http://localhost:3333/'+url)
-	}else{
-		requisicao = await axios.delete('http://localhost:3333/'+url+json)
-	}
+// funcao de requisicao get sem paramentro JSON
+async function requisicaoDELETE(url, json, authorization) {
+	await axios
+		.delete(`http://localhost:3333/${url}${json}`, authorization)
+		.then(function (response) {
+			if (response.status != 200) {
+				setTimeout(function () {
+					mensagemDeErro(`Erro: ${response}`)
+				}, 4000)
+			}
+		})
+		.catch(function (error) {
+			if (error.response) {
+				setTimeout(function () {
+					mensagemDeErro(`Erro: ${error.response.data.message}`)
+				}, 4000)
+			} else {
+				setTimeout(function () {
+					mensagemDeErro(`Erro: ${error}`)
+				}, 4000)
+			}
+		})
 }
 
-// --------------------------------------------- REQUISICAO VIA POST -----------------------------------------------------
+// funcao de requisicao post com paramentro JSON
+async function requisicaoPOST(url, json, authorization) {
+	let retorno
 
-//funcao de requisicao post com paramentro JSON
-async function requisicaoPOST(url,json){
-	await axios.post('http://localhost:3333/'+url,json)
-	.then(function(response){
-		if(response.status!=200){
-			mensagemDeErro(response);
-		}
-	})
-	.catch(function(error){
-		mensagemDeErro(error);
-	});
+	await axios
+		.post(`http://localhost:3333/${url}`, json, authorization)
+		.then(function (response) {
+			if (response.status != 200) {
+				setTimeout(function () {
+					mensagemDeErro(`Erro: ${response}`)
+				}, 4000)
+			} else {
+				retorno = response
+			}
+		})
+		.catch(function (error) {
+			if (error.response) {
+				setTimeout(function () {
+					mensagemDeErro(`Erro: ${error.response.data.message}`)
+				}, 4000)
+			} else {
+				setTimeout(function () {
+					mensagemDeErro(`Erro: ${error}`)
+				}, 4000)
+			}
+		})
+
+	return retorno
 }
 
-// --------------------------------------------- REQUISICAO VIA PUT -----------------------------------------------------
-
-//funcao de requisicao put com paramentro JSON
-async function requisicaoPUT(url,json){
-	await axios.put('http://localhost:3333/'+url,json)
-	.then(function(response){
-		if(response.status!=200){
-			mensagemDeErro(response);
-		}
-	})
-	.catch(function(error){
-		mensagemDeErro(error);
-	});
+// funcao de requisicao put com paramentro JSON
+async function requisicaoPUT(url, json, authorization) {
+	await axios
+		.put(`http://localhost:3333/${url}`, json, authorization)
+		.then(function (response) {
+			if (response.status != 200) {
+				setTimeout(function () {
+					mensagemDeErro(`Erro: ${response}`)
+				}, 7000)
+			}
+		})
+		.catch(function (error) {
+			if (error.response) {
+				setTimeout(function () {
+					mensagemDeErro(`Erro: ${error.response.data.message}`)
+				}, 4000)
+			} else {
+				setTimeout(function () {
+					mensagemDeErro(`Erro: ${error}`)
+				}, 4000)
+			}
+		})
 }

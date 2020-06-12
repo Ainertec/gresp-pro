@@ -1,135 +1,191 @@
-// --------------------------------------------- SELECT -----------------------------------------------------
+// --------------------------------------------- Classe Bebida -----------------------------------------------------
 
-// tela de visualizacao de bebida
-function telaVisualizarBebida(){
-    escopoTelaDeBusca("telaRespostaBuscarTodasBebidas()", "telaRepostaBuscarBebida()",'janela2');
-}
+let VETORDEBEBIDASCLASSEBEBIDA = []
 
-// funcao para gerar tela de resposta com todas as bebidas
-async function telaRespostaBuscarTodasBebidas(){
+//funcao responsavel por fazer a ligação necessaria com a tela de bebida
+function ligacaoBebidaFacede(tipo) {
+    const situacao = autenticacaoLogin()
 
-    document.getElementById('resposta').innerHTML = escopoTabelaDeResposta(await requisicaoGET("drinkables/"),'<th scope="col">Name</th><th scope="col">Descrição</th><th scope="col">Quantidade</th><th scope="col">Preço</th>','<th class="table-info">','<th class="table-info">','<td class="table-warning">','<td class="table-danger">R$',null);
-}
-
-
-// funcao para gerar tela de resposta com uma unica bebida
-async function telaRepostaBuscarBebida(){
-    document.getElementById('resposta').innerHTML = escopoTabelaDeResposta(await requisicaoGET("drinkables/?name="+$('#nome').val()),'<th scope="col">Name</th><th scope="col">Descrição</th><th scope="col">Quantidade</th><th scope="col">Preço</th>','<th class="table-info">','<th class="table-info">','<td class="table-warning">','<td class="table-danger">R$',null);
-}
-
-// ---------------------------------------------- DELETE ----------------------------------------------------
-
-// tela de deletar bebida
-function telaDeletarBebida(){
-    escopoTelaDeBusca("telaRespostaBuscarTodasBebidasDeletar()", "telaRespostaBuscarBebidasDeletar()",'janela2');
-}
-
-//funcao para gerar tela de resposta com todas as bebidas para deletar
-async function telaRespostaBuscarTodasBebidasDeletar(){
-    document.getElementById('resposta').innerHTML = escopoTabelaDeResposta(await requisicaoGET("drinkables/"),'<th scope="col">Name</th><th scope="col">Descrição</th><th scope="col">Quantidade</th><th scope="col">Preço</th><th scope="col">#</th>','<th class="table-secondary">','<th class="table-secondary">','<th class="table-secondary">','<th class="table-secondary">R$','<th class="table-secondary"><button class="btn btn-danger" onclick="deleteBebidaPorID(this.value)"','fas fa-trash-alt iconsTam');
-}
-
-//funcao para gerar tela de resposta com bebidas para deletar
-async function telaRespostaBuscarBebidasDeletar(){
-    document.getElementById('resposta').innerHTML = escopoTabelaDeResposta(await requisicaoGET("drinkables/?name="+$('#nome').val()),'<th scope="col">Name</th><th scope="col">Descrição</th><th scope="col">Quantidade</th><th scope="col">Preço</th><th scope="col">#</th>','<th class="table-secondary">','<th class="table-secondary">','<th class="table-secondary">','<th class="table-secondary">R$','<th class="table-secondary"><button class="btn btn-danger" onclick="deleteBebidaPorID(this.value)"','fas fa-trash-alt iconsTam');
-}
-
-//chamada de funcao de requisicao delete enviando Id da opcao selecionada
-function deleteBebidaPorID(id){
-    requisicaoDELETE("drinkables/",String(id));
-    mensagemDeAviso("Excluido com sucesso!");
-    telaDeletarBebida();
-}
-
-// --------------------------------------------- INSERT -----------------------------------------------------
-
-//tela de cadastrar bebida
-function telaCadastrarBebida(){
-    telaCadastrarOuAtualizarBebidas("Cadastro",null,">",">",">",">","cadastrarBebida()");
-}
-
-//chamada de funcao de requisicao create enviando dados em formato JSON para gravura
-async function cadastrarBebida(){
-    await requisicaoPOST("drinkables/",{"name":$('#nome').val(),"price":$('#preco').val(),"description":$('#descricao').val(),"stock":$('#quantidade').val()});
-    mensagemDeAviso("Cadastrado com sucesso!");
-    telaCadastrarBebida();
-}
-
-// -------------------------------------------- UPDATE -----------------------------------------------------
-
-//tela de atualizar bebida
-function telaListarBebidasAtualizar(){
-    escopoTelaDeBusca("telaRespostaBuscarTodasBebidasAtualizar()", "telaRespostaBuscarBebidasAtualizar()",'janela2');
-}
-
-//funcao para gerar tela de resposta com todos as bebidas para atualizar
-async function telaRespostaBuscarTodasBebidasAtualizar(){
-    document.getElementById('resposta').innerHTML = escopoTabelaDeResposta(await requisicaoGET("drinkables/"),'<th scope="col">Name</th><th scope="col">Descrição</th><th scope="col">Quantidade</th><th scope="col">Preço</th><th scope="col">#</th>','<th class="table-secondary">','<th class="table-secondary">','<th class="table-secondary">','<th class="table-secondary">R$','<th class="table-secondary"><button class="btn btn-primary" onclick="telaAtualizarBebida(this.value)"','fas fa-pencil-alt iconsTam');
-}
-
-//funcao para gerar tela de resposta com bebidas para atualizar
-async function telaRespostaBuscarBebidasAtualizar(){
-    document.getElementById('resposta').innerHTML = escopoTabelaDeResposta(await requisicaoGET("drinkables/?name="+$('#nome').val()),'<th scope="col">Name</th><th scope="col">Descrição</th><th scope="col">Quantidade</th><th scope="col">Preço</th><th scope="col">#</th>','<th class="table-secondary">','<th class="table-secondary">','<th class="table-secondary">','<th class="table-secondary">R$','<th class="table-secondary"><button class="btn btn-primary" onclick="telaAtualizarBebida(this.value)"','fas fa-pencil-alt iconsTam');
-}
-
-//tela atualizar bebidas
-async function telaAtualizarBebida(id){
-    var cont=0, json=await requisicaoGET("drinkables/");
-    while(json.data[cont]){
-            if(json.data[cont]._id==id){
-                telaCadastrarOuAtualizarBebidas("Atualizar",id,'value="'+json.data[cont].name+'">','value="'+json.data[cont].price+'">','value="'+json.data[cont].stock+'">','>'+json.data[cont].description+'',"atualizaBebidaPorID()");  
-            }
-        cont++;
+    if (JSON.parse(situacao).tipo == 'Administrador' || JSON.parse(situacao).tipo == 'Comum') {
+        if (tipo == 'cadastrar') {
+            telaBebida(tipo, null);
+        } else if (tipo == 'atualizar') {
+            telaBuscarBebida();
+        }
+    } else {
+        mensagemDeErro('Usuário não autorizado!')
     }
 }
 
-//chamada de funcao de requisicao put enviando os dados e o Id da opcao selecionada
-async function atualizaBebidaPorID(){
-    await requisicaoPUT("drinkables/"+$('#id').val(),{"name":$('#nome').val(),"price":$('#preco').val(),"description":$('#descricao').val(),"stock":$('#quantidade').val()});
-    mensagemDeAviso("Atualizado com sucesso!");
-    telaAtualizarBebida($('#id').val());
+// tela de visualizacao de bebida
+function telaBuscarBebida() {
+    let codigoHTML = '';
+
+    codigoHTML += '<h4 class="text-center">Buscar</h4>'
+    codigoHTML += '<div class="card-deck col-8 mx-auto d-block">'
+    codigoHTML += '<div class="input-group mb-3">'
+    codigoHTML += '<input id="nome" type="text" class="form-control mousetrap" placeholder="Nome Produto">'
+    codigoHTML += `<button onclick="if(validaDadosCampo(['#nome'])){buscarBebida('nome'); animacaoSlideUp(['#resposta']);}else{mensagemDeErro('Preencha o campo de busca!'); mostrarCamposIncorrreto(['nome'])}" type="button" class="btn btn-outline-info">`
+    codigoHTML += '<span class="fas fa-search"></span> Buscar'
+    codigoHTML += '</button>'
+    codigoHTML += '<br/>'
+    codigoHTML += `<button onclick="buscarBebida('todos'); animacaoSlideUp(['#resposta']);" type="button" class="btn btn-outline-info btn-block" style="margin-top:10px;">`
+    codigoHTML += '<span class="fas fa-search-plus"></span> Exibir todos'
+    codigoHTML += '</button>'
+    codigoHTML += '</div>'
+    codigoHTML += '</div>'
+    codigoHTML += '<div id="resposta"></div>'
+
+    document.getElementById('janela2').innerHTML = codigoHTML;
 }
 
+//funcao responsavel por buscar as bebidas e exibir a lista
+async function buscarBebida(tipoBusca) {
+    let codigoHTML = '', json = null;
 
-// -------------------------------------------- EXTRA -------------------------------------------------------
+    if (tipoBusca == 'nome') {
+        json = await requisicaoGET("items/" + $('#nome').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+    } else if (tipoBusca == 'todos') {
+        json = await requisicaoGET("items", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+    }
 
-//funcao de escopo de tela para cadastro ou atualizacao de bebidas
-function telaCadastrarOuAtualizarBebidas(cabecalho,id,opcao1,opcao2,opcao3,opcao4,opcao5){
-    var codigoHTML;
-
-    codigoHTML='<h3 class="text-center">'+cabecalho+'</h3>'
-    codigoHTML+='<form style="margin-top:30px;">'
-        if(id){
-            codigoHTML+='<div class="row">'
-                codigoHTML+='<div class="col">'
-                codigoHTML+='<fieldset disabled>'
-                    codigoHTML+='<input type="text" id="id" class="form-control my-3" placeholder="ID" value="'+id+'">'
-                codigoHTML+='</fieldset>'
-                codigoHTML+='</div>'
-            codigoHTML+='</div>'
+    codigoHTML += '<h4 class="text-center" style="margin-top:40px;">Lista</h4>'
+    codigoHTML += '<table style="margin-top:10px;" class="table table-light table-sm">'
+    codigoHTML += '<thead class="thead-dark">'
+    codigoHTML += '<tr><th scope="col">Nome</th><th scope="col">Descrição</th><th scope="col">Quantidade</th><th scope="col">Preço</th><th scope="col">Editar</th><th scope="col">Excluir</th></tr>'
+    codigoHTML += '</thead>'
+    codigoHTML += '<tbody>'
+    json.data.forEach(function (item) {
+        if (item.drink) {
+            VETORDEBEBIDASCLASSEBEBIDA.push(item)
+            codigoHTML += '<tr>'
+            codigoHTML += `<th class="table-info">${corrigirTamanhoString(20, item.name)}</th>`
+            codigoHTML += `<td class="table-info">${corrigirTamanhoString(40, item.description)}</td>`
+            if (item.stock != null) {
+                codigoHTML += `<td class="table-primary"><strong>${item.stock}</strong></td>`
+            } else {
+                codigoHTML += `<td class="table-primary text-danger"><strong>0</strong></td>`
+            }
+            codigoHTML += `<td class="table-warning text-danger"><strong>R$${(item.price).toFixed(2)}<strong></td>`
+            codigoHTML += `<th class="table-light"><button class="btn btn-primary" onclick="telaBebida('atualizar', '${item._id}'); carregarDadosBebida('${item._id}')"><span class="fas fa-pencil-alt iconsTam"></span></button></td>`
+            codigoHTML += `<th class="table-light"><button class="btn btn-outline-danger" onclick="confirmarAcao('Excluir os dados da bebida permanentemente!', 'deleteBebida(this.value)', '${item._id}');" ><span class="fas fa-trash-alt iconsTam"></span></button></td>`
+            codigoHTML += '</tr>'
         }
-        codigoHTML+='<div class="row">'
-            codigoHTML+='<div class="col">'
-                codigoHTML+='<label>Nome: </label><input id="nome" type="text" class="form-control" placeholder="Nome" '+opcao1
-            codigoHTML+='</div>'
-            codigoHTML+='<div class="col">'
-                codigoHTML+='<label>Preço: </label><input id="preco" type="Number" class="form-control" placeholder="Preço" '+opcao2
-            codigoHTML+='</div>'
-            codigoHTML+='<div class="col">'
-                codigoHTML+='<label>Quantidade: </label><input id="quantidade" type="Number" class="form-control" placeholder="Quantidade" '+opcao3
-            codigoHTML+='</div>'
-        codigoHTML+='</div>'
-        codigoHTML+='<div class="row">'
-            codigoHTML+='<div class="col">'
-                codigoHTML+='<label>Descrição: </label><textarea id="descricao" class="form-control my-3" row="10" placeholder="Descrição" '+opcao4+'</textarea>'
-            codigoHTML+='</div>'        
-       codigoHTML+='</div>'
-       codigoHTML+='<div class="row">'
-            codigoHTML+='<div class="col">'
-                
-            codigoHTML+='</div>'        
-       codigoHTML+='</div>'
-    codigoHTML+='</form>'
-    codigoHTML+='<button onclick="'+opcao5+'" type="button" class="btn btn-outline-primary btn-lg btn-block my-3"><span class="fas fa-save"></span> Salvar</button>'
+    });
+    codigoHTML += '</tbody>'
+    codigoHTML += '</table>'
+
+
+    document.getElementById('resposta').innerHTML = codigoHTML;
+    setTimeout(function () {
+        animacaoSlideDown(['#resposta'])
+    })
+}
+
+//funcao responsavel por gerar a tela de dados da bebida
+function telaBebida(tipoRequisicao, id) {
+    let codigoHTML = '';
+
+    if (tipoRequisicao == 'cadastrar') {
+        codigoHTML += '<h3 class="text-center">Cadastrar</h3>'
+    } else {
+        codigoHTML += '<h3 class="text-center">Atualizar</h3>'
+    }
+    codigoHTML += '<form class="card-deck col-9 mx-auto d-block" style="margin-top:30px;">'
+    codigoHTML += '<div class="row">'
+    codigoHTML += '<div class="col-6" style="margin-top:25px">'
+    codigoHTML += '<label>Nome: </label><input id="nome" type="text" class="form-control mousetrap" placeholder="Nome">'
+    codigoHTML += '</div>'
+    codigoHTML += '<div class="col-3" style="margin-top:25px">'
+    codigoHTML += '<label>Quantidade: </label><input id="quantidade" type="Number" class="form-control mousetrap" placeholder="Quantidade">'
+    codigoHTML += '</div>'
+    codigoHTML += '<div class="col-3" style="margin-top:25px">'
+    codigoHTML += '<label>Preço: </label><input id="preco" type="Number" class="form-control mousetrap" placeholder="Preço">'
+    codigoHTML += '</div>'
+    codigoHTML += '</div>'
+    codigoHTML += '<div class="row">'
+    codigoHTML += '<div class="col" style="margin-top:25px">'
+    codigoHTML += '<label>Descrição: </label><textArea type="text" id="descricao" class="form-control mousetrap" placeholder="Descrição">Nenhuma.</textArea>'
+    codigoHTML += '</div>'
+    codigoHTML += '</div>'
+
+    if (tipoRequisicao == 'cadastrar') {
+        codigoHTML += `<button onclick="if(validaDadosCampo(['#nome','#preco','#descricao']) && validaValoresCampo(['#preco','#quantidade'])){cadastrarBebida();}else{mensagemDeErro('Preencha os campos nome, preço e estoque com valores válidos!'); mostrarCamposIncorrreto(['nome','preco','quantidade','descricao']);}" type="button" class="btn btn-primary" style="margin:15px"><span class="fas fa-save"></span> Salvar</button>`
+    } else {
+        codigoHTML += `<button onclick="if(validaDadosCampo(['#nome','#preco','#descricao']) && validaValoresCampo(['#preco','#quantidade'])){confirmarAcao('Atualizar os dados da bebida!','atualizaBebida(this.value)', '${id}');}else{mensagemDeErro('Preencha os campos nome, preço e estoque com valores válidos!'); mostrarCamposIncorrreto(['nome','preco','quantidade','descricao']);}" type="button" class="btn btn-success" style="margin:15px"><span class="fas fa-pencil-alt"></span> Atualizar</button>`
+        codigoHTML += `<button onclick="confirmarAcao('Excluir os dados da bebida permanentemente!', 'deleteBebida(this.value)', '${id}');" type="button" class="btn btn-outline-danger" style="margin:15px"><span class="fas fa-trash-alt"></span> Excluir</button>`
+    }
+
+    codigoHTML += '</form>'
+
     document.getElementById('janela2').innerHTML = codigoHTML;
+}
+
+//funcao responsavel por carregar os dados da bebida
+function carregarDadosBebida(id) {
+    VETORDEBEBIDASCLASSEBEBIDA.forEach(function (item) {
+        if (item._id == id) {
+            setTimeout(function () {
+                document.getElementById('nome').value = item.name
+                document.getElementById('preco').value = item.price
+                document.getElementById('quantidade').value = item.stock
+                document.getElementById('descricao').value = item.description
+            }, 300)
+        }
+    });
+}
+
+//chamada de funcao de requisicao delete enviando Id da opcao selecionada
+function deleteBebida(id) {
+
+    if (id != null) {
+        try {
+            requisicaoDELETE('items/', (id).toString(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+            mensagemDeAviso('Excluido com sucesso!');
+            telaBuscarBebida();
+        } catch (error) {
+            mensagemDeErro('Não foi possível excluir!')
+        }
+    } else {
+        mensagemDeErro('Preencha o campo id!')
+    }
+}
+
+//chamada de funcao de requisicao create enviando dados em formato JSON para gravura
+async function cadastrarBebida() {
+    try {
+        var json = `{"name": "${($('#nome').val()).toString()}",`
+        json += `"price": ${parseFloat($('#preco').val())},`
+        json += `"drink": true,`
+        if (validaDadosCampo(['#quantidade']) && validaValoresCampo(['#quantidade'])) {
+            json += `"stock": ${parseInt($('#quantidade').val())},`
+        }
+        json += `"description": "${($('#descricao').val()).toString()}"}`
+
+        await requisicaoPOST('items', JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        mensagemDeAviso('Cadastrado com sucesso!');
+        telaBebida('cadastrar', null);
+    } catch (error) {
+        mensagemDeErro('Não foi possível cadastrar!')
+    }
+
+}
+
+//chamada de funcao de requisicao put enviando os dados e o Id da opcao selecionada
+async function atualizaBebida(id) {
+    try {
+        var json = `{"name": "${($('#nome').val()).toString()}",`
+        json += `"price": ${parseFloat($('#preco').val())},`
+        json += `"drink": true,`
+        if (validaDadosCampo(['#quantidade']) && validaValoresCampo(['#quantidade'])) {
+            json += `"stock": ${parseInt($('#quantidade').val())},`
+        }
+        json += `"description": "${($('#descricao').val()).toString()}"}`
+
+        await requisicaoPUT('items/' + id, JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        mensagemDeAviso('Atualizado com sucesso!');
+        telaBuscarBebida();
+    } catch (error) {
+        mensagemDeErro('Não foi possível atualizar!')
+    }
 }

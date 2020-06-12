@@ -1,3 +1,6 @@
 node_modules
-package-log.json
+axios
+bootstrap
+fontawesome-free
+package-lock.json
 yarn.lock

@@ -1,400 +1,187 @@
-// --------------------------------------------- INICIALIZACAO OBRIGATORIA DO SISTEMA -----------------------------------------------------
+//---------------------------------- Classe funcionalidades-----------------------------------------
 
-//verifica inicializações basicas
-$(document).ready(function (){
-    if(sessionStorage.getItem("login")){
-        document.getElementById('statusLogin').innerHTML = '<a onclick="logout();" class="nav-link text-light" href="home.html"><span class="fas fa-user-slash iconsTam"></span> Sair</a>';
-    }else{
-        document.getElementById('statusLogin').innerHTML = '<a onclick="telaAutenticacao();" class="nav-link text-light" href="#"><span class="fas fa-user-shield iconsTam"></span> Entrar</a>';
-    }
-});
-
-// --------------------------------------------- TELA DE QR CODE -----------------------------------------------------
-
-// funcao para gerar o QR code
-function telaGerarQRCode(numero){
-    
-    if(numero==null){
-        var numeroAleatorio = Math.floor(Math.random()*(201912345-200000000))+200000000;
-    }else{
-        var numeroAleatorio = parseInt(numero);
-    }
-    
-    var codigoHTML;
-
-    codigoHTML='<div>'
-        codigoHTML+='<a class="text-dark" href="home.html">Voltar</a>'
-    codigoHTML+='</div>'
-    codigoHTML+='<div class="text-center">'
-        codigoHTML+='<hr style="bg-light; size:30px">'
-        codigoHTML+='<img src="logo.png" class="rounded mx-auto d-block" style="width: 350px; margin-top: 225px;" align="middle">'
-        codigoHTML+='<h1 class="text-dark" style="margin-top: 250px;">'+numeroAleatorio+'</h1>'
-        codigoHTML+='<div class="qrcode rounded mx-auto d-block" id="qr" style="margin-top: 30px;" align="middle">'
-        codigoHTML+='</div>'
-        codigoHTML+='<hr style="margin-top: 525px; bg-light; size:30px">'
-    codigoHTML+='</div>'
-
-    document.getElementById('navbarTotal').innerHTML="";
-    document.getElementById('janelaTotal').innerHTML = codigoHTML;
-
-    new QRCode("qr", {
-        text: ""+numeroAleatorio+"",
-        width: 256 ,
-        height: 256,
-        colorDark : "black",
-        colorLight : "white",
-        correctLevel : QRCode.CorrectLevel.H
-    });
-    
-    setTimeout(function(){window.print();},1000);
-}
-
-// --------------------------------------------- GERA TABELA - BEBIDAS, PRODUTOS, RELATORIO DE AMBOS -----------------------------------------------------
-
-//funcao para gerar tabela de escopo
-function escopoTabelaDeResposta(msg,cabecalho,opcao1,opcao2,opcao3,opcao4,opcao5,opcao6){
-    var cont=0;
-
-    var codigoHTML='<table style="margin-top:10px;" class="table table-light">'
-				codigoHTML+='<thead>'
-					codigoHTML+='<tr>'
-						codigoHTML+=cabecalho
-					codigoHTML+='</tr>'
-				codigoHTML+='</thead>'
-				codigoHTML+='<tbody>'
-
-			while(msg.data[cont]){
-				
-                codigoHTML+='<tr>'
-                    if(opcao1){
-                        codigoHTML+=opcao1+msg.data[cont].name+'</th>'
-                    }
-                    if(opcao2){
-                        codigoHTML+=opcao2+msg.data[cont].description+'</td>'
-                    }
-                    if(opcao3){
-                        codigoHTML+=opcao3+msg.data[cont].stock+'</td>'
-                    }
-                    if(opcao4){
-                        codigoHTML+=opcao4+msg.data[cont].price.toFixed(2)+'</td>'
-                    }
-                    if(opcao5){
-                        codigoHTML+=opcao5+' value="'+msg.data[cont]._id+'"><span class="'+opcao6+'"></span></button></td>'
-                    }
-                codigoHTML+='</tr>'
-
-				cont++;
-			}
-				codigoHTML+='</tbody>'
-            codigoHTML+='</table>'
-            
-        return codigoHTML;
-}
-
-// --------------------------------------------- GERA TELA - PRODUTOS, BEBIDAS, ESTOQUE -----------------------------------------------------
-
-//funcao para gerar resultado tela padrão de buscas
-function escopoTelaDeBusca(funcao, funcao2, localizacao){
-
-    var codigoHTML;
-
-    codigoHTML='<h4 class="text-center">Buscar</h4>'
-    codigoHTML+='<form>'
-        codigoHTML+='<div class="form-row">'
-            codigoHTML+='<input id="nome" type="text" class="form-control col-md-9" placeholder="Nome Produto">'
-            codigoHTML+='<button onclick='+funcao2+' type="button" class="btn btn-light border border-dark col-md-3">'
-                codigoHTML+='<span class="fas fa-search"></span> Buscar'
-            codigoHTML+='</button>'
-            codigoHTML+='<br/>'
-            codigoHTML+='<button onclick='+funcao+' type="button" class="btn btn-light border border-dark btn-lg btn-block" style="margin-top:10px;">'
-                codigoHTML+='<span class="fas fa-search-plus"></span> Exibir todos'
-            codigoHTML+='</button>'
-        codigoHTML+='</div>'
-    codigoHTML+='</form>'
-    codigoHTML+='<div id="resposta"></div>'
-
-    document.getElementById(localizacao).innerHTML = codigoHTML;
-}
-
-// --------------------------------------------- SISTEMA DE ALERTAS -----------------------------------------------------
+//funcao de incializacao basica funcionalidade
+$(document).ready(function () {
+    limparTelaDeMensagem();
+})
 
 //funcao para gerar mensagem de erro
-function mensagemDeErro(mensagem){
-    document.getElementById('mensagemDeErro').innerHTML = '<span class="badge badge-danger h5">'+mensagem+'</span>';
+function mensagemDeErro(mensagem) {
+    document.getElementById('mensagemDeErro').innerHTML = `<span class="badge badge-danger h5">${mensagem}</span>`
+    $('#mensagemDeErro').animate({ width: 'show' })
     limparTelaDeMensagem();
 }
 
 //funcao para gerar mensagem de aviso
-function mensagemDeAviso(mensagem){
-    document.getElementById('mensagemDeErro').innerHTML = '<span class="badge badge-success h5">'+mensagem+'</span>';
+function mensagemDeAviso(mensagem) {
+    document.getElementById('mensagemDeErro').innerHTML = `<span class="badge badge-success h5">${mensagem}</span>`
+    $('#mensagemDeErro').animate({ width: 'show' })
     limparTelaDeMensagem();
 }
 
 //funcao para limpar tela de mensagens
-function limparTelaDeMensagem(){
-    setTimeout(function(){document.getElementById('mensagemDeErro').innerHTML=""},2000);
+function limparTelaDeMensagem() {
+    setTimeout(function () {
+        $('#mensagemDeErro').animate({ width: 'hide' })
+    }, 3000)
 }
 
-
-// --------------------------------------------- GERA GRAFICO - RELATORIO, RELATORIOCAIXA -----------------------------------------------------
-
-// variaveis globais para manipulação de itens do grafico de itens vendidos
-var vetorNomeIdItens=[], vetorQuantidadeItens=[], vetorNomeIdItensDefinitivo=[], vetorQuantidadeItensDefinitivo=[], marcadorDeIndiceDosVetoresDeItens=0;
-var vetorLucroMensalData=[], vetorLucroMensalValor=[], marcadorDeIndiceDosVetoresDeLucro=0;
-
-
-//funcao para gerar grafico com dados
-function graficoDeDados(json,idLocalizacao){
-    var dataAtual=new Date, ValorTotal=0, cont=0;
-
-    while(json.data[cont]){
-        ValorTotal=ValorTotal+json.data[cont].total;
-        cont++;
-    }
-
-    Highcharts.chart(idLocalizacao,{
-        chart:{
-            type:'bar'
-        },
-        title:{
-            text:'Valor total'
-        },
-        xAxis:{
-            categories:['Data: '+dataAtual.getDate()+'/'+(dataAtual.getMonth()+1)+'/'+dataAtual.getFullYear()]
-        },
-        yAxis:{
-            title:'Valor'
-        },
-        series:[{
-            name:'Valor',
-            data:[parseFloat(ValorTotal.toFixed(2))]
-        }]
+//funcao responsavel por imprimir na impressora
+function imprimirImpressora(idReferencia) {
+    $(idReferencia).printThis({
+        debug: false,               // show the iframe for debugging
+        importCSS: true,            // import parent page css
+        importStyle: false,         // import style tags
+        printContainer: true,       // print outer container/$.selector
+        loadCSS: "./../bootstrap/css/escopo-css-impressao.css",                // path to additional css file - use an array [] for multiple
+        pageTitle: "",              // add title to print page
+        removeInline: false,        // remove inline styles from print elements
+        removeInlineSelector: "*",  // custom selectors to filter inline styles. removeInline must be true
+        printDelay: 222,            // variable print delay
+        header: false,               // prefix to html
+        footer: null,               // postfix to html
+        base: false,                // preserve the BASE tag or accept a string for the URL
+        formValues: true,           // preserve input/form values
+        canvas: false,              // copy canvas content
+        doctypeString: false,       // enter a different doctype for older markup
+        removeScripts: false,       // remove script tags from print content
+        copyTagClasses: false,      // copy classes from the html & body tag
+        beforePrintEvent: null,     // function for printEvent in iframe
+        beforePrint: null,          // function called before iframe is filled
+        afterPrint: null            // function called before iframe is removed
     });
 }
 
-//funcao para gerar grafico com dados dos produtos mais e menos vendidos
-function graficoDeItensVendidos(json,idLocalizacao,json2,json3){
-    var cont=0;
+//funcao responsavel por limpar o modal de impressao
+function limparModal() {
+    document.getElementById('modal').innerHTML = '';
+}
 
-    vetorNomeIdItens=[]; 
-    vetorQuantidadeItens=[]; 
-    vetorNomeIdItensDefinitivo=[]; 
-    vetorQuantidadeItensDefinitivo=[]; 
-    marcadorDeIndiceDosVetoresDeItens=0;
+//funcao de animacao da janela2
+function animacaoJanela2() {
+    $('#janela2').fadeOut(100);
+    $('#janela2').fadeIn(100);
+}
 
-
-    while(json.data[cont]){
-        criarVetorComTodosOsItensDasOrdens(json.data[cont],1)
-        criarVetorComTodosOsItensDasOrdens(json.data[cont],2)
-        cont++;
-    }
-
-    marcadorDeIndiceDosVetoresDeItens=0;
-
-    for(var cont1=0;cont1<vetorNomeIdItens.length;cont1++){
-        verificarEOrdernarVetorDeItens(vetorNomeIdItens[cont1],vetorQuantidadeItens[cont1]);
-    }
-
-    for(var cont1=0; cont1<vetorNomeIdItensDefinitivo.length; cont1++){
-        var cont2=0;
-        while(json2.data[cont2]){
-            if(json2.data[cont2]._id==vetorNomeIdItensDefinitivo[cont1]){
-                vetorNomeIdItensDefinitivo[cont1]=json2.data[cont2].name;
-            }
-            cont2++;
+//funcao responsavel por validar os dados preenchidos nos campos
+function validaDadosCampo(campo) {
+    var validacao = true;
+    campo.forEach(function (item) {
+        if ($(item).val() == '' || $(item).val() == null) {
+            validacao = false;
         }
-        cont2=0;
-        while(json3.data[cont2]){
-            if(json3.data[cont2]._id==vetorNomeIdItensDefinitivo[cont1]){
-                vetorNomeIdItensDefinitivo[cont1]=json3.data[cont2].name;
-            }
-            cont2++;
+    });
+    return validacao;
+}
+
+//funcao responsavel por validar valores invalidos nos campos(valores negativos)
+function validaValoresCampo(campo) {
+    var validacao = true;
+    campo.forEach(function (item) {
+        if (parseFloat($(item).val()) < 0.0 || parseFloat($(item).val()) == 0.0) {
+            validacao = false;
+        }
+    });
+    return validacao;
+}
+
+// funcao responsavel por buscar a sessao do usuario
+function buscarSessionUser() {
+    return JSON.parse(sessionStorage.getItem('login'))
+}
+
+//funcao reponsavel por alertar o usuario sobre executar determinada acao
+function confirmarAcao(mensagem, funcao, value) {
+    var codigoHTML = '';
+    codigoHTML += '<div class="modal fade" id="modalAviso" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">'
+    codigoHTML += '<div class="modal-dialog" role="document">'
+    codigoHTML += '<div class="modal-content">'
+    codigoHTML += '<div class="modal-header">'
+    codigoHTML += '<h5 class="modal-title">Atenção</h5>'
+    codigoHTML += '</div>'
+    codigoHTML += '<div class="modal-body">'
+    codigoHTML += `<p>${mensagem} Deseja continuar?</p>`
+    codigoHTML += '</div>'
+    codigoHTML += '<div class="modal-footer">'
+    codigoHTML += '<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Não</button>'
+    if (value != null) {
+        codigoHTML += `<button onclick="${funcao}; document.getElementById('modal').innerHTML='';" value="${value}" type="button" class="btn btn-primary" data-dismiss="modal">Sim</button>`
+    } else {
+        codigoHTML += `<button onclick=${funcao}; document.getElementById('modal').innerHTML='';" type="button" class="btn btn-primary" data-dismiss="modal">Sim</button>`
+    }
+    codigoHTML += '</div>'
+    codigoHTML += '</div>'
+    codigoHTML += '</div>'
+    codigoHTML += '</div>'
+
+    document.getElementById('modal').innerHTML = codigoHTML;
+
+    $('#modalAviso').modal('show');
+}
+
+//funcao resopnsavel por gerenciar o tamanho da janela
+function janelaTamanho() {
+    if ((document.fullScreenElement && document.fullScreenElement !== null) ||
+        (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+        if (document.documentElement.requestFullScreen) {
+            document.documentElement.requestFullScreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+            document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullScreen) {
+            document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
+    } else {
+        if (document.cancelFullScreen) {
+            document.cancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
         }
     }
+}
 
-    Highcharts.chart(idLocalizacao,{
-        chart:{
-            type:'bar'
-        },
-        title:{
-            text:'Relatório de Itens Vendidos'
-        },
-        xAxis:{
-            categories: vetorNomeIdItensDefinitivo
-        },
-        yAxis:{
-            title:'Quantidade'
-        },
-        series:[{
-            name:'Quantidade',
-            data: vetorQuantidadeItensDefinitivo
-        }]
+//funcao responsavel por manipular o tamanho da string de exibição(caso seja muito grande)
+function corrigirTamanhoString(tamMax, texto) {
+    if (texto.toString().length > tamMax) {
+        texto = texto.substr(0, tamMax)
+        texto += '...'
+    }
+    return texto
+}
+
+//funcao resopnsavel por exibir cor defente no campo incorreto
+function mostrarCamposIncorrreto(campo) {
+    campo.forEach(function (item) {
+        document.getElementById(item).classList.add('border');
+        document.getElementById(item).classList.add('border-danger');
+        setTimeout(function () {
+            document.getElementById(item).classList.remove('border');
+            document.getElementById(item).classList.remove('border-danger');
+        }, 2000)
     });
 }
 
-//funcao para gerar grafico com dados dos lucros de cada mes 
-function graficoDeLucrosTotaisDeCadaMes(json,idLocalizacao){
-    var cont=0;
-
-    vetorLucroMensalData=[];
-    vetorLucroMensalValor=[];
-    marcadorDeIndiceDosVetoresDeLucro=0;
-
-    while(json.data[cont]){
-        var datah=json.data[cont].update_at;
-        var dataFormat = datah.split("-");
-        verificaEOrdenarVetorDeLucroMensal(dataFormat[0]+"/"+dataFormat[1],json.data[cont].total);
-        cont++;
-    }
-
-    Highcharts.chart(idLocalizacao,{
-        chart:{
-            type:'bar'
-        },
-        title:{
-            text:'Relatório de Lucros Mensais'
-        },
-        xAxis:{
-            categories: vetorLucroMensalData
-        },
-        yAxis:{
-            title:'Valor'
-        },
-        series:[{
-            name:'Valor',
-            data: vetorLucroMensalValor
-        }]
+//funcao de animacao slideUp
+function animacaoSlideUp(idReferencia) {
+    idReferencia.forEach(function (item) {
+        $(item).slideUp(300)
     });
 }
 
-//funcao para verificar e ordernar vetor com itens em um novo vetor
-function verificarEOrdernarVetorDeItens(id, quantidade){
-    var verificacao=true;
-
-    for(var cont=0; cont<vetorNomeIdItensDefinitivo.length; cont++){
-        if(vetorNomeIdItensDefinitivo[cont]==id){
-            vetorQuantidadeItensDefinitivo[cont]+=quantidade;
-            verificacao=false;
-        }
-    }
-    if(verificacao){
-        vetorNomeIdItensDefinitivo[marcadorDeIndiceDosVetoresDeItens]=id;
-        vetorQuantidadeItensDefinitivo[marcadorDeIndiceDosVetoresDeItens]=quantidade;
-        marcadorDeIndiceDosVetoresDeItens++;
-    }
+//funcao animacao slideDown
+function animacaoSlideDown(idReferencia) {
+    idReferencia.forEach(function (item) {
+        $(item).slideDown(300)
+    });
 }
 
-//funcao para criar vetor com todos os itens das ordens
-function criarVetorComTodosOsItensDasOrdens(json,tipo){
-    var cont=0;
-
-    if(tipo==1){
-        while(json.products[cont]){
-            vetorNomeIdItens[marcadorDeIndiceDosVetoresDeItens]=json.products[cont].product;
-            vetorQuantidadeItens[marcadorDeIndiceDosVetoresDeItens]=json.products[cont].quantity;
-            marcadorDeIndiceDosVetoresDeItens++;               
-            cont++;
-        }
-    }else if(tipo==2){
-        while(json.drinkables[cont]){
-            vetorNomeIdItens[marcadorDeIndiceDosVetoresDeItens]=json.drinkables[cont].drinkable;
-            vetorQuantidadeItens[marcadorDeIndiceDosVetoresDeItens]=json.drinkables[cont].quantity;
-            marcadorDeIndiceDosVetoresDeItens++;
-            cont++;
-        }
-    }
-}
-
-//funcao para verificar e ordenar vetos com os lucros mensais
-function verificaEOrdenarVetorDeLucroMensal(data, valor){
-    var verificacao=true;
-
-    for(var cont=0; cont<vetorLucroMensalData.length; cont++){
-        if(vetorLucroMensalData[cont]==data){
-            vetorLucroMensalValor[cont]+=valor;
-            verificacao=false;
-        }
-    }
-    if(verificacao){
-        vetorLucroMensalData[marcadorDeIndiceDosVetoresDeLucro]=data;
-        vetorLucroMensalValor[marcadorDeIndiceDosVetoresDeLucro]=valor;
-        marcadorDeIndiceDosVetoresDeLucro++;
-    }
-
-}
-
-//funcao para gerar linha para a tabela com o pedidos fechados
-function gerarLinhaTabelaRelatorios(json){
-    var codigoHTML, listaProdutos="",cont=0;
-
-    while(json.products[cont]){
-        listaProdutos+="("+json.products[cont].product+" X "+json.products[cont].quantity+")";
-        cont++;
-    }
-    cont=0;
-    while(json.drinkables[cont]){
-        listaProdutos+="("+json.drinkables[cont].drinkable+" X "+json.drinkables[cont].quantity+")";
-        cont++;
-    }
-
-    codigoHTML='<tr class="table-light text-dark">'
-        codigoHTML+='<td scope="col"><small>'+json.update_at+'</small></td>'
-        codigoHTML+='<td scope="col"><small>'+json.identification+'</small></td>'
-        codigoHTML+='<td scope="col"><small>'+listaProdutos+'</small></td>'
-        codigoHTML+='<td scope="col"><small>'+json.payment+'</small></td>'
-        codigoHTML+='<td scope="col"><small>R$'+json.total.toFixed(2)+'</small></td>'
-    codigoHTML+='</tr>'
-
-    return codigoHTML;
-}
-
-// --------------------------------------------- GERA TELA COM LISTA DE TODOS OS PEDIDOS - PAGAMENTO, PEDIDO -----------------------------------------------------
-
-//funcao para exibir lista com todos os pedidos
-async function telaEscopoExibirTodosOsPedidos(funcao){
-    var json = await requisicaoGET("orders/");
-    var codigoHTML, cont=0;
-    
-    codigoHTML='<h4 class="text-center" style="margin-top:30px">Lista de Pedidos</h4>'
-    codigoHTML+='<table class="table table-light text-center" style="margin-top:50px">'
-        codigoHTML+='<thead><tr><th scope="col">Número</th><th scope="col">Valor Total</th><th scope="col">Data</th><th scope="col">#</th></tr></thead>'
-        codigoHTML+='<tbody>'
-            while(json.data[cont]){
-                codigoHTML+='<tr>'
-                    codigoHTML+='<td>'+json.data[cont].identification+'</td>'
-                    codigoHTML+='<td>R$ '+json.data[cont].total.toFixed(2)+'</td>'
-                    codigoHTML+='<td>'+json.data[cont].update_at+'</td>'
-                    codigoHTML+='<td><button class="btn btn-primary" onclick='+funcao+' value='+json.data[cont].identification+'><span class="fas fa-edit iconsTam"></span></button></td>'
-                codigoHTML+='</tr>'
-                cont++;
-            }
-        codigoHTML+='</tbody>'
-    codigoHTML+='</table>'
-
-    document.getElementById('janela2').innerHTML = codigoHTML;
-}
-
-// -------------------------------------------------- GERA TELA COM LISTA DE TODOS OS PEDIDOS EM ABERTO --------------------------------------------------------
-
-//funcao para gerar linha para a tabela com o pedidos fechados
-function gerarLinhaTabelaPedidosEmAberto(json){
-    var codigoHTML, listaProdutos="",cont=0;
-
-    while(json.products[cont]){
-        listaProdutos+="("+json.products[cont].product.name+" X "+json.products[cont].quantity+")";
-        cont++;
-    }
-    cont=0;
-    while(json.drinkables[cont]){
-        listaProdutos+="("+json.drinkables[cont].drinkable.name+" X "+json.drinkables[cont].quantity+")";
-        cont++;
-    }
-
-    codigoHTML='<tr class="table-light text-dark">'
-        codigoHTML+='<td scope="col"><small>'+json.identification+'</small></td>'
-        codigoHTML+='<td scope="col"><small>'+listaProdutos+'</small></td>'
-        codigoHTML+='<td scope="col"><small>R$'+json.total.toFixed(2)+'</small></td>'
-    codigoHTML+='</tr>'
-
-    return codigoHTML;
+//funcao responsavel por controlar a ativação e desativação de um botão
+function ativaDesativaBotao(campo, tempo) {
+    campo.forEach(function (item) {
+        document.getElementById(item).disabled = true;
+        setTimeout(function () {
+            document.getElementById(item).disabled = false;
+        }, tempo)
+    });
 }
