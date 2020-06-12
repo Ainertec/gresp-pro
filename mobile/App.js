@@ -1,8 +1,9 @@
 import React from 'react';
-import { Text, View, Button, YellowBox, StatusBar } from 'react-native';
+import { YellowBox, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Routes from './src/routes';
-import Dialog from 'react-native-dialog';
+
+import { AuthProvider } from './src/contexts/auth';
 
 YellowBox.ignoreWarnings([
   'Unrecognized WebSocket',
@@ -14,7 +15,9 @@ export default function App() {
     <>
       <StatusBar backgroundColor={'#3F173F'} translucent />
       <NavigationContainer>
-        <Routes />
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
       </NavigationContainer>
     </>
   );

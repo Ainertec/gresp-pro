@@ -6,13 +6,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MatirialIcon from 'react-native-vector-icons/MaterialIcons';
 
-import Home from './pages/Home/index';
-import Identificator from './pages/Identificator';
-import Cozinha from './pages/Cozinha';
-import LeituraQrCode from './pages/LeituraQrCode';
-import ListaItens from './pages/ListaItens';
+import Home from '../pages/Home/index';
+import Identificator from '../pages/Identificator';
+import Cozinha from '../pages/Cozinha';
+import LeituraQrCode from '../pages/LeituraQrCode';
+import ListaItens from '../pages/ListaItens';
 
-import logo from './assets/logo.png';
+import logo from '../assets/logo.png';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -41,7 +41,13 @@ const HomeStack = () => {
       }}
     >
       <Stack.Screen name='Home' component={Home} />
-      <Stack.Screen name='Items' component={ListaItens} />
+      <Stack.Screen
+        name='Items'
+        options={{
+          headerRight: false,
+        }}
+        component={ListaItens}
+      />
     </Stack.Navigator>
   );
 };
