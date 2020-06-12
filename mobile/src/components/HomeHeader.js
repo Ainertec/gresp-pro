@@ -1,23 +1,36 @@
 import React from 'react';
 import { View, Image } from 'react-native';
 import { BottomNavigation } from 'react-native-material-ui';
-import { Header, Icon, } from 'react-native-elements';
+import { Header, Icon } from 'react-native-elements';
 
-export default function HomeHeader({
-  navigation,
-  setShowConfigs
-
-}) {
+export default function HomeHeader({ navigation, left, setShowConfigs }) {
+  console.log(left);
   return (
     <>
-      <View style={{ height: 60, justifyContent: "center", marginTop: 10 }}>
+      <View style={{ alignItems: 'center', paddingTop: 10 }}>
         <Header
-          leftComponent={<Image style={{ width: 100, height: 30 }} source={require('../../img/logo.png')} />}
-          rightComponent={<Icon name='leak-add' color='#fff' onPress={() => setShowConfigs(true)} />}
-          containerStyle={{ backgroundColor: '#3F173F', justifyContent: 'space-around' }} />
-
+          centerComponent={
+            <Image
+              style={{ width: 100, height: 30 }}
+              source={require('../../img/logo.png')}
+            />
+          }
+          rightComponent={
+            left && (
+              <Icon
+                name='leak-add'
+                color='#fff'
+                onPress={() => setShowConfigs(true)}
+              />
+            )
+          }
+          containerStyle={{
+            backgroundColor: '#3F173F',
+            // justifyContent: 'center',
+          }}
+        />
       </View>
-      <View style={{ marginTop: 10 }}>
+      {/* <View style={{ marginTop: 10 }}>
         <BottomNavigation hidden={false}>
           <BottomNavigation.Action
             key="Ler"
@@ -38,9 +51,9 @@ export default function HomeHeader({
 
           />
 
-        </BottomNavigation>
+        </BottomNavigation> */}
 
-      </View>
+      {/* </View> */}
     </>
   );
 }

@@ -1,10 +1,13 @@
-import React, { useState, useEffect, } from 'react';
-import { View, StyleSheet, AsyncStorage, ScrollView, Alert, } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  StyleSheet,
+  AsyncStorage,
+  ScrollView,
+  Alert,
+} from 'react-native';
 
-
-
-
-import api from '../services/api'
+import api from '../services/api';
 
 import PaymentModal from '../components/PaymentModal';
 import ConfigModal from '../components/ConfigModal';
@@ -12,7 +15,6 @@ import Footer from '../components/Footer';
 import Header from '../components/HomeHeader';
 import Observation from '../components/Observation';
 import ItemList from '../components/ItemList';
-
 
 export default function Home({ navigation }) {
   const [orders, setOrders] = useState([]);
@@ -28,8 +30,8 @@ export default function Home({ navigation }) {
   const [changed, setChanged] = useState(false);
 
   async function config() {
-    await AsyncStorage.setItem("ip", ip);
-    Alert.alert("Ip configurado");
+    await AsyncStorage.setItem('ip', ip);
+    Alert.alert('Ip configurado');
     setShowConfigs(false);
     Location.reload();
   }
@@ -37,11 +39,11 @@ export default function Home({ navigation }) {
     if (number === 1) {
       setChecked2(false);
       setChecked(true);
-      setPaymentKind("Dinheiro");
+      setPaymentKind('Dinheiro');
     } else {
       setChecked(false);
       setChecked2(true);
-      setPaymentKind("Cartão");
+      setPaymentKind('Cartão');
     }
   }
   async function productRemove(id) {
@@ -53,8 +55,7 @@ export default function Home({ navigation }) {
     }
     await listaProduc.splice(position, 1);
     setListaProduc(listaProduc.slice());
-    setOrders(orders.total = 0);
-
+    setOrders((orders.total = 0));
   }
   async function drinkableRemove(id) {
     var position;
@@ -63,11 +64,10 @@ export default function Home({ navigation }) {
         position = listaDrink.indexOf(element);
       }
     }
-    await listaDrink.splice(position, 1)
+    await listaDrink.splice(position, 1);
 
     setListaDrink(listaDrink.slice());
-    setOrders(orders.total = 0);
-
+    setOrders((orders.total = 0));
   }
   async function sendOrder() {
     const drinkables = [];
@@ -79,7 +79,7 @@ export default function Home({ navigation }) {
         quantity: element.quantity,
       };
       products.push(aux);
-    };
+    }
     for (const element of listaDrink) {
       var aux = {
         drinkable: element.drinkable._id,
@@ -89,26 +89,28 @@ export default function Home({ navigation }) {
     }
 
     const identification = Number.parseInt(await AsyncStorage.getItem('id'));
-    const newOrder = await AsyncStorage.getItem("newOrder");
-    await AsyncStorage.removeItem("newOrder");
+    const newOrder = await AsyncStorage.getItem('newOrder');
+    await AsyncStorage.removeItem('newOrder');
     const Api = await api();
 
     let haveDrink = drinkables.toString();
     let haveProduct = products.toString();
 
     if (!identification)
-      return Alert.alert("Ops!", "É necessário informar o número do pedido.");
-    if ((haveDrink == '') && (haveProduct == ''))
-      return Alert.alert("Ops!", "É necessário informar uma bebida ou produto.");
+      return Alert.alert('Ops!', 'É necessário informar o número do pedido.');
+    if (haveDrink == '' && haveProduct == '')
+      return Alert.alert(
+        'Ops!',
+        'É necessário informar uma bebida ou produto.'
+      );
     var response;
 
     if (newOrder) {
-      response = await Api.post("/orders/", {
+      response = await Api.post('/orders/', {
         identification,
         products,
         drinkables,
-        note
-
+        note,
       });
 
       // await Api.get(`/printer/?identification=${identification}`);
@@ -117,20 +119,15 @@ export default function Home({ navigation }) {
         Alert.alert(`${response.alert}`);
       }
 
-      if (response.status == 200)
-        Alert.alert("Tudo Certo!", "pedido criado!");
-      else
-        Alert.alert("ocorreu um erro!");
-
+      if (response.status == 200) Alert.alert('Tudo Certo!', 'pedido criado!');
+      else Alert.alert('ocorreu um erro!');
     } else {
       // var jsonDid = await Api.get(`/order/?identification=${identification}`);
 
       response = await Api.put(`/orders/${identification}`, {
-
         products,
         drinkables,
-        note
-
+        note,
       });
 
       // await Api.put(`/printerupdate/?identification=${identification}`, jsonDid.data);
@@ -139,130 +136,106 @@ export default function Home({ navigation }) {
         Alert.alert(`${response.alert}`);
       }
       if (response.status == 200)
-        Alert.alert("Tudo Certo!", "Pedido atualizado!")
-      else
-        Alert.alert("ocorreu um erro!")
-
+        Alert.alert('Tudo Certo!', 'Pedido atualizado!');
+      else Alert.alert('ocorreu um erro!');
     }
     setChanged(false);
-    await getDrinkablesAndProducts(response.data.order.drinkables, response.data.order.products);
+    await getDrinkablesAndProducts(
+      response.data.order.drinkables,
+      response.data.order.products
+    );
     setOrders(response.data.order);
-
   }
   async function getDrinkablesAndProducts(drinkables, products) {
     var temporaryListDrink = [];
     var temporaryListProduc = [];
-    if (drinkables == undefined || drinkables == null)
-      drinkables = [];
-    if (products == undefined || products == null)
-      products = [];
+    if (drinkables == undefined || drinkables == null) drinkables = [];
+    if (products == undefined || products == null) products = [];
 
     for (var element of drinkables) {
       temporaryListDrink.push(element);
-    };
+    }
 
     for (var element of products) {
       temporaryListProduc.push(element);
-    };
+    }
 
     setListaDrink(temporaryListDrink);
     setListaProduc(temporaryListProduc);
-
   }
   async function loadOrders() {
-    const identification = await AsyncStorage.getItem("id");
+    const identification = await AsyncStorage.getItem('id');
     const Api = await api();
     const response = await Api.get('/order/', {
-      params: { identification }
-    })
-
+      params: { identification },
+    });
 
     if (response.data == null) {
-      await AsyncStorage.setItem("newOrder", "true");
+      await AsyncStorage.setItem('newOrder', 'true');
       response.data = [];
     }
 
-    await getDrinkablesAndProducts(response.data.drinkables, response.data.products);
+    await getDrinkablesAndProducts(
+      response.data.drinkables,
+      response.data.products
+    );
 
     setOrders(response.data);
-
-
   }
   async function payment() {
     const Api = await api();
     if (orders.total === undefined || changed === true)
-      return Alert.alert("Ops!", "Crie ou atualize o pedido para paga-lo!");
+      return Alert.alert('Ops!', 'Crie ou atualize o pedido para paga-lo!');
 
-    const identification = await AsyncStorage.getItem("id");
-    if (identification == null)
-      return Alert.alert("identificação invalida!");
+    const identification = await AsyncStorage.getItem('id');
+    if (identification == null) return Alert.alert('identificação invalida!');
 
-    const response = await Api.delete(`/orders/${identification}/${paymentKind}`);
+    const response = await Api.delete(
+      `/orders/${identification}/${paymentKind}`
+    );
 
     setShowPay(false);
     await AsyncStorage.removeItem('id');
-    Alert.alert("Pedido Pago!", `Número:${identification}`);
+    Alert.alert('Pedido Pago!', `Número:${identification}`);
     setOrders([]);
     setListaDrink([]);
     setListaProduc([]);
   }
 
-  useEffect(() => {
-    const teste = navigation.getParam('producList', null);
-    const teste2 = navigation.getParam('drinkableList', null);
+  // useEffect(() => {
+  //   const teste = navigation.getParam('producList', null);
+  //   const teste2 = navigation.getParam('drinkableList', null);
 
-    if (teste == null)
-      loadOrders();
-    else
-      getDrinkablesAndProducts(teste2, teste);
-
-
-
-  }, []);
-
+  //   if (teste == null) loadOrders();
+  //   else getDrinkablesAndProducts(teste2, teste);
+  // }, []);
 
   return (
-
     <View style={styles.container}>
+      {/* <Header navigation={navigation} setShowConfigs={setShowConfigs} /> */}
 
-      <Header
-        navigation={navigation}
-        setShowConfigs={setShowConfigs}
-      />
-
-      <Observation
-        orders={orders}
-        setNote={setNote}
-      />
-
+      <Observation orders={orders} setNote={setNote} />
 
       <View style={{ flex: 1, marginTop: 5 }}>
-  
-        <ScrollView style={{ flex: 1, backgroundColor: "#ffe" }}>
-          {
-            listaProduc.map((l, i) => (
-              <ItemList 
+        <ScrollView style={{ flex: 1, backgroundColor: '#ffe' }}>
+          {listaProduc.map((l, i) => (
+            <ItemList
               key={i}
               listType={l.product}
               list={l}
               itemRemove={productRemove}
               setChanged={setChanged}
-              />
-            ))
-          }
-          {
-            listaDrink.map((l, i) => (
-              <ItemList 
+            />
+          ))}
+          {listaDrink.map((l, i) => (
+            <ItemList
               key={i}
               listType={l.drinkable}
               list={l}
               itemRemove={drinkableRemove}
               setChanged={setChanged}
-              />
-            ))
-
-          }
-
+            />
+          ))}
         </ScrollView>
       </View>
 
@@ -274,7 +247,6 @@ export default function Home({ navigation }) {
         setShowPay={setShowPay}
         sendOrder={sendOrder}
       />
-
 
       <PaymentModal
         showPay={showPay}
@@ -291,22 +263,18 @@ export default function Home({ navigation }) {
         config={config}
         setShowConfigs={setShowConfigs}
       />
-
-    </View >
+    </View>
   );
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#3F173F',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   list: {
     flex: 1,
-    backgroundColor: "#ffe"
+    backgroundColor: '#ffe',
   },
-
 });
