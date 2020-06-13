@@ -7,25 +7,25 @@ function ligacaoEstoqueFacede() {
     const situacao = autenticacaoLogin();
 
     if (JSON.parse(situacao).tipo == 'Administrador' || JSON.parse(situacao).tipo == 'Comum') {
-        telaDeBuscarBebidasEstoque();
+        telaDeBuscarEstoque();
     } else {
         mensagemDeErro('Usuário não autorizado!')
     }
 }
 
 //funcao para gerar tela de busca de bebidas
-function telaDeBuscarBebidasEstoque() {
+function telaDeBuscarEstoque() {
     let codigoHTML = '';
 
     codigoHTML += '<h4 class="text-center">Buscar</h4>'
     codigoHTML += '<div class="card-deck col-8 mx-auto d-block">'
     codigoHTML += '<div class="input-group mb-3">'
     codigoHTML += '<input id="nome" type="text" class="form-control mousetrap" placeholder="Nome Produto">'
-    codigoHTML += `<button onclick="if(validaDadosCampo(['#nome'])){buscarBebidaEstoque('nome');}else{mensagemDeErro('Preencha o campo nome!'); mostrarCamposIncorrreto(['nome']);}" type="button" class="btn btn-outline-info">`
+    codigoHTML += `<button onclick="if(validaDadosCampo(['#nome'])){buscarEstoque('nome');}else{mensagemDeErro('Preencha o campo nome!'); mostrarCamposIncorrreto(['nome']);}" type="button" class="btn btn-outline-info">`
     codigoHTML += '<span class="fas fa-search"></span> Buscar'
     codigoHTML += '</button>'
     codigoHTML += '<br/>'
-    codigoHTML += `<button onclick="buscarBebidaEstoque('todos');" type="button" class="btn btn-outline-info btn-block" style="margin-top:10px;">`
+    codigoHTML += `<button onclick="buscarEstoque('todos');" type="button" class="btn btn-outline-info btn-block" style="margin-top:10px;">`
     codigoHTML += '<span class="fas fa-search-plus"></span> Exibir todos'
     codigoHTML += '</button>'
     codigoHTML += '</div>'
@@ -36,13 +36,13 @@ function telaDeBuscarBebidasEstoque() {
 }
 
 //funcao para fazer busca via GET de todas as bebidas
-async function buscarBebidaEstoque(tipoBusca) {
+async function buscarEstoque(tipoBusca) {
     let codigoHTML = '', json = null;
 
     if (tipoBusca == 'nome') {
-        json = await requisicaoGET("items/" + $("#nome").val())
+        json = await requisicaoGET("items/" + $("#nome").val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     } else if (tipoBusca == 'todos') {
-        json = await requisicaoGET("items")
+        json = await requisicaoGET("items", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     }
 
     VETORDEITENSESTOQUE = [];
@@ -85,11 +85,15 @@ async function atualizarEstoque(id) {
             }
         });
 
+        delete json._id
+        delete json.createdAt
+        delete json.updatedAt
+        delete json.__v
         json.stock = parseInt(json.stock) + parseInt($('#quantidade' + id).val())
 
-        await requisicaoPUT('drinkables/' + id, json);
+        await requisicaoPUT('items/' + id, json, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         mensagemDeAviso('Atualizado com sucesso!');
-        telaDeBuscarBebidasEstoque();
+        telaDeBuscarEstoque();
     } catch (error) {
         mensagemDeErro('Não foi possível atualizar a quantidade do produto!')
     }

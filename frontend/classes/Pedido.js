@@ -76,7 +76,7 @@ function telaDigitarPedido(identificacao) {
     codigoHTML += '<div class="col-11 rounded mx-auto d-block" style="margin-bottom: 40px"><button onclick="telaBuscaeExibirItens();" class="btn btn-warning btn-block"><span class="fas fa-utensils"> Adicionar produtos e bebidas <span class="fas fa-wine-glass-alt"></span></button></div>'
     codigoHTML += '<hr class="my-6 bg-dark">'
     codigoHTML += '<h5 style="margin-top:10px; margin-left: 10px">Observações</h5>'
-    codigoHTML += '<textarea id="observacao" class="form-control col-11 rounded mx-auto d-block border border-dark mousetrap" rows="5"></textarea>'
+    codigoHTML += '<textArea id="observacao" class="form-control col-11 rounded mx-auto d-block border border-dark mousetrap" rows="5"></textArea>'
     codigoHTML += '</div>'
     codigoHTML += '<hr class="my-6 bg-dark">'
     codigoHTML += '<div id="botaoFinalizarPedido" style="margin-top:10px" class="col-11 rounded mx-auto d-block"></div>'
@@ -126,7 +126,7 @@ function telaLeituraDeQrCodePedido() {
 //funcao para exibir lista com todos os pedidos
 async function telaExibirTodosOsPedidos() {
 
-    let codigoHTML = '', json = await requisicaoGET("orders/");
+    let codigoHTML = '', json = await requisicaoGET("orders", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
 
     codigoHTML += '<h4 class="text-center" style="margin-top:30px">Lista de Pedidos</h4>'
     codigoHTML += '<table class="table table-light text-center col-10 mx-auto table-sm" style="margin-top:50px">'
@@ -151,7 +151,7 @@ async function telaExibirTodosOsPedidos() {
 //funcao para verificar se pedido existe
 async function buscarPedido() {
 
-    let json = await requisicaoGET("order/?identification=" + $('#identificacao').val());
+    let json = await requisicaoGET("orders/" + $('#identificacao').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
 
     recarregarPagina();
 
@@ -159,11 +159,12 @@ async function buscarPedido() {
         if (json.data != null) {
             document.getElementById('valorTotal').innerHTML = `Valor total: <span class="badge badge-success"> R$ ${json.data.total.toFixed(2)}</span>`;
             $('#escondeDados1').slideDown(300);
-            json.data.products.forEach(function (item) {
-                adicionarItemaoPedido('Produto', item.product._id, item.quantity, 'atualizar');
-            });
-            json.data.drinkables.forEach(function (item) {
-                adicionarItemaoPedido('Bebida', item.drinkable._id, item.quantity, 'atualizar');
+            json.data.items.forEach(function (item) {
+                if (!item.product.drink) {
+                    adicionarItemaoPedido('Produto', item.product._id, item.quantity, 'atualizar');
+                } else {
+                    adicionarItemaoPedido('Bebida', item.product._id, item.quantity, 'atualizar');
+                }
             });
             document.getElementById('observacao').innerHTML = json.data.note;
             $('#escondeDados4').slideDown(300);
@@ -194,11 +195,7 @@ async function adicionarItemaoPedido(itemTipo, idItem, quantidadeItem, pedidoTip
 
     let aux = true, json = null;
 
-    if (itemTipo == 'Produto') {
-        json = await requisicaoGET('products/');
-    } else if (itemTipo == 'Bebida') {
-        json = await requisicaoGET('drinkables/');
-    }
+    json = await requisicaoGET('items', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
 
     VETORDEITENSCLASSEPEDIDO.forEach(function (item) {
         if (item._id.toString() == idItem.toString()) {
@@ -346,11 +343,9 @@ async function listaItens(tipoBusca) {
     let codigoHTML = '', codigoHTML2 = '', json = null, json2 = null;
 
     if (tipoBusca == 'todos') {
-        json = await requisicaoGET('products/');
-        json2 = await requisicaoGET('drinkables/');
+        json = await requisicaoGET('items', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     } else if (tipoBusca == 'nome') {
-        json = await requisicaoGET('products/?name=' + $('#nome').val());
-        json2 = await requisicaoGET('drinkables/?name=' + $('#nome').val());
+        json = await requisicaoGET('items/' + $('#nome').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     }
 
     codigoHTML += '<h5 class="text-center" style="margin-top:20px">Lista produtos</h5>'
@@ -359,12 +354,14 @@ async function listaItens(tipoBusca) {
     codigoHTML += '<thead class="thead-dark"><tr><th scope="col">Nome</th><th scope="col">Preço</th><th scope="col">Quantidade</th><th scope="col">#</th></tr></thead>'
     codigoHTML += '<tbody>'
     json.data.forEach(function (item) {
-        codigoHTML += '<tr>'
-        codigoHTML += `<td class="col-md-5 table-secondary"><strong>${corrigirTamanhoString(30, item.name)}</strong></td>`
-        codigoHTML += `<td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>`
-        codigoHTML += `<td class="col-md-2 table-warning"><input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" /></td>`
-        codigoHTML += `<td class="col-md-2"><button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('Produto', '${item._id}', '#quantidadeAdicionar${item._id}', 'novo')}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm"><span class="fas fa-plus"></span></button></td>`
-        codigoHTML += '</tr>'
+        if (!item.drink) {
+            codigoHTML += '<tr>'
+            codigoHTML += `<td class="col-md-5 table-secondary"><strong>${corrigirTamanhoString(30, item.name)}</strong></td>`
+            codigoHTML += `<td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>`
+            codigoHTML += `<td class="col-md-2 table-warning"><input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" /></td>`
+            codigoHTML += `<td class="col-md-2"><button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('Produto', '${item._id}', '#quantidadeAdicionar${item._id}', 'novo')}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm"><span class="fas fa-plus"></span></button></td>`
+            codigoHTML += '</tr>'
+        }
     });
     codigoHTML += '</tbody>'
     codigoHTML += '</table>'
@@ -376,13 +373,15 @@ async function listaItens(tipoBusca) {
     codigoHTML2 += '<table class="table table-light table-sm">'
     codigoHTML2 += '<thead class="thead-dark"><tr><th scope="col">Nome</th><th scope="col">Preço</th><th scope="col">Quantidade</th><th scope="col">#</th></tr></thead>'
     codigoHTML2 += '<tbody>'
-    json2.data.forEach(function (item) {
-        codigoHTML2 += '<tr>'
-        codigoHTML2 += `<td class="col-md-5 table-secondary"><strong>${corrigirTamanhoString(30, item.name)}</strong></td>`
-        codigoHTML2 += `<td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>`
-        codigoHTML2 += `<td class="col-md-2 table-warning"><input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" /></td>`
-        codigoHTML2 += `<td class="col-md-2"><button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('Bebida', '${item._id}', '#quantidadeAdicionar${item._id}', 'novo')}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm"><span class="fas fa-plus"></span></button></td>`
-        codigoHTML2 += '</tr>'
+    json.data.forEach(function (item) {
+        if (item.drink) {
+            codigoHTML2 += '<tr>'
+            codigoHTML2 += `<td class="col-md-5 table-secondary"><strong>${corrigirTamanhoString(30, item.name)}</strong></td>`
+            codigoHTML2 += `<td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>`
+            codigoHTML2 += `<td class="col-md-2 table-warning"><input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" /></td>`
+            codigoHTML2 += `<td class="col-md-2"><button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('Bebida', '${item._id}', '#quantidadeAdicionar${item._id}', 'novo')}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm"><span class="fas fa-plus"></span></button></td>`
+            codigoHTML2 += '</tr>'
+        }
     });
     codigoHTML2 += '</tbody>'
     codigoHTML2 += '</table>'
@@ -408,39 +407,26 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
 
     try {
         let json = `{"identification":${parseInt($('#identificacao').val())},
-                    "products":[`
+                    "items":[`
         VETORDEITENSCLASSEPEDIDO.forEach(function (item) {
-            if (item.type == 'Produto') {
-                if (aux) {
-                    json += `{"product":"${item._id}","quantity":${parseInt($('#quantidade' + item._id).val())}}`
-                    aux = false;
-                    condicaoComItens = true;
-                } else {
-                    json += `,{"product":"${item._id}","quantity":${parseInt($('#quantidade' + item._id).val())}}`
-                }
+            if (aux) {
+                json += `{"product":"${item._id}","quantity":${parseInt($('#quantidade' + item._id).val())}}`
+                aux = false;
+                condicaoComItens = true;
+            } else {
+                json += `,{"product":"${item._id}","quantity":${parseInt($('#quantidade' + item._id).val())}}`
             }
         });
-        json += `],
-                    "drinkables":[`
-        aux = true
-        VETORDEITENSCLASSEPEDIDO.forEach(function (item) {
-            if (item.type == 'Bebida') {
-                if (aux) {
-                    json += `{"drinkable":"${item._id}","quantity":${parseInt($('#quantidade' + item._id).val())}}`
-                    aux = false;
-                    condicaoComItens = true;
-                } else {
-                    json += `,{"drinkable":"${item._id}","quantity":${parseInt($('#quantidade' + item._id).val())}}`
-                }
-            }
-        });
-        json += `],
-                    "note":"${$('#observacao').val()}"}`
+        if (validaDadosCampo(['#observacao'])) {
+            json += `],"note":"${($('#observacao').val()).toString()}"}`
+        } else {
+            json += `],"note":"Nenhuma."}`
+        }
 
         if (tipoRequisicao == 'cadastrar') {
             if (condicaoComItens && condicaoSemQuantidade) {
-                await requisicaoPOST("orders/", JSON.parse(json));
-                await requisicaoGET("printer/?identification=" + $('#identificacao').val());
+                await requisicaoPOST("orders", JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+                //await requisicaoGET("printer/?identification=" + $('#identificacao').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
                 mensagemDeAviso("Pedido cadastrado com sucesso!");
                 buscarPedido();
             } else if (condicaoComItens) {
@@ -450,9 +436,9 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
             }
         } else {
             if (condicaoComItens && condicaoSemQuantidade) {
-                let jsonDid = await requisicaoGET("order/?identification=" + $('#identificacao').val());
-                await requisicaoPUT("orders/" + $('#identificacao').val(), JSON.parse(json));
-                await requisicaoPUT("printerupdate/?identification=" + $('#identificacao').val(), jsonDid.data);
+                let jsonDid = await requisicaoGET("orders/" + $('#identificacao').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+                await requisicaoPUT("orders/" + $('#identificacao').val(), JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+                //await requisicaoPUT("printerupdate/?identification=" + $('#identificacao').val(), jsonDid.data, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
                 mensagemDeAviso("Pedido atualizado com sucesso!");
                 buscarPedido();
             } else if (condicaoComItens) {
