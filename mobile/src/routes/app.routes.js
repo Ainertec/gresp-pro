@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import MatirialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import Home from '../pages/Home/index';
-import Identificator from '../pages/Identificator';
+import Setting from '../pages/Setting';
 import Cozinha from '../pages/Cozinha';
 import LeituraQrCode from '../pages/LeituraQrCode';
 import ListaItens from '../pages/ListaItens';
@@ -17,10 +17,31 @@ import logo from '../assets/logo.png';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
+const header = {
+  headerTitleAlign: 'center',
+  headerTitle: () => (
+    <Image
+      source={logo}
+      resizeMode='contain'
+      style={{ width: 120, paddingTop: 50 }}
+    />
+  ),
+  headerStyle: {
+    backgroundColor: '#3F173F',
+    elevation: 15,
+  },
+  headerBackTitleStyle: {
+    color: '#fff',
+    bacbackgroundColor: '#fff',
+  },
+  gestureDirection: 'horizontal',
+  gestureEnabled: true,
+};
+
 const HomeStack = () => {
   return (
     <Stack.Navigator
-      screenOptions={{
+      screenOptions={({ navigation }) => ({
         headerTitleAlign: 'center',
         headerTitle: () => (
           <Image
@@ -30,45 +51,30 @@ const HomeStack = () => {
           />
         ),
         headerRight: () => (
-          <View syle={{ flex: 1, paddingRight: 15 }}>
-            <Icon name='cog' size={25} color='#fff' />
-          </View>
+          <Icon
+            onPress={() => navigation.navigate('Setting')}
+            name='cog'
+            size={25}
+            color='#fff'
+          />
         ),
+        headerRightContainerStyle: {
+          paddingRight: 10,
+        },
         headerStyle: {
           backgroundColor: '#3F173F',
           elevation: 1000,
         },
-      }}
+      })}
     >
       <Stack.Screen name='Home' component={Home} />
-      <Stack.Screen
-        name='Items'
-        options={{
-          headerRight: false,
-        }}
-        component={ListaItens}
-      />
     </Stack.Navigator>
   );
 };
 
 const KitchenStack = () => {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerTitleAlign: 'center',
-        headerTitle: () => (
-          <Image
-            source={logo}
-            resizeMode='contain'
-            style={{ width: 120, paddingTop: 50 }}
-          />
-        ),
-        headerStyle: {
-          backgroundColor: '#3F173F',
-        },
-      }}
-    >
+    <Stack.Navigator screenOptions={header}>
       <Stack.Screen name='Cozinha' component={Cozinha} />
     </Stack.Navigator>
   );
@@ -76,21 +82,7 @@ const KitchenStack = () => {
 
 const ReadStack = () => {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerTitleAlign: 'center',
-        headerTitle: () => (
-          <Image
-            source={logo}
-            resizeMode='contain'
-            style={{ width: 120, paddingTop: 50 }}
-          />
-        ),
-        headerStyle: {
-          backgroundColor: '#3F173F',
-        },
-      }}
-    >
+    <Stack.Navigator screenOptions={header}>
       <Stack.Screen name='ler' component={LeituraQrCode} />
     </Stack.Navigator>
   );
@@ -140,37 +132,20 @@ function HomeTabs() {
   );
 }
 
-// const Routes = () => {
-//   return (
-//     <Stack.Navigator
-//       screenOptions={{
-//         headerTitleAlign: 'center',
-//         headerShown: false,
-//         // header: (props) => <Header />,
-//         headerStyle: {
-//           backgroundColor: '#3F173F',
-//         },
-//       }}
-//       initialRouteName='Home'
-//     >
-//       <Stack.Screen
-//         options={{
-//           headerBackTitleVisible: false,
-//           headerLeft: false,
-//         }}
-//         name='Home'
-//         component={HomeTabs}
-//       />
-//       <Stack.Screen
-//         options={{
-//           headerShown: false,
-//           headerBackTitleVisible: false,
-//         }}
-//         name='ListaItens'
-//         component={ListaItens}
-//       />
-//     </Stack.Navigator>
-//   );
-// };
+const Routes = () => {
+  return (
+    <Stack.Navigator initialRouteName='Home'>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name='Home'
+        component={HomeTabs}
+      />
+      <Stack.Screen options={header} name='Items' component={ListaItens} />
+      <Stack.Screen options={header} name='Setting' component={Setting} />
+    </Stack.Navigator>
+  );
+};
 
-export default HomeTabs;
+export default Routes;
