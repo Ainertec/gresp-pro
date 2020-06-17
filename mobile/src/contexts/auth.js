@@ -14,11 +14,9 @@ export const AuthProvider = ({ children }) => {
     async function loadStorage() {
       const storagedUser = await AsyncStorage.getItem('@RNAuth:user');
       const storagedToken = await AsyncStorage.getItem('@RNAuth:token');
-      if (storagedUser && storagedToken) {
-        // const apiService = await api();
 
+      if (storagedUser && storagedToken) {
         api.defaults.headers.Authorization = `Bearer ${storagedToken}`;
-        // console.log(apiService.defaults.headers.common.Authorization);
 
         setUser(JSON.parse(storagedUser));
       }
@@ -40,7 +38,6 @@ export const AuthProvider = ({ children }) => {
 
     setUser(response.data.user);
 
-    // const apiService = await api();
     api.defaults.headers.Authorization = `Bearer ${response.data.token}`;
 
     await AsyncStorage.setItem(

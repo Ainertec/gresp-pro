@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, AsyncStorage, Alert, FlatList } from 'react-native';
+import { AsyncStorage, Alert, FlatList } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+
+import { useOrder } from '../../contexts/order';
 
 import api from '../../services/api';
 
@@ -22,7 +24,7 @@ import {
 } from './styles';
 
 export default function Home() {
-  const [order, setOrder] = useState([]);
+  const { order, setOrder } = useOrder();
 
   const [showPay, setShowPay] = useState(false);
 
@@ -102,29 +104,15 @@ export default function Home() {
       return Alert.alert('Ops!', 'Crie ou atualize o pedido para paga-lo!');
     setShowPay(true);
   }
+  useEffect(() => {
+    console.log('order', order);
+  }, [order]);
 
   useEffect(() => {
     if (!showPay) {
       setOrder([]);
     }
   }, [showPay]);
-
-  useEffect(() => {
-    async function loadOrders() {
-      const identification = await AsyncStorage.getItem('id');
-
-      const response = await api.get('/orders/4');
-
-      if (response.data) setOrder(response.data);
-    }
-    // const teste = navigation.getParam('producList', null);
-    // const teste2 = navigation.getParam('drinkableList', null);
-
-    // if (teste == null) loadOrders();
-    // else getDrinkablesAndProducts(teste2, teste);
-
-    loadOrders();
-  }, []);
 
   return (
     <Container>

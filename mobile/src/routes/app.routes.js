@@ -9,7 +9,7 @@ import MatirialIcon from 'react-native-vector-icons/MaterialIcons';
 import Home from '../pages/Home/index';
 import Setting from '../pages/Setting';
 import Cozinha from '../pages/Cozinha';
-import LeituraQrCode from '../pages/LeituraQrCode';
+import QrReader from '../pages/QrReader';
 import ListaItens from '../pages/ListaItens';
 
 import logo from '../assets/logo.png';
@@ -83,7 +83,7 @@ const KitchenStack = () => {
 const ReadStack = () => {
   return (
     <Stack.Navigator screenOptions={header}>
-      <Stack.Screen name='ler' component={LeituraQrCode} />
+      <Stack.Screen name='ler' component={QrReader} />
     </Stack.Navigator>
   );
 };
@@ -119,7 +119,7 @@ function HomeTabs() {
         }}
       />
       <Tab.Screen
-        name='LeituraQrCode'
+        name='QrReader'
         component={ReadStack}
         options={{
           tabBarLabel: 'Qr code',

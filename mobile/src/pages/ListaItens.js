@@ -4,14 +4,13 @@ import { BottomNavigation } from 'react-native-material-ui';
 import { Header, Icon, ListItem, Input, Button } from 'react-native-elements';
 import api from '../services/api';
 
+import { useOrder } from '../contexts/order';
+
 export default function ListaItens({ navigation }) {
-  const [drink, setDrink] = useState([]);
-  const [product, setProduct] = useState([]);
+  const { setOrder, order, addItem } = useOrder();
+  const [items, setItems] = useState([]);
   const [selectedType, setSelectedType] = useState(0);
   const [name, setName] = useState('');
-  var producList = null;
-  const [list, setList] = useState([]);
-  var drinkableList = null;
 
   async function search() {
     const Api = await api();
@@ -29,84 +28,54 @@ export default function ListaItens({ navigation }) {
     }
   }
   function addItens(l) {
-    if (producList == null) producList = navigation.getParam('listaProduc', []);
-    if (drinkableList == null)
-      drinkableList = navigation.getParam('listaDrink', []);
-
-    if (l.quantity == undefined) {
-      return Alert.alert('Atenção!', 'Selecione a quantidade!');
-    }
-    if (selectedType == 1) {
-      var obj = {
-        product: l,
-        quantity: l.quantity,
-      };
-
-      for (const element of producList) {
-        if (element.product._id == l._id) {
-          return Alert.alert('Atenção!', `${l.name} já foi selecionado!`);
-        }
-      }
-      producList.push(obj);
-      return Alert.alert('Tudo Certo!', `O item ${l.name} foi adicionado!`);
-    } else {
-      var obj = {
-        drinkable: l,
-        quantity: l.quantity,
-      };
-      for (const element of drinkableList) {
-        if (element.drinkable._id == l._id) {
-          return Alert.alert('Atenção', `O item ${l.name} já foi selecionado!`);
-        }
-      }
-      drinkableList.push(obj);
-      return Alert.alert('Tudo Certo!', `O item ${l.name} foi adicionado!`);
-    }
+    // if (producList == null) producList = navigation.getParam('listaProduc', []);
+    // if (drinkableList == null)
+    //   drinkableList = navigation.getParam('listaDrink', []);
+    // if (l.quantity == undefined) {
+    //   return Alert.alert('Atenção!', 'Selecione a quantidade!');
+    // }
+    // if (selectedType == 1) {
+    //   var obj = {
+    //     product: l,
+    //     quantity: l.quantity,
+    //   };
+    //   for (const element of producList) {
+    //     if (element.product._id == l._id) {
+    //       return Alert.alert('Atenção!', `${l.name} já foi selecionado!`);
+    //     }
+    //   }
+    //   producList.push(obj);
+    //   return Alert.alert('Tudo Certo!', `O item ${l.name} foi adicionado!`);
+    // } else {
+    //   var obj = {
+    //     drinkable: l,
+    //     quantity: l.quantity,
+    //   };
+    //   for (const element of drinkableList) {
+    //     if (element.drinkable._id == l._id) {
+    //       return Alert.alert('Atenção', `O item ${l.name} já foi selecionado!`);
+    //     }
+    //   }
+    //   drinkableList.push(obj);
+    //   return Alert.alert('Tudo Certo!', `O item ${l.name} foi adicionado!`);
+    // }
   }
   async function ending() {
-    navigation.navigate('Home', { producList, drinkableList });
+    navigation.navigate('Home');
   }
 
   useEffect(() => {
     async function load() {
-      const Api = await api();
-      const responseDrink = await Api.get('/drinkables');
-      const responseProduct = await Api.get('/products');
+      const response = await api.get('/items');
 
-      setDrink(responseDrink.data);
-      setProduct(responseProduct.data);
+      setItems(response.data);
+    }
 
-      setSelectedType(1);
-    }
-    if (selectedType == 0) {
-      load();
-    }
-    if (selectedType == 2) {
-      setList(drink);
-    }
-    if (selectedType == 1) {
-      setList(product);
-    }
-  }, [selectedType]);
+    load();
+  }, []);
 
   return (
     <View style={styles.container}>
-      {/* <View style={{ marginTop: 30 }}>
-        <Text style={{ marginBottom: 10, color: "white", textAlign: "center", fontSize: 22 }}>{selectedType == 1 ? `Produtos` : `Bebidas`}</Text>
-        <BottomNavigation hidden={true}>
-          <BottomNavigation.Action
-            key="Produtos"
-            icon="local-dining"
-            onPress={() => setSelectedType(1)}
-          />
-          <BottomNavigation.Action
-            key="Bebidas"
-            icon="local-bar"
-            onPress={() => setSelectedType(2)}
-          />
-        </BottomNavigation>
-      </View> */}
-
       <View style={{ marginTop: 10, flexDirection: 'row' }}>
         <Input
           containerStyle={{ width: 290 }}
@@ -125,11 +94,11 @@ export default function ListaItens({ navigation }) {
 
       <View style={{ flex: 1, marginTop: 15 }}>
         <ScrollView style={{ flex: 1, backgroundColor: '#ffe' }}>
-          {list.map((l, i) => (
+          {items.map((l, i) => (
             <ListItem
               key={i}
               leftAvatar={
-                <Icon name={selectedType == 1 ? 'local-dining' : 'local-bar'} />
+                <Icon name={!l.drink ? 'local-dining' : 'local-bar'} />
               }
               title={l.name}
               subtitle={`R$ ${l.price}`}
@@ -143,7 +112,7 @@ export default function ListaItens({ navigation }) {
                 },
                 keyboardType: 'numeric',
               }}
-              rightIcon={{ name: 'add', onPress: () => addItens(l), size: 30 }}
+              rightIcon={{ name: 'add', onPress: () => addItem(l), size: 30 }}
               bottomDivider
               onPress={() =>
                 Alert.alert(

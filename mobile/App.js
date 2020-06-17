@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Routes from './src/routes';
 
 import { AuthProvider } from './src/contexts/auth';
+import { OrderProvider } from './src/contexts/order';
 
 YellowBox.ignoreWarnings([
   'Unrecognized WebSocket',
@@ -16,7 +17,9 @@ export default function App() {
       <StatusBar backgroundColor={'#3F173F'} translucent />
       <NavigationContainer>
         <AuthProvider>
-          <Routes />
+          <OrderProvider>
+            <Routes />
+          </OrderProvider>
         </AuthProvider>
       </NavigationContainer>
     </>
