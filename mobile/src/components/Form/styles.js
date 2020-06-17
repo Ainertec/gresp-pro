@@ -1,5 +1,7 @@
 import styled from 'styled-components/native';
 import { Input } from 'react-native-elements';
+import { RectButton } from 'react-native-gesture-handler';
+
 // import { Searchbar } from 'react-native-paper';
 import { Dimensions } from 'react-native';
 
@@ -14,26 +16,39 @@ export const Label = styled.Text`
 export const TextInput = styled(Input).attrs((props) => ({
   containerStyle: {
     backgroundColor: '#3f173f',
+    color: '#fff',
   },
-  inputStyle: '#fff',
+  inputStyle: {
+    color: '#fff',
+  },
 }))``;
 
-export const Touchable = styled.TouchableOpacity`
-  margin-top: ${height * 0.01}px;
+export const Touchable = styled(RectButton)`
+  margin-top: ${height * 0.06}px;
   width: 100%;
-  height: ${height * 0.05}px;
-  border-radius: 20px;
-  border-width: 1px;
+  flex-direction: row;
+  height: ${height * 0.07}px;
+  border-radius: 10px;
   border-width: ${(props) => (props.outline ? 1 : 0)}px;
-  border-color: darkblue;
-  background: ${(props) => (!props.outline ? 'black' : '#3f173f')};
+  border-color: #3f173f;
+  background: ${(props) => (!props.outline ? '#e72847' : '#3f173f')};
+  overflow: hidden;
   align-items: center;
-  justify-content: center;
   margin-bottom: ${height * 0.024}px;
 `;
 export const TouchableText = styled.Text`
   color: #fff;
   font-weight: bold;
+  flex: 1;
+  justify-content: center;
+  text-align: center;
+`;
+export const TouchableIcon = styled.View`
+  height: ${height * 0.07}px;
+  width: ${height * 0.07}px;
+  background-color: rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  align-items: center;
 `;
 
 // export const Search = styled(Searchbar)`

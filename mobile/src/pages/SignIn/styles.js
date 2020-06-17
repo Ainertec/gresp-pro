@@ -7,7 +7,7 @@ const { width } = Dimensions.get('window');
 export const Container = styled.View`
   flex: 1;
   background: #3f173f;
-  padding: 0 ${width * 0.02}px;
+  padding: 0 ${width * 0.03}px;
 `;
 export const Content = styled.View`
   justify-content: center;
@@ -22,8 +22,8 @@ export const Logo = styled.Image.attrs({
   resizeMode: 'cover',
 })`
   align-self: center;
-  height: ${height * 0.2}px;
-  width: ${height * 0.499}px;
+  height: ${height * 0.15}px;
+  width: ${height * 0.38}px;
 `;
 export const Title = styled.Text`
   font-weight: bold;
