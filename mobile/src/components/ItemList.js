@@ -1,27 +1,33 @@
 import React from 'react';
 
-import { Icon, ListItem, } from 'react-native-elements';
+import { Icon, ListItem } from 'react-native-elements';
 
-export default function ItemList({
-  listType,
-  list,
-  itemRemove,
-  setChanged,
-}) {
+export default function ItemList({ item, setChanged, itemRemove }) {
   return (
     <ListItem
-      leftAvatar={<Icon name='restaurant' />}
-      title={listType.name}
+      style={{ borderRadius: 40 }}
+      containerStyle={{ borderRadius: 30 }}
+      leftAvatar={
+        item.product.drink ? (
+          <Icon name='local-drink' />
+        ) : (
+          <Icon name='restaurant' />
+        )
+      }
+      title={item.product.name}
       input={{
         inputContainerStyle: { width: 50 },
-        defaultValue: `${list.quantity}`,
+        defaultValue: `${item.quantity}`,
         placeholder: '0',
-        label: "Quantidade",
-        onChangeText: text => { setChanged(true); list.quantity = text },
-        keyboardType: "numeric",
+        label: 'Quantidade',
+        onChangeText: (text) => {
+          setChanged(true);
+          item.quantity = text;
+        },
+        keyboardType: 'numeric',
       }}
-      subtitle={`R$ ${listType.price}`}
-      rightIcon={{ name: 'clear', onPress: () => itemRemove(listType._id) }}
+      subtitle={`R$ ${item.product.price}`}
+      rightIcon={{ name: 'clear', onPress: () => itemRemove(item._id) }}
       bottomDivider
     />
   );
