@@ -6,7 +6,7 @@ export default function ItemList({ item, setChanged, itemRemove }) {
   return (
     <ListItem
       style={{ borderRadius: 40 }}
-      containerStyle={{ borderRadius: 30 }}
+      containerStyle={{ borderRadius: 30, marginBottom: 10 }}
       leftAvatar={
         item.product.drink ? (
           <Icon name='local-drink' />
@@ -27,7 +27,7 @@ export default function ItemList({ item, setChanged, itemRemove }) {
         keyboardType: 'numeric',
       }}
       subtitle={`R$ ${item.product.price}`}
-      rightIcon={{ name: 'clear', onPress: () => itemRemove(item._id) }}
+      rightIcon={{ name: 'clear', onPress: () => itemRemove(item.product._id) }}
       bottomDivider
     />
   );

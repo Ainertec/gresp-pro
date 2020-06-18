@@ -45,8 +45,8 @@ const Input = ({ name, iconName, ...rest }) => {
       leftIcon={
         <Icon
           name={iconName}
-          size={24}
-          color='#fff'
+          size={29}
+          color='#000'
           style={{ marginRight: 20 }}
         />
       }

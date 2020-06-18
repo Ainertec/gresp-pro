@@ -15,10 +15,10 @@ export const Label = styled.Text`
 
 export const TextInput = styled(Input).attrs((props) => ({
   containerStyle: {
-    backgroundColor: '#3f173f',
+    backgroundColor: '#fff',
   },
   inputStyle: {
-    color: '#fff',
+    color: '#000',
   },
 }))``;
 
@@ -30,7 +30,8 @@ export const Touchable = styled(RectButton)`
   border-radius: 10px;
   border-width: ${(props) => (props.outline ? 1 : 0)}px;
   border-color: #3f173f;
-  background: ${(props) => (!props.outline ? '#e72847' : '#3f173f')};
+  /* background: ${(props) => (!props.outline ? '#e72847' : '#3f173f')}; */
+  background: ${(props) => (!props.outline ? '#3f173f' : '#3f173f')};
   overflow: hidden;
   align-items: center;
   margin-bottom: ${height * 0.024}px;

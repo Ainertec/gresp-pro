@@ -10,7 +10,7 @@ import * as Yup from 'yup';
 import { Input, Label, Button } from '../../components/Form';
 // import Alert from '../../components/Alert';
 
-import logo from '../../assets/logo.png';
+import logo from '../../assets/logo2.png';
 import { useAuth } from '../../contexts/auth';
 
 import { Container, Logo, Title, Content } from './styles';

@@ -6,7 +6,8 @@ const { width } = Dimensions.get('window');
 
 export const Container = styled.View`
   flex: 1;
-  background: #3f173f;
+  /* background: #3f173f; */
+  background: #fff;
   padding: 0 ${width * 0.03}px;
 `;
 export const Content = styled.View`

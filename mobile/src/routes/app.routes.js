@@ -10,7 +10,7 @@ import Home from '../pages/Home/index';
 import Setting from '../pages/Setting';
 import Cozinha from '../pages/Cozinha';
 import QrReader from '../pages/QrReader';
-import ListaItens from '../pages/ListaItens';
+import AddItems from '../pages/AddItems/index';
 
 import logo from '../assets/logo.png';
 
@@ -142,7 +142,7 @@ const Routes = () => {
         name='Home'
         component={HomeTabs}
       />
-      <Stack.Screen options={header} name='Items' component={ListaItens} />
+      <Stack.Screen options={header} name='Items' component={AddItems} />
       <Stack.Screen options={header} name='Setting' component={Setting} />
     </Stack.Navigator>
   );
