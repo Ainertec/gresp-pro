@@ -33,77 +33,63 @@ export default function Home() {
 
   const navigation = useNavigation();
 
-  async function itemRemove(id) {
-    const filterdItem = order.items.filter((item) => item._id !== id);
-    setOrder(filterdItem);
+  function handleNavigateItems() {
+    if (!order.identification) {
+      alert('É necessário informar a identificação primeiro');
+      navigation.navigate('QrReader');
+      return;
+    }
+
+    navigation.navigate('Items');
   }
 
-  // async function sendOrder() {
+  async function itemRemove(id) {
+    const filterdItem = order.items.filter((item) => item.product._id !== id);
+    setOrder({ ...order, items: filterdItem });
+  }
 
-  //   const identification = Number.parseInt(await AsyncStorage.getItem('id'));
-  //   const newOrder = await AsyncStorage.getItem('newOrder');
-  //   await AsyncStorage.removeItem('newOrder');
-  //   const Api = await api();
+  async function sendOrder() {
+    if (!order.identification) {
+      alert('É necessário a identificação');
+      navigation.navigate('QrReader');
+      return;
+    }
+    if (order.items.length === 0 || order.items.length === undefined) {
+      return alert('Necessário inserir items');
+    }
 
-  //   let haveDrink = drinkables.toString();
-  //   let haveProduct = products.toString();
+    if (order._id) {
+      const response = await api.put(`orders/${order.identification}`, {
+        items: order.items,
+        note: order.note,
+      });
 
-  //   if (!identification)
-  //     return Alert.alert('Ops!', 'É necessário informar o número do pedido.');
-  //   if (haveDrink == '' && haveProduct == '')
-  //     return Alert.alert(
-  //       'Ops!',
-  //       'É necessário informar uma bebida ou produto.'
-  //     );
-  //   var response;
-
-  //   if (newOrder) {
-  //     response = await Api.post('/order/', {
-  //       identification,
-  //       products,
-  //       drinkables,
-  //       note,
-  //     });
-
-  //     // await Api.get(`/printer/?identification=${identification}`);
-
-  //     if (response.alert) {
-  //       Alert.alert(`${response.alert}`);
-  //     }
-
-  //     if (response.status == 200) Alert.alert('Tudo Certo!', 'pedido criado!');
-  //     else Alert.alert('ocorreu um erro!');
-  //   } else {
-  //     // var jsonDid = await Api.get(`/order/?identification=${identification}`);
-
-  //     response = await Api.put(`/order/${identification}`, {
-  //       products,
-  //       drinkables,
-  //       note,
-  //     });
-
-  //     // await Api.put(`/printerupdate/?identification=${identification}`, jsonDid.data);
-
-  //     if (response.alert) {
-  //       Alert.alert(`${response.alert}`);
-  //     }
-  //     if (response.status == 200)
-  //       Alert.alert('Tudo Certo!', 'Pedido atualizado!');
-  //     else Alert.alert('ocorreu um erro!');
-  //   }
-  //   setChanged(false);
-  //   await getDrinkablesAndProducts(
-  //     response.data.order.drinkables,
-  //     response.data.order.products
-  //   );
-  //   setOrder(response.data.order);
-  // }
+      return response.status === 200
+        ? alert('Pedido atualizado')
+        : alert('Falha ao atualizar pedido');
+    } else {
+      console.log('opa novo');
+      const response = await api
+        .post(`orders`, {
+          identification: Number(order.identification),
+          items: order.items,
+          note: note,
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+      return response.status === 200
+        ? alert('Pedido criado')
+        : alert('Falha ao criar pedido');
+    }
+  }
 
   async function handlePayment() {
     if (order.total === undefined || changed === true)
       return Alert.alert('Ops!', 'Crie ou atualize o pedido para paga-lo!');
     setShowPay(true);
   }
+
   useEffect(() => {
     console.log('order', order);
   }, [order]);
@@ -157,7 +143,7 @@ export default function Home() {
             color='grey'
             size={26}
             name='add-circle'
-            onPress={() => navigation.navigate('Items')}
+            onPress={handleNavigateItems}
           />
           <OrderNumber>Pedido N°</OrderNumber>
         </FooterItems>
@@ -177,7 +163,7 @@ export default function Home() {
             raised
             color='#7b1b53'
             name='send'
-            onPress={() => {}}
+            onPress={sendOrder}
           />
         </FooterNavigation>
       </FooterContainer>

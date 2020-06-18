@@ -1,8 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-// import { AsyncStorage } from 'react-native';
 
 import { load } from '../services/loadOrder';
-// import api from '../services/api';
 
 const OrderContext = createContext({});
 
@@ -13,7 +11,7 @@ export const OrderProvider = ({ children }) => {
     const response = await load(identification);
     if (response.data) setOrder(response.data);
     else {
-      const newOrder = { identification: identification };
+      const newOrder = { identification: identification, items: [], note: '' };
       setOrder(newOrder);
     }
   }
@@ -22,6 +20,7 @@ export const OrderProvider = ({ children }) => {
     const items = order.items;
     const newProduct = { product: item, quantity: item.quantity };
     items.push(newProduct);
+    console.log('items', items);
 
     setOrder({ ...order, items: items });
   }
