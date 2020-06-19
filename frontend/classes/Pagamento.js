@@ -48,7 +48,7 @@ function telaLeituraDeQrCodePagamento() {
     var codigoHTML;
 
     codigoHTML = '<h4 class="text-center">Leitura QR Code</h4>'
-    codigoHTML += '<video id="preview" class="rounded mx-auto d-block" style="margin-top:30px" width=300 height=300></video>'
+    codigoHTML += '<video id="preview" class="mx-auto d-block" style="margin-top:30px; background-color:#000; width:40vw; height:30vw; border-radius:30px;"></video>'
     codigoHTML += '<button onclick="telaLeituraDeQrCodePedido();" class="btn btn-outline-secondary rounded mx-auto d-block" style="margin-top:15px"><span class="fas fa-sync"></span> Atualizar</button>'
 
     document.getElementById('janela2').innerHTML = codigoHTML;
@@ -75,7 +75,7 @@ function telaLeituraDeQrCodePagamento() {
 //funcao para exibir lista com todos os pedidos
 async function telaExibirTodosOsPedidosPagamento() {
 
-    let codigoHTML = '', json = await requisicaoGET("orders/");
+    let codigoHTML = '', json = await requisicaoGET("orders", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
 
     codigoHTML += '<h4 class="text-center" style="margin-top:30px">Lista de Pedidos</h4>'
     codigoHTML += '<table class="table table-light col-10 mx-auto table-sm text-center" style="margin-top:50px">'
@@ -85,7 +85,7 @@ async function telaExibirTodosOsPedidosPagamento() {
         codigoHTML += '<tr>'
         codigoHTML += '<td class="table-info"><strong>' + item.identification + '</strong></td>'
         codigoHTML += '<td class="table-warning text-danger"><strong>R$ ' + item.total.toFixed(2) + '</strong></td>'
-        codigoHTML += '<td class="table-warning"><strong>' + (item.update_at).split('.')[0] + '</strong></td>'
+        codigoHTML += '<td class="table-warning"><strong>' + (item.updatedAt).split('.')[0] + '</strong></td>'
         codigoHTML += '<td><button class="btn btn-primary" onclick="telaPagamento(this.value)" value=' + item.identification + '><span class="fas fa-edit iconsTam"></span></button></td>'
         codigoHTML += '</tr>'
     });
@@ -101,10 +101,11 @@ async function telaExibirTodosOsPedidosPagamento() {
 async function buscarDadosDoPedidoParaPagamento() {
 
     var codigoHTML = '';
-    var json = await requisicaoGET("order/?identification=" + $('#identificacao').val());
+    var json = await requisicaoGET("orders/" + $('#identificacao').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
 
     if (json.data == null) {
         mensagemDeErro("Pedido inexistente!");
+        setTimeout(function () { menuPagamentoPedido(); }, 1000)
     } else {
 
         document.getElementById('resposta').innerHTML = "";
@@ -118,23 +119,21 @@ async function buscarDadosDoPedidoParaPagamento() {
         codigoHTML += '<div class="col-12 layer1" style="position: relative; height: 35vh; z-index: 1; overflow: scroll; margin-right: 0px; padding: 5px">'
         codigoHTML += '<table class="table table-light table-sm"><thead class="thead-dark"><tr><th scope="col">Nome</th><th scope="col">Preço</th><th scope="col">Quantidade</th><th scope="col">Total</th></tr></thead><tbody>'
         try {
-            json.data.products.forEach(function (item) {
+            json.data.items.forEach(function (item) {
                 codigoHTML += '<tr scope="row">'
-                codigoHTML += `<td class="table-info"><strong>${corrigirTamanhoString(40, item.product.name)}</strong></td>`
+                if (item.product.drink) {
+                    codigoHTML += `<td class="table-info"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(40, item.product.name)}</strong></td>`
+                } else {
+                    codigoHTML += `<td class="table-info"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(40, item.product.name)}</strong></td>`
+                }
                 codigoHTML += `<td class="table-warning"><strong>R$ ${(parseFloat(item.product.price)).toFixed(2)}</strong></td>`
                 codigoHTML += `<td class="table-warning text-center"><strong>${parseInt(item.quantity)}</strong></td>`
                 codigoHTML += `<td class="table-warning text-danger"><strong>R$ ${(parseFloat(item.product.price) * parseInt(item.quantity)).toFixed(2)}</strong></td>`
                 codigoHTML += '</tr>'
             });
-            json.data.drinkables.forEach(function (item) {
-                codigoHTML += '<tr scope="row">'
-                codigoHTML += `<td class="table-info"><strong>${corrigirTamanhoString(40, item.drinkable.name)}</strong></td>`
-                codigoHTML += `<td class="table-warning"><strong>R$ ${(parseFloat(item.drinkable.price)).toFixed(2)}</strong></td>`
-                codigoHTML += `<td class="table-warning text-center"><strong>${parseInt(item.quantity)}</strong></td>`
-                codigoHTML += `<td class="table-warning text-danger"><strong>R$ ${(parseFloat(item.drinkable.price) * parseInt(item.quantity)).toFixed(2)}</strong></td>`
-                codigoHTML += '</tr>'
-            });
-        } catch (Exception) { }
+        } catch (Exception) {
+            mensagemDeErro('Não foi possível carregar os itens!')
+        }
         codigoHTML += '</tbody></table>'
         codigoHTML += '</div>'
 
@@ -161,8 +160,9 @@ async function buscarDadosDoPedidoParaPagamento() {
 //funcao para efetuar o pagamento
 function efetuarPagamento() {
     try {
-        requisicaoDELETE("orders/" + $('#identificacao').val() + "/" + $('#formaPagamento').val(), null);
+        requisicaoDELETE("orders/" + $('#identificacao').val() + "/" + $('#formaPagamento').val(), null, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         mensagemDeAviso("Pagamento Efetuado!");
+        setTimeout(function () { menuPagamentoPedido(); }, 500)
     } catch (error) {
         mensagemDeErro('Não foi possível efetuar o pagamento!')
     }

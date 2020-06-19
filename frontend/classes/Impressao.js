@@ -9,6 +9,8 @@ function ligacaoRelatorioFacede(tipo) {
             telaGerarRelatorioDeCaixa();
         } else if (tipo == 'produtosebebidas') {
             telaGerarRelatorioProdutoseBebidas();
+        } else {
+            telaGerarListaTodosOsPedidosAbertos();
         }
     } else if (JSON.parse(situacao).tipo == 'Comum') {
         if (tipo == 'pedidosabertos') {
@@ -147,16 +149,16 @@ function telaGerarRelatorioDeCaixa() {
 
 //funcao para gerar tela de resposta com todos os pedidos fechados
 async function telaRespostaRelatorioDeCaixa() {
-    let json = await requisicaoGET("logs_by_month/"), codigoHTML = '';
+    //let json = await requisicaoGET("logs_by_month/"), codigoHTML = '';
 
     gerarGraficoLucroTotal();
 
     gerarGraficoDemonstrativoVendaPorItem();
 
-    gerarGraficoLucroMensal();
+    gerarGraficoLucroMensal('impressao');
 
 
-    codigoHTML += '<table class="table table-dark table-bordered text-center">'
+    /*codigoHTML += '<table class="table table-dark table-bordered text-center">'
     codigoHTML += '<thead class="thead-dark">'
     codigoHTML += '<tr>'
     codigoHTML += '<td scope="col"><small>Data</small></td>'
@@ -186,7 +188,7 @@ async function telaRespostaRelatorioDeCaixa() {
     codigoHTML += '</tbody>'
     codigoHTML += '</table>'
 
-    document.getElementById('lista').innerHTML = codigoHTML;
+    document.getElementById('lista').innerHTML = codigoHTML;*/
 
 }
 
@@ -227,7 +229,7 @@ function telaGerarListaTodosOsPedidosAbertos() {
 
 //funcao para gerar tela de resposta com lista de todos os pedidos em aberto
 async function telaRespostaListaTodosOsPedidosAbertos() {
-    var json = await requisicaoGET("orders/"), codigoHTML = ``;
+    let json = await requisicaoGET("orders", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }), codigoHTML = ``;
 
     codigoHTML += `<table class="table table-dark table-bordered text-center">`
     codigoHTML += `<thead class="thead-dark">`
@@ -243,11 +245,8 @@ async function telaRespostaListaTodosOsPedidosAbertos() {
         codigoHTML += `<tr class="table-light text-dark">`
         codigoHTML += `<td scope="col"><small>${item.identification}</small></td>`
         codigoHTML += `<td scope="col"><small>`
-        item.products.forEach(function (item2) {
+        item.items.forEach(function (item2) {
             codigoHTML += `( ${corrigirTamanhoString(20, item2.product.name)} X ${item2.quantity} )`
-        });
-        item.drinkables.forEach(function (item2) {
-            codigoHTML += `( ${corrigirTamanhoString(20, item2.drinkable.name)} X ${item2.quantity} )`
         });
         codigoHTML += `</small></td>`
         codigoHTML += `<td scope="col"><small>R$${(item.total).toFixed(2)}</small></td>`

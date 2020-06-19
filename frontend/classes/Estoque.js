@@ -56,7 +56,11 @@ async function buscarEstoque(tipoBusca) {
     json.data.forEach(function (item) {
         VETORDEITENSESTOQUE.push(item);
         codigoHTML += '<tr>'
-        codigoHTML += `<td class="table-secondary text-dark"><strong>${corrigirTamanhoString(20, item.name)}</strong></td>`
+        if (item.drink) {
+            codigoHTML += `<td class="table-secondary text-dark"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
+        } else {
+            codigoHTML += `<td class="table-secondary text-dark"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
+        }
         codigoHTML += `<td class="table-secondary text-dark">${corrigirTamanhoString(40, item.description)}</td>`
         if (parseInt(item.stock) > 5) {
             codigoHTML += `<td class="table-success text-dark text-center"><strong>${item.stock}</strong></td>`

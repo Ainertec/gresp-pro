@@ -59,7 +59,7 @@ async function buscarBebida(tipoBusca) {
         if (item.drink) {
             VETORDEBEBIDASCLASSEBEBIDA.push(item)
             codigoHTML += '<tr>'
-            codigoHTML += `<th class="table-info">${corrigirTamanhoString(20, item.name)}</th>`
+            codigoHTML += `<th class="table-info"><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(20, item.name)}</th>`
             codigoHTML += `<td class="table-info">${corrigirTamanhoString(40, item.description)}</td>`
             if (item.stock != null) {
                 codigoHTML += `<td class="table-primary"><strong>${item.stock}</strong></td>`

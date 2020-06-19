@@ -99,7 +99,7 @@ function telaLeituraDeQrCodePedido() {
     let codigoHTML = '';
 
     codigoHTML += '<h4 class="text-center">Leitura QR Code</h4>'
-    codigoHTML += '<video id="preview" class="rounded mx-auto d-block" style="margin-top:30px" width=300 height=300></video>'
+    codigoHTML += '<video id="preview" class="mx-auto d-block" style="margin-top:30px; background-color:#000; width:40vw; height:30vw; border-radius:30px;"></video>'
     codigoHTML += '<button onclick="telaLeituraDeQrCodePedido();" class="btn btn-outline-dark rounded mx-auto d-block" style="margin-top:15px"><span class="fas fa-sync"></span> Atualizar</button>'
 
     document.getElementById('janela2').innerHTML = codigoHTML;
@@ -120,7 +120,7 @@ function telaLeituraDeQrCodePedido() {
             mensagemDeErro("Não existe câmera no dispositivo!");
         }
     });
-    setTimeout(function () { scanner.stop(); }, 10000);
+    setTimeout(function () { scanner.stop(); document.getElementById('preview').innerHTML = ''; }, 10000);
 }
 
 //funcao para exibir lista com todos os pedidos
@@ -136,7 +136,7 @@ async function telaExibirTodosOsPedidos() {
         codigoHTML += '<tr>'
         codigoHTML += `<td class="table-info"><strong>${item.identification}</strong></td>`
         codigoHTML += `<td class="table-warning text-danger"><strong>R$ ${(item.total).toFixed(2)}</strong></td>`
-        codigoHTML += `<td class="table-warning"><strong>${(item.update_at).split('.')[0]}</strong></td>`
+        codigoHTML += `<td class="table-warning"><strong>${(item.updatedAt).split('.')[0]}</strong></td>`
         codigoHTML += `<td><button class="btn btn-primary" onclick="telaDigitarPedido(this.value)" value=${item.identification}><span class="fas fa-edit iconsTam"></span></button></td>`
         codigoHTML += '</tr>'
     });
@@ -225,7 +225,11 @@ function gerarTabeladeItensInseridos(json, quantidadeItem, pedidoTipo) {
     let codigoHTML = '';
 
     codigoHTML = `<tr scope="row" id="item${json._id}">`
-    codigoHTML += `<td class="col-md-5 table-info"><strong>${corrigirTamanhoString(30, json.name)}</strong></td>`
+    if (json.type == 'Produto') {
+        codigoHTML += `<td class="col-md-5 table-info"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(30, json.name)}</strong></td>`
+    } else {
+        codigoHTML += `<td class="col-md-5 table-info"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(30, json.name)}</strong></td>`
+    }
     codigoHTML += `<td class="col-md-2 table-warning text-danger"><strong>R$${(parseFloat(json.price)).toFixed(2)}</strong></td>`
     codigoHTML += `<td class="col-md-1 table-warning"><input class="form-control col-md-8 form-control-sm mousetrap" id="quantidade${json._id}" type="Number" value=${parseInt(quantidadeItem)}></td>`
     if (pedidoTipo == 'novo') {
@@ -321,6 +325,8 @@ function telaBuscaeExibirItens() {
     codigoHTML += '<div class="col">'
     codigoHTML += '<div id="respostaProduto" style="margin-top: 10px;"></div>'
     codigoHTML += '</div>'
+    codigoHTML += '</div>'
+    codigoHTML += '<div class="row">'
     codigoHTML += '<div class="col">'
     codigoHTML += '<div id="respostaBebida" style="margin-top: 10px;"></div>'
     codigoHTML += '</div>'
@@ -356,7 +362,7 @@ async function listaItens(tipoBusca) {
     json.data.forEach(function (item) {
         if (!item.drink) {
             codigoHTML += '<tr>'
-            codigoHTML += `<td class="col-md-5 table-secondary"><strong>${corrigirTamanhoString(30, item.name)}</strong></td>`
+            codigoHTML += `<td class="col-md-5 table-secondary"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(30, item.name)}</strong></td>`
             codigoHTML += `<td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>`
             codigoHTML += `<td class="col-md-2 table-warning"><input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" /></td>`
             codigoHTML += `<td class="col-md-2"><button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('Produto', '${item._id}', '#quantidadeAdicionar${item._id}', 'novo')}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm"><span class="fas fa-plus"></span></button></td>`
@@ -376,7 +382,7 @@ async function listaItens(tipoBusca) {
     json.data.forEach(function (item) {
         if (item.drink) {
             codigoHTML2 += '<tr>'
-            codigoHTML2 += `<td class="col-md-5 table-secondary"><strong>${corrigirTamanhoString(30, item.name)}</strong></td>`
+            codigoHTML2 += `<td class="col-md-5 table-secondary"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(30, item.name)}</strong></td>`
             codigoHTML2 += `<td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>`
             codigoHTML2 += `<td class="col-md-2 table-warning"><input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" /></td>`
             codigoHTML2 += `<td class="col-md-2"><button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('Bebida', '${item._id}', '#quantidadeAdicionar${item._id}', 'novo')}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm"><span class="fas fa-plus"></span></button></td>`
@@ -429,6 +435,7 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
                 //await requisicaoGET("printer/?identification=" + $('#identificacao').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
                 mensagemDeAviso("Pedido cadastrado com sucesso!");
                 buscarPedido();
+                setTimeout(function () { menuPedido(); }, 1500)
             } else if (condicaoComItens) {
                 mensagemDeErro('Não cadastrado, item com quantidade inválida!')
             } else {
@@ -437,10 +444,13 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
         } else {
             if (condicaoComItens && condicaoSemQuantidade) {
                 let jsonDid = await requisicaoGET("orders/" + $('#identificacao').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-                await requisicaoPUT("orders/" + $('#identificacao').val(), JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+                let json2 = JSON.parse(json)
+                delete json2.identification
+                await requisicaoPUT("orders/" + $('#identificacao').val(), json2, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
                 //await requisicaoPUT("printerupdate/?identification=" + $('#identificacao').val(), jsonDid.data, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
                 mensagemDeAviso("Pedido atualizado com sucesso!");
                 buscarPedido();
+                setTimeout(function () { menuPedido(); }, 1500)
             } else if (condicaoComItens) {
                 mensagemDeErro('Não atualizado, item com quantidade inválida!')
             } else {
