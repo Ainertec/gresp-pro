@@ -21,7 +21,15 @@ export const OrderProvider = ({ children }) => {
     const newProduct = { product: item, quantity: item.quantity };
     items.push(newProduct);
 
-    setOrder({ ...order, items: items });
+    const newOrder = {
+      _id: order._id,
+      note: order.note,
+      identification: order.identification,
+      items: items,
+    };
+    console.log('new order', newOrder);
+
+    setOrder(newOrder);
   }
 
   return (

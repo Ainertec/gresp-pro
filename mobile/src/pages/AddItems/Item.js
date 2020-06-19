@@ -18,6 +18,7 @@ const Item = ({ item }) => {
 
   function handleSelect(data) {
     data.quantity = quantity;
+
     const alrearySelected = order.items.findIndex(
       (item) => item.product._id === data._id
     );
@@ -26,7 +27,11 @@ const Item = ({ item }) => {
       const filterdItem = order.items.filter(
         (item) => item.product._id !== data._id
       );
-      setOrder({ ...order, items: filterdItem });
+      const newOrder = {
+        ...order,
+        items: filterdItem,
+      };
+      setOrder(newOrder);
     } else {
       addItem(data);
     }

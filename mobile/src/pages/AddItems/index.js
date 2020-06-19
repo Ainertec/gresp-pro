@@ -4,7 +4,6 @@ import { BottomNavigation } from 'react-native-material-ui';
 import { Icon } from 'react-native-elements';
 import { Form } from '@unform/core';
 
-import { useOrder } from '../../contexts/order';
 import api from '../../services/api';
 
 import { SearchBar } from '../../components/Form';
@@ -23,26 +22,28 @@ export default function ListaItens({ navigation }) {
   const formRef = useRef(null);
 
   async function handleSubmit(data) {
-    setItems([]);
-    loadProducts(1, data.name, true);
+    setPage(1);
+    if (data === '') {
+      loadProducts(1);
+    } else {
+      loadProducts(1, data.name, true);
+    }
   }
 
   async function loadProducts(pageNumber = page, data = '', newItems) {
-    console.log('data', data);
+    console.log(pageNumber);
     if (loading) {
       return;
     }
 
-    if (total > 0 && items.length === total && data === '') {
-      return;
-    }
+    if (total && pageNumber > total) return;
 
     setLoading(true);
 
     const response = await api
       .get(`items/${data}`, {
         params: {
-          page,
+          page: pageNumber,
         },
       })
       .catch((error) => {
@@ -51,7 +52,8 @@ export default function ListaItens({ navigation }) {
     console.log(response);
 
     setItems(newItems ? response.data : [...items, ...response.data]);
-    setTotal(Number(response.headers['x-total-count']));
+    // setTotal(Number(response.headers['x-total-count']));
+    setTotal(Math.ceil(Number(response.headers['x-total-count']) / 10));
     setPage(page + 1);
     setLoading(false);
   }
@@ -63,6 +65,9 @@ export default function ListaItens({ navigation }) {
   useEffect(() => {
     loadProducts();
   }, []);
+  // useEffect(() => {
+  //   console.log('Os items', items);
+  // }, [items]);
 
   const SEARCH_TRANSLATE = deviceHeight * 0.2;
   const scrollFlatlist = new Animated.Value(0);
@@ -100,9 +105,9 @@ export default function ListaItens({ navigation }) {
         }
         data={items}
         showsVerticalScrollIndicator={false}
-        onEndReached={loadProducts}
+        onEndReached={() => loadProducts()}
         onEndReachedThreshold={0.2}
-        keyExtractor={(item) => String(item._id)}
+        keyExtractor={(itemKey) => String(itemKey._id)}
         onScroll={Animated.event(
           [
             {
@@ -112,7 +117,7 @@ export default function ListaItens({ navigation }) {
           { useNativeDriver: true }
         )}
         scrollEventThrottle={16}
-        renderItem={({ item }) => <Item key={item._id} item={item} />}
+        renderItem={({ item }) => <Item item={item} />}
       />
 
       <View>
@@ -121,7 +126,7 @@ export default function ListaItens({ navigation }) {
             key='voltar'
             icon='arrow-back'
             label='Voltar'
-            onPress={() => navigation.navigate('Home')}
+            onPress={() => loadProducts()}
           />
           <BottomNavigation.Action
             key='Finalizar'

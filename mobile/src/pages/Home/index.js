@@ -117,10 +117,9 @@ export default function Home() {
       <FlatList
         style={{ paddingTop: 20 }}
         data={order.items}
-        keyExtractor={(item) => String(item._id)}
+        keyExtractor={(item) => String(item.product._id)}
         renderItem={({ item }) => (
           <ItemList
-            key={item._id}
             item={item}
             setChanged={setChanged}
             itemRemove={itemRemove}
