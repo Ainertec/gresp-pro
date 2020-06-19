@@ -20,7 +20,7 @@ import session from './validations/sessionSchema';
 import serial from './validations/serialSchema';
 import { get, post } from './validations/forgotSchema';
 import { paramIdUser, user, userUpdate } from './validations/userSchema';
-import { item, paramIdItem, paramNameItem } from './validations/itemSchema';
+import { item, paramIdItem, paramNameItem,queryPage } from './validations/itemSchema';
 import {
   order,
   orderUpdate,
@@ -66,7 +66,7 @@ routes.delete('/users/:id', celebrate({ params: paramIdUser }), UserController.d
 
 // Item
 
-routes.get('/items/:name', celebrate({ params: paramNameItem }), ItemController.show);
+routes.get('/items/:name', celebrate({ params: paramNameItem,query:queryPage }), ItemController.show);
 routes.get('/items', ItemController.index);
 routes.post('/items', celebrate({ body: item }), ItemController.create);
 routes.put('/items/:id', celebrate({ body: item, params: paramIdItem }), ItemController.update);

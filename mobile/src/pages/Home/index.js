@@ -90,9 +90,9 @@ export default function Home() {
     setShowPay(true);
   }
 
-  useEffect(() => {
-    console.log('order', order);
-  }, [order]);
+  // useEffect(() => {
+  //   console.log('order', order);
+  // }, [order]);
 
   useEffect(() => {
     if (!showPay) {
@@ -145,7 +145,7 @@ export default function Home() {
             name='add-circle'
             onPress={handleNavigateItems}
           />
-          <OrderNumber>Pedido N°</OrderNumber>
+          <OrderNumber>Pedido N° {order.identification}</OrderNumber>
         </FooterItems>
         <FooterNavigation>
           <Icon

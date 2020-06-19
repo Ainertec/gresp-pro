@@ -20,7 +20,6 @@ export const OrderProvider = ({ children }) => {
     const items = order.items;
     const newProduct = { product: item, quantity: item.quantity };
     items.push(newProduct);
-    console.log('items', items);
 
     setOrder({ ...order, items: items });
   }
