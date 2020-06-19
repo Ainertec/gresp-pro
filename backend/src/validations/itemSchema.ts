@@ -15,3 +15,6 @@ export const paramIdItem = {
 export const paramNameItem = {
   name: Joi.string(),
 };
+export const queryPage = {
+  page: Joi.number(),
+};

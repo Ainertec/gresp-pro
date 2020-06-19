@@ -3,24 +3,33 @@ import Item from '../models/Item';
 
 class ItemController {
   public async show(req: Request, res: Response) {
-    const name: string = req.params.name;
-
-    const items = await Item.find({ name: { $regex: new RegExp(name), $options: 'i' } });
-
-    return res.json(items);
-  }
-  public async index(req: Request, res: Response) {
     const { page = 1 } = req.query;
+    const { name } = req.params
 
-    const count = await Item.countDocuments({});
-
-    const items = await Item.find()
+      const count = await Item.find({ name: { $regex: new RegExp(name), $options: 'i' } }).countDocuments({});
+      const items = await Item.find({ name: { $regex: new RegExp(name), $options: 'i' } })
       .skip((Number(page) - 1) * 10)
       .limit(10);
 
     res.header('X-Total-Count', String(count));
 
     return res.json(items);
+  }
+  public async index(req: Request, res: Response) {
+    const { page = 1 } = req.query;
+   
+      const count = await Item.countDocuments({});
+
+      const items = await Item.find()
+        .skip((Number(page) - 1) * 10)
+        .limit(10);
+
+      res.header('X-Total-Count', String(count));
+
+      return res.json(items);
+    
+
+    
   }
   public async create(req: Request, res: Response): Promise<Response> {
     const { name, price, description, stock, drink } = req.body;
