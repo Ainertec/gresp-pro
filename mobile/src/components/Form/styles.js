@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import { Input } from 'react-native-elements';
 import { RectButton } from 'react-native-gesture-handler';
 
-// import { Searchbar } from 'react-native-paper';
+import { Searchbar } from 'react-native-paper';
 import { Dimensions } from 'react-native';
 
 const { height } = Dimensions.get('window');
@@ -51,12 +51,12 @@ export const TouchableIcon = styled.View`
   align-items: center;
 `;
 
-// export const Search = styled(Searchbar)`
-//   border-radius: ${width * 0.06}px;
-//   z-index: 2;
-//   margin: ${height * 0.02}px ${height * 0.01}px;
-//   position: absolute;
-//   left: 0;
-//   top: 0;
-//   right: 0;
-// `;
+export const Search = styled(Searchbar)`
+  border-radius: ${width * 0.06}px;
+  z-index: 2;
+  margin: ${height * 0.02}px ${height * 0.01}px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+`;

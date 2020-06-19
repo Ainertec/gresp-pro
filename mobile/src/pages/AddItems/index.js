@@ -1,32 +1,59 @@
-import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Alert, FlatList } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Animated, Dimensions, ActivityIndicator } from 'react-native';
 import { BottomNavigation } from 'react-native-material-ui';
-import { Icon, ListItem, Input, Button } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
+import { Form } from '@unform/core';
 
-import { useOrder } from '../contexts/order';
-import api from '../services/api';
+import { useOrder } from '../../contexts/order';
+import api from '../../services/api';
+
+import { SearchBar } from '../../components/Form';
+
 import { Container, ItemList } from './styles';
+import Item from './Item';
+
+const deviceHeight = Dimensions.get('window').height;
 
 export default function ListaItens({ navigation }) {
-  const { addItem } = useOrder();
   const [items, setItems] = useState([]);
-  const [selectedType, setSelectedType] = useState(0);
-  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
 
-  async function search() {
-    const Api = await api();
-    if (selectedType == 1) {
-      const response = await Api.get('/products', {
-        params: { name },
-      });
+  const formRef = useRef(null);
 
-      setList(response.data);
-    } else {
-      const response = await Api.get('/drinkables', {
-        params: { name },
-      });
-      setList(response.data);
+  async function handleSubmit(data) {
+    setItems([]);
+    loadProducts(1, data.name, true);
+  }
+
+  async function loadProducts(pageNumber = page, data = '', newItems) {
+    console.log('data', data);
+    if (loading) {
+      return;
     }
+
+    if (total > 0 && items.length === total && data === '') {
+      return;
+    }
+
+    setLoading(true);
+
+    const response = await api
+      .get(`items/${data}`, {
+        params: {
+          page,
+        },
+      })
+      .catch((error) => {
+        console.log(error.request);
+      });
+    console.log(response);
+
+    setItems(newItems ? response.data : [...items, ...response.data]);
+    setTotal(Number(response.headers['x-total-count']));
+    setPage(page + 1);
+    setLoading(false);
   }
 
   async function ending() {
@@ -34,66 +61,58 @@ export default function ListaItens({ navigation }) {
   }
 
   useEffect(() => {
-    async function load() {
-      const response = await api.get('/items');
-
-      setItems(response.data);
-    }
-
-    load();
+    loadProducts();
   }, []);
+
+  const SEARCH_TRANSLATE = deviceHeight * 0.2;
+  const scrollFlatlist = new Animated.Value(0);
+
+  const ScrollDiff = scrollFlatlist.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 1],
+    extrapolateLeft: 'clamp',
+  });
+  const clampScroll = Animated.diffClamp(ScrollDiff, 0, SEARCH_TRANSLATE);
+  const heightSearch = clampScroll.interpolate({
+    inputRange: [0, SEARCH_TRANSLATE],
+    outputRange: [0, -SEARCH_TRANSLATE],
+    extrapolate: 'clamp',
+  });
 
   return (
     <Container>
-      <View style={{ marginTop: 10, flexDirection: 'row' }}>
-        <Input
-          containerStyle={{ width: 290 }}
-          inputStyle={{ color: 'white' }}
-          placeholder='Nome'
-          onChangeText={(text) => setName(text)}
+      <Form ref={formRef} onSubmit={handleSubmit}>
+        <SearchBar
+          style={{
+            transform: [{ translateY: heightSearch }],
+          }}
+          name='name'
+          onSubmitEditing={() => formRef.current.submitForm()}
         />
-        <Button
-          containerStyle={{ width: 50 }}
-          type='solid'
-          buttonStyle={{ backgroundColor: 'white' }}
-          icon={<Icon name='youtube-searched-for' size={15} />}
-          onPress={() => search()}
-        />
-      </View>
+      </Form>
 
       <ItemList
+        ListFooterComponentStyle={{ paddingBottom: 80 }}
+        ListFooterComponent={
+          <View style={{ flex: 1 }}>
+            {loading && <ActivityIndicator color='#ddd' size='large' />}
+          </View>
+        }
         data={items}
+        showsVerticalScrollIndicator={false}
+        onEndReached={loadProducts}
+        onEndReachedThreshold={0.2}
         keyExtractor={(item) => String(item._id)}
-        renderItem={({ item }) => (
-          <ListItem
-            contentContainerStyle={{ marginTop: 20 }}
-            leftAvatar={
-              <Icon name={!item.drink ? 'local-dining' : 'local-bar'} />
-            }
-            title={item.name}
-            subtitle={`R$ ${l.price}`}
-            input={{
-              inputContainerStyle: { width: 55 },
-              defaultValue:
-                item.quantity == undefined ? '' : `${item.quantity}`,
-              placeholder: '0',
-              label: 'Quantidade',
-              onChangeText: (text) => {
-                l['quantity'] = text;
-              },
-              keyboardType: 'numeric',
-            }}
-            rightIcon={{ name: 'add', onPress: () => addItem(item), size: 30 }}
-            bottomDivider
-            onPress={() =>
-              Alert.alert(
-                'Informações',
-                `Nome: ${item.name} 
-Descrição: ${item.description}`
-              )
-            }
-          />
+        onScroll={Animated.event(
+          [
+            {
+              nativeEvent: { contentOffset: { y: scrollFlatlist } },
+            },
+          ],
+          { useNativeDriver: true }
         )}
+        scrollEventThrottle={16}
+        renderItem={({ item }) => <Item key={item._id} item={item} />}
       />
 
       <View>
