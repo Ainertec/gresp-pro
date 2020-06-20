@@ -76,7 +76,11 @@ async function buscarBebida(tipoBusca) {
     codigoHTML += '</table>'
 
 
-    document.getElementById('resposta').innerHTML = codigoHTML;
+    if (json.data[0] == null) {
+        document.getElementById('resposta').innerHTML = '<h5 class="text-center" style="margin-top:20vh;"><span class="fas fa-exclamation-triangle"></span> Nenhuma bebida encontrada!</h5>';
+    } else {
+        document.getElementById('resposta').innerHTML = codigoHTML;
+    }
     setTimeout(function () {
         animacaoSlideDown(['#resposta'])
     })

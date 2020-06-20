@@ -58,8 +58,8 @@ function menuProdutoeBebida() {
 
     var codigoHTML = '';
 
-    codigoHTML += '<h3 class="text-center">Produtos</h3>'
-    codigoHTML += '<div class="card-deck mx-auto" style="margin-top:40px;">'
+    codigoHTML += '<h3 style="margin-top:10vh;" class="text-center">Produtos</h3>'
+    codigoHTML += '<div class="card-deck mx-auto" style="margin-top:5vh;">'
     codigoHTML += `<button onclick="ligacaoProdutoFacede('cadastrar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px">`
     codigoHTML += '<span class="fas fa-plus"></span> Cadastrar Produto <span class="fas fa-utensils"></span>'
     codigoHTML += '</button>'
@@ -68,8 +68,8 @@ function menuProdutoeBebida() {
     codigoHTML += '</button>'
     codigoHTML += '</div>'
 
-    codigoHTML += '<h3 style="margin-top:60px;" class="text-center">Bebidas</h3>'
-    codigoHTML += '<div class="card-deck mx-auto" style="margin-top:40px;">'
+    codigoHTML += '<h3 style="margin-top:10vh;" class="text-center">Bebidas</h3>'
+    codigoHTML += '<div class="card-deck mx-auto" style="margin-top:5vh;">'
     codigoHTML += `<button onclick="ligacaoBebidaFacede('cadastrar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px">`
     codigoHTML += '<span class="fas fa-plus"></span> Cadastrar Bebida <span class="fas fa-wine-glass-alt"></span>'
     codigoHTML += '</button>'

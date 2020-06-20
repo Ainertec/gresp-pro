@@ -14,6 +14,10 @@ function ligacaoPagamentoFacede(tipo) {
         }
     } else {
         mensagemDeErro('Usuário não autorizado!')
+        if (tipo == 'lista') {
+            animacaoSlideDown(['#janela2'])
+            telaAutenticacao()
+        }
     }
 }
 
@@ -92,7 +96,12 @@ async function telaExibirTodosOsPedidosPagamento() {
     codigoHTML += '</tbody>'
     codigoHTML += '</table>'
 
-    document.getElementById('janela2').innerHTML = codigoHTML;
+    if (json.data[0] == null) {
+        document.getElementById('janela2').innerHTML = '<h5 class="text-center" style="margin-top:40vh;"><span class="fas fa-exclamation-triangle"></span> Não existe pedido em aberto!</h5>';
+        setTimeout(function () { animacaoJanela2(); setTimeout(function () { menuPagamentoPedido(); }, 100); }, 2000)
+    } else {
+        document.getElementById('janela2').innerHTML = codigoHTML;
+    }
 
     animacaoSlideDown(['#janela2']);
 }

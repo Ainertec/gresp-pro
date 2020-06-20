@@ -1,3 +1,16 @@
+//----------------------------------------------- Classe Cozinha ------------------------------------
+
+//funcao responsavel pelas necessarias da classe cozinha
+function pedidosCozinhaFacede() {
+    const situacao = autenticacaoLogin()
+
+    if (JSON.parse(situacao).tipo == 'Administrador' || JSON.parse(situacao).tipo == 'Comum') {
+        telaPedidosCozinha();
+    } else {
+        mensagemDeErro('Usuário não autorizado!')
+    }
+}
+
 //funcao responsavel por geara a tela da peidos da cozinha
 async function telaPedidosCozinha() {
     let codigoHTML = '', json = await requisicaoGET("orders", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
@@ -25,7 +38,11 @@ async function telaPedidosCozinha() {
     });
     codigoHTML += '</div>'
 
-    document.getElementById('janela2').innerHTML = codigoHTML;
+    if (json.data[0] == null) {
+        document.getElementById('janela2').innerHTML = '<h5 class="text-center" style="margin-top:40vh;"><span class="fas fa-exclamation-triangle"></span> Não existe pedido em aberto!</h5>';
+    } else {
+        document.getElementById('janela2').innerHTML = codigoHTML;
+    }
 
 }
 

@@ -44,15 +44,10 @@ function telaRelatorioDeCaixa() {
     codigoHTML += '</div>'
 
 
-    codigoHTML += '<hr class="my-6 bg-dark">'
-    codigoHTML += '<div id="grafico0" style="margin-top:10px;" class="col-12 rounded mx-auto d-block"></div>'
-    codigoHTML += '<hr class="my-6 bg-dark">'
-    codigoHTML += '<div id="grafico1" style="margin-top:10px;" class="col-12 rounded mx-auto d-block"></div>'
-    codigoHTML += '<hr class="my-6 bg-dark">'
-    codigoHTML += '<div id="grafico2" style="margin-top:10px;" class="col-12 rounded mx-auto d-block"></div>'
-    codigoHTML += '<hr class="my-6 bg-dark">'
-    codigoHTML += '<h5>Lista de Pedidos Fechados</h5>'
-    codigoHTML += '<div id="listaItens" style="margin-top:10px" class="col-12 rounded mx-auto d-block"></div>'
+    codigoHTML += '<div id="grafico0" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>'
+    codigoHTML += '<div id="grafico1" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>'
+    codigoHTML += '<div id="grafico2" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>'
+    codigoHTML += '<div id="listaItens" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>'
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
@@ -242,6 +237,7 @@ async function gerarGraficoLucroMensal(tipo) {
 async function tabelaDeRelatorioCaixa() {
     /* let codigoHTML = '', json = await requisicaoGET('logs/?date=2020-06', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
  
+     codigoHTML += '<h5>Lista de Pedidos Fechados</h5>'
      codigoHTML += '<table class="table table-dark table-bordered text-center">'
      codigoHTML += '<thead class="thead-dark">'
      codigoHTML += '<tr>'

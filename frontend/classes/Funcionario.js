@@ -38,7 +38,7 @@ function telaFuncionario() {
     codigoHTML += '</div>'
     codigoHTML += '<div class="btn-group btn-lg btn-block" role="group">'
     codigoHTML +=
-        '<button onclick="if(validaDadosCampo([\'#buscaFuncionarioByName\'])){buscarFuncionario(\'Administrador\',\'nome\'); animacaoSlideUp([\'#listaFuncionarios\'])}else{mensagemDeErro(\'Preencha o campo nome!\'); mostrarCamposIncorreto([\'buscaFuncionarioByName\'])}" type="button" class="btn btn-outline-primary"><span class="fas fa-search"></span> Buscar por Nome</button>'
+        '<button onclick="if(validaDadosCampo([\'#buscaFuncionarioByName\'])){buscarFuncionario(\'Administrador\',\'nome\'); animacaoSlideUp([\'#listaFuncionarios\'])}else{mensagemDeErro(\'Preencha o campo nome!\'); mostrarCamposIncorrreto([\'buscaFuncionarioByName\'])}" type="button" class="btn btn-outline-primary"><span class="fas fa-search"></span> Buscar por Nome</button>'
     codigoHTML +=
         '<button onclick="buscarFuncionario(\'Administrador\',\'todos\'); animacaoSlideUp([\'#listaFuncionarios\'])" type="button" class="btn btn-outline-primary"><span class="fas fa-search"></span> Exibir todos</button>'
     codigoHTML += '</div>'
@@ -191,7 +191,7 @@ async function buscarFuncionario(tipo, busca) {
 
         if (busca == 'nome') {
             var json = await requisicaoGET(
-                `users_by_name?name=${
+                `users/${
                 document.getElementById('buscaFuncionarioByName').value
                 }`,
                 { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }
@@ -245,7 +245,7 @@ async function cadastrarFuncionario() {
         }
     } else {
         mensagemDeErro('Preencha todos os campos!')
-        mostrarCamposIncorreto(['login', 'senha', 'response'])
+        mostrarCamposIncorrreto(['login', 'senha', 'response'])
     }
 }
 
@@ -282,7 +282,7 @@ async function atualizarFuncionario() {
         }
     } else {
         mensagemDeErro('Preencha todos os campos!')
-        mostrarCamposIncorreto(['response', 'login', 'senha'])
+        mostrarCamposIncorrreto(['response', 'login', 'senha'])
     }
 }
 

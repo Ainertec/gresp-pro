@@ -75,8 +75,11 @@ async function buscarProdutos(tipoBusca) {
     codigoHTML += '</tbody>'
     codigoHTML += '</table>'
 
-
-    document.getElementById('resposta').innerHTML = codigoHTML;
+    if (json.data[0] == null) {
+        document.getElementById('resposta').innerHTML = '<h5 class="text-center" style="margin-top:20vh;"><span class="fas fa-exclamation-triangle"></span> Nenhum produto encontrado!</h5>';
+    } else {
+        document.getElementById('resposta').innerHTML = codigoHTML;
+    }
     setTimeout(function () {
         animacaoSlideDown(['#resposta']);
     }, 300);
