@@ -81,32 +81,6 @@ function menuProdutoeBebida() {
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
 
-// --------------------------------------------- SUB MENU ADMIN -----------------------------------------------------
-
-//funcao menu de opoes para admin
-function menuConfiguracaoAdmin() {
-
-    var codigoHTML;
-
-    codigoHTML = '<h3 class="text-center">Administrador</h3>'
-    codigoHTML += '<div class="card-deck mx-auto" style="margin-top:30px;">'
-    codigoHTML += '<button onclick="ligacaoAdministradorFacede(\'cadastrar\');" type="button" class="btn btn-light border border-dark btn-lg col-8 mx-auto" style="margin-top: 10px">'
-    codigoHTML += '<span class="fas fa-users"></span> Cadastrar Administrador'
-    codigoHTML += '</button>'
-    codigoHTML += '<button onclick="ligacaoAdministradorFacede(\'atualizar\');" type="button" class="btn btn-light border border-dark btn-lg col-8 mx-auto" style="margin-top: 10px">'
-    codigoHTML += '<span class="fas fa-search"></span> Buscar Administrador'
-    codigoHTML += '</button>'
-
-    codigoHTML += '</div>'
-
-
-    if (sessionStorage.getItem("login")) {
-        document.getElementById('janela2').innerHTML = codigoHTML;
-    } else {
-        telaAutenticacao();
-    }
-}
-
 // --------------------------------------------- SUB MENU PEDIDO -----------------------------------------------------
 
 //funcao menu de opcaoes para pedido
