@@ -90,9 +90,9 @@ export default function Home() {
     setShowPay(true);
   }
 
-  // useEffect(() => {
-  //   console.log('order', order);
-  // }, [order]);
+  useEffect(() => {
+    console.log('order', order);
+  }, [order]);
 
   useEffect(() => {
     if (!showPay) {

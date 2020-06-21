@@ -27,13 +27,24 @@ export const OrderProvider = ({ children }) => {
       identification: order.identification,
       items: items,
     };
-    console.log('new order', newOrder);
 
+    setOrder(newOrder);
+  }
+  function removeItem(data) {
+    const filterdItem = order.items.filter(
+      (item) => item.product._id !== data._id
+    );
+    const newOrder = {
+      ...order,
+      items: filterdItem,
+    };
     setOrder(newOrder);
   }
 
   return (
-    <OrderContext.Provider value={{ order, addItem, setOrder, loadOrder }}>
+    <OrderContext.Provider
+      value={{ order, addItem, removeItem, setOrder, loadOrder }}
+    >
       {children}
     </OrderContext.Provider>
   );
