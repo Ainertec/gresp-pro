@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Icon } from 'react-native-elements';
 import { StyleSheet } from 'react-native';
 
@@ -13,7 +13,7 @@ import {
 } from './styles';
 
 const Item = ({ item }) => {
-  const { addItem, order, setOrder } = useOrder();
+  const { addItem, removeItem, order, setOrder } = useOrder();
   const [quantity, setQuantity] = useState(1);
 
   function handleSelect(data) {
@@ -24,25 +24,40 @@ const Item = ({ item }) => {
     );
 
     if (alrearySelected >= 0) {
-      const filterdItem = order.items.filter(
-        (item) => item.product._id !== data._id
-      );
-      const newOrder = {
-        ...order,
-        items: filterdItem,
-      };
-      setOrder(newOrder);
+      removeItem(data);
     } else {
       addItem(data);
     }
   }
 
+  function existItem(item) {
+    return order.items.find((itemData) => itemData.product._id === item._id);
+  }
+
+  useEffect(() => {
+    const existentItem = existItem(item);
+    if (existentItem) {
+      setQuantity(Number(existentItem.quantity));
+    }
+  }, []);
+
+  useEffect(() => {
+    const existentItem = existItem(item);
+    if (existentItem) {
+      const position = order.items.findIndex(
+        (item) => item.product._id === existentItem.product._id
+      );
+      existentItem.quantity = quantity;
+      const serializadItems = order.items;
+      serializadItems[position] = existentItem;
+
+      setOrder({ ...order, items: serializadItems });
+    }
+  }, [quantity]);
+
   return (
     <ItemContent
-      style={
-        order.items.find((itemData) => itemData.product._id === item._id) &&
-        styles.selectedItem
-      }
+      style={existItem(item) && styles.selectedItem}
       leftAvatar={<Icon name={!item.drink ? 'local-dining' : 'local-bar'} />}
       title={item.name}
       subtitle={`R$ ${item.price.toFixed(2)}`}

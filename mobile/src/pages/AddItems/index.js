@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Animated, Dimensions, ActivityIndicator } from 'react-native';
 import { BottomNavigation } from 'react-native-material-ui';
-import { Icon } from 'react-native-elements';
+// import { Icon } from 'react-native-elements';
 import { Form } from '@unform/core';
 
 import api from '../../services/api';
@@ -18,20 +18,16 @@ export default function ListaItens({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [name, setName] = useState('');
 
   const formRef = useRef(null);
 
   async function handleSubmit(data) {
-    setPage(1);
-    if (data === '') {
-      loadProducts(1);
-    } else {
-      loadProducts(1, data.name, true);
-    }
+    setName(data.name);
+    loadProducts(1, data.name, true);
   }
 
-  async function loadProducts(pageNumber = page, data = '', newItems) {
-    console.log(pageNumber);
+  async function loadProducts(pageNumber = page, data = name, newItems) {
     if (loading) {
       return;
     }
@@ -46,15 +42,12 @@ export default function ListaItens({ navigation }) {
           page: pageNumber,
         },
       })
-      .catch((error) => {
-        console.log(error.request);
-      });
+      .catch((error) => {});
     console.log(response);
 
     setItems(newItems ? response.data : [...items, ...response.data]);
-    // setTotal(Number(response.headers['x-total-count']));
     setTotal(Math.ceil(Number(response.headers['x-total-count']) / 10));
-    setPage(page + 1);
+    newItems ? setPage(pageNumber + 1) : setPage(page + 1);
     setLoading(false);
   }
 
@@ -65,9 +58,6 @@ export default function ListaItens({ navigation }) {
   useEffect(() => {
     loadProducts();
   }, []);
-  // useEffect(() => {
-  //   console.log('Os items', items);
-  // }, [items]);
 
   const SEARCH_TRANSLATE = deviceHeight * 0.2;
   const scrollFlatlist = new Animated.Value(0);
@@ -120,7 +110,7 @@ export default function ListaItens({ navigation }) {
         renderItem={({ item }) => <Item item={item} />}
       />
 
-      <View>
+      {/* <View>
         <BottomNavigation hidden={true}>
           <BottomNavigation.Action
             key='voltar'
@@ -135,7 +125,7 @@ export default function ListaItens({ navigation }) {
             onPress={() => ending()}
           />
         </BottomNavigation>
-      </View>
+      </View> */}
     </Container>
   );
 }
