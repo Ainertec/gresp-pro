@@ -2,7 +2,7 @@ import request from 'supertest';
 import fs from 'fs';
 import path from 'path';
 import app from '../../src/app';
-import { OrderInterface } from '../../src/interfaces/base';
+import { OrderInterface,ItemInterface } from '../../src/interfaces/base';
 
 import { closeConnection, openConnection } from '../utils/connection';
 import Token from '../utils/getToken';
@@ -19,21 +19,123 @@ describe('Stock controller', () => {
   beforeEach(async () => {
     await Order.deleteMany({});
   });
-  it('shuld create a recipe', async () => {
+  it('shuld create a new recipe ', async () => {
     const token = await Token;
-    const order = await factory.create<OrderInterface>('Order');
+
+    const oldOrder = await factory.create<OrderInterface>('Order',{
+      identification:222
+    });
+
 
     const response = await request(app)
-      .get(`/printer`)
-      .query({
-        identification: order.identification,
-        type: 'fiscal',
-      })
+      .post(`/printer`)
+      .send({ 
+        type: true,
+        identification: oldOrder.identification,
+        
+       })
       .set('Authorization', `Bearer ${token}`);
 
-    setTimeout(async () => {
-      await fs.unlinkSync(path.resolve(__dirname, '..', 'recipes', `${order.identification}.txt`));
-    }, 1000);
+
+    expect(response.status).toBe(200);
+  });
+
+  it('shuld create a recipe updated ', async () => {
+    const token = await Token;
+
+    const item = await factory.create<ItemInterface>('Item',{
+      name:'Tomate'
+    })
+    const item2 = await factory.create<ItemInterface>('Item',{
+      name:'Chocolate'
+    })
+
+    const oldOrder = await factory.create<OrderInterface>('Order',{
+      identification:123,
+      items:[
+       {
+         product:item._id,
+         quantity:5
+       },
+      ]
+    });
+
+    oldOrder.items = [
+          {
+            product:item._id,
+            quantity:5
+          },
+          {
+            product:item2._id,
+            quantity:5
+          },
+         ]
+
+    await  oldOrder.save()
+
+    const response = await request(app)
+      .post(`/printer`)
+      .send({ 
+        identification: oldOrder.identification,
+        type: false,
+        oldItems:[
+        {
+          product:item._id,
+          quantity:5
+        },
+       ]})
+      .set('Authorization', `Bearer ${token}`);
+
+    
+
+    expect(response.status).toBe(200);
+  });
+
+  it('shuld create a recipe with quantity updated', async () => {
+    const token = await Token;
+
+    const item = await factory.create<ItemInterface>('Item',{
+      name:'Tomate'
+    })
+    const item2 = await factory.create<ItemInterface>('Item',{
+      name:'Chocolate'
+    })
+
+    const oldOrder = await factory.create<OrderInterface>('Order',{
+      identification:123544,
+      items:[
+       {
+         product:item._id,
+         quantity:5
+       },
+      ]
+    });
+
+    oldOrder.items = [
+          {
+            product:item._id,
+            quantity:7
+          },
+          {
+            product:item2._id,
+            quantity:5
+          },
+         ]
+
+    await  oldOrder.save()
+
+    const response = await request(app)
+      .post(`/printer`)
+      .send({ 
+        identification: oldOrder.identification,
+        type: false,
+        oldItems:[
+        {
+          product:item._id,
+          quantity:5
+        },
+       ]})
+      .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(200);
   });

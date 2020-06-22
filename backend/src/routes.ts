@@ -99,7 +99,7 @@ routes.get('/kitchen', KitchenController.index);
 
 // Printer
 
-routes.get('/printer', celebrate({ query: printer }), PrinterController.create);
+routes.post('/printer',celebrate({body:printer}), PrinterController.create);
 
 routes.use(Authorization);
 
