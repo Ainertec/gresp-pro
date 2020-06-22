@@ -52,6 +52,37 @@ describe('Order Controller', () => {
     expect(response.status).toBe(200);
   });
 
+  it('shold list closed orders total by an informated date ', async () => {
+    const token = await Token;
+
+    await factory.createMany('Order', 3, {
+      createdAt: new Date(2020, 3, 1),
+      closed: true,
+    });
+    await factory.createMany('Order', 3, {
+      createdAt: new Date(2020, 5, 30),
+      closed: true,
+    });
+    await factory.createMany('Order', 3, {
+      createdAt: new Date(2020, 7, 30),
+      closed: true,
+    });
+    await factory.createMany('Order', 3, {
+      createdAt: new Date(2020, 2, 30),
+      closed: true,
+    });
+
+    const response = await request(app)
+      .get('/reports/total')
+      .query({
+        initial: '2020-06-01',
+        final: '2020-08-30',
+      })
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(200);
+  });
+
   it('shold not list closed orders amount with invalide date period ', async () => {
     const token = await Token;
 

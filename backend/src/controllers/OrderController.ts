@@ -44,7 +44,7 @@ class OrderController {
     const order = await Order.create({
       identification,
       items,
-      total: finalPrice.toFixed(2),
+      total: Number(finalPrice.toFixed(2)),
       note,
       finished: false,
     });

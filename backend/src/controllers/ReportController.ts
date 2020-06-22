@@ -31,6 +31,29 @@ class ReportController {
 
     return res.json(orders);
   }
+  public async showTotal(req: Request, res: Response) {
+    const initial = String(req.query.initial);
+    const final = String(req.query.final);
+
+    const initialDate = parseISO(initial);
+    const finalDate = parseISO(final);
+
+    if (!isValid(initialDate) && !isValid(finalDate))
+      return res.status(400).json({ message: 'invalid date' });
+
+    const orders = await Order.aggregate()
+      .match({
+        createdAt: { $gte: initialDate, $lte: finalDate },
+        closed: true,
+      })
+      .group({
+        _id: { month: { $month: '$createdAt' }, year: { $year: '$createdAt' } },
+        total: { $sum: 1 },
+      })
+      .sort({ amount: -1 });
+
+    return res.json(orders);
+  }
 
   public async index(req: Request, res: Response) {
     const orders = await Order.find();

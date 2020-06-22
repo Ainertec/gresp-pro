@@ -19,7 +19,7 @@ import Authorization from './middlewares/Authorization';
 import session from './validations/sessionSchema';
 import serial from './validations/serialSchema';
 import { get, post } from './validations/forgotSchema';
-import { paramIdUser, user, userUpdate } from './validations/userSchema';
+import { paramIdUser, user, userUpdate,paramName } from './validations/userSchema';
 import { item, paramIdItem, paramNameItem,queryPage } from './validations/itemSchema';
 import {
   order,
@@ -55,7 +55,7 @@ routes.use(Authentication);
 // User
 
 routes.get('/users', UserController.index);
-routes.get('/users/:id', celebrate({ params: paramIdUser }), UserController.show);
+routes.get('/users/:name', celebrate({ params: paramName }), UserController.show);
 routes.post('/users', celebrate({ body: user }), UserController.create);
 routes.put(
   '/users/:id',
@@ -106,6 +106,7 @@ routes.use(Authorization);
 // Report
 
 routes.get('/reports', celebrate({ query: report }), ReportController.show);
+routes.get('/reports/total', celebrate({ query: report }), ReportController.showTotal);
 routes.get('/reports/all', ReportController.index);
 routes.get('/reports/products', ReportController.totalSoldProducts);
 
