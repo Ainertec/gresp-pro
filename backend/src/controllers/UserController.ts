@@ -26,18 +26,23 @@ class UserController {
   }
 
   public async show(req: Request, res: Response): Promise<Response> {
-    const id = req.params.id;
-    const user = await User.findOne({ _id: id });
+    const name = req.params.name;
+    const users = await User.find({ name: { $regex: new RegExp(name), $options: 'i' } })
 
-    const serializadedUser = {
-      ...user?.toObject(),
-      password_hash: undefined,
-    };
+    const serializadedUser = users.map(user=>{
+     return { 
+       ...user.toObject(),
+      password_hash: undefined
+
+      }
+    }) 
+
     return res.json(serializadedUser);
   }
 
   public async create(req: CustomRequest, res: Response): Promise<Response> {
-    const { question, name, password, response, admin } = req.body;
+    const {  admin,name,question,password,response } = req.body;
+   
     const userId = req.userId;
 
     const isValidQuestion = Questions.getQuestions().includes(question);

@@ -4,7 +4,7 @@ import { Request } from 'express';
 export interface ItemInterface extends Document {
   name: string;
   price: number;
-  decription?: string;
+  description?: string;
   stock?: number;
   drink?: boolean;
 }
@@ -15,7 +15,7 @@ export interface ItemsIterface {
 
 export interface UserInterface extends Document {
   name: string;
-  password_hash: string;
+  // password_hash: string;
   password: string;
   question: string;
   response: string;

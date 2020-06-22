@@ -19,3 +19,6 @@ export const userUpdate = Joi.object().keys({
 export const paramIdUser = {
   id: Joi.custom(validObjectId, 'valid id').required(),
 };
+export const paramName = {
+  name: Joi.string().required(),
+};

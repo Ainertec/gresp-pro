@@ -218,7 +218,7 @@ describe('User Tests', () => {
     expect(response.status).toBe(200);
   });
 
-  it('should show a expecific user', async () => {
+  it('should show users by name', async () => {
     const user = await factory.create<UserInterface>('User', {
       admin: true,
       name: 'Cleiton',
@@ -227,14 +227,17 @@ describe('User Tests', () => {
     await factory.createMany<UserInterface>('User', 5);
 
     const response = await request(app)
-      .get(`/users/${user._id}`)
+      .get(`/users/${user.name}`)
       .set('Authorization', `Bearer ${user.generateToken()}`);
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
-      expect.objectContaining({
+      expect.arrayContaining([
+        expect.objectContaining({
         name: 'Cleiton',
       })
+      ])
+      
     );
   });
 
