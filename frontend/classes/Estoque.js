@@ -56,7 +56,11 @@ async function buscarEstoque(tipoBusca) {
     json.data.forEach(function (item) {
         VETORDEITENSESTOQUE.push(item);
         codigoHTML += '<tr>'
-        codigoHTML += `<td class="table-secondary text-dark"><strong>${corrigirTamanhoString(20, item.name)}</strong></td>`
+        if (item.drink) {
+            codigoHTML += `<td class="table-secondary text-dark"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
+        } else {
+            codigoHTML += `<td class="table-secondary text-dark"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
+        }
         codigoHTML += `<td class="table-secondary text-dark">${corrigirTamanhoString(40, item.description)}</td>`
         if (parseInt(item.stock) > 5) {
             codigoHTML += `<td class="table-success text-dark text-center"><strong>${item.stock}</strong></td>`
@@ -70,8 +74,12 @@ async function buscarEstoque(tipoBusca) {
     codigoHTML += '</tbody>'
     codigoHTML += '</table>'
 
-    document.getElementById('resposta').innerHTML = codigoHTML;
-    setTimeout(function () { gerarGraficoEstoque(json); }, 300)
+    if (json.data[0] == null) {
+        document.getElementById('resposta').innerHTML = '<h5 class="text-center" style="margin-top:20vh;"><span class="fas fa-exclamation-triangle"></span> Nenhum produto ou bebida encontrado!</h5>';
+    } else {
+        document.getElementById('resposta').innerHTML = codigoHTML;
+        setTimeout(function () { gerarGraficoEstoque(json); }, 300)
+    }
 }
 
 //funcao para salvar atualizar quantidade de produtos no estoque

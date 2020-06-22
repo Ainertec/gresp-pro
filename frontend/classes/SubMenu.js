@@ -3,7 +3,7 @@
 // funcao menu de opcoes para impressao
 function menuImpressao() {
 
-    var codigoHTML;
+    let codigoHTML;
 
     codigoHTML = '<h3 class="text-center">Impressão</h3>'
     codigoHTML += '<div class="card-deck mx-auto" style="margin-top:50px;">'
@@ -58,53 +58,27 @@ function menuProdutoeBebida() {
 
     var codigoHTML = '';
 
-    codigoHTML += '<h3 class="text-center">Produtos</h3>'
-    codigoHTML += '<div class="card-deck mx-auto" style="margin-top:40px;">'
+    codigoHTML += '<h3 style="margin-top:10vh;" class="text-center">Produtos</h3>'
+    codigoHTML += '<div class="card-deck mx-auto" style="margin-top:5vh;">'
     codigoHTML += `<button onclick="ligacaoProdutoFacede('cadastrar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px">`
-    codigoHTML += '<span class="fas fa-plus"></span> Cadastrar Produto'
+    codigoHTML += '<span class="fas fa-plus"></span> Cadastrar Produto <span class="fas fa-utensils"></span>'
     codigoHTML += '</button>'
     codigoHTML += `<button onclick="ligacaoProdutoFacede('atualizar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px">`
-    codigoHTML += '<span class="fas fa-search"></span> Buscar Produto'
+    codigoHTML += '<span class="fas fa-search"></span> Buscar Produto <span class="fas fa-utensils"></span>'
     codigoHTML += '</button>'
     codigoHTML += '</div>'
 
-    codigoHTML += '<h3 style="margin-top:60px;" class="text-center">Bebidas</h3>'
-    codigoHTML += '<div class="card-deck mx-auto" style="margin-top:40px;">'
+    codigoHTML += '<h3 style="margin-top:10vh;" class="text-center">Bebidas</h3>'
+    codigoHTML += '<div class="card-deck mx-auto" style="margin-top:5vh;">'
     codigoHTML += `<button onclick="ligacaoBebidaFacede('cadastrar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px">`
-    codigoHTML += '<span class="fas fa-plus"></span> Cadastrar Bebida'
+    codigoHTML += '<span class="fas fa-plus"></span> Cadastrar Bebida <span class="fas fa-wine-glass-alt"></span>'
     codigoHTML += '</button>'
     codigoHTML += `<button onclick="ligacaoBebidaFacede('atualizar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px">`
-    codigoHTML += '<span class="fas fa-search"></span> Buscar Bebida'
+    codigoHTML += '<span class="fas fa-search"></span> Buscar Bebida <span class="fas fa-wine-glass-alt"></span>'
     codigoHTML += '</button>'
     codigoHTML += '</div>'
 
     document.getElementById('janela2').innerHTML = codigoHTML;
-}
-
-// --------------------------------------------- SUB MENU ADMIN -----------------------------------------------------
-
-//funcao menu de opoes para admin
-function menuConfiguracaoAdmin() {
-
-    var codigoHTML;
-
-    codigoHTML = '<h3 class="text-center">Administrador</h3>'
-    codigoHTML += '<div class="card-deck mx-auto" style="margin-top:30px;">'
-    codigoHTML += '<button onclick="ligacaoAdministradorFacede(\'cadastrar\');" type="button" class="btn btn-light border border-dark btn-lg col-8 mx-auto" style="margin-top: 10px">'
-    codigoHTML += '<span class="fas fa-users"></span> Cadastrar Administrador'
-    codigoHTML += '</button>'
-    codigoHTML += '<button onclick="ligacaoAdministradorFacede(\'atualizar\');" type="button" class="btn btn-light border border-dark btn-lg col-8 mx-auto" style="margin-top: 10px">'
-    codigoHTML += '<span class="fas fa-search"></span> Buscar Administrador'
-    codigoHTML += '</button>'
-
-    codigoHTML += '</div>'
-
-
-    if (sessionStorage.getItem("login")) {
-        document.getElementById('janela2').innerHTML = codigoHTML;
-    } else {
-        telaAutenticacao();
-    }
 }
 
 // --------------------------------------------- SUB MENU PEDIDO -----------------------------------------------------

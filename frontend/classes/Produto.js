@@ -59,7 +59,7 @@ async function buscarProdutos(tipoBusca) {
         if (!item.drink) {
             VETORDEPRODUTOSCLASSEPRODUTO.push(item)
             codigoHTML += '<tr>'
-            codigoHTML += `<th class="table-info">${corrigirTamanhoString(20, item.name)}</th>`
+            codigoHTML += `<th class="table-info"><span class="fas fa-utensils"></span> ${corrigirTamanhoString(20, item.name)}</th>`
             codigoHTML += `<td class="table-info">${corrigirTamanhoString(40, item.description)}</td>`
             if (item.stock != null) {
                 codigoHTML += `<td class="table-primary"><strong>${item.stock}</strong></td>`
@@ -75,8 +75,11 @@ async function buscarProdutos(tipoBusca) {
     codigoHTML += '</tbody>'
     codigoHTML += '</table>'
 
-
-    document.getElementById('resposta').innerHTML = codigoHTML;
+    if (json.data[0] == null) {
+        document.getElementById('resposta').innerHTML = '<h5 class="text-center" style="margin-top:20vh;"><span class="fas fa-exclamation-triangle"></span> Nenhum produto encontrado!</h5>';
+    } else {
+        document.getElementById('resposta').innerHTML = codigoHTML;
+    }
     setTimeout(function () {
         animacaoSlideDown(['#resposta']);
     }, 300);
