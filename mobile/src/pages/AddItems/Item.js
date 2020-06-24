@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Icon } from 'react-native-elements';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Alert } from 'react-native';
 
 import { useOrder } from '../../contexts/order';
 
@@ -58,7 +58,18 @@ const Item = ({ item }) => {
   return (
     <ItemContent
       style={existItem(item) && styles.selectedItem}
-      leftAvatar={<Icon name={!item.drink ? 'local-dining' : 'local-bar'} />}
+      leftAvatar={
+        <Icon
+          name={!item.drink ? 'local-dining' : 'local-bar'}
+          size={30}
+          onPress={() =>
+            Alert.alert(
+              'Informações',
+              `Nome: ${item.name}\nDescrição: ${item.description}`
+            )
+          }
+        />
+      }
       title={item.name}
       subtitle={`R$ ${item.price.toFixed(2)}`}
       rightElement={
@@ -82,7 +93,6 @@ const Item = ({ item }) => {
           <QuantityLabel>Quantidade</QuantityLabel>
         </ItemContainer>
       }
-      chevron
       onPress={() => handleSelect(item)}
     />
   );

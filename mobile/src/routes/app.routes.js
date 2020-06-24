@@ -19,6 +19,7 @@ const Stack = createStackNavigator();
 
 const header = {
   headerTitleAlign: 'center',
+
   headerTitle: () => (
     <Image
       source={logo}
@@ -28,7 +29,7 @@ const header = {
   ),
   headerStyle: {
     backgroundColor: '#3F173F',
-    elevation: 15,
+    elevation: 25,
   },
   headerBackTitleStyle: {
     color: '#fff',
@@ -142,7 +143,11 @@ const Routes = () => {
         name='Home'
         component={HomeTabs}
       />
-      <Stack.Screen options={header} name='Items' component={AddItems} />
+      <Stack.Screen
+        options={{ ...header, headerLeft: false }}
+        name='Items'
+        component={AddItems}
+      />
       <Stack.Screen options={header} name='Setting' component={Setting} />
     </Stack.Navigator>
   );

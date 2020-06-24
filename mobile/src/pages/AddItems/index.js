@@ -3,9 +3,10 @@ import { Form } from '@unform/mobile';
 import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Animated, Dimensions, View } from 'react-native';
 import { SearchBar } from '../../components/Form';
+import Icon from 'react-native-vector-icons/Feather';
 import api from '../../services/api';
 import Item from './Item';
-import { Container, ItemList } from './styles';
+import { Container, ItemList, ActionButton } from './styles';
 
 const deviceHeight = Dimensions.get('window').height;
 
@@ -83,7 +84,7 @@ export default function AddItems({ navigation }) {
       </Form>
 
       <ItemList
-        ListFooterComponentStyle={{ paddingBottom: 80 }}
+        ListFooterComponentStyle={{ paddingBottom: 90 }}
         ListFooterComponent={
           <View style={{ flex: 1 }}>
             {loading && <ActivityIndicator color='#ddd' size='large' />}
@@ -106,22 +107,9 @@ export default function AddItems({ navigation }) {
         renderItem={({ item }) => <Item item={item} />}
       />
 
-      {/* <View>
-        <BottomNavigation hidden={true}>
-          <BottomNavigation.Action
-            key='voltar'
-            icon='arrow-back'
-            label='Voltar'
-            onPress={() => loadProducts()}
-          />
-          <BottomNavigation.Action
-            key='Finalizar'
-            icon='done'
-            label='Finalizar'
-            onPress={() => ending()}
-          />
-        </BottomNavigation>
-      </View> */}
+      <ActionButton onPress={ending}>
+        <Icon name='send' size={25} color={'#fff'} />
+      </ActionButton>
     </Container>
   );
 }

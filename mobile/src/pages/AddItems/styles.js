@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
-import { Animated } from 'react-native';
+import { Animated, Dimensions } from 'react-native';
 import { ListItem } from 'react-native-elements';
+const deviceWidth = Dimensions.get('window').width;
 
 export const Container = styled.View`
   flex: 1;
@@ -43,4 +44,17 @@ export const QuantityLabel = styled.Text`
 `;
 export const ItemContainer = styled.View`
   text-align: center;
+`;
+
+export const ActionButton = styled.TouchableOpacity`
+  position: absolute;
+  width: ${deviceWidth * 0.15}px;
+  height: ${deviceWidth * 0.15}px;
+  align-items: center;
+  justify-content: center;
+  right: ${deviceWidth * 0.02}px;
+  bottom: ${deviceWidth * 0.02}px;
+  background: #080705;
+  /* background: #3f173f; */
+  border-radius: ${deviceWidth * 0.2}px;
 `;
