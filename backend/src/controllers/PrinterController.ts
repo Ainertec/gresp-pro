@@ -64,7 +64,7 @@ class PrinterController {
 
     await order.populate('items.product').execPopulate();
 
-    const date = format(order.createdAt, 'dd/MM/yyyy HH:mm:ss');
+    const date = order.updatedAt ? format(order.updatedAt, 'dd/MM/yyyy HH:mm:ss') : '';
     const myDoc = new jsRTF({
       language: jsRTF.Language.BR,
       pageWidth: jsRTF.Utils.mm2twips(58),
