@@ -3,11 +3,12 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   ActivityIndicator,
+  View,
 } from 'react-native';
-import { Form } from '@unform/core';
+import  {Form}  from '@unform/mobile';
 import * as Yup from 'yup';
 
-import { Input, Label, Button } from '../../components/Form';
+import { Button, Input,Label } from '../../components/Form';
 // import Alert from '../../components/Alert';
 
 import logo from '../../assets/logo2.png';
@@ -60,6 +61,7 @@ const SignIn = () => {
     }
   }
   return (
+  
     <Container>
       <KeyboardAvoidingView
         style={{

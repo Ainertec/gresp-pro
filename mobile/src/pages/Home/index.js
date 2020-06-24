@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AsyncStorage, Alert, FlatList } from 'react-native';
+import {  Alert, FlatList } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
@@ -106,7 +106,7 @@ export default function Home() {
         <ObservationNote>Observação:</ObservationNote>
         <ObservationInput
           placeholder='Digite uma observação'
-          defaultValue={order.note}
+          defaultValue={order?order.note:''}
           onChangeText={(text) => setNote(text)}
           multiline={true}
           numberOfLines={3}

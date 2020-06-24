@@ -1,19 +1,15 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Animated, Dimensions, ActivityIndicator } from 'react-native';
-import { BottomNavigation } from 'react-native-material-ui';
 // import { Icon } from 'react-native-elements';
-import { Form } from '@unform/core';
-
-import api from '../../services/api';
-
+import { Form } from '@unform/mobile';
+import React, { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Animated, Dimensions, View } from 'react-native';
 import { SearchBar } from '../../components/Form';
-
-import { Container, ItemList } from './styles';
+import api from '../../services/api';
 import Item from './Item';
+import { Container, ItemList } from './styles';
 
 const deviceHeight = Dimensions.get('window').height;
 
-export default function ListaItens({ navigation }) {
+export default function AddItems({ navigation }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);

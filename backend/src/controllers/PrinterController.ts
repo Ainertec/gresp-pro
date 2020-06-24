@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
-import '../@types/jsrtg.d.ts'
+// import '../@types/jsrtg.d.ts'
 import jsRTF from 'jsrtf';
 import Order from '../models/Order';
 import { ItemsIterface } from '../interfaces/base';
