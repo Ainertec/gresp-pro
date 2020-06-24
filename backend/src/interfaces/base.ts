@@ -32,6 +32,7 @@ export interface OrderInterface extends Document {
   finished?: boolean;
   payment?: string;
   items?: Array<ItemsIterface>;
+  createdAt?: Date;
 }
 
 export interface CustomRequest extends Request {

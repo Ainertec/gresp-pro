@@ -1,44 +1,42 @@
 import { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
+import { format } from 'date-fns';
 // import '../@types/jsrtg.d.ts'
 import jsRTF from 'jsrtf';
 import Order from '../models/Order';
 import { ItemsIterface } from '../interfaces/base';
 
 export interface OldItems {
-  product: string,
-  quantity: number,
+  product: string;
+  quantity: number;
 }
-
 
 class PrinterController {
   constructor() {
     this.create = this.create.bind(this);
   }
 
-  private toPrinterUpdated(items: ItemsIterface[], oldItems: OldItems[]){
+  private toPrinterUpdated(items: ItemsIterface[], oldItems: OldItems[]) {
     let products = '';
     let drinks = '';
 
-    const response = oldItems.map(oldItem=>{
+    const response = oldItems.map((oldItem) => {
       return items.filter(
-        item => (String(item.product._id) !== oldItem.product || item.quantity !== oldItem.quantity)
-        )
-     })
+        (item) => String(item.product._id) !== oldItem.product || item.quantity !== oldItem.quantity
+      );
+    });
 
     for (const item of response[0]) {
       if (item.product.drink) {
-drinks += `* ${item.product.name}
+        drinks += `* ${item.product.name}
 - Quantidade: ${item.quantity}\n`;
       } else {
-products += `* ${item.product.name}
+        products += `* ${item.product.name}
 - Quantidade: ${item.quantity}\n`;
       }
     }
     return { products, drinks };
-    
-                                             
   }
 
   private toPrinterNew(items: ItemsIterface[]) {
@@ -47,10 +45,10 @@ products += `* ${item.product.name}
 
     for (const item of items) {
       if (item.product.drink) {
-drinks += `* ${item.product.name}
+        drinks += `* ${item.product.name}
 - Quantidade: ${item.quantity}\n`;
       } else {
-products += `* ${item.product.name}
+        products += `* ${item.product.name}
 - Quantidade: ${item.quantity}\n`;
       }
     }
@@ -58,7 +56,7 @@ products += `* ${item.product.name}
   }
 
   async create(req: Request, res: Response) {
-    const { identification,oldItems,type } = req.body
+    const { identification, oldItems, type } = req.body;
 
     const order = await Order.findOne({ closed: false, identification });
 
@@ -66,7 +64,7 @@ products += `* ${item.product.name}
 
     await order.populate('items.product').execPopulate();
 
-
+    const date = format(order.createdAt, 'dd/MM/yyyy HH:mm:ss');
     const myDoc = new jsRTF({
       language: jsRTF.Language.BR,
       pageWidth: jsRTF.Utils.mm2twips(58),
@@ -96,12 +94,11 @@ products += `* ${item.product.name}
       align: 'center',
       borderTop: { size: 2, spacing: 100, color: jsRTF.Colors.GREEN },
     });
-    
-    if (order.items) {
-    
-      const items = type ? this.toPrinterNew(order.items) : this.toPrinterUpdated(order.items,oldItems);
 
-      
+    if (order.items) {
+      const items = type
+        ? this.toPrinterNew(order.items)
+        : this.toPrinterUpdated(order.items, oldItems);
 
       myDoc.writeText('------------------------------------------------', contentBorder);
       myDoc.writeText('>>>>>>>>> Comanda <<<<<<<<<<', header);
@@ -114,11 +111,12 @@ products += `* ${item.product.name}
       myDoc.writeText(`${items.drinks}`, contentStyle);
       myDoc.writeText('========== Observação =========', contentBorder);
       myDoc.writeText(`- ${order.note}`, contentStyle);
-   
+      myDoc.writeText(`- ${date}`, contentStyle);
+
       const content = myDoc.createDocument();
 
-      const buffer =  Buffer.from(content, 'binary');
-      
+      const buffer = Buffer.from(content, 'binary');
+
       const dir =
         process.env.NODE_ENV === 'test'
           ? path.resolve(__dirname, '..', '..', '__tests__', 'recipes')
@@ -140,5 +138,3 @@ products += `* ${item.product.name}
 }
 
 export default new PrinterController();
-
-
