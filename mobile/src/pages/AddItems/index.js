@@ -83,7 +83,7 @@ export default function AddItems({ navigation }) {
       </Form>
 
       <ItemList
-        ListFooterComponentStyle={{ paddingBottom: 90 }}
+        ListFooterComponentStyle={{ paddingBottom: 100 }}
         ListFooterComponent={
           <View style={{ flex: 1 }}>
             {loading && <ActivityIndicator color='#ddd' size='large' />}

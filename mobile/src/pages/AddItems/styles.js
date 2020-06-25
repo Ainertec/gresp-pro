@@ -54,7 +54,7 @@ export const ActionButton = styled.TouchableOpacity`
   justify-content: center;
   right: ${deviceWidth * 0.02}px;
   bottom: ${deviceWidth * 0.02}px;
-  background: #080705;
-  /* background: #3f173f; */
+  /* background: #080705; */
+  background: #7b1b53;
   border-radius: ${deviceWidth * 0.2}px;
 `;
