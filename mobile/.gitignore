@@ -9,7 +9,7 @@ npm-debug.*
 *.orig.*
 web-build/
 web-report/
-package-log.json
+package-lock.json
 yarn.lock
 yarn-error.lock
 
