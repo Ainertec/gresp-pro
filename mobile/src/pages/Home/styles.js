@@ -43,7 +43,7 @@ export const FooterContainer = styled.View`
 
 export const FooterItems = styled.View`
   flex-direction: row;
-  padding: 16px 0;
+  padding: 6px 0;
   align-items: center;
   justify-content: space-around;
   border-radius: 20px;
@@ -89,12 +89,21 @@ export const ItemContainer = styled.View`
   text-align: center;
   margin-right: 10px;
 `;
+
 export const HomeItem = styled(ListItem).attrs({
   containerStyle: {
     borderRadius: 30,
     marginBottom: 10,
     marginHorizontal: 8,
   },
-})`
-  /* border-radius: 40px; */
+})``;
+
+export const AddIcon = styled.View`
+  text-align: center;
+  justify-content: flex-end;
+`;
+export const AddIconLabel = styled.Text`
+  text-align: center;
+  font-size: 12px;
+  color: black;
 `;

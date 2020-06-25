@@ -15,14 +15,13 @@ import { Input } from '../../components/Form';
 
 import {
   Container,
-  ObsevationContainer,
-  ObservationInput,
-  ObservationNote,
   FooterContainer,
   FooterItems,
   FooterNavigation,
   OrderNumber,
   Total,
+  AddIcon,
+  AddIconLabel,
 } from './styles';
 
 export default function Home() {
@@ -86,20 +85,10 @@ export default function Home() {
   }
 
   async function handlePayment() {
-    if (order.total === undefined || changed === true)
-      return Alert.alert('Ops!', 'Crie ou atualize o pedido para paga-lo!');
+    // if (order.total === undefined || changed === true)
+    //   return Alert.alert('Ops!', 'Crie ou atualize o pedido para paga-lo!');
     setShowPay(true);
   }
-
-  // useEffect(() => {
-  //   console.log('order', order);
-  // }, [order]);
-
-  useEffect(() => {
-    if (!showPay) {
-      setOrder([]);
-    }
-  }, [showPay]);
 
   return (
     <Container>
@@ -130,29 +119,36 @@ export default function Home() {
         )}
       />
 
-      {/* <ObsevationContainer> */}
-      <Form style={{ marginBottom: 10, marginHorizontal: 10, marginTop: 10 }}>
-        <Input name='note' iconName='edit' />
+      <Form
+        style={{
+          marginBottom: 10,
+          marginHorizontal: 10,
+          marginTop: 10,
+        }}
+      >
+        <Input
+          name='note'
+          iconName='edit'
+          multiline={true}
+          numberOfLines={2}
+          editable={true}
+          placeholder='Digite uma observação'
+        />
       </Form>
-      {/* </ObsevationContainer> */}
 
       <FooterContainer>
-        <FooterItems
-          style={{
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 3 },
-            shadowOpacity: 0.5,
-            shadowRadius: 2,
-            // elevation: 2,
-          }}
-        >
-          <Icon
-            style={{ marginBottom: 10 }}
-            color='grey'
-            size={26}
-            name='add-circle'
-            onPress={handleNavigateItems}
-          />
+        <FooterItems>
+          <AddIcon>
+            <Icon
+              style={{ marginBottom: 10 }}
+              color='grey'
+              size={26}
+              name='add-circle'
+              onPress={handleNavigateItems}
+            />
+            <AddIconLabel>Adicionar</AddIconLabel>
+          </AddIcon>
+
           <OrderNumber>Pedido N° {order.identification}</OrderNumber>
         </FooterItems>
         <FooterNavigation>

@@ -41,9 +41,9 @@ export default function Item({ item, setChanged, itemRemove }) {
     <HomeItem
       leftAvatar={
         item.product.drink ? (
-          <Icon name='local-drink' />
+          <Icon name='local-drink' size={25} />
         ) : (
-          <Icon name='restaurant' />
+          <Icon name='restaurant' size={28} />
         )
       }
       title={item.product.name}
