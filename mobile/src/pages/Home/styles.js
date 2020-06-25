@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { Icon, ListItem } from 'react-native-elements';
 
 export const Container = styled.View`
   flex: 1;
@@ -87,4 +88,13 @@ export const QuantityLabel = styled.Text`
 export const ItemContainer = styled.View`
   text-align: center;
   margin-right: 10px;
+`;
+export const HomeItem = styled(ListItem).attrs({
+  containerStyle: {
+    borderRadius: 30,
+    marginBottom: 10,
+    marginHorizontal: 8,
+  },
+})`
+  /* border-radius: 40px; */
 `;

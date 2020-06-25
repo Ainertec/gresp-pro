@@ -70,7 +70,6 @@ export default function Home() {
         ? alert('Pedido atualizado')
         : alert('Falha ao atualizar pedido');
     } else {
-      console.log('opa novo');
       const response = await api
         .post(`orders`, {
           identification: Number(order.identification),

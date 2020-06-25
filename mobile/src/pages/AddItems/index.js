@@ -40,7 +40,6 @@ export default function AddItems({ navigation }) {
         },
       })
       .catch((error) => {});
-    console.log(response);
 
     setItems(newItems ? response.data : [...items, ...response.data]);
     setTotal(Math.ceil(Number(response.headers['x-total-count']) / 10));

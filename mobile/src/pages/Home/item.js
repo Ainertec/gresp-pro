@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Icon, ListItem } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { useOrder } from '../../contexts/order';
@@ -10,10 +10,10 @@ import {
   Quantity,
   QuantityLabel,
   RightContent,
+  HomeItem,
 } from './styles';
 
 export default function Item({ item, setChanged, itemRemove }) {
-  const [quantity, setQuantity] = useState(0);
   const { order, setOrder } = useOrder();
 
   function existItem(item) {
@@ -21,47 +21,24 @@ export default function Item({ item, setChanged, itemRemove }) {
       (itemData) => itemData.product._id === item.product._id
     );
   }
-
-  useEffect(() => {
-    console.log('ajdfhasoidfua');
-    const existentItem = existItem(item);
-    if (existentItem) {
-      setQuantity(Number(existentItem.quantity));
-    }
-  }, []);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const existentItem = existItem(item);
-
-  //     if (existentItem) {
-  //       setQuantity(Number(existentItem.quantity));
-  //     }
-  //   }, [])
-  // );
-
-  useEffect(() => {
-    const existentItem = existItem(item);
+  function changeQuantity(value) {
+    const existentItem = order.items.find(
+      (itemData) => itemData.product._id === item.product._id
+    );
     if (existentItem) {
       const position = order.items.findIndex(
         (item) => item.product._id === existentItem.product._id
       );
-      existentItem.quantity = quantity;
+      existentItem.quantity = existentItem.quantity + value;
       const serializadItems = order.items;
       serializadItems[position] = existentItem;
 
       setOrder({ ...order, items: serializadItems });
     }
-  }, [quantity]);
+  }
 
   return (
-    <ListItem
-      style={{ borderRadius: 40 }}
-      containerStyle={{
-        borderRadius: 30,
-        marginBottom: 10,
-        marginHorizontal: 8,
-      }}
+    <HomeItem
       leftAvatar={
         item.product.drink ? (
           <Icon name='local-drink' />
@@ -79,14 +56,14 @@ export default function Item({ item, setChanged, itemRemove }) {
                 raised
                 name='remove'
                 size={12}
-                onPress={() => setQuantity((state) => state - 1)}
+                onPress={() => changeQuantity(-1)}
               />
-              <Quantity>{quantity}</Quantity>
+              <Quantity>{item.quantity}</Quantity>
               <Icon
                 name='add'
                 raised
                 size={12}
-                onPress={() => setQuantity((state) => state + 1)}
+                onPress={() => changeQuantity(1)}
               />
             </ItemContentQuantity>
             <QuantityLabel>Quantidade</QuantityLabel>
@@ -99,7 +76,6 @@ export default function Item({ item, setChanged, itemRemove }) {
         </RightContent>
       }
       subtitle={`R$ ${item.product.price}`}
-      // rightIcon={{ name: 'clear',  }}
       bottomDivider
     />
   );
