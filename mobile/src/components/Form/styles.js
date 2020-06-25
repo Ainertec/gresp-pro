@@ -16,6 +16,7 @@ export const Label = styled.Text`
 export const TextInput = styled(Input).attrs((props) => ({
   containerStyle: {
     backgroundColor: '#fff',
+    borderRadius: 10,
   },
   inputStyle: {
     color: '#000',

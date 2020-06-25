@@ -6,7 +6,11 @@ export default function ItemList({ item, setChanged, itemRemove }) {
   return (
     <ListItem
       style={{ borderRadius: 40 }}
-      containerStyle={{ borderRadius: 30, marginBottom: 10 }}
+      containerStyle={{
+        borderRadius: 30,
+        marginBottom: 10,
+        marginHorizontal: 8,
+      }}
       leftAvatar={
         item.product.drink ? (
           <Icon name='local-drink' />

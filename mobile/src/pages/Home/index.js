@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {  Alert, FlatList } from 'react-native';
+import { Alert, FlatList, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import { Form } from '@unform/mobile';
 
 import { useOrder } from '../../contexts/order';
 
@@ -9,7 +10,8 @@ import api from '../../services/api';
 
 import PaymentModal from './paymentModal';
 
-import ItemList from '../../components/ItemList';
+import ItemList from './item';
+import { Input } from '../../components/Form';
 
 import {
   Container,
@@ -90,9 +92,9 @@ export default function Home() {
     setShowPay(true);
   }
 
-  useEffect(() => {
-    console.log('order', order);
-  }, [order]);
+  // useEffect(() => {
+  //   console.log('order', order);
+  // }, [order]);
 
   useEffect(() => {
     if (!showPay) {
@@ -102,20 +104,22 @@ export default function Home() {
 
   return (
     <Container>
-      <ObsevationContainer>
+      {/* <ObsevationContainer>
         <ObservationNote>Observação:</ObservationNote>
         <ObservationInput
           placeholder='Digite uma observação'
-          defaultValue={order?order.note:''}
+          defaultValue={order ? order.note : ''}
           onChangeText={(text) => setNote(text)}
           multiline={true}
           numberOfLines={3}
           editable={true}
         ></ObservationInput>
-      </ObsevationContainer>
+      </ObsevationContainer> */}
 
       <FlatList
         style={{ paddingTop: 20 }}
+        ListFooterComponentStyle={{ paddingBottom: 20 }}
+        ListFooterComponent={<View style={{ flex: 1 }}></View>}
         data={order.items}
         keyExtractor={(item) => String(item.product._id)}
         renderItem={({ item }) => (
@@ -127,6 +131,12 @@ export default function Home() {
         )}
       />
 
+      {/* <ObsevationContainer> */}
+      <Form style={{ marginBottom: 10, marginHorizontal: 10, marginTop: 10 }}>
+        <Input name='note' iconName='edit' />
+      </Form>
+      {/* </ObsevationContainer> */}
+
       <FooterContainer>
         <FooterItems
           style={{
@@ -134,7 +144,7 @@ export default function Home() {
             shadowOffset: { width: 0, height: 3 },
             shadowOpacity: 0.5,
             shadowRadius: 2,
-            elevation: 2,
+            // elevation: 2,
           }}
         >
           <Icon

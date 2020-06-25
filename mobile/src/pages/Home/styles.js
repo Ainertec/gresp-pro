@@ -3,14 +3,16 @@ import styled from 'styled-components/native';
 export const Container = styled.View`
   flex: 1;
   background: #3f173f;
+  /* background: #fff; */
   justify-content: flex-start;
 `;
 
 export const ObsevationContainer = styled.View`
-  align-self: stretch;
+  /* align-self: stretch;
   background: #fff;
   margin-top: 5px;
-  margin-bottom: 0px;
+  margin-bottom: 0px; */
+  border-radius: 20px;
 `;
 
 export const ObservationNote = styled.Text`
@@ -31,7 +33,11 @@ export const ObservationInput = styled.TextInput`
 `;
 export const FooterContainer = styled.View`
   background: #fff;
+  margin: 0 6px;
+  /* background: #3f173f; */
+  border-radius: 30px;
   justify-content: center;
+  margin-bottom: 10px;
 `;
 
 export const FooterItems = styled.View`
@@ -39,8 +45,10 @@ export const FooterItems = styled.View`
   padding: 16px 0;
   align-items: center;
   justify-content: space-around;
+  border-radius: 20px;
 
-  border-bottom-color: #fff;
+  border-bottom-color: #000;
+  border-bottom-width: 1px;
 `;
 
 export const OrderNumber = styled.Text`
@@ -55,3 +63,28 @@ export const FooterNavigation = styled.View`
 `;
 
 export const Total = styled.Text``;
+
+export const RightContent = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const ItemContentQuantity = styled.View`
+  align-items: center;
+  flex-direction: row;
+`;
+export const Quantity = styled.Text`
+  text-align: center;
+  font-weight: bold;
+  padding: 0 5px;
+  font-size: 15px;
+`;
+export const QuantityLabel = styled.Text`
+  text-align: center;
+  color: gray;
+  font-size: 15px;
+`;
+export const ItemContainer = styled.View`
+  text-align: center;
+  margin-right: 10px;
+`;

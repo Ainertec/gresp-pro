@@ -64,7 +64,7 @@ const HomeStack = () => {
         },
         headerStyle: {
           backgroundColor: '#3F173F',
-          elevation: 1000,
+          elevation: 25,
         },
       })}
     >
