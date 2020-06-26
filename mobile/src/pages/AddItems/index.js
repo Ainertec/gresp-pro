@@ -77,7 +77,7 @@ export default function AddItems({ navigation }) {
             transform: [{ translateY: heightSearch }],
           }}
           name='name'
-          sonSubmitEditing={() => formRef.current.submitForm()}
+          onSubmitEditing={() => formRef.current.submitForm()}
         />
       </Form>
 
