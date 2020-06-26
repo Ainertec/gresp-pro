@@ -6,11 +6,7 @@ import Routes from './src/routes';
 import { AuthProvider } from './src/contexts/auth';
 import { OrderProvider } from './src/contexts/order';
 
-YellowBox.ignoreWarnings([
-  'Unrecognized WebSocket',
-  'componentWillReceiveProps',
-  'Possible Unhandled Promise',
-]);
+YellowBox.ignoreWarnings(['Unrecognized WebSocket']);
 export default function App() {
   return (
     <>

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Alert, FlatList, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
-import { Form } from '@unform/mobile';
 
 import { useOrder } from '../../contexts/order';
 
@@ -11,7 +10,6 @@ import api from '../../services/api';
 import PaymentModal from './paymentModal';
 
 import ItemList from './item';
-import { Input } from '../../components/Form';
 
 import {
   Container,
@@ -22,14 +20,15 @@ import {
   Total,
   AddIcon,
   AddIconLabel,
+  TextInput,
+  Form,
 } from './styles';
 
 export default function Home() {
   const { order, setOrder } = useOrder();
 
   const [showPay, setShowPay] = useState(false);
-
-  const [note, setNote] = useState('');
+  const [note, setNote] = useState(' ');
   const [changed, setChanged] = useState(false);
 
   const navigation = useNavigation();
@@ -62,9 +61,10 @@ export default function Home() {
     if (order._id) {
       const response = await api.put(`orders/${order.identification}`, {
         items: order.items,
-        note: order.note,
+        note: note,
       });
-
+      setOrder(response.data.order);
+      setChanged(false);
       return response.status === 200
         ? alert('Pedido atualizado')
         : alert('Falha ao atualizar pedido');
@@ -76,8 +76,10 @@ export default function Home() {
           note: note,
         })
         .catch((error) => {
-          console.log(error.response);
+          console.log(error.request);
         });
+      setOrder(response.data.order);
+      setChanged(false);
       return response.status === 200
         ? alert('Pedido criado')
         : alert('Falha ao criar pedido');
@@ -85,25 +87,13 @@ export default function Home() {
   }
 
   async function handlePayment() {
-    // if (order.total === undefined || changed === true)
-    //   return Alert.alert('Ops!', 'Crie ou atualize o pedido para paga-lo!');
+    if (order.total === undefined || changed === true)
+      return Alert.alert('Ops!', 'Crie ou atualize o pedido para paga-lo!');
     setShowPay(true);
   }
 
   return (
     <Container>
-      {/* <ObsevationContainer>
-        <ObservationNote>Observação:</ObservationNote>
-        <ObservationInput
-          placeholder='Digite uma observação'
-          defaultValue={order ? order.note : ''}
-          onChangeText={(text) => setNote(text)}
-          multiline={true}
-          numberOfLines={3}
-          editable={true}
-        ></ObservationInput>
-      </ObsevationContainer> */}
-
       <FlatList
         style={{ paddingTop: 20 }}
         ListFooterComponentStyle={{ paddingBottom: 20 }}
@@ -119,16 +109,24 @@ export default function Home() {
         )}
       />
 
-      <Form
-        style={{
-          marginBottom: 10,
-          marginHorizontal: 10,
-          marginTop: 10,
-        }}
-      >
-        <Input
-          name='note'
-          iconName='edit'
+      <Form>
+        <TextInput
+          leftIcon={
+            <Icon
+              name='edit'
+              size={29}
+              color='#000'
+              style={{ marginRight: 20 }}
+              onPress={() =>
+                Alert.alert(
+                  'Observação',
+                  'Digite uma observação caso necessário.'
+                )
+              }
+            />
+          }
+          defaultValue={order.note}
+          onChangeText={(text) => setNote(text)}
           multiline={true}
           numberOfLines={2}
           editable={true}
@@ -172,11 +170,7 @@ export default function Home() {
         </FooterNavigation>
       </FooterContainer>
 
-      <PaymentModal
-        showPay={showPay}
-        total={order.total}
-        setShowPay={setShowPay}
-      />
+      <PaymentModal showPay={showPay} setShowPay={setShowPay} />
     </Container>
   );
 }

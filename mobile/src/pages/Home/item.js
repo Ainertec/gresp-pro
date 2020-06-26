@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { Icon } from 'react-native-elements';
-import { useFocusEffect } from '@react-navigation/native';
 
 import { useOrder } from '../../contexts/order';
 
@@ -16,12 +15,8 @@ import {
 export default function Item({ item, setChanged, itemRemove }) {
   const { order, setOrder } = useOrder();
 
-  function existItem(item) {
-    return order.items.find(
-      (itemData) => itemData.product._id === item.product._id
-    );
-  }
   function changeQuantity(value) {
+    setChanged(true);
     const existentItem = order.items.find(
       (itemData) => itemData.product._id === item.product._id
     );
@@ -41,7 +36,7 @@ export default function Item({ item, setChanged, itemRemove }) {
     <HomeItem
       leftAvatar={
         item.product.drink ? (
-          <Icon name='local-drink' size={25} />
+          <Icon name='local-drink' size={28} />
         ) : (
           <Icon name='restaurant' size={28} />
         )

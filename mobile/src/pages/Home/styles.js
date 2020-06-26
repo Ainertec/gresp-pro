@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import { Icon, ListItem } from 'react-native-elements';
+import { Input, ListItem, Overlay, CheckBox } from 'react-native-elements';
 
 export const Container = styled.View`
   flex: 1;
@@ -8,30 +8,6 @@ export const Container = styled.View`
   justify-content: flex-start;
 `;
 
-export const ObsevationContainer = styled.View`
-  /* align-self: stretch;
-  background: #fff;
-  margin-top: 5px;
-  margin-bottom: 0px; */
-  border-radius: 20px;
-`;
-
-export const ObservationNote = styled.Text`
-  font-weight: bold;
-  color: #444;
-  margin-bottom: 8px;
-  margin-left: 5px;
-`;
-
-export const ObservationInput = styled.TextInput`
-  border-width: 1px;
-  border-color: #ddd;
-  font-size: 15px;
-  border-radius: 21px;
-  padding-left: 8px;
-  margin-bottom: 10px;
-  height: 44px;
-`;
 export const FooterContainer = styled.View`
   background: #fff;
   margin: 0 6px;
@@ -63,7 +39,10 @@ export const FooterNavigation = styled.View`
   align-items: center;
 `;
 
-export const Total = styled.Text``;
+export const Total = styled.Text`
+  font-weight: bold;
+  font-size: 17px;
+`;
 
 export const RightContent = styled.View`
   flex-direction: row;
@@ -106,4 +85,55 @@ export const AddIconLabel = styled.Text`
   text-align: center;
   font-size: 12px;
   color: black;
+`;
+
+export const TextInput = styled(Input).attrs({
+  containerStyle: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+  },
+  inputStyle: {
+    color: '#000',
+  },
+})``;
+
+export const Form = styled.View`
+  margin: 10px 10px;
+`;
+
+export const Modal = styled(Overlay).attrs({
+  overlayStyle: {
+    borderRadius: 20,
+    paddingBottom: 0,
+    height: 450,
+    backgroundColor: '#3f173f',
+  },
+})``;
+export const Check = styled(CheckBox).attrs({
+  containerStyle: { borderRadius: 20, backgroundColor: '#fff' },
+  textStyle: { color: '#000' },
+})``;
+
+export const HeaderPayment = styled.View`
+  flex-direction: row;
+  justify-content: flex-end;
+`;
+export const TitlePayment = styled.Text`
+  margin-top: 30px;
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 30px;
+  font-weight: bold;
+  color: #fff;
+`;
+export const SubtitlePayment = styled.Text`
+  font-size: 18px;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #fff;
+`;
+export const TotalPayment = styled.Text`
+  color: #fff;
+  font-size: 20px;
+  text-align: center;
 `;

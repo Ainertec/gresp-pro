@@ -32,10 +32,11 @@ export const Touchable = styled(RectButton)`
   border-width: ${(props) => (props.outline ? 1 : 0)}px;
   border-color: #3f173f;
   /* background: ${(props) => (!props.outline ? '#e72847' : '#3f173f')}; */
-  background: ${(props) => (!props.outline ? '#3f173f' : '#3f173f')};
+  background:#3f173f;
   overflow: hidden;
   align-items: center;
   margin-bottom: ${height * 0.024}px;
+  border-radius: 15px;
 `;
 export const TouchableText = styled.Text`
   color: #fff;
@@ -45,6 +46,7 @@ export const TouchableText = styled.Text`
   text-align: center;
 `;
 export const TouchableIcon = styled.View`
+  border-radius: 15px;
   height: ${height * 0.07}px;
   width: ${height * 0.07}px;
   background-color: rgba(0, 0, 0, 0.1);

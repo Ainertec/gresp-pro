@@ -1,4 +1,3 @@
-// import { Icon } from 'react-native-elements';
 import { Form } from '@unform/mobile';
 import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Animated, Dimensions, View } from 'react-native';
@@ -78,7 +77,7 @@ export default function AddItems({ navigation }) {
             transform: [{ translateY: heightSearch }],
           }}
           name='name'
-          onSubmitEditing={() => formRef.current.submitForm()}
+          sonSubmitEditing={() => formRef.current.submitForm()}
         />
       </Form>
 
