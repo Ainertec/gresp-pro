@@ -9,8 +9,8 @@ interface Items extends ArraySchema {
 }
 
 export const order = Joi.object().keys({
-  identification: Joi.number().required(),
   note: Joi.string(),
+  identification: Joi.number().required(),
   items: Joi.array().required(),
 });
 export const orderUpdate = Joi.object().keys({

@@ -13,8 +13,6 @@ export default function Cozinha({ navigation }) {
   const [products, setProducts] = useState([]);
   const [note, setNote] = useState('');
 
-  const [ip, setIp] = useState('');
-
   const [showModal, setShowModal] = useState(false);
 
   function showInformations(l) {
@@ -40,38 +38,36 @@ export default function Cozinha({ navigation }) {
   }
   useEffect(() => {
     async function loadOrders() {
-      const Api = await api();
-      const response = await Api.get('orders');
-      const responsefinisheds = await Api.get('/kitchen/');
+      const response = await api.get('orders');
+      const responsefinisheds = await api.get('/kitchen/');
       setOpenOrders(response.data);
-
       setFinishedOrders(responsefinisheds.data);
-
-      const ip = await AsyncStorage.getItem('ip');
-      setIp(ip);
     }
     loadOrders();
   }, []);
 
-  const socket = useMemo(() => socketio.connect(`http://${ip}:3333`), [
-    ip,
+  const socket = useMemo(() => socketio.connect(`http://10.0.0.102:3333`), [
     socket,
   ]);
 
   useEffect(() => {
     socket.on('newOrder', (data) => {
-      let temporary = [];
-      let contains = false;
-      for (const element of openOrders) {
-        if (element._id === data._id) {
-          contains = true;
-          temporary.push(data);
-        } else {
-          temporary.push(element);
-        }
-      }
-      if (!contains) temporary.push(data);
-      setOpenOrders(temporary);
+      console.log('this is the data', data);
+      const exist = openOrders.filter((order) => order._id != data._id);
+      setOpenOrders(data);
+
+      // let temporary = [];
+      // let contains = false;
+      // for (const element of openOrders) {
+      //   if (element._id === data._id) {
+      //     contains = true;
+      //     temporary.push(data);
+      //   } else {
+      //     temporary.push(element);
+      //   }
+      // }
+      // if (!contains) temporary.push(data);
+      // setOpenOrders(temporary);
     });
   }, [openOrders, socket]);
 
