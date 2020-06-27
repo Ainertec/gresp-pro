@@ -5,14 +5,15 @@ let ATIVACAODEATALHOGERAL = true;
 
 //funcao responsavel por ativar os atalhos gerais do software
 function ativarAtalhosPrincipais() {
-    Mousetrap.bind('ctrl+1', function () { if (ATIVACAODEATALHOGERAL) { animacaoJanela2(); setTimeout(function () { menuPedido(); liberarMouseTrap(); }, 100) } else { liberarSubMenu(); } })
-    Mousetrap.bind('ctrl+2', function () { if (ATIVACAODEATALHOGERAL) { animacaoJanela2(); setTimeout(function () { menuPagamentoPedido(); liberarMouseTrap(); }, 100) } else { liberarSubMenu(); } })
-    Mousetrap.bind('ctrl+3', function () { if (ATIVACAODEATALHOGERAL) { animacaoJanela2(); setTimeout(function () { menuImpressao(); liberarMouseTrap(); }, 100) } else { liberarSubMenu(); } })
-    Mousetrap.bind('ctrl+4', function () { if (ATIVACAODEATALHOGERAL) { animacaoJanela2(); setTimeout(function () { ligacaoRelatorioCaixaFacede(); }, 100) } else { liberarSubMenu(); } })
+    Mousetrap.bind('ctrl+1', function () { if (ATIVACAODEATALHOGERAL) { animacaoJanela2(); setTimeout(function () { menuPagamentoPedido(); liberarMouseTrap(); }, 100) } else { liberarSubMenu(); } })
+    Mousetrap.bind('ctrl+2', function () { if (ATIVACAODEATALHOGERAL) { animacaoJanela2(); setTimeout(function () { menuPedido(); liberarMouseTrap(); }, 100) } else { liberarSubMenu(); } })
+    Mousetrap.bind('ctrl+3', function () { if (ATIVACAODEATALHOGERAL) { animacaoJanela2(); setTimeout(function () { pedidosCozinhaFacede(); liberarMouseTrap(); }, 100) } else { liberarSubMenu(); } })
+    Mousetrap.bind('ctrl+4', function () { if (ATIVACAODEATALHOGERAL) { animacaoJanela2(); setTimeout(function () { ligacaoEstoqueFacede(); }, 100) } else { liberarSubMenu(); } })
     Mousetrap.bind('ctrl+5', function () { if (ATIVACAODEATALHOGERAL) { animacaoJanela2(); setTimeout(function () { menuProdutoeBebida(); liberarMouseTrap(); }, 100) } else { liberarSubMenu(); } })
-    Mousetrap.bind('ctrl+6', function () { if (ATIVACAODEATALHOGERAL) { animacaoJanela2(); setTimeout(function () { ligacaoEstoqueFacede(); }, 100) } else { liberarSubMenu(); } })
-    Mousetrap.bind('ctrl+7', function () { if (ATIVACAODEATALHOGERAL) { animacaoJanela2(); setTimeout(function () { menuConfiguracaoAdmin(); liberarMouseTrap(); }, 100) } else { liberarSubMenu(); } })
-    Mousetrap.bind('ctrl+8', function () { if (ATIVACAODEATALHOGERAL) { telaDeConfiguracaoDispositivo(); } else { liberarSubMenu(); } })
+    Mousetrap.bind('ctrl+6', function () { if (ATIVACAODEATALHOGERAL) { animacaoJanela2(); setTimeout(function () { autenticacaoFuncionarioFacede(); liberarMouseTrap(); }, 100) } else { liberarSubMenu(); } })
+    Mousetrap.bind('ctrl+7', function () { if (ATIVACAODEATALHOGERAL) { animacaoJanela2(); setTimeout(function () { ligacaoRelatorioCaixaFacede(); }, 100) } else { liberarSubMenu(); } })
+    Mousetrap.bind('ctrl+8', function () { if (ATIVACAODEATALHOGERAL) { animacaoJanela2(); setTimeout(function () { menuImpressao(); liberarMouseTrap(); }, 100) } else { liberarSubMenu(); } })
+    Mousetrap.bind('ctrl+9', function () { if (ATIVACAODEATALHOGERAL) { telaDeConfiguracaoDispositivo(); } else { liberarSubMenu(); } })
     Mousetrap.bind('esc', function () { if (ATIVACAODEATALHOGERAL) { logout(); window.location.href = "home.html"; } else { liberarSubMenu(); } })
 }
 

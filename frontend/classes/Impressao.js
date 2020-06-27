@@ -269,7 +269,7 @@ function telaGerarQRCode(numero, tipo) {
 
     if (tipo == 'random') {
         for (var cont = 0; cont < numero; cont++) {
-            vetorDeRandomico.push(Math.floor(Math.random() * (2019123 - 200000000)) + 200000000);
+            vetorDeRandomico.push(((Math.floor(Math.random() * (2019123 - 200000000)) + 200000000) + '' + cont).toString());
         }
     } else {
         vetorDeRandomico.push(parseInt(numero));
@@ -319,6 +319,6 @@ function telaGerarQRCode(numero, tipo) {
         });
     }
 
-    setTimeout(function () { window.print(); }, 1000);
+    setTimeout(function () { window.print(); alert('entrei'); }, 1000);
 
 }
