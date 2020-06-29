@@ -109,7 +109,7 @@ function telaProduto(tipoRequisicao, id) {
     codigoHTML += '</div>'
     codigoHTML += '<div class="row">'
     codigoHTML += '<div class="col" style="margin-top:25px">'
-    codigoHTML += '<label>Descrição: </label><textArea type="text" id="descricao" class="form-control mousetrap" placeholder="Descrição">Nenhuma.</textArea>'
+    codigoHTML += '<label>Descrição: </label><textArea type="text" id="descricao" class="form-control mousetrap" placeholder="Descrição" rows="10">Nenhuma.</textArea>'
     codigoHTML += '</div>'
     codigoHTML += '</div>'
 

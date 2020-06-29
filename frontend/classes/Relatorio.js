@@ -37,7 +37,7 @@ function telaRelatorioDeCaixa() {
     codigoHTML +=
         '<div class="btn-group btn-lg btn-block" role="group" aria-label="Basic example">'
     codigoHTML +=
-        `<button onclick="if(validaDadosCampo(['#dataInicio','#dataFim'])){gerarGraficoLucroMensal('visualizar'); tabelaDeRelatorioCaixa();}else{mensagemDeErro('Informe um Periodo!'); mostrarCamposIncorrreto(['dataInicio','dataFim']);}" type="button" class="btn btn-outline-primary"><span class="fas fa-search"></span> Relatórios periódicos</button>`
+        `<button onclick="if(validaDadosCampo(['#dataInicio','#dataFim'])){gerarGraficoLucroMensal('visualizar'); gerarGraficoQuantidadeVendasMensal('visualizar'); tabelaDeRelatorioCaixa();}else{mensagemDeErro('Informe um Periodo!'); mostrarCamposIncorrreto(['dataInicio','dataFim']);}" type="button" class="btn btn-outline-primary"><span class="fas fa-search"></span> Relatórios periódicos</button>`
     codigoHTML +=
         '<button onclick="gerarGraficoLucroTotal(); gerarGraficoDemonstrativoVendaPorItem();" type="button" class="btn btn-outline-primary"><span class="fas fa-search"></span> Relatórios completos</button>'
     codigoHTML += '</div>'
@@ -47,6 +47,7 @@ function telaRelatorioDeCaixa() {
     codigoHTML += '<div id="grafico0" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>'
     codigoHTML += '<div id="grafico1" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>'
     codigoHTML += '<div id="grafico2" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>'
+    codigoHTML += '<div id="grafico3" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>'
     codigoHTML += '<div id="listaItens" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>'
 
     document.getElementById('janela2').innerHTML = codigoHTML;
@@ -167,13 +168,18 @@ async function gerarGraficoDemonstrativoVendaPorItem() {
 
 //funcao responsavel por gerar o relatorio de lucro mensal
 async function gerarGraficoLucroMensal(tipo) {
-    let json = null;
+    let json = null, vetorData = [], vetorTotal = [];
     if (tipo == 'impressao') {
         json = await requisicaoGET(`reports?initial=2020-01-01&final=${new Date().getFullYear()}-0${new Date().getMonth() + 1}-28`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         console.log(json)
     } else {
         json = await requisicaoGET(`reports?initial=${$('#dataInicio').val()}&final=${$('#dataFim').val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     }
+
+    json.data.forEach(function (item) {
+        vetorData.push((item._id.month + '/' + item._id.year).toString())
+        vetorTotal.push(item.amount)
+    });
 
     Highcharts.chart('grafico2', {
         chart: {
@@ -186,7 +192,7 @@ async function gerarGraficoLucroMensal(tipo) {
             text: 'Este gráfico demostra o lucro mensal arrecadado pelo estabelecimento.'
         },
         xAxis: {
-            categories: [json.data[0]._id.month + '/' + json.data[0]._id.year],
+            categories: vetorData,
             title: {
                 text: null
             }
@@ -228,7 +234,55 @@ async function gerarGraficoLucroMensal(tipo) {
         },
         series: [{
             name: 'Valor total',
-            data: [json.data[0].amount]
+            data: vetorTotal
+        }]
+    });
+}
+
+//funcao responsavel por gerar o grafico de quantidade de vendas por periodo
+async function gerarGraficoQuantidadeVendasMensal(tipo) {
+    let json = null, vetorData = [], vetorTotal = [];
+    if (tipo == 'impressao') {
+        json = await requisicaoGET(`reports/total?initial=2020-01-01&final=${new Date().getFullYear()}-0${new Date().getMonth() + 1}-28`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        console.log(json)
+    } else {
+        json = await requisicaoGET(`reports/total?initial=${$('#dataInicio').val()}&final=${$('#dataFim').val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    }
+
+    json.data.forEach(function (item) {
+        vetorData.push((item._id.month + '/' + item._id.year).toString())
+        vetorTotal.push(item.total)
+    });
+
+    Highcharts.chart('grafico3', {
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: 'Demonstrativo Quantitativo de Vendas Mensal'
+        },
+        subtitle: {
+            text: 'Gráfico responsavel por demostrar a quantidade total de vendas mensal.'
+        },
+        xAxis: {
+            categories: vetorData
+        },
+        yAxis: {
+            title: {
+                text: 'Quantidade (Unid.)'
+            }
+        },
+        plotOptions: {
+            line: {
+                dataLabels: {
+                    enabled: true
+                },
+                enableMouseTracking: false
+            }
+        },
+        series: [{
+            name: 'Quantidade',
+            data: vetorTotal
         }]
     });
 }
