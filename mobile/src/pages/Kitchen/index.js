@@ -36,8 +36,8 @@ export default function Kitchen() {
   useMemo(() => {
     async function loadOrders() {
       // const response = await api.get('orders');
-      const responsefinisheds = await api.get('kitchen');
-      setOpenOrders(responsefinisheds.data);
+      const response = await api.get('orders');
+      setOpenOrders(response.data);
       // setFinishedOrders(responsefinisheds.data);
       setLoading(false);
     }
