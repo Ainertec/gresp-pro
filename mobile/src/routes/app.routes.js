@@ -8,7 +8,7 @@ import MatirialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import Home from '../pages/Home/index';
 import Setting from '../pages/Setting';
-import Cozinha from '../pages/Cozinha';
+import Kitchen from '../pages/Kitchen';
 import QrReader from '../pages/QrReader';
 import AddItems from '../pages/AddItems/index';
 
@@ -76,7 +76,7 @@ const HomeStack = () => {
 const KitchenStack = () => {
   return (
     <Stack.Navigator screenOptions={header}>
-      <Stack.Screen name='Cozinha' component={Cozinha} />
+      <Stack.Screen name='Cozinha' component={Kitchen} />
     </Stack.Navigator>
   );
 };

@@ -41,7 +41,10 @@ class App {
     this.express.use(errors());
   }
   private webSocket() {
-    this.io.on('connection', (socket) => {});
+    this.io.on('connection', (socket) => {
+      console.log('opa conection');
+    });
+
     this.express.use((req: CustomRequest, res, next) => {
       req.io = this.io;
       return next();
@@ -49,4 +52,4 @@ class App {
   }
 }
 
-export default new App().express;
+export default new App();
