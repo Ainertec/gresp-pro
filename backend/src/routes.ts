@@ -19,8 +19,8 @@ import Authorization from './middlewares/Authorization';
 import session from './validations/sessionSchema';
 import serial from './validations/serialSchema';
 import { get, post } from './validations/forgotSchema';
-import { paramIdUser, user, userUpdate,paramName } from './validations/userSchema';
-import { item, paramIdItem, paramNameItem,queryPage } from './validations/itemSchema';
+import { paramIdUser, user, userUpdate, paramName } from './validations/userSchema';
+import { item, paramIdItem, paramNameItem, queryPage } from './validations/itemSchema';
 import {
   order,
   orderUpdate,
@@ -66,7 +66,11 @@ routes.delete('/users/:id', celebrate({ params: paramIdUser }), UserController.d
 
 // Item
 
-routes.get('/items/:name', celebrate({ params: paramNameItem,query:queryPage }), ItemController.show);
+routes.get(
+  '/items/:name',
+  celebrate({ params: paramNameItem, query: queryPage }),
+  ItemController.show
+);
 routes.get('/items', ItemController.index);
 routes.post('/items', celebrate({ body: item }), ItemController.create);
 routes.put('/items/:id', celebrate({ body: item, params: paramIdItem }), ItemController.update);
@@ -99,7 +103,7 @@ routes.get('/kitchen', KitchenController.index);
 
 // Printer
 
-routes.post('/printer',celebrate({body:printer}), PrinterController.create);
+routes.post('/printer', celebrate({ body: printer }), PrinterController.create);
 
 routes.use(Authorization);
 
@@ -109,5 +113,6 @@ routes.get('/reports', celebrate({ query: report }), ReportController.show);
 routes.get('/reports/total', celebrate({ query: report }), ReportController.showTotal);
 routes.get('/reports/all', ReportController.index);
 routes.get('/reports/products', ReportController.totalSoldProducts);
+routes.get('/reports/orders', ReportController.showClosedOrders);
 
 export default routes;
