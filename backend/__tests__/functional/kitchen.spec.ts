@@ -1,13 +1,15 @@
 import request from 'supertest';
 
 import { OrderInterface } from '../../src/interfaces/base';
-import app from '../../src/app';
+import App from '../../src/app';
 import { closeConnection, openConnection } from '../utils/connection';
 
 import factory from '../factories';
 import Order from '../../src/models/Order';
 import Token from '../utils/getToken';
 import Item from '../../src/models/Item';
+
+const app = App.express;
 
 describe('Order Controller', () => {
   beforeAll(() => {

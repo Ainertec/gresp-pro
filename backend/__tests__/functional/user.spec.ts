@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../../src/app';
+import App from '../../src/app';
 
 import { UserInterface } from '../../src/interfaces/base';
 
@@ -8,6 +8,8 @@ import Token from '../utils/getToken';
 import factory from '../factories';
 import User from '../../src/models/User';
 import { Questions } from '../../src/models/User';
+
+const app = App.express;
 
 describe('User Tests', () => {
   beforeAll(() => {
@@ -234,10 +236,9 @@ describe('User Tests', () => {
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-        name: 'Cleiton',
-      })
+          name: 'Cleiton',
+        }),
       ])
-      
     );
   });
 

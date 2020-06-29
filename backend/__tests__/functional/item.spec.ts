@@ -1,13 +1,15 @@
 import request from 'supertest';
 
 import { ItemInterface } from '../../src/interfaces/base';
-import app from '../../src/app';
+import App from '../../src/app';
 
 import { closeConnection, openConnection } from '../utils/connection';
 import factory from '../factories';
 import Token from '../utils/getToken';
 import Item from '../../src/models/Item';
 import User from '../../src/models/User';
+
+const app = App.express;
 
 describe('Item Tests', () => {
   beforeAll(() => {

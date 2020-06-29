@@ -16,7 +16,7 @@ class KitchenController {
   }
 
   async index(req: Request, res: Response) {
-    const orders = await Order.find({ closed: false }).populate('items.product');
+    const orders = await Order.find({ closed: false, finished: true }).populate('items.product');
     return res.json(orders);
   }
 }

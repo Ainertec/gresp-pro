@@ -1,11 +1,13 @@
 import request from 'supertest';
-import app from '../../src/app';
+import App from '../../src/app';
 
 import { UserInterface } from '../../src/interfaces/base';
 
 import { closeConnection, openConnection } from '../utils/connection';
 import factory from '../factories';
 import User from '../../src/models/User';
+
+const app = App.express;
 
 describe('Session Tests', () => {
   beforeAll(() => {

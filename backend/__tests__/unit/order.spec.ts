@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../../src/app';
+import App from '../../src/app';
 import { OrderInterface, ItemInterface } from '../../src/interfaces/base';
 
 import { closeConnection, openConnection } from '../utils/connection';
@@ -7,6 +7,8 @@ import Token from '../utils/getToken';
 import factory from '../factories';
 import Order from '../../src/models/Order';
 import Item from '../../src/models/Item';
+
+const app = App.express;
 
 describe('Stock controller', () => {
   beforeAll(() => {
