@@ -113,6 +113,6 @@ routes.get('/reports', celebrate({ query: report }), ReportController.show);
 routes.get('/reports/total', celebrate({ query: report }), ReportController.showTotal);
 routes.get('/reports/all', ReportController.index);
 routes.get('/reports/products', ReportController.totalSoldProducts);
-routes.get('/reports/orders', ReportController.showClosedOrders);
+routes.get('/reports/orders', celebrate({ query: report }), ReportController.showClosedOrders);
 
 export default routes;
