@@ -1,13 +1,15 @@
 import request from 'supertest';
 
 import { ItemInterface, UserInterface } from '../../src/interfaces/base';
-import app from '../../src/app';
+import App from '../../src/app';
 import { closeConnection, openConnection } from '../utils/connection';
 
 import factory from '../factories';
 import Order from '../../src/models/Order';
 import Token from '../utils/getToken';
 import Item from '../../src/models/Item';
+
+const app = App.express;
 
 describe('Order Controller', () => {
   beforeAll(() => {
@@ -198,5 +200,41 @@ describe('Order Controller', () => {
       .set('Authorization', `Bearer ${user.generateToken()}`);
 
     expect(response.status).toBe(401);
+  });
+
+  it('should list closed orders by period', async () => {
+    const token = await Token;
+
+    await factory.createMany('Order', 3, {
+      createdAt: new Date(2020, 3, 1),
+      closed: true,
+      total: 100,
+    });
+    await factory.createMany('Order', 3, {
+      createdAt: new Date(2020, 5, 30),
+      closed: true,
+      total: 100,
+    });
+    await factory.createMany('Order', 3, {
+      createdAt: new Date(2020, 7, 30),
+      closed: true,
+      total: 100,
+    });
+    await factory.createMany('Order', 3, {
+      createdAt: new Date(2020, 2, 30),
+      closed: true,
+      total: 100,
+    });
+
+    const response = await request(app)
+      .get('/reports/orders')
+      .query({
+        initial: '2020-06-01',
+        final: '2020-08-30',
+      })
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBe(6);
   });
 });

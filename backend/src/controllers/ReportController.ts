@@ -31,6 +31,7 @@ class ReportController {
 
     return res.json(orders);
   }
+
   public async showTotal(req: Request, res: Response) {
     const initial = String(req.query.initial);
     const final = String(req.query.final);
@@ -51,6 +52,24 @@ class ReportController {
         total: { $sum: 1 },
       })
       .sort({ amount: -1 });
+
+    return res.json(orders);
+  }
+
+  public async showClosedOrders(req: Request, res: Response) {
+    const initial = String(req.query.initial);
+    const final = String(req.query.final);
+
+    const initialDate = parseISO(initial);
+    const finalDate = parseISO(final);
+
+    if (!isValid(initialDate) && !isValid(finalDate))
+      return res.status(400).json({ message: 'invalid date' });
+
+    const orders = await Order.find({
+      createdAt: { $gte: initialDate, $lte: finalDate },
+      closed: true,
+    }).populate('items.product');
 
     return res.json(orders);
   }
