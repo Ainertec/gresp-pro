@@ -1,13 +1,16 @@
-import React, { useState, useEffect, useMemo, useLayoutEffect } from 'react';
-import { View, StyleSheet, ScrollView, Text, AsyncStorage } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import { View, ScrollView, Text, FlatList } from 'react-native';
 import { Icon, ListItem, Button, Overlay } from 'react-native-elements';
 
 import socketio from 'socket.io-client';
 import api from '../../services/api';
 
+import Item from './Item';
+
+import { Container } from './styles';
+
 export default function Kitchen() {
-  const [openOrders, setOpenOrders] = useState([]);
-  const [finishedOrders, setFinishedOrders] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [items, setItems] = useState([]);
@@ -15,30 +18,23 @@ export default function Kitchen() {
 
   const [showModal, setShowModal] = useState(false);
 
+  // usar refresh par novas alterações como pedidios finalizados
+  // badge para indicar, disparo atravez da função finished
+  // criar um estado no order context
+  // quando disparar a finished ele fica true
+  // aprarece o badge
+  // ao dar refresh ele e setado como false
+
   function showInformations(l) {
     setNote(l.note);
     setItems(l.items);
     setShowModal(true);
   }
-  async function finished(id) {
-    const identification = Number.parseInt(id);
-    const response = await api.post('/kitchen', {
-      identification,
-    });
-    const index = openOrders.findIndex(
-      (orders) => orders.identification == identification
-    );
-    console.log(index);
-    openOrders[index] = response.data;
-    setOpenOrders(openOrders);
-  }
 
   useMemo(() => {
     async function loadOrders() {
-      // const response = await api.get('orders');
       const response = await api.get('orders');
-      setOpenOrders(response.data);
-      // setFinishedOrders(responsefinisheds.data);
+      setOrders(response.data);
       setLoading(false);
     }
     loadOrders();
@@ -50,14 +46,14 @@ export default function Kitchen() {
     let mounted = true;
     if (!loading) {
       socket.on('newOrder', (data) => {
-        const alreadyOrder = openOrders.findIndex(
+        const alreadyOrder = orders.findIndex(
           (order) => order.identification === data.identification
         );
         if (alreadyOrder >= 0) {
-          openOrders[alreadyOrder] = data;
-          setOpenOrders(openOrders);
+          orders[alreadyOrder] = data;
+          setOrders(orders);
         } else {
-          setOpenOrders([...openOrders, data]);
+          setOrders([...orders, data]);
         }
       });
     }
@@ -67,37 +63,24 @@ export default function Kitchen() {
   useEffect(() => {
     if (!loading) {
       socket.on('payment', (data) => {
-        const filteredOrders = openOrders.filter(
+        const filteredOrders = orders.filter(
           (orders) => orders.identification != data.identification
         );
-        setOpenOrders(filteredOrders);
+        setOrders(filteredOrders);
       });
     }
-  }, [openOrders, loading]);
+  }, [orders, loading]);
 
   return (
-    <View style={styles.container}>
-      <View style={{ flex: 1 }}>
-        <ScrollView style={{ flex: 1, backgroundColor: '#3f173f' }}>
-          {openOrders.map((orders) => (
-            <ListItem
-              containerStyle={{ borderRadius: 20, marginBottom: 10 }}
-              key={orders._id}
-              leftAvatar={<Icon name='touch-app' />}
-              title={`Pedido N°: ${orders.identification}`}
-              subtitle={`Total: ${orders.total.toFixed(2)}`}
-              rightIcon={{
-                name: orders.finished ? 'check-box' : 'close',
-                onPress: () =>
-                  orders.finished ? {} : finished(orders.identification),
-              }}
-              bottomDivider
-              onPress={() => showInformations(orders)}
-            />
-          ))}
-        </ScrollView>
-      </View>
-      <View style={{ marginTop: 15, backgroundColor: '#3F173F' }}></View>
+    <Container>
+      <FlatList
+        data={orders}
+        keyExtractor={(order) => String(order._id)}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <Item data={item} setOrders={setOrders} orders={orders} />
+        )}
+      />
       <Overlay isVisible={showModal}>
         <View style={{ flex: 1 }}>
           <Text
@@ -148,14 +131,6 @@ export default function Kitchen() {
           />
         </View>
       </Overlay>
-    </View>
+    </Container>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#3F173F',
-    justifyContent: 'flex-start',
-  },
-});
