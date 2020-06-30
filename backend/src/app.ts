@@ -42,7 +42,10 @@ class App {
   }
   private webSocket() {
     this.io.on('connection', (socket) => {
-      console.log('opa conection');
+      socket.on('newFinished', (data) => {
+        console.log(data);
+        socket.broadcast.emit('hasFinished', data);
+      });
     });
 
     this.express.use((req: CustomRequest, res, next) => {

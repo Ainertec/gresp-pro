@@ -1,10 +1,12 @@
 import React from 'react';
-import { Image, View } from 'react-native';
+import { Image, View, Text } from 'react-native';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MatirialIcon from 'react-native-vector-icons/MaterialIcons';
+
+import { useOrder } from '../contexts/order';
 
 import Home from '../pages/Home/index';
 import Setting from '../pages/Setting';
@@ -16,6 +18,40 @@ import logo from '../assets/logo.png';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
+function IconWithBadge({ name, badgeCount, color, size }) {
+  return (
+    <View style={{ width: 24, height: 24, margin: 5 }}>
+      <MatirialIcon name={name} size={size} color={color} />
+      {badgeCount > 0 && (
+        <View
+          style={{
+            // On React Native < 0.57 overflow outside of parent will not work on Android, see https://git.io/fhLJ8
+            position: 'absolute',
+            right: -6,
+            top: -3,
+            backgroundColor: 'red',
+            borderRadius: 6,
+            width: 12,
+            height: 12,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ color: 'white', fontSize: 10, fontWeight: 'bold' }}>
+            {badgeCount}
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+}
+
+function HomeIconWithBadge(props) {
+  const { shouldRefresh } = useOrder();
+
+  return <IconWithBadge {...props} badgeCount={shouldRefresh} />;
+}
 
 const header = {
   headerTitleAlign: 'center',
@@ -105,7 +141,7 @@ function HomeTabs() {
         options={{
           tabBarLabel: 'Cozinha',
           tabBarIcon: ({ color }) => (
-            <MatirialIcon name='kitchen' size={24} color={color} />
+            <HomeIconWithBadge name='kitchen' size={24} color={color} />
           ),
         }}
       />

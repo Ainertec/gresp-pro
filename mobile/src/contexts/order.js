@@ -6,6 +6,7 @@ const OrderContext = createContext({});
 
 export const OrderProvider = ({ children }) => {
   const [order, setOrder] = useState({});
+  const [shouldRefresh, setShouldRefresh] = useState(0);
 
   async function loadOrder(identification) {
     const response = await load(identification);
@@ -30,6 +31,7 @@ export const OrderProvider = ({ children }) => {
 
     setOrder(newOrder);
   }
+
   function removeItem(data) {
     const filterdItem = order.items.filter(
       (item) => item.product._id !== data._id
@@ -43,7 +45,15 @@ export const OrderProvider = ({ children }) => {
 
   return (
     <OrderContext.Provider
-      value={{ order, addItem, removeItem, setOrder, loadOrder }}
+      value={{
+        order,
+        addItem,
+        removeItem,
+        setOrder,
+        loadOrder,
+        shouldRefresh,
+        setShouldRefresh,
+      }}
     >
       {children}
     </OrderContext.Provider>

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { View, Text } from 'react-native';
 import { Icon, ListItem } from 'react-native-elements';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -10,7 +10,7 @@ import { ListItemStyled } from './styles';
 
 const AnimatableItem = Animatable.createAnimatableComponent(ListItemStyled);
 
-const Item = ({ data, orders, setOrders }) => {
+const Item = ({ data, orders, setOrders, socket }) => {
   const itemRef = useRef(null);
 
   async function finished(identification) {
@@ -27,6 +27,7 @@ const Item = ({ data, orders, setOrders }) => {
 
       setOrders([...filteredOrders, response.data]);
       itemRef.current.bounceIn();
+      socket.emit('newFinished', 1);
     });
   }
 
