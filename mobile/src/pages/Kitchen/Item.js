@@ -1,17 +1,27 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef } from 'react';
 import { View, Text } from 'react-native';
-import { Icon, ListItem } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
+import { useNavigation } from '@react-navigation/native';
 
 import api from '../../services/api';
 
-import { ListItemStyled } from './styles';
+import {
+  ListItemStyled,
+  RigthContentLabel,
+  RigthContentListItem,
+} from './styles';
 
 const AnimatableItem = Animatable.createAnimatableComponent(ListItemStyled);
 
 const Item = ({ data, orders, setOrders, socket }) => {
   const itemRef = useRef(null);
+  const navigation = useNavigation();
+
+  function handelNavigation() {
+    navigation.navigate('Details', data);
+  }
 
   async function finished(identification) {
     const response = await api.post('/kitchen', {
@@ -38,18 +48,20 @@ const Item = ({ data, orders, setOrders, socket }) => {
       title={`Pedido N°: ${data.identification}`}
       subtitle={`Total: ${data.total.toFixed(2)}`}
       rightAvatar={
-        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <RigthContentListItem>
           <FeatherIcon
             name={data.finished ? 'check-circle' : 'x-circle'}
             size={26}
             color={data.finished ? '#3F173F' : '#000'}
             onPress={() => (data.finished ? {} : finished(data.identification))}
           />
-          <Text>{data.finished ? 'Finalizado' : 'Finalizar'}</Text>
-        </View>
+          <RigthContentLabel>
+            {data.finished ? 'Finalizado' : 'Finalizar'}
+          </RigthContentLabel>
+        </RigthContentListItem>
       }
       bottomDivider
-      // onPress={() => showInformations(item)}
+      onPress={handelNavigation}
     />
   );
 };
