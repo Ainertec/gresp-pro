@@ -13,6 +13,7 @@ import Setting from '../pages/Setting';
 import Kitchen from '../pages/Kitchen';
 import QrReader from '../pages/QrReader';
 import AddItems from '../pages/AddItems/index';
+import Details from '../pages/Details';
 
 import logo from '../assets/logo.png';
 
@@ -185,6 +186,7 @@ const Routes = () => {
         component={AddItems}
       />
       <Stack.Screen options={header} name='Setting' component={Setting} />
+      <Stack.Screen options={header} name='Details' component={Details} />
     </Stack.Navigator>
   );
 };
