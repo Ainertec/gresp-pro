@@ -4,7 +4,7 @@ import Order from '../models/Order';
 import { ItemInterface } from '../interfaces/base';
 
 interface ProductsTotalSold extends ItemInterface {
-  soldout: number;
+  amount: number;
 }
 
 class ReportController {
@@ -103,18 +103,18 @@ class ReportController {
           stock: '$products.stock',
           drink: '$products.drink',
         },
-        soldout: { $sum: '$items.quantity' },
+        amount: { $sum: '$items.quantity' },
       })
-      .sort({ soldout: -1 });
+      .sort({ amount: -1 });
 
     const totalProducts = products.reduce((sum, product) => {
-      return sum + product.soldout;
+      return sum + product.amount;
     }, 0);
 
     const serializadedProducts = products.map((product) => {
       return {
         ...product,
-        soldout: totalProducts,
+        amount: totalProducts,
       };
     });
     return res.json(products);
