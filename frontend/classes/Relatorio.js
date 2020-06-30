@@ -37,7 +37,7 @@ function telaRelatorioDeCaixa() {
     codigoHTML +=
         '<div class="btn-group btn-lg btn-block" role="group" aria-label="Basic example">'
     codigoHTML +=
-        `<button onclick="if(validaDadosCampo(['#dataInicio','#dataFim'])){gerarGraficoLucroMensal('visualizar'); gerarGraficoQuantidadeVendasMensal('visualizar'); tabelaDeRelatorioCaixa();}else{mensagemDeErro('Informe um Periodo!'); mostrarCamposIncorrreto(['dataInicio','dataFim']);}" type="button" class="btn btn-outline-primary"><span class="fas fa-search"></span> Relatórios periódicos</button>`
+        `<button onclick="if(validaDadosCampo(['#dataInicio','#dataFim'])){gerarGraficoLucroMensal('visualizar'); gerarGraficoQuantidadeVendasMensal('visualizar'); tabelaDeRelatorioCaixa('visualizar');}else{mensagemDeErro('Informe um Periodo!'); mostrarCamposIncorrreto(['dataInicio','dataFim']);}" type="button" class="btn btn-outline-primary"><span class="fas fa-search"></span> Relatórios periódicos</button>`
     codigoHTML +=
         '<button onclick="gerarGraficoLucroTotal(); gerarGraficoDemonstrativoVendaPorItem();" type="button" class="btn btn-outline-primary"><span class="fas fa-search"></span> Relatórios completos</button>'
     codigoHTML += '</div>'
@@ -123,7 +123,7 @@ async function gerarGraficoDemonstrativoVendaPorItem() {
     let result = [];
 
     json.data.forEach(function (item) {
-        result.push(JSON.parse(`{"name":"${item._id.name}","data":[${item.soldout}]}`))
+        result.push(JSON.parse(`{"name":"${item._id.name}","data":[${item.amount}]}`))
     });
 
     Highcharts.chart('grafico1', {
@@ -169,19 +169,68 @@ async function gerarGraficoDemonstrativoVendaPorItem() {
 //funcao responsavel por gerar o relatorio de lucro mensal
 async function gerarGraficoLucroMensal(tipo) {
     let json = null, vetorData = [], vetorTotal = [];
+
     if (tipo == 'impressao') {
         json = await requisicaoGET(`reports?initial=2020-01-01&final=${new Date().getFullYear()}-0${new Date().getMonth() + 1}-28`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-        console.log(json)
     } else {
         json = await requisicaoGET(`reports?initial=${$('#dataInicio').val()}&final=${$('#dataFim').val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     }
 
     json.data.forEach(function (item) {
-        vetorData.push((item._id.month + '/' + item._id.year).toString())
-        vetorTotal.push(item.amount)
+        vetorTotal.push(parseFloat(item.amount))
+        vetorData.push((`${item._id.month} / ${item._id.year}`).toString())
     });
 
     Highcharts.chart('grafico2', {
+        chart: {
+            type: 'area',
+            inverted: true
+        },
+        title: {
+            text: 'Average fruit consumption during one week'
+        },
+        accessibility: {
+            keyboardNavigation: {
+                seriesNavigation: {
+                    mode: 'serialize'
+                }
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -150,
+            y: 100,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor:
+                Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF'
+        },
+        xAxis: {
+            categories: [
+                vetorData
+            ]
+        },
+        yAxis: {
+            title: {
+                text: 'Number of units'
+            },
+            allowDecimals: false,
+            min: 0
+        },
+        plotOptions: {
+            area: {
+                fillOpacity: 0.5
+            }
+        },
+        series: [{
+            name: 'Valor Total',
+            data: vetorTotal
+        }]
+    });
+
+    /*Highcharts.chart('grafico2', {
         chart: {
             type: 'bar'
         },
@@ -236,7 +285,7 @@ async function gerarGraficoLucroMensal(tipo) {
             name: 'Valor total',
             data: vetorTotal
         }]
-    });
+    });*/
 }
 
 //funcao responsavel por gerar o grafico de quantidade de vendas por periodo
@@ -288,40 +337,48 @@ async function gerarGraficoQuantidadeVendasMensal(tipo) {
 }
 
 //funcao para gerar tabela com todos os pedidos registrados no caixa
-async function tabelaDeRelatorioCaixa() {
-    /* let codigoHTML = '', json = await requisicaoGET('logs/?date=2020-06', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
- 
-     codigoHTML += '<h5>Lista de Pedidos Fechados</h5>'
-     codigoHTML += '<table class="table table-dark table-bordered text-center">'
-     codigoHTML += '<thead class="thead-dark">'
-     codigoHTML += '<tr>'
-     codigoHTML += '<td scope="col"><small>Data</small></td>'
-     codigoHTML += '<td scope="col"><small>Identificação</small></td>'
-     codigoHTML += '<td scope="col"><small>Lista itens por ID</small></td>'
-     codigoHTML += '<td scope="col"><small>Forma pagamento</small></td>'
-     codigoHTML += '<td scope="col"><small>Valor</small></td>'
-     codigoHTML += '</tr>'
-     codigoHTML += '</thead>'
-     codigoHTML += '<tbody>'
-     json.data.forEach(function (item) {
-         codigoHTML += '<tr class="table-light text-dark">'
-         codigoHTML += `<td scope="col"><small>${item.update_at}</small></td>`
-         codigoHTML += `<td scope="col"><small>${item.identification}</small></td>`
-         codigoHTML += `<td scope="col"><small>`
-         item.products.forEach(function (item2) {
-             codigoHTML += `(${item2.product} X ${item2.quantity})`;
-         });
- 
-         item.drinkables.forEach(function (item2) {
-             codigoHTML += `(${item2.drinkable} X ${item2.quantity})`;
-         });
-         codigoHTML += '</small></td>'
-         codigoHTML += `<td scope="col"><small>${item.payment}</small></td>`
-         codigoHTML += `<td scope="col"><small>R$${(item.total).toFixed(2)}</small></td>`
-         codigoHTML += '</tr>'
-     });
-     codigoHTML += '</tbody>'
-     codigoHTML += '</table>'
- 
-     document.getElementById('listaItens').innerHTML = codigoHTML;*/
+async function tabelaDeRelatorioCaixa(tipo) {
+    let codigoHTML = '', json = null;
+
+    try {
+        if (tipo == 'impressao') {
+            json = await requisicaoGET(`reports/orders?initial=2020-01-01&final=${new Date().getFullYear()}-12-28`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        } else {
+            json = await requisicaoGET(`reports/orders?initial=${$('#dataInicio').val()}&final=${$('#dataFim').val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        }
+
+        codigoHTML += '<h5>Lista de Pedidos Fechados</h5>'
+        codigoHTML += '<table class="table table-dark table-bordered text-center">'
+        codigoHTML += '<thead class="thead-dark">'
+        codigoHTML += '<tr>'
+        codigoHTML += '<td scope="col"><small>Data</small></td>'
+        codigoHTML += '<td scope="col"><small>Identificação</small></td>'
+        codigoHTML += '<td scope="col"><small>Lista itens por ID</small></td>'
+        codigoHTML += '<td scope="col"><small>Forma pagamento</small></td>'
+        codigoHTML += '<td scope="col"><small>Valor</small></td>'
+        codigoHTML += '</tr>'
+        codigoHTML += '</thead>'
+        codigoHTML += '<tbody>'
+        json.data.forEach(function (item) {
+            codigoHTML += '<tr class="table-light text-dark">'
+            codigoHTML += `<td scope="col"><small>${(item.updatedAt).split(".")[0]}</small></td>`
+            codigoHTML += `<td scope="col"><small>${item.identification}</small></td>`
+            codigoHTML += `<td scope="col"><small>`
+            item.items.forEach(function (item2) {
+                codigoHTML += `(${item2.product.name} X ${item2.quantity})`;
+            });
+            codigoHTML += '</small></td>'
+            codigoHTML += `<td scope="col"><small>${item.payment}</small></td>`
+            codigoHTML += `<td scope="col"><small>R$${(item.total).toFixed(2)}</small></td>`
+            codigoHTML += '</tr>'
+        });
+        codigoHTML += '</tbody>'
+        codigoHTML += '</table>'
+
+        document.getElementById('listaItens').innerHTML = codigoHTML;
+
+    } catch (error) {
+
+        document.getElementById('listaItens').innerHTML = 'Não foi possivel carregar a lista!' + error
+    }
 }

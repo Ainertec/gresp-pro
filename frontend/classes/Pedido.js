@@ -441,7 +441,15 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
         if (tipoRequisicao == 'cadastrar') {
             if (condicaoComItens && condicaoSemQuantidade) {
                 await requisicaoPOST("orders", JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-                //await requisicaoGET("printer/?identification=" + $('#identificacao').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+
+                let newOrder = `{
+                    "identification":${$('#identificacao').val()},
+                    "oldItems": [],
+                    "type":true
+                }`
+
+                //await requisicaoPOST(`printer`, JSON.parse(newOrder), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+
                 mensagemDeAviso("Pedido cadastrado com sucesso!");
                 buscarPedido();
                 setTimeout(function () { menuPedido(); }, 1500)
@@ -453,10 +461,34 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
         } else {
             if (condicaoComItens && condicaoSemQuantidade) {
                 let jsonDid = await requisicaoGET("orders/" + $('#identificacao').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-                let json2 = JSON.parse(json)
+                let json2 = JSON.parse(json), aux = true
                 delete json2.identification
                 await requisicaoPUT("orders/" + $('#identificacao').val(), json2, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-                //await requisicaoPUT("printerupdate/?identification=" + $('#identificacao').val(), jsonDid.data, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+
+                let updateOrder = `{
+                    "identification":${$('#identificacao').val()},
+                    "oldItems": [`
+                jsonDid.data.items.forEach(function (item) {
+                    if (aux) {
+                        updateOrder += `{
+                                "product":"${item.product._id}",
+                                "quantity":${item.quantity}
+                            }`
+                        aux = false;
+                    } else {
+                        updateOrder += `,{
+                                "product":"${item.product._id}",
+                                "quantity":${item.quantity}
+                            }`
+                    }
+
+                });
+                updateOrder += `],
+                    "type":false
+                }`
+
+                //await requisicaoPOST(`printer`, JSON.parse(updateOrder), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+
                 mensagemDeAviso("Pedido atualizado com sucesso!");
                 buscarPedido();
                 setTimeout(function () { menuPedido(); }, 1500)

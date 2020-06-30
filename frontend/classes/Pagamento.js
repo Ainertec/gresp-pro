@@ -169,7 +169,7 @@ async function buscarDadosDoPedidoParaPagamento() {
 //funcao para efetuar o pagamento
 function efetuarPagamento() {
     try {
-        requisicaoDELETE("orders/" + $('#identificacao').val() + "/" + $('#formaPagamento').val(), null, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        requisicaoDELETE("orders/" + $('#identificacao').val() + "/" + $('#formaPagamento').val(), '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         mensagemDeAviso("Pagamento Efetuado!");
         setTimeout(function () { menuPagamentoPedido(); }, 500)
     } catch (error) {

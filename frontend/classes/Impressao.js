@@ -130,7 +130,8 @@ function telaGerarRelatorioDeCaixa() {
     codigoHTML += '<div id="grafico0"></div>'
     codigoHTML += '<div id="grafico1"></div>'
     codigoHTML += '<div id="grafico2"></div>'
-    codigoHTML += '<div id="lista"></div>'
+    codigoHTML += '<div id="grafico3"></div>'
+    codigoHTML += '<div id="listaItens"></div>'
     codigoHTML += '<hr style="margin-top:10px;">'
     codigoHTML += '</div>'
     codigoHTML += '</div>'
@@ -149,7 +150,6 @@ function telaGerarRelatorioDeCaixa() {
 
 //funcao para gerar tela de resposta com todos os pedidos fechados
 async function telaRespostaRelatorioDeCaixa() {
-    //let json = await requisicaoGET("logs_by_month/"), codigoHTML = '';
 
     gerarGraficoLucroTotal();
 
@@ -157,38 +157,9 @@ async function telaRespostaRelatorioDeCaixa() {
 
     gerarGraficoLucroMensal('impressao');
 
+    gerarGraficoQuantidadeVendasMensal('impressao');
 
-    /*codigoHTML += '<table class="table table-dark table-bordered text-center">'
-    codigoHTML += '<thead class="thead-dark">'
-    codigoHTML += '<tr>'
-    codigoHTML += '<td scope="col"><small>Data</small></td>'
-    codigoHTML += '<td scope="col"><small>Identificação</small></td>'
-    codigoHTML += '<td scope="col"><small>Lista itens por ID</small></td>'
-    codigoHTML += '<td scope="col"><small>Forma pagamento</small></td>'
-    codigoHTML += '<td scope="col"><small>Valor</small></td>'
-    codigoHTML += '</tr>'
-    codigoHTML += '</thead>'
-    codigoHTML += '<tbody>'
-    json.data.forEach(function (item) {
-        codigoHTML += '<tr class="table-light text-dark">'
-        codigoHTML += `<td scope="col"><small>${item.update_at}</small></td>`
-        codigoHTML += `<td scope="col"><small>${item.identification}</small></td>`
-        codigoHTML += `<td scope="col"><small>`
-        item.products.forEach(function (item2) {
-            codigoHTML += `(${item2.product} X ${item2.quantity})`
-        });
-        item.drinkables.forEach(function (item2) {
-            codigoHTML += `(${item2.drinkable} X ${item2.quantity})`
-        });
-        codigoHTML += `</small></td>`
-        codigoHTML += `<td scope="col"><small>${item.payment}</small></td>`
-        codigoHTML += `<td scope="col"><small>R$ ${(item.total).toFixed(2)}</small></td>`
-        codigoHTML += '</tr>'
-    });
-    codigoHTML += '</tbody>'
-    codigoHTML += '</table>'
-
-    document.getElementById('lista').innerHTML = codigoHTML;*/
+    tabelaDeRelatorioCaixa('impressao');
 
 }
 
