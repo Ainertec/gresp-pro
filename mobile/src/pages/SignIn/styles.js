@@ -1,23 +1,22 @@
 import styled from 'styled-components/native';
 import { Dimensions } from 'react-native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 const { height } = Dimensions.get('window');
 const { width } = Dimensions.get('window');
 
-export const Container = styled.View`
+export const Container = styled.SafeAreaView`
   flex: 1;
   background: #fff;
   padding: 0 ${width * 0.03}px;
 `;
 export const Header = styled.View`
-  /* flex: 1; */
-  height: 40px;
-  /* width: 50px; */
+  /* height: 40px; */
   /* background: #000; */
   flex-direction: row;
   align-items: flex-end;
   justify-content: flex-end;
-  margin: 30px 2px 0 0px;
+  margin-top: ${getStatusBarHeight() + 10}px;
 `;
 export const Content = styled.View`
   justify-content: center;

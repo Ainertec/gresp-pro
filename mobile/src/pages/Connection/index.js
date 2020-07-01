@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import React, { useEffect, useRef } from 'react';
-import { KeyboardAvoidingView, AsyncStorage } from 'react-native';
+import { KeyboardAvoidingView, AsyncStorage, StatusBar } from 'react-native';
 import * as Yup from 'yup';
 import { Button, Input, Label } from '../../components/Form';
 import Scanner from '../../components/QrReader';
@@ -50,6 +50,11 @@ export default function Connection() {
 
   return (
     <Container>
+      <StatusBar
+        backgroundColor={'#3F173F'}
+        translucent
+        barStyle='light-content'
+      />
       <KeyboardAvoidingView
         style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
         behavior='height'

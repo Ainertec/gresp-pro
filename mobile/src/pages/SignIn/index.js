@@ -3,7 +3,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   ActivityIndicator,
-  View,
+  StatusBar,
 } from 'react-native';
 import { Form } from '@unform/mobile';
 import * as Yup from 'yup';
@@ -16,11 +16,13 @@ import logo from '../../assets/logo2.png';
 import { useAuth } from '../../contexts/auth';
 
 import { Container, Logo, Title, Content, Header } from './styles';
+import { useNavigation } from '@react-navigation/native';
 
 const SignIn = () => {
   const formRef = useRef(null);
   // const errorRef = useRef(null);
   // const disconectRef = useRef(null);
+  const navigation = useNavigation();
 
   const { signIn } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -55,6 +57,7 @@ const SignIn = () => {
   }
   return (
     <Container>
+      <StatusBar backgroundColor='#fff' translucent barStyle='dark-content' />
       <KeyboardAvoidingView
         style={{
           flex: 1,
@@ -65,7 +68,12 @@ const SignIn = () => {
         enable
       >
         <Header>
-          <Icon name='cog' color='#3f173f' size={28} />
+          <Icon
+            name='cog'
+            color='#3f173f'
+            size={28}
+            onPress={() => navigation.navigate('Connection')}
+          />
         </Header>
 
         <Content>
