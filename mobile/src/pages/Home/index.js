@@ -28,7 +28,7 @@ export default function Home() {
   const { order, setOrder } = useOrder();
 
   const [showPay, setShowPay] = useState(false);
-  const [note, setNote] = useState(' ');
+  const [note, setNote] = useState('');
   const [changed, setChanged] = useState(false);
 
   const navigation = useNavigation();
@@ -61,7 +61,7 @@ export default function Home() {
     if (order._id) {
       const response = await api.put(`orders/${order.identification}`, {
         items: order.items,
-        note: note,
+        note: note === '' ? undefined : note,
       });
       setOrder(response.data.order);
       setChanged(false);
@@ -73,7 +73,7 @@ export default function Home() {
         .post(`orders`, {
           identification: Number(order.identification),
           items: order.items,
-          note: note,
+          note: note === '' ? undefined : note,
         })
         .catch((error) => {
           console.log(error.request);
@@ -139,7 +139,7 @@ export default function Home() {
           <AddIcon>
             <Icon
               style={{ marginBottom: 10 }}
-              color='grey'
+              color='black'
               size={26}
               name='add-circle'
               onPress={handleNavigateItems}

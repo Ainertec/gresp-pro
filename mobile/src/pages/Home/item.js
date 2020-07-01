@@ -24,7 +24,7 @@ export default function Item({ item, setChanged, itemRemove }) {
       const position = order.items.findIndex(
         (item) => item.product._id === existentItem.product._id
       );
-      existentItem.quantity = existentItem.quantity + value;
+      existentItem.quantity = value > 0 ? existentItem.quantity + value : 1;
       const serializadItems = order.items;
       serializadItems[position] = existentItem;
 

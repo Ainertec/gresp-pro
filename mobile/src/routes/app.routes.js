@@ -10,9 +10,10 @@ import { useOrder } from '../contexts/order';
 
 import Home from '../pages/Home/index';
 import Setting from '../pages/Setting';
+import Connection from '../pages/Connection';
 import Kitchen from '../pages/Kitchen';
 import QrReader from '../pages/QrReader';
-import AddItems from '../pages/AddItems/index';
+import AddItems from '../pages/AddItems';
 import Details from '../pages/Details';
 
 import logo from '../assets/logo.png';
@@ -56,7 +57,6 @@ function HomeIconWithBadge(props) {
 
 const header = {
   headerTitleAlign: 'center',
-
   headerTitle: () => (
     <Image
       source={logo}
@@ -75,6 +75,19 @@ const header = {
   gestureDirection: 'horizontal',
   gestureEnabled: true,
 };
+
+const headerButtomBack = ({ navigation }) => ({
+  ...header,
+  headerLeft: () => (
+    <MatirialIcon
+      name='arrow-back'
+      onPress={() => navigation.goBack()}
+      color='#fff'
+      size={30}
+    />
+  ),
+  headerLeftContainerStyle: { paddingLeft: 10 },
+});
 
 const HomeStack = () => {
   return (
@@ -170,6 +183,15 @@ function HomeTabs() {
   );
 }
 
+const SettingsStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name='Setting' component={Setting} />
+      <Stack.Screen name='Connection' component={Connection} />
+    </Stack.Navigator>
+  );
+};
+
 const Routes = () => {
   return (
     <Stack.Navigator initialRouteName='Home'>
@@ -185,8 +207,16 @@ const Routes = () => {
         name='Items'
         component={AddItems}
       />
-      <Stack.Screen options={header} name='Setting' component={Setting} />
-      <Stack.Screen options={header} name='Details' component={Details} />
+      <Stack.Screen
+        options={headerButtomBack}
+        name='Setting'
+        component={SettingsStack}
+      />
+      <Stack.Screen
+        options={headerButtomBack}
+        name='Details'
+        component={Details}
+      />
     </Stack.Navigator>
   );
 };

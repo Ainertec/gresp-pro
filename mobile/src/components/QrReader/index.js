@@ -10,7 +10,7 @@ import { Container } from './styles';
 
 const windownHeader = Dimensions.get('window').height;
 
-const QrReader = ({ cameraSide, formRef, sendBarcode, ...rest }) => {
+const QrReader = ({ cameraSide, formRef, ...rest }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
@@ -32,15 +32,10 @@ const QrReader = ({ cameraSide, formRef, sendBarcode, ...rest }) => {
 
   const handleBarCodeScanned = async ({ data }) => {
     setScanned(true);
-    if (sendBarcode) {
-      await api.post('/send_barcode', {
-        barcode: data,
-        destiny: user._id,
-      });
-    } else {
-      formRef.current.setFieldValue('barcode', `${data}`);
-      formRef.current.setFieldValue('ipAddress', `${data}`);
-    }
+
+    formRef.current.setFieldValue('identification', `${data}`);
+    formRef.current.setFieldValue('ipAddress', `${data}`);
+
     setScanned(false);
   };
 
@@ -75,8 +70,7 @@ const QrReader = ({ cameraSide, formRef, sendBarcode, ...rest }) => {
     <Container>
       <Switch
         trackColor={{ false: '#767577', true: '#ddd' }}
-        thumbColor={isEnabled ? '##3f173f' : '#f4f3f4'}
-        ios_backgroundColor='#3e3e3e'
+        thumbColor={isEnabled ? '#e72847' : '#f4f3f4'}
         onValueChange={() => {
           showAnimation();
         }}
@@ -84,11 +78,7 @@ const QrReader = ({ cameraSide, formRef, sendBarcode, ...rest }) => {
       />
       {isEnabled && (
         <AnimatableScanner
-          barCodeTypes={[
-            BarCodeScanner.Constants.BarCodeType.ean13,
-            BarCodeScanner.Constants.BarCodeType.ean8,
-            BarCodeScanner.Constants.BarCodeType.code39,
-          ]}
+          barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
           type={cameraSide ? 'back' : 'front'}
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={{

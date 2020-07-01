@@ -3,27 +3,48 @@ import Icon from 'react-native-vector-icons/Feather';
 
 import { useAuth } from '../../contexts/auth';
 
-import { Container, Content, IconArea, ContentText, Title } from './styles';
+import {
+  Container,
+  Content,
+  IconArea,
+  ContentText,
+  Title,
+  Footer,
+  FooterText,
+  FooterVersion,
+} from './styles';
+import { useNavigation } from '@react-navigation/native';
 
 const Setting = () => {
   const { signOut } = useAuth();
+  const navigation = useNavigation();
   return (
     <Container>
       <Title>Configurações</Title>
 
-      <Content onPress={() => signOut()} style={{ elevation: 90 }}>
+      <Content onPress={() => signOut()} style={{ elevation: 10 }}>
         <IconArea>
-          <Icon name='log-out' size={25} color='#Fff' />
+          <Icon name='log-out' size={25} color='#000' />
         </IconArea>
         <ContentText>Sair</ContentText>
       </Content>
 
-      <Content onPress={() => {}} style={{ elevation: 90 }}>
+      <Content
+        onPress={() => {
+          navigation.navigate('Connection');
+        }}
+        style={{ elevation: 10 }}
+      >
         <IconArea>
-          <Icon name='wifi' size={25} color='#Fff' />
+          <Icon name='wifi' size={25} color='#000' />
         </IconArea>
         <ContentText>Rede</ContentText>
       </Content>
+
+      <Footer>
+        <FooterText>Desenvolvido por Ainertec</FooterText>
+        <FooterVersion>Versão 2.4.4</FooterVersion>
+      </Footer>
     </Container>
   );
 };

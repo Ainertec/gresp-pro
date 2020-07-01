@@ -41,9 +41,10 @@ export const List = styled.FlatList`
 `;
 export const Item = styled(ListItem).attrs({
   containerStyle: {
-    borderRadius: 30,
+    borderRadius: 24,
     paddingRight: 30,
     height: 87,
+    elevation: 10,
   },
   titleStyle: {
     fontWeight: 'bold',
@@ -60,7 +61,7 @@ export const Item = styled(ListItem).attrs({
     fontSize: 15,
   },
 })`
-  border-radius: 30px;
+  border-radius: 16px;
 
   margin: 0 10px 10px;
 `;

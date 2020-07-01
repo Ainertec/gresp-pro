@@ -5,21 +5,22 @@ import {
   ActivityIndicator,
   View,
 } from 'react-native';
-import  {Form}  from '@unform/mobile';
+import { Form } from '@unform/mobile';
 import * as Yup from 'yup';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-import { Button, Input,Label } from '../../components/Form';
+import { Button, Input, Label } from '../../components/Form';
 // import Alert from '../../components/Alert';
 
 import logo from '../../assets/logo2.png';
 import { useAuth } from '../../contexts/auth';
 
-import { Container, Logo, Title, Content } from './styles';
+import { Container, Logo, Title, Content, Header } from './styles';
 
 const SignIn = () => {
   const formRef = useRef(null);
-  const errorRef = useRef(null);
-  const disconectRef = useRef(null);
+  // const errorRef = useRef(null);
+  // const disconectRef = useRef(null);
 
   const { signIn } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -41,14 +42,6 @@ const SignIn = () => {
       const status = await signIn(data);
 
       if (status === 200) return;
-
-      // if (status === 404) {
-      //   disconectRef.current.open();
-      // }
-
-      // if (status === 401) {
-      //   errorRef.current.open();
-      // }
       setLoading(false);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
@@ -61,7 +54,6 @@ const SignIn = () => {
     }
   }
   return (
-  
     <Container>
       <KeyboardAvoidingView
         style={{
@@ -72,6 +64,10 @@ const SignIn = () => {
         behavior='position'
         enable
       >
+        <Header>
+          <Icon name='cog' color='#3f173f' size={28} />
+        </Header>
+
         <Content>
           <Logo source={logo} />
         </Content>
@@ -92,17 +88,6 @@ const SignIn = () => {
         </Form>
         {loading && <ActivityIndicator size='large' color='#eee' />}
       </KeyboardAvoidingView>
-
-      {/* <Alert
-        ref={errorRef}
-        title='Ops...'
-        subtitle='Usuário e/ou senha incorretos'
-      />
-      <Alert
-        ref={disconectRef}
-        title='Ops...'
-        subtitle='Não foi possivel se conectar'
-      /> */}
     </Container>
   );
 };

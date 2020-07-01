@@ -12,7 +12,7 @@ export const FooterContainer = styled.View`
   background: #fff;
   margin: 0 6px;
   /* background: #3f173f; */
-  border-radius: 30px;
+  border-radius: 25px;
   justify-content: center;
   margin-bottom: 10px;
 `;
@@ -22,7 +22,7 @@ export const FooterItems = styled.View`
   padding: 6px 0;
   align-items: center;
   justify-content: space-around;
-  border-radius: 20px;
+  border-radius: 16px;
 
   border-bottom-color: #000;
   border-bottom-width: 1px;
@@ -71,7 +71,7 @@ export const ItemContainer = styled.View`
 
 export const HomeItem = styled(ListItem).attrs({
   containerStyle: {
-    borderRadius: 30,
+    borderRadius: 24,
     marginBottom: 10,
     marginHorizontal: 8,
   },
@@ -93,7 +93,7 @@ export const TextInput = styled(Input).attrs({
     borderRadius: 10,
   },
   inputStyle: {
-    color: '#000',
+    paddingLeft: 5,
   },
 })``;
 

@@ -6,15 +6,24 @@ const { width } = Dimensions.get('window');
 
 export const Container = styled.View`
   flex: 1;
-  /* background: #3f173f; */
   background: #fff;
   padding: 0 ${width * 0.03}px;
+`;
+export const Header = styled.View`
+  /* flex: 1; */
+  height: 40px;
+  /* width: 50px; */
+  /* background: #000; */
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-end;
+  margin: 30px 2px 0 0px;
 `;
 export const Content = styled.View`
   justify-content: center;
   align-items: center;
-  padding-top:150px;
-  padding-bottom:70px;
+  padding-top:100px;
+  padding-bottom:30px;
   /* flex: 1;
   margin-top: ${height * 0.16}px;
   margin-bottom: ${height * 0.16}px; */

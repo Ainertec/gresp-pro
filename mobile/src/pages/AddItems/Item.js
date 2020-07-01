@@ -47,7 +47,7 @@ const Item = ({ item }) => {
       const position = order.items.findIndex(
         (item) => item.product._id === existentItem.product._id
       );
-      existentItem.quantity = quantity;
+      existentItem.quantity = quantity > 0 ? quantity : 1;
       const serializadItems = order.items;
       serializadItems[position] = existentItem;
 
@@ -80,7 +80,9 @@ const Item = ({ item }) => {
               raised
               name='remove'
               size={12}
-              onPress={() => setQuantity((state) => state - 1)}
+              onPress={() =>
+                setQuantity((state) => (state > 1 ? state - 1 : 1))
+              }
             />
             <Quantity>{quantity}</Quantity>
             <Icon

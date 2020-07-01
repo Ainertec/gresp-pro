@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 const Stack = createStackNavigator();
 
 import SignIn from '../pages/SignIn';
+import Connection from '../pages/Connection';
 
 const AuthRoute = () => {
   return (
@@ -15,6 +16,7 @@ const AuthRoute = () => {
       }}
     >
       <Stack.Screen name='SignIn' component={SignIn} />
+      <Stack.Screen name='Connection' component={Connection} />
     </Stack.Navigator>
   );
 };

@@ -19,7 +19,7 @@ export const TextInput = styled(Input).attrs((props) => ({
     borderRadius: 10,
   },
   inputStyle: {
-    color: '#000',
+    // paddingLeft: 5,
   },
 }))``;
 

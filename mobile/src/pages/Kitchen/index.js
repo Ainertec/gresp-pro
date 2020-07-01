@@ -9,6 +9,7 @@ import { useOrder } from '../../contexts/order';
 import Item from './Item';
 
 import { Container } from './styles';
+import { View } from 'react-native-animatable';
 
 export default function Kitchen() {
   const [orders, setOrders] = useState([]);
@@ -72,12 +73,22 @@ export default function Kitchen() {
       {shouldRefresh > 0 && (
         <Badge
           value='Refresh necessário!'
-          status='warning'
-          badgeStyle={{ marginVertical: 10 }}
+          status='error'
+          onPress={refreshList}
+          badgeStyle={{ marginVertical: 4, height: 25, paddingHorizontal: 10 }}
+          containerStyle={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            zIndex: 10,
+          }}
         />
       )}
 
       <FlatList
+        style={{ paddingTop: 15 }}
+        ListFooterComponentStyle={{ paddingBottom: 15 }}
+        ListFooterComponent={<View />}
         data={orders}
         keyExtractor={(order) => String(order._id)}
         showsVerticalScrollIndicator={false}

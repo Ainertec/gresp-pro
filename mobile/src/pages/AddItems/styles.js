@@ -16,11 +16,11 @@ export const ItemList = styled(Animated.FlatList)`
 
 export const Item = styled(ListItem).attrs({
   containerStyle: {
-    borderRadius: 30,
+    borderRadius: 24,
     paddingRight: 30,
   },
 })`
-  border-radius: 30px;
+  border-radius: 24px;
 
   margin: 0 8px 10px;
 `;
@@ -55,6 +55,6 @@ export const ActionButton = styled.TouchableOpacity`
   right: ${deviceWidth * 0.02}px;
   bottom: ${deviceWidth * 0.02}px;
   /* background: #080705; */
-  background: #7b1b53;
+  background: #e72847;
   border-radius: ${deviceWidth * 0.2}px;
 `;

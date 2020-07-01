@@ -7,12 +7,12 @@ export const Container = styled.View`
 `;
 export const ListItemStyled = styled(ListItem).attrs({
   containerStyle: {
-    borderRadius: 30,
+    borderRadius: 24,
     paddingRight: 30,
     height: 87,
   },
 })`
-  border-radius: 30px;
+  border-radius: 24px;
 
   margin: 0 10px 10px;
 `;

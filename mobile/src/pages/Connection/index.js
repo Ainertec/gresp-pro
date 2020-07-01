@@ -2,29 +2,31 @@ import { useNavigation } from '@react-navigation/native';
 
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import React, { useEffect, useRef } from 'react';
-import { KeyboardAvoidingView } from 'react-native';
+import { KeyboardAvoidingView, AsyncStorage } from 'react-native';
 import * as Yup from 'yup';
 import { Button, Input, Label } from '../../components/Form';
 import Scanner from '../../components/QrReader';
+import api from '../../services/api';
 import { useOrder } from '../../contexts/order';
 import { Container, Scroll, FormCode } from './styles';
 
-export default function QrReader() {
+export default function Connection() {
   const formRef = useRef(null);
   const navigation = useNavigation();
-  const { loadOrder, order } = useOrder();
 
   async function handleSubmit(data) {
     try {
       formRef.current.setErrors({});
       const schema = Yup.object().shape({
-        identification: Yup.string().required('a identificão é obrigatória.'),
+        ipAddress: Yup.string().required('O ip é obrigatório.'),
       });
       await schema.validate(data, {
         abortEarly: false,
       });
-      await loadOrder(data.identification);
-      navigation.navigate('Home');
+      api.defaults.baseURL = `http://${data.ipAddress}:3333`;
+      await AsyncStorage.setItem('@RN:ip', data.ipAddress);
+
+      navigation.goBack();
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errorMessages = {};
@@ -38,8 +40,10 @@ export default function QrReader() {
 
   useEffect(() => {
     async function loadIpAddress() {
-      const identification = [order.identification].toString();
-      if (identification) formRef.current.setData({ identification });
+      // const ipAddress = await AsyncStorage.getItem('@RN:ip');
+      const ipAddress = await api.defaults.baseURL.split('//')[1].split(':')[0];
+
+      formRef.current.setData({ ipAddress });
     }
     loadIpAddress();
   }, []);
@@ -56,12 +60,11 @@ export default function QrReader() {
           <Scanner formRef={formRef} cameraSide />
 
           <FormCode ref={formRef} onSubmit={handleSubmit}>
-            <Label>Identificação:</Label>
+            <Label>Endereço ip:</Label>
             <Input
-              name='identification'
+              name='ipAddress'
               iconName='leak-add'
-              placeholder='Digite a identificação'
-              keyboardType='numeric'
+              placeholder='Digite endereço ip'
             />
             <Button
               style={{ backgroundColor: '#e72847' }}
