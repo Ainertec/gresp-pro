@@ -1,4 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, {
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+  useReducer,
+} from 'react';
 import { FlatList, Alert } from 'react-native';
 import { Badge } from 'react-native-elements';
 import socketio from 'socket.io-client';
@@ -17,11 +23,11 @@ export default function Kitchen() {
   const { shouldRefresh, setShouldRefresh } = useOrder();
   const [refreshing, setRefreshing] = useState(false);
 
-  async function loadOrders() {
+  const loadOrders = useCallback(async () => {
     const response = await api.get('orders');
     setOrders(response.data);
     setLoading(false);
-  }
+  }, []);
 
   async function refreshList() {
     setRefreshing(true);
@@ -30,37 +36,39 @@ export default function Kitchen() {
     setShouldRefresh(0);
   }
 
-  useMemo(() => {
+  useEffect(() => {
     loadOrders();
-  }, []);
+  }, [loadOrders]);
 
   const socket = useMemo(() => socketio.connect(`${api.defaults.baseURL}`), []);
 
-  useMemo(() => {
-    socket.on('newOrder', (data) => {
-      const alreadyOrder = orders.findIndex(
-        (order) => order.identification === data.identification
-      );
-      if (alreadyOrder >= 0) {
-        console.log('atualizado');
-        orders[alreadyOrder] = data;
-        setOrders(orders);
-      } else {
-        console.log('novo', data);
-        setOrders((oldState) => [...oldState, data]);
-      }
-    });
-  }, []);
+  useEffect(() => {
+    console.log(loading);
+    if (!loading) {
+      socket.on('newOrder', async (data) => {
+        console.log('uma vez');
+        const alreadyOrder = orders.findIndex((order) => order._id == data._id);
+        if (alreadyOrder >= 0) {
+          orders[alreadyOrder] = data;
+          setOrders(orders);
+        } else {
+          setOrders((oldState) => [...oldState, data]);
+        }
+      });
+    }
+  }, [loading]);
 
-  useMemo(() => {
-    socket.on('payment', (data) => {
-      console.log('opa');
-      const filteredOrders = orders.filter(
-        (order) => order.identification != data.identification
-      );
-      setOrders(filteredOrders);
-    });
-  }, []);
+  useEffect(() => {
+    if (!loading) {
+      socket.on('payment', (data) => {
+        console.log('opa', orders.length);
+        const filteredOrders = orders.filter(
+          (order) => order.identification != data.identification
+        );
+        setOrders(filteredOrders);
+      });
+    }
+  }, [loading]);
 
   useMemo(() => {
     socket.on('hasFinished', (data) => {

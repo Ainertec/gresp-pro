@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
 import { load } from '../services/loadOrder';
+import api from '../services/api';
 
 const OrderContext = createContext({});
 
