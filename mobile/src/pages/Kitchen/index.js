@@ -10,7 +10,7 @@ import { Badge } from 'react-native-elements';
 import socketio from 'socket.io-client';
 
 import api from '../../services/api';
-import { useOrder } from '../../contexts/order';
+import { useOrder, OrderProvider } from '../../contexts/order';
 
 import Item from './Item';
 
@@ -23,11 +23,11 @@ export default function Kitchen() {
   const { shouldRefresh, setShouldRefresh } = useOrder();
   const [refreshing, setRefreshing] = useState(false);
 
-  const loadOrders = useCallback(async () => {
+  async function loadOrders() {
     const response = await api.get('orders');
     setOrders(response.data);
     setLoading(false);
-  }, []);
+  }
 
   async function refreshList() {
     setRefreshing(true);
@@ -38,21 +38,23 @@ export default function Kitchen() {
 
   useEffect(() => {
     loadOrders();
-  }, [loadOrders]);
+  }, []);
 
   const socket = useMemo(() => socketio.connect(`${api.defaults.baseURL}`), []);
 
   useEffect(() => {
-    console.log(loading);
     if (!loading) {
       socket.on('newOrder', async (data) => {
         console.log('uma vez');
-        const alreadyOrder = orders.findIndex((order) => order._id == data._id);
+        const alreadyOrder = orders.findIndex(
+          (order) => order._id === data._id
+        );
         if (alreadyOrder >= 0) {
           orders[alreadyOrder] = data;
           setOrders(orders);
         } else {
-          setOrders((oldState) => [...oldState, data]);
+          orders.push(data);
+          setOrders(orders);
         }
       });
     }
@@ -60,12 +62,15 @@ export default function Kitchen() {
 
   useEffect(() => {
     if (!loading) {
+      console.log('qunatas');
       socket.on('payment', (data) => {
-        console.log('opa', orders.length);
-        const filteredOrders = orders.filter(
-          (order) => order.identification != data.identification
+        console.log('pagamento');
+        const position = orders.findIndex(
+          (order) => data.identification == order.identification
         );
-        setOrders(filteredOrders);
+        console.log(position);
+        orders.splice(position, 1);
+        setOrders(orders);
       });
     }
   }, [loading]);
