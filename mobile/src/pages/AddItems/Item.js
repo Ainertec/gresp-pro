@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { Icon } from 'react-native-elements';
 import { StyleSheet, Alert } from 'react-native';
 
@@ -107,4 +107,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Item;
+export default memo(Item);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Dimensions, Alert, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useOrder } from '../../contexts/order';
@@ -19,7 +19,7 @@ import {
 
 const { height } = Dimensions.get('window');
 
-export default function PaymentModal({ showPay, setShowPay }) {
+const PaymentModal = ({ showPay, setShowPay }) => {
   const [checked, setChecked] = useState(true);
   const [checked2, setChecked2] = useState(false);
   const [paymentKind, setPaymentKind] = useState('Dinheiro');
@@ -99,4 +99,6 @@ export default function PaymentModal({ showPay, setShowPay }) {
       </>
     </Modal>
   );
-}
+};
+
+export default memo(PaymentModal);

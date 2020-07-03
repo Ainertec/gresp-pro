@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { View, Text } from 'react-native';
+import React, { useRef, memo } from 'react';
+
 import { Icon } from 'react-native-elements';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
@@ -66,4 +66,4 @@ const Item = ({ data, orders, setOrders, socket }) => {
   );
 };
 
-export default Item;
+export default memo(Item);

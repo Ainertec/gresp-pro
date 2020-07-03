@@ -1,21 +1,14 @@
-import React, {
-  useState,
-  useMemo,
-  useEffect,
-  useCallback,
-  useReducer,
-} from 'react';
-import { FlatList, Alert } from 'react-native';
+import React, { useState, useMemo, useEffect } from 'react';
+import { FlatList, View } from 'react-native';
 import { Badge } from 'react-native-elements';
 import socketio from 'socket.io-client';
 
 import api from '../../services/api';
-import { useOrder, OrderProvider } from '../../contexts/order';
+import { useOrder } from '../../contexts/order';
 
 import Item from './Item';
 
 import { Container } from './styles';
-import { View } from 'react-native-animatable';
 
 export default function Kitchen() {
   const [orders, setOrders] = useState([]);
@@ -40,40 +33,30 @@ export default function Kitchen() {
     loadOrders();
   }, []);
 
-  const socket = useMemo(() => socketio.connect(`${api.defaults.baseURL}`), []);
+  const socket = useMemo(() => socketio(`${api.defaults.baseURL}`), []);
 
   useEffect(() => {
-    if (!loading) {
-      socket.on('newOrder', async (data) => {
-        console.log('uma vez');
-        const alreadyOrder = orders.findIndex(
-          (order) => order._id === data._id
-        );
-        if (alreadyOrder >= 0) {
-          orders[alreadyOrder] = data;
-          setOrders(orders);
-        } else {
-          orders.push(data);
-          setOrders(orders);
-        }
-      });
-    }
-  }, [loading]);
-
-  useEffect(() => {
-    if (!loading) {
-      console.log('qunatas');
-      socket.on('payment', (data) => {
-        console.log('pagamento');
-        const position = orders.findIndex(
-          (order) => data.identification == order.identification
-        );
-        console.log(position);
-        orders.splice(position, 1);
+    socket.on('newOrder', (data) => {
+      console.log('uma vez');
+      const alreadyOrder = orders.findIndex((order) => order._id === data._id);
+      if (alreadyOrder >= 0) {
+        orders[alreadyOrder] = data;
         setOrders(orders);
-      });
-    }
-  }, [loading]);
+      } else {
+        setOrders([...orders, data]);
+      }
+    });
+  }, [orders]);
+
+  useMemo(() => {
+    socket.on('payment', (data) => {
+      console.log('pagamento');
+      const filtered = orders.filter(
+        (order) => data.identification != order.identification
+      );
+      setOrders(filtered);
+    });
+  }, [orders, socket]);
 
   useMemo(() => {
     socket.on('hasFinished', (data) => {

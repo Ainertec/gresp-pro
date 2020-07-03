@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Icon } from 'react-native-elements';
 
 import { useOrder } from '../../contexts/order';
@@ -12,7 +12,7 @@ import {
   HomeItem,
 } from './styles';
 
-export default function Item({ item, setChanged, itemRemove }) {
+const Item = ({ item, setChanged, itemRemove }) => {
   const { order, setOrder } = useOrder();
 
   function changeQuantity(value) {
@@ -75,4 +75,6 @@ export default function Item({ item, setChanged, itemRemove }) {
       bottomDivider
     />
   );
-}
+};
+
+export default memo(Item);
