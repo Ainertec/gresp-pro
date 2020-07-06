@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { FlatList, View } from 'react-native';
 import { Badge } from 'react-native-elements';
 import socketio from 'socket.io-client';
@@ -15,48 +15,74 @@ export default function Kitchen() {
   const [loading, setLoading] = useState(true);
   const { shouldRefresh, setShouldRefresh } = useOrder();
   const [refreshing, setRefreshing] = useState(false);
+  const [kitchenOrders, setKitchenOrders] = useState([]);
+  const [changed, setChanged] = useState(false);
 
-  async function loadOrders() {
+  async function loadKitchenOrders() {
     const response = await api.get('orders');
-    setOrders(response.data);
+    setKitchenOrders(response.data);
     setLoading(false);
   }
 
+  const addOrders = useCallback(
+    (data) => {
+      setKitchenOrders((oldState) => [...oldState, data]);
+      setChanged(true);
+    },
+    [setKitchenOrders]
+  );
+
+  const updateOrders = useCallback(
+    (data) => {
+      if (loading) return;
+      setKitchenOrders((oldState) =>
+        oldState.map((order) => {
+          return order._id == data._id ? data : order;
+        })
+      );
+    },
+    [setKitchenOrders, loading]
+  );
+  const removeOrders = useCallback(
+    (data) => {
+      setKitchenOrders((oldState) =>
+        oldState.filter((order) => data.identification != order.identification)
+      );
+    },
+    [setKitchenOrders]
+  );
+
   async function refreshList() {
     setRefreshing(true);
-    await loadOrders();
+    await loadKitchenOrders();
     setRefreshing(false);
     setShouldRefresh(0);
   }
 
   useEffect(() => {
-    loadOrders();
+    loadKitchenOrders();
   }, []);
 
   const socket = useMemo(() => socketio(`${api.defaults.baseURL}`), []);
 
-  useEffect(() => {
+  useMemo(() => {
     socket.on('newOrder', (data) => {
-      console.log('uma vez');
-      const alreadyOrder = orders.findIndex((order) => order._id === data._id);
-      if (alreadyOrder >= 0) {
-        orders[alreadyOrder] = data;
-        setOrders(orders);
-      } else {
-        setOrders([...orders, data]);
-      }
+      addOrders(data);
     });
-  }, [orders]);
+  }, [addOrders]);
 
   useMemo(() => {
-    socket.on('payment', (data) => {
-      console.log('pagamento');
-      const filtered = orders.filter(
-        (order) => data.identification != order.identification
-      );
-      setOrders(filtered);
+    if (kitchenOrders === 0) return;
+    socket.on('updatedOrder', (data) => {
+      updateOrders(data);
     });
-  }, [orders, socket]);
+  }, [updateOrders]);
+
+  // useMemo(() => {
+  //   socket.on('payment', (data) => {
+  //     console.log('pagamento');
+  //   });
+  // }, [removeOrders]);
 
   useMemo(() => {
     socket.on('hasFinished', (data) => {
@@ -85,7 +111,7 @@ export default function Kitchen() {
         style={{ paddingTop: 15 }}
         ListFooterComponentStyle={{ paddingBottom: 15 }}
         ListFooterComponent={<View />}
-        data={orders}
+        data={kitchenOrders}
         keyExtractor={(order) => String(order._id)}
         showsVerticalScrollIndicator={false}
         onRefresh={refreshList}
