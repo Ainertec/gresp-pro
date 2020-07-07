@@ -35,7 +35,7 @@ export default function Home() {
 
   function handleNavigateItems() {
     if (!order.identification) {
-      alert('É necessário informar a identificação primeiro');
+      Alert.alert('Ops...', 'É necessário informar a identificação primeiro');
       navigation.navigate('QrReader');
       return;
     }
@@ -55,7 +55,7 @@ export default function Home() {
       return;
     }
     if (order.items.length === 0 || order.items.length === undefined) {
-      return alert('Necessário inserir items');
+      return Alert.alert('Ops...', 'Necessário inserir items');
     }
 
     if (order._id) {
@@ -66,8 +66,8 @@ export default function Home() {
       setOrder(response.data.order);
       setChanged(false);
       return response.status === 200
-        ? alert('Pedido atualizado')
-        : alert('Falha ao atualizar pedido');
+        ? Alert.alert('Ops...', 'Pedido atualizado')
+        : Alert.alert('Ops...', 'Falha ao atualizar pedido');
     } else {
       const response = await api
         .post(`orders`, {
