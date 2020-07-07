@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "ts-node-dev src/server.ts --transpile-only ",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles ",
-    "build": "tsc"
+    "build": "tsc",
+    "prod": "node dist/src/server.js"
   },
   "repository": {
     "type": "git",
