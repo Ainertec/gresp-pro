@@ -82,7 +82,7 @@ class OrderController {
 
     await order.populate('items.product').execPopulate();
 
-    req.io.emit('newOrder', order);
+    req.io.emit('updatedOrder', order);
     return res.json({
       order,
       stockAlert: orderInformations.alert.length === 0 ? undefined : orderInformations.alert,

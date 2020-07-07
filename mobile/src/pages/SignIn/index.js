@@ -10,7 +10,7 @@ import * as Yup from 'yup';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { Button, Input, Label } from '../../components/Form';
-// import Alert from '../../components/Alert';
+import Alert from '../../components/Alert';
 
 import logo from '../../assets/logo2.png';
 import { useAuth } from '../../contexts/auth';
@@ -20,8 +20,8 @@ import { useNavigation } from '@react-navigation/native';
 
 const SignIn = () => {
   const formRef = useRef(null);
-  // const errorRef = useRef(null);
-  // const disconectRef = useRef(null);
+  const errorRef = useRef(null);
+  const disconectRef = useRef(null);
   const navigation = useNavigation();
 
   const { signIn } = useAuth();
@@ -44,6 +44,14 @@ const SignIn = () => {
       const status = await signIn(data);
 
       if (status === 200) return;
+
+      if (status === 404) {
+        disconectRef.current.open();
+      }
+
+      if (status === 401) {
+        errorRef.current.open();
+      }
       setLoading(false);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
@@ -94,8 +102,19 @@ const SignIn = () => {
 
           <Button title='Entrar' onPress={() => formRef.current.submitForm()} />
         </Form>
-        {loading && <ActivityIndicator size='large' color='#eee' />}
+        {loading && <ActivityIndicator size='large' color='#3f173f' />}
       </KeyboardAvoidingView>
+
+      <Alert
+        ref={errorRef}
+        title='Ops...'
+        subtitle='Usuário e/ou senha incorretos'
+      />
+      <Alert
+        ref={disconectRef}
+        title='Ops...'
+        subtitle='Não foi possivel se conectar'
+      />
     </Container>
   );
 };

@@ -2,7 +2,6 @@ import React, { useState, memo } from 'react';
 import { Dimensions, Alert, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useOrder } from '../../contexts/order';
-// import { Button } from 'react-native-elements';
 
 import api from '../../services/api';
 import { Button, Input, Label } from '../../components/Form';
@@ -15,7 +14,6 @@ import {
   SubtitlePayment,
   TotalPayment,
 } from './styles';
-// import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const { height } = Dimensions.get('window');
 
@@ -38,7 +36,6 @@ const PaymentModal = ({ showPay, setShowPay }) => {
   }
 
   async function payment() {
-    console.log('paymentt');
     const response = await api
       .delete(`/orders/${order.identification}/${paymentKind}`)
       .catch((error) => {

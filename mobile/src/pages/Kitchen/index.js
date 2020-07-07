@@ -11,12 +11,10 @@ import Item from './Item';
 import { Container } from './styles';
 
 export default function Kitchen() {
-  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const { shouldRefresh, setShouldRefresh } = useOrder();
   const [refreshing, setRefreshing] = useState(false);
   const [kitchenOrders, setKitchenOrders] = useState([]);
-  const [changed, setChanged] = useState(false);
 
   async function loadKitchenOrders() {
     const response = await api.get('orders');
@@ -27,7 +25,6 @@ export default function Kitchen() {
   const addOrders = useCallback(
     (data) => {
       setKitchenOrders((oldState) => [...oldState, data]);
-      setChanged(true);
     },
     [setKitchenOrders]
   );
@@ -78,11 +75,11 @@ export default function Kitchen() {
     });
   }, [updateOrders]);
 
-  // useMemo(() => {
-  //   socket.on('payment', (data) => {
-  //     console.log('pagamento');
-  //   });
-  // }, [removeOrders]);
+  useMemo(() => {
+    socket.on('payment', (data) => {
+      removeOrders(data);
+    });
+  }, [removeOrders]);
 
   useMemo(() => {
     socket.on('hasFinished', (data) => {
@@ -119,8 +116,8 @@ export default function Kitchen() {
         renderItem={({ item }) => (
           <Item
             data={item}
-            setOrders={setOrders}
-            orders={orders}
+            setOrders={setKitchenOrders}
+            orders={kitchenOrders}
             socket={socket}
           />
         )}
