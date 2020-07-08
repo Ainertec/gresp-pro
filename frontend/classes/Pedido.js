@@ -448,7 +448,7 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
                     "type":true
                 }`
 
-                //await requisicaoPOST(`printer`, JSON.parse(newOrder), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+                await requisicaoPOST(`printer`, JSON.parse(newOrder), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
 
                 mensagemDeAviso("Pedido cadastrado com sucesso!");
                 buscarPedido();
@@ -487,7 +487,7 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
                     "type":false
                 }`
 
-                //await requisicaoPOST(`printer`, JSON.parse(updateOrder), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+                await requisicaoPOST(`printer`, JSON.parse(updateOrder), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
 
                 mensagemDeAviso("Pedido atualizado com sucesso!");
                 buscarPedido();
