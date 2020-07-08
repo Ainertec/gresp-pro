@@ -171,14 +171,14 @@ async function gerarGraficoLucroMensal(tipo) {
     let json = null, vetorData = [], vetorTotal = [];
 
     if (tipo == 'impressao') {
-        json = await requisicaoGET(`reports?initial=2020-01-01&final=${new Date().getFullYear()}-0${new Date().getMonth() + 1}-28`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        json = await requisicaoGET(`reports?initial=2020-01-01&final=${new Date().getFullYear()}-12-28`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     } else {
         json = await requisicaoGET(`reports?initial=${$('#dataInicio').val()}&final=${$('#dataFim').val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     }
 
     json.data.forEach(function (item) {
         vetorTotal.push(parseFloat(item.amount))
-        vetorData.push((`${item._id.month} / ${item._id.year}`).toString())
+        vetorData.push(`${item._id.month} / ${item._id.year}`)
     });
 
     Highcharts.chart('grafico2', {
@@ -187,7 +187,10 @@ async function gerarGraficoLucroMensal(tipo) {
             inverted: true
         },
         title: {
-            text: 'Average fruit consumption during one week'
+            text: 'Demostrativo de Lucro Mensal Arrecadado'
+        },
+        subtitle: {
+            text: 'Este gráfico demostra o lucro mensal arrecadado pelo estabelecimento.'
         },
         accessibility: {
             keyboardNavigation: {
@@ -208,13 +211,11 @@ async function gerarGraficoLucroMensal(tipo) {
                 Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF'
         },
         xAxis: {
-            categories: [
-                vetorData
-            ]
+            categories: vetorData
         },
         yAxis: {
             title: {
-                text: 'Number of units'
+                text: 'Data'
             },
             allowDecimals: false,
             min: 0
@@ -230,69 +231,13 @@ async function gerarGraficoLucroMensal(tipo) {
         }]
     });
 
-    /*Highcharts.chart('grafico2', {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Demostrativo de Lucro Mensal Arrecadado'
-        },
-        subtitle: {
-            text: 'Este gráfico demostra o lucro mensal arrecadado pelo estabelecimento.'
-        },
-        xAxis: {
-            categories: vetorData,
-            title: {
-                text: null
-            }
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: 'Valos R$ (x.xx)',
-                align: 'high'
-            },
-            labels: {
-                overflow: 'justify'
-            }
-        },
-        tooltip: {
-            valueSuffix: ' reais'
-        },
-        plotOptions: {
-            bar: {
-                dataLabels: {
-                    enabled: true
-                }
-            }
-        },
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'top',
-            x: -40,
-            y: 80,
-            floating: true,
-            borderWidth: 1,
-            backgroundColor:
-                Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
-            shadow: true
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: 'Valor total',
-            data: vetorTotal
-        }]
-    });*/
 }
 
 //funcao responsavel por gerar o grafico de quantidade de vendas por periodo
 async function gerarGraficoQuantidadeVendasMensal(tipo) {
     let json = null, vetorData = [], vetorTotal = [];
     if (tipo == 'impressao') {
-        json = await requisicaoGET(`reports/total?initial=2020-01-01&final=${new Date().getFullYear()}-0${new Date().getMonth() + 1}-28`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        json = await requisicaoGET(`reports/total?initial=2020-01-01&final=${new Date().getFullYear()}-12-28`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         console.log(json)
     } else {
         json = await requisicaoGET(`reports/total?initial=${$('#dataInicio').val()}&final=${$('#dataFim').val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });

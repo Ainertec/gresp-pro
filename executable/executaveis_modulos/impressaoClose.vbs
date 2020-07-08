@@ -10,3 +10,9 @@ set colProcesses=objWMIService.ExecQuery _
 For Each Processo In colProcesses
 	Processo.Terminate()
 Next
+
+set ApagaArquivo=CreateObject("Scripting.FileSystemObject")
+set folder = ApagaArquivo.getFolder("C:\gresppro-x64\backend\commands\commandsPrint\")
+for each file in folder.files
+file.delete
+next

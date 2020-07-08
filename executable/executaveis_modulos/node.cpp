@@ -3,7 +3,7 @@
 
 int main(){
 	
-	system("cd C:\\gresppro-x64\\program\\src && node server.js");
+	system("cd C:\\gresppro-x64\\backend && node src\\server.js");
 	
 	return 0;
 }

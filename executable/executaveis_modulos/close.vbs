@@ -1,5 +1,5 @@
 strComputer ="."
-set objNetwork = CreateObject("Wscript.Network")
+On Error Resume Next
 
 set objWMIService = GetObject("winmgmts:" _
 	& "{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")
@@ -18,6 +18,5 @@ For Each Processo1 In colProcesses1
 	Processo1.Terminate()
 Next
 
-
-Set WshShell1 = WScript.CreateObject( "WScript.shell" )
-WshShell1.Run "C:\\gresppro-x64\\executaveis_modulos\\startView.vbs",0,0
+On Error GoTo 0
+WScript.Quit
