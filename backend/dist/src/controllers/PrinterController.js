@@ -52,13 +52,18 @@ var PrinterController = /** @class */ (function () {
     PrinterController.prototype.toPrinterUpdated = function (items, oldItems) {
         var products = '';
         var drinks = '';
-        var response = oldItems.map(function (oldItem) {
-            return items.filter(function (item) { return String(item.product._id) !== oldItem.product || item.quantity !== oldItem.quantity; });
+        oldItems.map(function (oldItem) {
+            var position = items.findIndex(function (item) {
+                return String(item.product._id) === String(oldItem.product) && item.quantity === oldItem.quantity;
+            });
+            if (position >= 0) {
+                items.splice(position, 1);
+            }
         });
-        for (var _i = 0, _a = response[0]; _i < _a.length; _i++) {
-            var item = _a[_i];
+        for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
+            var item = items_1[_i];
             if (item.product.drink) {
-                drinks += "* " + item.product.name + "\n- Quantidade: " + item.quantity + "\n";
+                drinks += "* " + (item === null || item === void 0 ? void 0 : item.product.name) + "\n- Quantidade: " + item.quantity + "\n";
             }
             else {
                 products += "* " + item.product.name + "\n- Quantidade: " + item.quantity + "\n";
@@ -69,8 +74,8 @@ var PrinterController = /** @class */ (function () {
     PrinterController.prototype.toPrinterNew = function (items) {
         var products = '';
         var drinks = '';
-        for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
-            var item = items_1[_i];
+        for (var _i = 0, items_2 = items; _i < items_2.length; _i++) {
+            var item = items_2[_i];
             if (item.product.drink) {
                 drinks += "* " + item.product.name + "\n- Quantidade: " + item.quantity + "\n";
             }
@@ -128,17 +133,18 @@ var PrinterController = /** @class */ (function () {
                         items = type
                             ? this.toPrinterNew(order.items)
                             : this.toPrinterUpdated(order.items, oldItems);
-                        myDoc.writeText('------------------------------------------------', contentBorder);
+                        myDoc.writeText('', contentBorder);
                         myDoc.writeText('>>>>>>>>> Comanda <<<<<<<<<<', header);
                         myDoc.writeText("N\u00FAmero: " + order.identification, header);
                         type ? myDoc.writeText("Tipo: Novo", header) : myDoc.writeText("Tipo: Atualizado", header);
-                        myDoc.writeText("Hora: " + order.identification, header);
+                        // myDoc.writeText(`Hora: ${order.identification}`, header);
                         myDoc.writeText('=========== Produtos ==========', contentBorder);
-                        myDoc.writeText("" + items.products, contentStyle);
+                        myDoc.writeText("" + (items === null || items === void 0 ? void 0 : items.products), contentStyle);
                         myDoc.writeText('=========== Bebidas ===========', contentBorder);
-                        myDoc.writeText("" + items.drinks, contentStyle);
-                        myDoc.writeText('========== Observação =========', contentBorder);
-                        myDoc.writeText("- " + order.note, contentStyle);
+                        myDoc.writeText("" + (items === null || items === void 0 ? void 0 : items.drinks), contentStyle);
+                        myDoc.writeText('', contentBorder);
+                        myDoc.writeText('========== Observação =========', contentStyle);
+                        myDoc.writeText("- " + order.note + "\n", contentStyle);
                         myDoc.writeText("- " + date, contentStyle);
                         content = myDoc.createDocument();
                         buffer = Buffer.from(content, 'binary');
