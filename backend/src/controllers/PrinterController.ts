@@ -21,15 +21,19 @@ class PrinterController {
     let products = '';
     let drinks = '';
 
-    const response = oldItems.map((oldItem) => {
-      return items.filter(
-        (item) => String(item.product._id) !== oldItem.product || item.quantity !== oldItem.quantity
+    oldItems.map((oldItem) => {
+      const position = items.findIndex(
+        (item) =>
+          String(item.product._id) === String(oldItem.product) && item.quantity === oldItem.quantity
       );
+      if (position >= 0) {
+        items.splice(position, 1);
+      }
     });
 
-    for (const item of response[0]) {
+    for (const item of items) {
       if (item.product.drink) {
-        drinks += `* ${item.product.name}
+        drinks += `* ${item?.product.name}
 - Quantidade: ${item.quantity}\n`;
       } else {
         products += `* ${item.product.name}
@@ -100,17 +104,18 @@ class PrinterController {
         ? this.toPrinterNew(order.items)
         : this.toPrinterUpdated(order.items, oldItems);
 
-      myDoc.writeText('------------------------------------------------', contentBorder);
+      myDoc.writeText('', contentBorder);
       myDoc.writeText('>>>>>>>>> Comanda <<<<<<<<<<', header);
       myDoc.writeText(`Número: ${order.identification}`, header);
       type ? myDoc.writeText(`Tipo: Novo`, header) : myDoc.writeText(`Tipo: Atualizado`, header);
-      myDoc.writeText(`Hora: ${order.identification}`, header);
+      // myDoc.writeText(`Hora: ${order.identification}`, header);
       myDoc.writeText('=========== Produtos ==========', contentBorder);
-      myDoc.writeText(`${items.products}`, contentStyle);
+      myDoc.writeText(`${items?.products}`, contentStyle);
       myDoc.writeText('=========== Bebidas ===========', contentBorder);
-      myDoc.writeText(`${items.drinks}`, contentStyle);
-      myDoc.writeText('========== Observação =========', contentBorder);
-      myDoc.writeText(`- ${order.note}`, contentStyle);
+      myDoc.writeText(`${items?.drinks}`, contentStyle);
+      myDoc.writeText('', contentBorder);
+      myDoc.writeText('========== Observação =========', contentStyle);
+      myDoc.writeText(`- ${order.note}\n`, contentStyle);
       myDoc.writeText(`- ${date}`, contentStyle);
 
       const content = myDoc.createDocument();

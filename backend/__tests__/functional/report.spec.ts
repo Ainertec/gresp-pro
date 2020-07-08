@@ -132,7 +132,7 @@ describe('Order Controller', () => {
     );
   });
 
-  it('shold list items with soldout quantity ', async () => {
+  it('shold list items with amount quantity ', async () => {
     const token = await Token;
 
     const item = await factory.create<ItemInterface>('Item', {
@@ -180,7 +180,7 @@ describe('Order Controller', () => {
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          soldout: 9,
+          amount: 9,
         }),
       ])
     );

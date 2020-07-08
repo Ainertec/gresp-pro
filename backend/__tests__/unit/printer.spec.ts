@@ -11,7 +11,7 @@ import Order from '../../src/models/Order';
 
 const app = App.express;
 
-describe('Stock controller', () => {
+describe('Printer', () => {
   beforeAll(() => {
     openConnection();
   });
@@ -45,6 +45,9 @@ describe('Stock controller', () => {
     const item = await factory.create<ItemInterface>('Item', {
       name: 'Tomate',
     });
+    const item1 = await factory.create<ItemInterface>('Item', {
+      name: 'Manga',
+    });
     const item2 = await factory.create<ItemInterface>('Item', {
       name: 'Chocolate',
     });
@@ -56,12 +59,20 @@ describe('Stock controller', () => {
           product: item._id,
           quantity: 5,
         },
+        {
+          product: item1._id,
+          quantity: 5,
+        },
       ],
     });
 
     oldOrder.items = [
       {
         product: item._id,
+        quantity: 5,
+      },
+      {
+        product: item1._id,
         quantity: 5,
       },
       {
@@ -82,6 +93,10 @@ describe('Stock controller', () => {
             product: item._id,
             quantity: 5,
           },
+          {
+            product: item1._id,
+            quantity: 5,
+          },
         ],
       })
       .set('Authorization', `Bearer ${token}`);
@@ -95,6 +110,9 @@ describe('Stock controller', () => {
     const item = await factory.create<ItemInterface>('Item', {
       name: 'Tomate',
     });
+    const item1 = await factory.create<ItemInterface>('Item', {
+      name: 'Manga',
+    });
     const item2 = await factory.create<ItemInterface>('Item', {
       name: 'Chocolate',
     });
@@ -102,6 +120,10 @@ describe('Stock controller', () => {
     const oldOrder = await factory.create<OrderInterface>('Order', {
       identification: 123544,
       items: [
+        {
+          product: item1._id,
+          quantity: 5,
+        },
         {
           product: item._id,
           quantity: 5,
@@ -113,6 +135,10 @@ describe('Stock controller', () => {
       {
         product: item._id,
         quantity: 7,
+      },
+      {
+        product: item1._id,
+        quantity: 5,
       },
       {
         product: item2._id,
@@ -128,6 +154,10 @@ describe('Stock controller', () => {
         identification: oldOrder.identification,
         type: false,
         oldItems: [
+          {
+            product: item1._id,
+            quantity: 5,
+          },
           {
             product: item._id,
             quantity: 5,
