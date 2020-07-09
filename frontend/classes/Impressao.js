@@ -15,6 +15,8 @@ function ligacaoRelatorioFacede(tipo) {
     } else if (JSON.parse(situacao).tipo == 'Comum') {
         if (tipo == 'pedidosabertos') {
             telaGerarListaTodosOsPedidosAbertos();
+        } else {
+            mensagemDeErro('Usúario não autorizado!')
         }
     } else {
         mensagemDeErro('Usúario não autorizado!')
@@ -49,13 +51,11 @@ function telaGerarRelatorioProdutoseBebidas() {
     codigoHTML += '</div>'
     codigoHTML += '</div>'
 
-    if (sessionStorage.getItem("login")) {
-        document.getElementById('modal').innerHTML = codigoHTML;
-        $('#modalRelatorioProdutoseBebidas').modal('show');
-        telaRespostaRelatorioProdutoseBebidas();
-    } else {
-        telaAutenticacao();
-    }
+
+    document.getElementById('modal').innerHTML = codigoHTML;
+    $('#modalRelatorioProdutoseBebidas').modal('show');
+    telaRespostaRelatorioProdutoseBebidas();
+
 }
 
 //funcao para gerar tela de resposta com todos os produtos e bebidas
@@ -139,13 +139,10 @@ function telaGerarRelatorioDeCaixa() {
     codigoHTML += '</div>'
     codigoHTML += '</div>'
 
-    if (sessionStorage.getItem("login")) {
-        document.getElementById('modal').innerHTML = codigoHTML;
-        $('#modalRelatorioDeCaixa').modal('show');
-        telaRespostaRelatorioDeCaixa();
-    } else {
-        telaAutenticacao();
-    }
+    document.getElementById('modal').innerHTML = codigoHTML;
+    $('#modalRelatorioDeCaixa').modal('show');
+    telaRespostaRelatorioDeCaixa();
+
 }
 
 //funcao para gerar tela de resposta com todos os pedidos fechados
