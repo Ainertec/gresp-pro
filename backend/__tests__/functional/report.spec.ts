@@ -8,6 +8,7 @@ import factory from '../factories';
 import Order from '../../src/models/Order';
 import Token from '../utils/getToken';
 import Item from '../../src/models/Item';
+import { sub } from 'date-fns';
 
 const app = App.express;
 
@@ -236,5 +237,21 @@ describe('Order Controller', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.length).toBe(6);
+  });
+
+  it('should delete close order with more than 2 years', async () => {
+    const token = await Token;
+
+    await factory.createMany('Order', 3, {
+      createdAt: sub(new Date(), { years: 2 }),
+      closed: true,
+    });
+    await factory.create('Order');
+
+    const response = await request(app).delete('/reports').set('Authorization', `Bearer ${token}`);
+
+    const sales = await Order.find().countDocuments();
+    expect(response.status).toBe(200);
+    expect(sales).toBe(1);
   });
 });

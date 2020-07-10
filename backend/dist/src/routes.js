@@ -62,6 +62,7 @@ routes.get('/kitchen', KitchenController_1.default.index);
 routes.post('/printer', celebrate_1.celebrate({ body: printerValidation_1.default }), PrinterController_1.default.create);
 routes.use(Authorization_1.default);
 // Report
+routes.delete('/reports', ReportController_1.default.delete);
 routes.get('/reports', celebrate_1.celebrate({ query: reportSchema_1.default }), ReportController_1.default.show);
 routes.get('/reports/total', celebrate_1.celebrate({ query: reportSchema_1.default }), ReportController_1.default.showTotal);
 routes.get('/reports/all', ReportController_1.default.index);

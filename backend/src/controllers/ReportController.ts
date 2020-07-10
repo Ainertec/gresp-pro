@@ -125,6 +125,7 @@ class ReportController {
 
     await Order.deleteMany({
       createdAt: { $lte: date },
+      closed: true,
     });
 
     return res.status(200).send();

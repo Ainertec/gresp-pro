@@ -200,6 +200,7 @@ var ReportController = /** @class */ (function () {
                         date = date_fns_1.sub(new Date(), { years: 2 });
                         return [4 /*yield*/, Order_1.default.deleteMany({
                                 createdAt: { $lte: date },
+                                closed: true,
                             })];
                     case 1:
                         _a.sent();

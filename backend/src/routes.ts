@@ -109,6 +109,7 @@ routes.use(Authorization);
 
 // Report
 
+routes.delete('/reports', ReportController.delete);
 routes.get('/reports', celebrate({ query: report }), ReportController.show);
 routes.get('/reports/total', celebrate({ query: report }), ReportController.showTotal);
 routes.get('/reports/all', ReportController.index);
