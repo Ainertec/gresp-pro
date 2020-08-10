@@ -1,11 +1,12 @@
 // --------------------------------------------- Classe Relatorio -----------------------------------------------------
 
 //funcao responsavel por fazer a ligação necessaria com a tela de relatorio de caixa
-function ligacaoRelatorioCaixaFacede() {
+async function ligacaoRelatorioCaixaFacede() {
     const situacao = autenticacaoLogin()
 
     if (JSON.parse(situacao).tipo == 'Administrador') {
         telaRelatorioDeCaixa();
+        await requisicaoDELETE(`reports`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
     } else {
         mensagemDeErro('Usuário não autorizado!')
     }
