@@ -6,7 +6,9 @@ async function ligacaoRelatorioCaixaFacede() {
 
     if (JSON.parse(situacao).tipo == 'Administrador') {
         telaRelatorioDeCaixa();
+        await aguardeCarregamento(true)
         await requisicaoDELETE(`reports`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        await aguardeCarregamento(false)
     } else {
         mensagemDeErro('Usuário não autorizado!')
     }
@@ -56,7 +58,9 @@ function telaRelatorioDeCaixa() {
 
 //funcao responsavel por gerar o relatorio de lucro total
 async function gerarGraficoLucroTotal() {
+    await aguardeCarregamento(true)
     let json = await requisicaoGET('reports/all', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await aguardeCarregamento(false)
 
     json.data.total = parseFloat(json.data.total)
 
@@ -120,7 +124,9 @@ async function gerarGraficoLucroTotal() {
 
 //funcao responsasvel por gerar o relatorio de quantidade venda de produtos
 async function gerarGraficoDemonstrativoVendaPorItem() {
+    await aguardeCarregamento(true)
     let json = await requisicaoGET('reports/products', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await aguardeCarregamento(false)
     let result = [];
 
     json.data.forEach(function (item) {
@@ -172,9 +178,13 @@ async function gerarGraficoLucroMensal(tipo) {
     let json = null, vetorData = [], vetorTotal = [];
 
     if (tipo == 'impressao') {
+        await aguardeCarregamento(true)
         json = await requisicaoGET(`reports?initial=2020-01-01&final=${new Date().getFullYear()}-12-28`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        await aguardeCarregamento(false)
     } else {
+        await aguardeCarregamento(true)
         json = await requisicaoGET(`reports?initial=${$('#dataInicio').val()}&final=${$('#dataFim').val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        await aguardeCarregamento(false)
     }
 
     json.data.forEach(function (item) {
@@ -238,10 +248,13 @@ async function gerarGraficoLucroMensal(tipo) {
 async function gerarGraficoQuantidadeVendasMensal(tipo) {
     let json = null, vetorData = [], vetorTotal = [];
     if (tipo == 'impressao') {
+        await aguardeCarregamento(true)
         json = await requisicaoGET(`reports/total?initial=2020-01-01&final=${new Date().getFullYear()}-12-28`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-        console.log(json)
+        await aguardeCarregamento(false)
     } else {
+        await aguardeCarregamento(true)
         json = await requisicaoGET(`reports/total?initial=${$('#dataInicio').val()}&final=${$('#dataFim').val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        await aguardeCarregamento(false)
     }
 
     json.data.forEach(function (item) {
@@ -288,9 +301,13 @@ async function tabelaDeRelatorioCaixa(tipo) {
 
     try {
         if (tipo == 'impressao') {
+            await aguardeCarregamento(true)
             json = await requisicaoGET(`reports/orders?initial=2020-01-01&final=${new Date().getFullYear()}-12-28`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+            await aguardeCarregamento(false)
         } else {
+            await aguardeCarregamento(true)
             json = await requisicaoGET(`reports/orders?initial=${$('#dataInicio').val()}&final=${$('#dataFim').val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+            await aguardeCarregamento(false)
         }
 
         codigoHTML += '<h5>Lista de Pedidos Fechados</h5>'

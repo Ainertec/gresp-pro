@@ -30,10 +30,12 @@ async function telaRecuperarSenha() {
     let codigoHTML = '';
 
     try {
+        await aguardeCarregamento(true)
         const questao = await requisicaoGET(
             `forgot?name=${document.getElementById('login').value}`,
             null
         )
+        await aguardeCarregamento(false)
 
         codigoHTML += '<h4 class="text-center" style="margin-top:30px;">Recuperar conta</h4>'
         codigoHTML += '<div class="text-center" style="margin-top:10px;">'
@@ -58,6 +60,7 @@ async function telaRecuperarSenha() {
 //funcao responsavel por recuperar a senha
 async function recuperarSenha() {
     if (validaDadosCampo(['#login', '#pergunta', '#novaSenha'])) {
+        await aguardeCarregamento(true)
         const result = await requisicaoPOST(
             'forgot',
             JSON.parse(
@@ -67,6 +70,7 @@ async function recuperarSenha() {
             ),
             null
         )
+        await aguardeCarregamento(false)
         if (result) {
             mensagemDeAviso('Atualizado com sucesso!')
         }
@@ -88,6 +92,7 @@ async function efetuarLogin() {
     logout()
 
     setTimeout(async function () {
+        await aguardeCarregamento(true)
         const json = await requisicaoPOST(
             'sessions',
             JSON.parse(
@@ -97,6 +102,7 @@ async function efetuarLogin() {
             ),
             null
         )
+        await aguardeCarregamento(false)
 
         if (!json) {
             mensagemDeErro('Login/senha incorretos ou usuario inexistente!')

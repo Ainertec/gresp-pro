@@ -130,7 +130,9 @@ function telaLeituraDeQrCodePedido() {
 //funcao para exibir lista com todos os pedidos
 async function telaExibirTodosOsPedidos() {
 
+    await aguardeCarregamento(true)
     let codigoHTML = '', json = await requisicaoGET("orders", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await aguardeCarregamento(false)
 
     codigoHTML += '<h4 class="text-center" style="margin-top:30px">Lista de Pedidos</h4>'
     codigoHTML += '<table class="table table-light text-center col-10 mx-auto table-sm" style="margin-top:50px">'
@@ -160,7 +162,9 @@ async function telaExibirTodosOsPedidos() {
 //funcao para verificar se pedido existe
 async function buscarPedido() {
 
+    await aguardeCarregamento(true)
     let json = await requisicaoGET("orders/" + $('#identificacao').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await aguardeCarregamento(false)
 
     recarregarPagina();
 
@@ -204,7 +208,9 @@ async function adicionarItemaoPedido(itemTipo, idItem, quantidadeItem, pedidoTip
 
     let aux = true, json = null;
 
+    await aguardeCarregamento(true)
     json = await requisicaoGET('items', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await aguardeCarregamento(false)
 
     VETORDEITENSCLASSEPEDIDO.forEach(function (item) {
         if (item._id.toString() == idItem.toString()) {
@@ -358,9 +364,13 @@ async function listaItens(tipoBusca) {
     let codigoHTML = '', codigoHTML2 = '', json = null, json2 = null;
 
     if (tipoBusca == 'todos') {
+        await aguardeCarregamento(true)
         json = await requisicaoGET('items', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        await aguardeCarregamento(false)
     } else if (tipoBusca == 'nome') {
+        await aguardeCarregamento(true)
         json = await requisicaoGET('items/' + $('#nome').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        await aguardeCarregamento(false)
     }
 
     codigoHTML += '<h5 class="text-center" style="margin-top:20px">Lista produtos</h5>'
@@ -440,7 +450,9 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
 
         if (tipoRequisicao == 'cadastrar') {
             if (condicaoComItens && condicaoSemQuantidade) {
+                await aguardeCarregamento(true)
                 await requisicaoPOST("orders", JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+                await aguardeCarregamento(false)
 
                 let newOrder = `{
                     "identification":${$('#identificacao').val()},
@@ -448,11 +460,13 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
                     "type":true
                 }`
 
+                await aguardeCarregamento(true)
                 await requisicaoPOST(`printer`, JSON.parse(newOrder), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+                await aguardeCarregamento(false)
 
-                mensagemDeAviso("Pedido cadastrado com sucesso!");
-                buscarPedido();
-                setTimeout(function () { menuPedido(); }, 1500)
+                await mensagemDeAviso("Pedido cadastrado com sucesso!");
+                await buscarPedido();
+                await setTimeout(function () { menuPedido(); }, 1500)
             } else if (condicaoComItens) {
                 mensagemDeErro('Não cadastrado, item com quantidade inválida!')
             } else {
@@ -460,10 +474,12 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
             }
         } else {
             if (condicaoComItens && condicaoSemQuantidade) {
+                await aguardeCarregamento(true)
                 let jsonDid = await requisicaoGET("orders/" + $('#identificacao').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
                 let json2 = JSON.parse(json), aux = true
                 delete json2.identification
                 await requisicaoPUT("orders/" + $('#identificacao').val(), json2, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+                await aguardeCarregamento(false)
 
                 let updateOrder = `{
                     "identification":${$('#identificacao').val()},
@@ -487,11 +503,13 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
                     "type":false
                 }`
 
+                await aguardeCarregamento(true)
                 await requisicaoPOST(`printer`, JSON.parse(updateOrder), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+                await aguardeCarregamento(false)
 
-                mensagemDeAviso("Pedido atualizado com sucesso!");
-                buscarPedido();
-                setTimeout(function () { menuPedido(); }, 1500)
+                await mensagemDeAviso("Pedido atualizado com sucesso!");
+                await buscarPedido();
+                await setTimeout(function () { menuPedido(); }, 1500)
             } else if (condicaoComItens) {
                 mensagemDeErro('Não atualizado, item com quantidade inválida!')
             } else {
