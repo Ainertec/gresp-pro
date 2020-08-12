@@ -74,17 +74,23 @@ class OrderController {
         note,
       },
       {
-        new: true,
+        new: false,
       }
     );
 
+    const newOrder = await Order.findOne({
+      identification: identification,
+      closed: false,
+    }).populate('items.product');
+
     if (!order) return res.status(400).json('identification does not exist');
 
-    await order.populate('items.product').execPopulate();
+    // await order.populate('items.product').execPopulate();
 
-    req.io.emit('updatedOrder', order);
+    req.io.emit('updatedOrder', newOrder);
     return res.json({
-      order,
+      order: newOrder,
+      oldItems: order.items,
       stockAlert: orderInformations.alert.length === 0 ? undefined : orderInformations.alert,
     });
   }

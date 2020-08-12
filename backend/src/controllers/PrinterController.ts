@@ -61,7 +61,7 @@ class PrinterController {
 
   async create(req: Request, res: Response) {
     const { identification, oldItems, type } = req.body;
-
+    console.log(oldItems);
     const order = await Order.findOne({ closed: false, identification });
 
     if (!order) return res.status(400).json('orders does not exist!');
@@ -115,7 +115,7 @@ class PrinterController {
       myDoc.writeText(`${items?.drinks}`, contentStyle);
       myDoc.writeText('', contentBorder);
       myDoc.writeText('========== Observação =========', contentStyle);
-      myDoc.writeText(`- ${order.note}\n`, contentStyle);
+      myDoc.writeText(`\n- ${order.note ? order.note : 'Nenhuma.'}\n`, contentStyle);
       myDoc.writeText(`- ${date}`, contentStyle);
 
       const content = myDoc.createDocument();
@@ -128,7 +128,7 @@ class PrinterController {
           : process.env.DIR_PRODUCTION;
 
       await fs.writeFile(
-        `${dir}/${identification}.rtf`,
+        `${path.resolve(__dirname, '..', '..', '__tests__', 'recipes')}/${identification}.rtf`,
         buffer,
         { encoding: 'utf-8', flag: 'w' },
         (err) => {

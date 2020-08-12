@@ -43,7 +43,6 @@ class App {
   private webSocket() {
     this.io.on('connection', (socket) => {
       socket.on('newFinished', (data) => {
-        console.log(data);
         socket.broadcast.emit('hasFinished', data);
       });
     });
