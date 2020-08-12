@@ -44,9 +44,13 @@ async function buscarProdutos(tipoBusca) {
     let codigoHTML = '', json = null;
 
     if (tipoBusca == 'nome') {
+        await aguardeCarregamento(true)
         json = await requisicaoGET("items/" + $('#nome').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        await aguardeCarregamento(false)
     } else if (tipoBusca == 'todos') {
+        await aguardeCarregamento(true)
         json = await requisicaoGET("items", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        await aguardeCarregamento(false)
     }
 
     codigoHTML += '<h4 class="text-center" style="margin-top:40px;">Lista</h4>'
@@ -140,12 +144,14 @@ function carregarDadosProduto(id) {
 }
 
 //chamada de funcao de requisicao delete enviando Id da opcao selecionada
-function deletarProduto(id) {
+async function deletarProduto(id) {
     if (id != null) {
         try {
-            requisicaoDELETE("items/", (id).toString(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-            mensagemDeAviso("Excluido com sucesso!");
-            telaBuscarProduto();
+            await aguardeCarregamento(true)
+            await requisicaoDELETE("items/", (id).toString(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+            await aguardeCarregamento(false)
+            await mensagemDeAviso("Excluido com sucesso!");
+            await telaBuscarProduto();
         } catch (error) {
             mensagemDeErro('Não foi possivel excluir!')
         }
@@ -165,9 +171,11 @@ async function cadastrarProduto() {
         }
         json += `"description": "${($('#descricao').val()).toString()}"}`
 
+        await aguardeCarregamento(true)
         await requisicaoPOST("items", JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-        mensagemDeAviso("Cadastrado com sucesso!");
-        telaProduto('cadastrar', null)
+        await aguardeCarregamento(false)
+        await mensagemDeAviso("Cadastrado com sucesso!");
+        await telaProduto('cadastrar', null)
     } catch (error) {
         mensagemDeErro('Não foi possível cadastrar!')
     }
@@ -184,9 +192,11 @@ async function atualizaProduto(id) {
         }
         json += `"description": "${($('#descricao').val()).toString()}"}`
 
+        await aguardeCarregamento(true)
         await requisicaoPUT("items/" + id, JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-        mensagemDeAviso('Atualizado com sucesso!');
-        telaBuscarProduto();
+        await aguardeCarregamento(false)
+        await mensagemDeAviso('Atualizado com sucesso!');
+        await telaBuscarProduto();
     } catch (error) {
         mensagemDeErro('Não foi possível atualizar!')
     }

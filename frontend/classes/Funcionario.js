@@ -190,16 +190,20 @@ async function buscarFuncionario(tipo, busca) {
         let cont = 0
 
         if (busca == 'nome') {
+            await aguardeCarregamento(true)
             var json = await requisicaoGET(
                 `users/${
                 document.getElementById('buscaFuncionarioByName').value
                 }`,
                 { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }
             )
+            await aguardeCarregamento(false)
         } else if (busca == 'todos') {
+            await aguardeCarregamento(true)
             var json = await requisicaoGET('users', {
                 headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
             })
+            await aguardeCarregamento(false)
         }
 
         document.getElementById('localDaLista').hidden = false
@@ -235,11 +239,13 @@ async function cadastrarFuncionario() {
         json += `"admin":${$('#tipoFun').val()}}`
 
         try {
+            await aguardeCarregamento(true)
             await requisicaoPOST('users', JSON.parse(json), {
                 headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
             })
-            mensagemDeAviso('Cadastrado com sucesso!')
-            autenticacaoFuncionarioFacede()
+            await aguardeCarregamento(false)
+            await mensagemDeAviso('Cadastrado com sucesso!')
+            await autenticacaoFuncionarioFacede()
         } catch (error) {
             mensagemDeErro(`Não foi possível efetuar o cadastro! Erro: ${error}`)
         }
@@ -270,13 +276,15 @@ async function atualizarFuncionario() {
         json += `"admin":${$('#tipoFun').val()}}`
 
         try {
+            await aguardeCarregamento(true)
             await requisicaoPUT(
                 `users/${document.getElementById('id').value}`,
                 JSON.parse(json),
                 { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }
             )
-            mensagemDeAviso('Atualizado com sucesso!')
-            autenticacaoFuncionarioFacede()
+            await aguardeCarregamento(false)
+            await mensagemDeAviso('Atualizado com sucesso!')
+            await autenticacaoFuncionarioFacede()
         } catch (error) {
             mensagemDeErro(`Não foi possível atualizar! Erro: ${error}`)
         }
@@ -290,11 +298,13 @@ async function atualizarFuncionario() {
 async function excluirFuncionario() {
     if (validaDadosCampo(['#id'])) {
         try {
+            await aguardeCarregamento(true)
             await requisicaoDELETE(`users/${$('#id').val()}`, '', {
                 headers: { Authorization: `Bearer ${buscarSessionUser().token}` },
             })
-            mensagemDeAviso('Excluido com sucesso!')
-            autenticacaoFuncionarioFacede()
+            await aguardeCarregamento(false)
+            await mensagemDeAviso('Excluido com sucesso!')
+            await autenticacaoFuncionarioFacede()
         } catch (error) {
             mensagemDeErro(`Não foi possível excluir! Erro: ${error}`)
         }

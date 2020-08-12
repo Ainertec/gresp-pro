@@ -13,7 +13,9 @@ function pedidosCozinhaFacede() {
 
 //funcao responsavel por geara a tela da peidos da cozinha
 async function telaPedidosCozinha() {
+    await aguardeCarregamento(true)
     let codigoHTML = '', json = await requisicaoGET("orders", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await aguardeCarregamento(false)
 
     codigoHTML += '<h4 class="text-center">Lista de pedidos</h4>'
     codigoHTML += '<div class="list-group col-10 mx-auto sm" style="margin-top:30px;">'
@@ -50,9 +52,11 @@ async function telaPedidosCozinha() {
 async function entregarPedido(identificacao) {
     try {
         let json = `{"identification":${parseInt(identificacao)}}`
+        await aguardeCarregamento(true)
         await requisicaoPOST('kitchen/', JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
-        mensagemDeAviso('Enviado com succeso!')
-        telaPedidosCozinha();
+        await aguardeCarregamento(false)
+        await mensagemDeAviso('Enviado com succeso!')
+        await telaPedidosCozinha();
     } catch (error) {
         mensagemDeErro('Problemas ao enviar!')
     }

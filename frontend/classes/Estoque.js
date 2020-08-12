@@ -40,9 +40,13 @@ async function buscarEstoque(tipoBusca) {
     let codigoHTML = '', json = null;
 
     if (tipoBusca == 'nome') {
+        await aguardeCarregamento(true)
         json = await requisicaoGET("items/" + $("#nome").val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        await aguardeCarregamento(false)
     } else if (tipoBusca == 'todos') {
+        await aguardeCarregamento(true)
         json = await requisicaoGET("items", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        await aguardeCarregamento(false)
     }
 
     VETORDEITENSESTOQUE = [];
@@ -99,9 +103,11 @@ async function atualizarEstoque(id) {
         delete json.__v
         json.stock = parseInt(json.stock) + parseInt($('#quantidade' + id).val())
 
+        await aguardeCarregamento(true)
         await requisicaoPUT('items/' + id, json, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-        mensagemDeAviso('Atualizado com sucesso!');
-        telaDeBuscarEstoque();
+        await aguardeCarregamento(false)
+        await mensagemDeAviso('Atualizado com sucesso!');
+        await telaDeBuscarEstoque();
     } catch (error) {
         mensagemDeErro('Não foi possível atualizar a quantidade do produto!')
     }

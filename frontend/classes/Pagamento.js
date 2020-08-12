@@ -79,7 +79,9 @@ function telaLeituraDeQrCodePagamento() {
 //funcao para exibir lista com todos os pedidos
 async function telaExibirTodosOsPedidosPagamento() {
 
+    await aguardeCarregamento(true)
     let codigoHTML = '', json = await requisicaoGET("orders", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await aguardeCarregamento(false)
 
     codigoHTML += '<h4 class="text-center" style="margin-top:30px">Lista de Pedidos</h4>'
     codigoHTML += '<table class="table table-light col-10 mx-auto table-sm text-center" style="margin-top:50px">'
@@ -110,7 +112,9 @@ async function telaExibirTodosOsPedidosPagamento() {
 async function buscarDadosDoPedidoParaPagamento() {
 
     var codigoHTML = '';
+    await aguardeCarregamento(true)
     var json = await requisicaoGET("orders/" + $('#identificacao').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await aguardeCarregamento(false)
 
     if (json.data == null) {
         mensagemDeErro("Pedido inexistente!");
@@ -167,11 +171,13 @@ async function buscarDadosDoPedidoParaPagamento() {
 }
 
 //funcao para efetuar o pagamento
-function efetuarPagamento() {
+async function efetuarPagamento() {
     try {
-        requisicaoDELETE("orders/" + $('#identificacao').val() + "/" + $('#formaPagamento').val(), '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-        mensagemDeAviso("Pagamento Efetuado!");
-        setTimeout(function () { menuPagamentoPedido(); }, 500)
+        await aguardeCarregamento(true)
+        await requisicaoDELETE("orders/" + $('#identificacao').val() + "/" + $('#formaPagamento').val(), '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        await aguardeCarregamento(false)
+        await mensagemDeAviso("Pagamento Efetuado!");
+        await setTimeout(function () { menuPagamentoPedido(); }, 500)
     } catch (error) {
         mensagemDeErro('Não foi possível efetuar o pagamento!')
     }

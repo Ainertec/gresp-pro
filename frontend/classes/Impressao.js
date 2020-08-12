@@ -60,7 +60,9 @@ function telaGerarRelatorioProdutoseBebidas() {
 
 //funcao para gerar tela de resposta com todos os produtos e bebidas
 async function telaRespostaRelatorioProdutoseBebidas() {
+    await aguardeCarregamento(true)
     let codigoHTML = '', json = await requisicaoGET("items", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await aguardeCarregamento(false)
 
 
     codigoHTML += `<table class="table table-dark table-bordered text-center table-sm">`
@@ -148,15 +150,19 @@ function telaGerarRelatorioDeCaixa() {
 //funcao para gerar tela de resposta com todos os pedidos fechados
 async function telaRespostaRelatorioDeCaixa() {
 
-    gerarGraficoLucroTotal();
+    await aguardeCarregamento(true)
 
-    gerarGraficoDemonstrativoVendaPorItem();
+    await gerarGraficoLucroTotal();
 
-    gerarGraficoLucroMensal('impressao');
+    await gerarGraficoDemonstrativoVendaPorItem();
 
-    gerarGraficoQuantidadeVendasMensal('impressao');
+    await gerarGraficoLucroMensal('impressao');
 
-    tabelaDeRelatorioCaixa('impressao');
+    await gerarGraficoQuantidadeVendasMensal('impressao');
+
+    await tabelaDeRelatorioCaixa('impressao');
+
+    await aguardeCarregamento(false)
 
 }
 
@@ -197,7 +203,9 @@ function telaGerarListaTodosOsPedidosAbertos() {
 
 //funcao para gerar tela de resposta com lista de todos os pedidos em aberto
 async function telaRespostaListaTodosOsPedidosAbertos() {
+    await aguardeCarregamento(true)
     let json = await requisicaoGET("orders", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }), codigoHTML = ``;
+    await aguardeCarregamento(false)
 
     codigoHTML += `<table class="table table-dark table-bordered text-center">`
     codigoHTML += `<thead class="thead-dark">`
