@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, FlatList, View } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
@@ -26,9 +27,9 @@ import {
 
 export default function Home() {
   const { order, setOrder } = useOrder();
+  const [isSpinnerVisible, setIsSpinnerVisible] = useState(false);
 
   const [showPay, setShowPay] = useState(false);
-  const [note, setNote] = useState('');
   const [changed, setChanged] = useState(false);
 
   const navigation = useNavigation();
@@ -48,42 +49,91 @@ export default function Home() {
     setOrder({ ...order, items: filterdItem });
   }
 
+  function createOrder() {
+    api
+      .post(`orders`, {
+        identification: Number(order.identification),
+        items: order.items,
+        note: order.note === '' || !order.note ? undefined : order.note,
+      })
+      .then((response) => {
+        setOrder(response.data.order);
+        setChanged(false);
+        api
+          .post('printer', {
+            identification: order.identification,
+            type: true,
+          })
+          .then(() => {
+            return Alert.alert('Tudo certo!', 'Pedido criado');
+          })
+          .catch((error) => {
+            if (error.request.status !== 200) {
+              return Alert.alert('Ops...', 'Falha ao imprimir pedido');
+            }
+          });
+      })
+      .catch((error) => {
+        if (error.request.status !== 200) {
+          return Alert.alert('Ops...', 'Falha ao criar pedido');
+        }
+      });
+    setIsSpinnerVisible(false);
+  }
+
+  function updateOrder() {
+    console.log(order.note);
+    api
+      .put(`orders/${order.identification}`, {
+        items: order.items,
+        note: order.note === '' || !order.note ? undefined : order.note,
+      })
+      .then((response) => {
+        setOrder(response.data.order);
+        setChanged(false);
+        api
+          .post('printer', {
+            identification: order.identification,
+            type: false,
+            oldItems: response.data.oldItems,
+          })
+          .then(() => {
+            return Alert.alert('Tudo certo!', 'Pedido atualizado');
+          })
+          .catch((error) => {
+            if (error.request.status !== 200) {
+              return Alert.alert('Ops...', 'Falha ao imprimir pedido');
+            }
+          });
+      })
+      .catch((error) => {
+        if (error.request.status !== 200) {
+          return Alert.alert('Ops...', 'Falha ao atualizar pedido');
+        }
+      });
+    setIsSpinnerVisible(false);
+  }
+
   async function sendOrder() {
     if (!order.identification) {
-      alert('É necessário a identificação');
+      Alert.alert('Ops...', 'É necessário a identificação');
       navigation.navigate('QrReader');
       return;
     }
     if (order.items.length === 0 || order.items.length === undefined) {
       return Alert.alert('Ops...', 'Necessário inserir items');
     }
+    setIsSpinnerVisible(true);
 
     if (order._id) {
-      const response = await api.put(`orders/${order.identification}`, {
-        items: order.items,
-        note: note === '' ? undefined : note,
-      });
-      setOrder(response.data.order);
-      setChanged(false);
-      return response.status === 200
-        ? Alert.alert('Ops...', 'Pedido atualizado')
-        : Alert.alert('Ops...', 'Falha ao atualizar pedido');
+      updateOrder();
     } else {
-      const response = await api
-        .post(`orders`, {
-          identification: Number(order.identification),
-          items: order.items,
-          note: note === '' ? undefined : note,
-        })
-        .catch((error) => {
-          console.log(error.request);
-        });
-      setOrder(response.data.order);
-      setChanged(false);
-      return response.status === 200
-        ? alert('Pedido criado')
-        : alert('Falha ao criar pedido');
+      createOrder();
     }
+
+    setTimeout(() => {
+      setIsSpinnerVisible(false);
+    }, 3500);
   }
 
   async function handlePayment() {
@@ -94,6 +144,12 @@ export default function Home() {
 
   return (
     <Container>
+      <Spinner
+        visible={isSpinnerVisible}
+        textContent={'Carregando...'}
+        animation='fade'
+        textStyle={{ color: '#fff', alignSelf: 'center' }}
+      />
       <FlatList
         style={{ paddingTop: 20 }}
         ListFooterComponentStyle={{ paddingBottom: 20 }}
@@ -126,7 +182,7 @@ export default function Home() {
             />
           }
           defaultValue={order.note}
-          onChangeText={(text) => setNote(text)}
+          onChangeText={(text) => (order.note = text)}
           multiline={true}
           numberOfLines={2}
           editable={true}

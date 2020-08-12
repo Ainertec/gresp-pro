@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 
 import { load } from '../services/loadOrder';
-import api from '../services/api';
 
 const OrderContext = createContext({});
 

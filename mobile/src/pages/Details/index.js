@@ -25,7 +25,8 @@ const Details = () => {
         </HeaderLine>
 
         <HeaderText>
-          Observações: {order.note === ' ' ? 'Nenhuma ' : order.note}
+          Observações:{' '}
+          {order.note === '' || !order.note ? 'Nenhuma ' : order.note}
         </HeaderText>
       </Header>
       <List

@@ -1,8 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
-
-import { BarCodeScanner } from 'expo-barcode-scanner';
+import AsyncStorage from '@react-native-community/async-storage';
 import React, { useEffect, useRef } from 'react';
-import { KeyboardAvoidingView, AsyncStorage, StatusBar } from 'react-native';
+import { KeyboardAvoidingView, StatusBar } from 'react-native';
 import * as Yup from 'yup';
 import { Button, Input, Label } from '../../components/Form';
 import Scanner from '../../components/QrReader';
