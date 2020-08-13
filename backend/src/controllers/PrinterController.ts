@@ -61,7 +61,6 @@ class PrinterController {
 
   async create(req: Request, res: Response) {
     const { identification, oldItems, type } = req.body;
-    console.log(oldItems);
     const order = await Order.findOne({ closed: false, identification });
 
     if (!order) return res.status(400).json('orders does not exist!');
