@@ -19,29 +19,31 @@ function ligacaoProdutoFacede(tipo) {
 
 // tela de visualizacao da lista de produto
 function telaBuscarProduto() {
-    let codigoHTML = '';
+    let codigoHTML = ``;
 
-    codigoHTML += '<h4 class="text-center">Buscar</h4>'
-    codigoHTML += '<div class="card-deck col-8 mx-auto d-block">'
-    codigoHTML += '<div class="input-group mb-3">'
-    codigoHTML += '<input id="nome" type="text" class="form-control mousetrap" placeholder="Nome Produto">'
-    codigoHTML += `<button onclick="if(validaDadosCampo(['#nome'])){buscarProdutos('nome'); animacaoSlideUp(['#resposta']);}else{mensagemDeErro('Preencha o campo nome!');  mostrarCamposIncorrreto(['nome']);}" type="button" class="btn btn-outline-info">`
-    codigoHTML += '<span class="fas fa-search"></span> Buscar'
-    codigoHTML += '</button>'
-    codigoHTML += '<br/>'
-    codigoHTML += `<button onclick="buscarProdutos('todos'); animacaoSlideUp(['#resposta']);" type="button" class="btn btn-outline-info btn-block" style="margin-top:10px;">`
-    codigoHTML += '<span class="fas fa-search-plus"></span> Exibir todos'
-    codigoHTML += '</button>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-    codigoHTML += '<div id="resposta"></div>'
+    codigoHTML += `<h4 class="text-center"><span class="fas fa-utensils"></span> Buscar produto</h4>
+        <div class="card-deck col-8 mx-auto d-block">
+            <div class="input-group mb-3">
+                <input id="nome" type="text" class="form-control mousetrap" placeholder="Nome do produto">
+                <button onclick="if(validaDadosCampo(['#nome'])){buscarProdutos('nome'); animacaoSlideUp(['#resposta']);}else{mensagemDeErro('Preencha o campo nome!');  mostrarCamposIncorrreto(['nome']);}" type="button" class="btn btn-outline-info">
+                    <span class="fas fa-search"></span> Buscar
+                </button>
+                <br/>
+                <button onclick="buscarProdutos('todos'); animacaoSlideUp(['#resposta']);" type="button" class="btn btn-outline-info btn-block" style="margin-top:10px;">
+                    <span class="fas fa-search-plus"></span> Exibir todos
+                </button>
+            </div>
+        </div>
+        <div id="resposta"></div>`
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
 
 //funcao responsavel por buscar os produtos selecionados
 async function buscarProdutos(tipoBusca) {
-    let codigoHTML = '', json = null;
+    let codigoHTML = ``, json = null;
+
+    VETORDEPRODUTOSCLASSEPRODUTO = []
 
     if (tipoBusca == 'nome') {
         await aguardeCarregamento(true)
@@ -53,34 +55,42 @@ async function buscarProdutos(tipoBusca) {
         await aguardeCarregamento(false)
     }
 
-    codigoHTML += '<h4 class="text-center" style="margin-top:40px;">Lista</h4>'
-    codigoHTML += '<table style="margin-top:10px;" class="table table-light table-sm">'
-    codigoHTML += '<thead class="thead-dark">'
-    codigoHTML += '<tr><th scope="col">Name</th><th scope="col">Descrição</th><th scope="col">Quantidade</th><th scope="col">Preço</th><th scope="col">Editar</th><th scope="col">Excluir</th></tr>'
-    codigoHTML += '</thead>'
-    codigoHTML += '<tbody>'
+    codigoHTML += `<h4 class="text-center" style="margin-top:40px;">Lista de produtos</h4>
+        <table style="margin-top:10px;" class="table table-light table-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Quantidade</th>
+                    <th scope="col">Preço</th>
+                    <th scope="col">Editar</th>
+                    <th scope="col">Excluir</th>
+                </tr>
+            </thead>
+            <tbody>`
+
     json.data.forEach(function (item) {
         if (!item.drink) {
             VETORDEPRODUTOSCLASSEPRODUTO.push(item)
-            codigoHTML += '<tr>'
-            codigoHTML += `<th class="table-info"><span class="fas fa-utensils"></span> ${corrigirTamanhoString(20, item.name)}</th>`
-            codigoHTML += `<td class="table-info">${corrigirTamanhoString(40, item.description)}</td>`
+            codigoHTML += `<tr>
+                <th class="table-info" title="${item.name}"><span class="fas fa-utensils"></span> ${corrigirTamanhoString(20, item.name)}</th>
+                <td class="table-info" title="${item.description}">${corrigirTamanhoString(40, item.description)}</td>`
             if (item.stock != null) {
-                codigoHTML += `<td class="table-primary"><strong>${item.stock}</strong></td>`
+                codigoHTML += `<td class="table-primary"><strong>${item.stock} Unid.</strong></td>`
             } else {
-                codigoHTML += `<td class="table-primary text-danger"><strong>0</strong></td>`
+                codigoHTML += `<td class="table-primary text-danger"><strong>0 Unid.</strong></td>`
             }
-            codigoHTML += `<td class="table-warning text-danger"><strong>R$${(item.price).toFixed(2)}<strong></td>`
-            codigoHTML += `<th class="table-light"><button class="btn btn-primary" onclick="telaProduto('atualizar', '${item._id}'); carregarDadosProduto('${item._id}');"><span class="fas fa-pencil-alt iconsTam"></span></button></td>`
-            codigoHTML += `<th class="table-light"><button class="btn btn-outline-danger" onclick="confirmarAcao('Excluir os dados do produto permanentemente!', 'deletarProduto(this.value)', '${item._id}');" ><span class="fas fa-trash-alt iconsTam"></span></button></td>`
-            codigoHTML += '</tr>'
+            codigoHTML += `<td class="table-warning text-danger"><strong>R$${(item.price).toFixed(2)}<strong></td>
+                    <th class="table-light"><button class="btn btn-primary btn-sm" onclick="carregarDadosProduto('${item._id}');"><span class="fas fa-pencil-alt iconsTam"></span> Editar</button></td>
+                    <th class="table-light"><button class="btn btn-outline-danger btn-sm" onclick="confirmarAcao('Excluir os dados do produto permanentemente!', 'deletarProduto(this.value)', '${item._id}');" ><span class="fas fa-trash-alt iconsTam"></span> Excluir</button></td>
+                </tr>`
         }
     });
-    codigoHTML += '</tbody>'
-    codigoHTML += '</table>'
+    codigoHTML += `</tbody>
+    </table>`
 
     if (json.data[0] == null) {
-        document.getElementById('resposta').innerHTML = '<h5 class="text-center" style="margin-top:20vh;"><span class="fas fa-exclamation-triangle"></span> Nenhum produto encontrado!</h5>';
+        document.getElementById('resposta').innerHTML = `<h5 class="text-center" style="margin-top:20vh;"><span class="fas fa-exclamation-triangle"></span> Nenhum produto encontrado!</h5>`;
     } else {
         document.getElementById('resposta').innerHTML = codigoHTML;
     }
@@ -92,30 +102,44 @@ async function buscarProdutos(tipoBusca) {
 
 //funcao responsavel por gerar a tela de dados do produto
 function telaProduto(tipoRequisicao, id) {
-    let codigoHTML = '';
+    let codigoHTML = ``;
 
     if (tipoRequisicao == 'cadastrar') {
-        codigoHTML += '<h3 class="text-center">Cadastrar</h3>'
+        codigoHTML += `<h3 class="text-center"><span class="fas fa-utensils"></span> Cadastrar produto</h3>`
     } else {
-        codigoHTML += '<h3 class="text-center">Atualizar</h3>'
+        codigoHTML += `<h3 class="text-center"><span class="fas fa-utensils"></span> Atualizar produto</h3>`
     }
-    codigoHTML += '<form class="card-deck col-9 mx-auto d-block" style="margin-top:30px;">'
-    codigoHTML += '<div class="row">'
-    codigoHTML += '<div class="col-6" style="margin-top:25px">'
-    codigoHTML += '<label>Nome: </label><input id="nome" type="text" class="form-control mousetrap" placeholder="Nome">'
-    codigoHTML += '</div>'
-    codigoHTML += '<div class="col-3" style="margin-top:25px">'
-    codigoHTML += '<label>Quantidade: </label><input id="quantidade" type="Number" class="form-control mousetrap" placeholder="Quantidade">'
-    codigoHTML += '</div>'
-    codigoHTML += '<div class="col-3" style="margin-top:25px">'
-    codigoHTML += '<label>Preço: </label><input id="preco" type="Number" class="form-control mousetrap" placeholder="Preço">'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-    codigoHTML += '<div class="row">'
-    codigoHTML += '<div class="col" style="margin-top:25px">'
-    codigoHTML += '<label>Descrição: </label><textArea type="text" id="descricao" class="form-control mousetrap" placeholder="Descrição" rows="10">Nenhuma.</textArea>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
+    codigoHTML += `<form class="card-deck col-9 mx-auto d-block" style="margin-top:30px;">
+        <div class="row">
+            <div class="col-6" style="margin-top:25px">
+                <label>Nome: </label>
+                <input id="nome" type="text" class="form-control mousetrap" placeholder="Nome do produto">
+            </div>
+            <div class="col-3" style="margin-top:25px">
+                <label>Quantidade: </label>
+                <div class="input-group">
+                    <input id="quantidade" type="Number" class="form-control mousetrap" placeholder="Quantidade">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Unid.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3" style="margin-top:25px">
+                <label>Preço: </label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">R$</span>
+                    </div>
+                    <input id="preco" type="Number" class="form-control mousetrap" placeholder="Preço">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" style="margin-top:25px">
+                <label>Descrição: </label>
+                <textArea type="text" id="descricao" class="form-control mousetrap" placeholder="Descrição" rows="10">Nenhuma.</textArea>
+            </div>
+        </div>`
 
     if (tipoRequisicao == 'cadastrar') {
         codigoHTML += `<button onclick="if(validaDadosCampo(['#nome','#preco','#descricao']) && validaValoresCampo(['#preco','#quantidade'])){cadastrarProduto();}else{mensagemDeErro('Preencha os campos nome e preço com valores válidos!'); mostrarCamposIncorrreto(['nome','preco','descricao','quantidade']);}" type="button" class="btn btn-primary" style="margin:15px"><span class="fas fa-save"></span> Salvar</button>`
@@ -124,23 +148,28 @@ function telaProduto(tipoRequisicao, id) {
         codigoHTML += `<button onclick="confirmarAcao('Excluir os dados do produto permanentemente!', 'deletarProduto(this.value)', '${id}');" type="button" class="btn btn-outline-danger" style="margin:15px"><span class="fas fa-trash-alt"></span> Excluir</button>`
     }
 
-    codigoHTML += '</form>'
+    codigoHTML += `</form>`
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
 
 //funcao responsavel por carregar os dados do produto
-function carregarDadosProduto(id) {
-    VETORDEPRODUTOSCLASSEPRODUTO.forEach(function (item) {
-        if (item._id == id) {
-            setTimeout(function () {
-                document.getElementById('nome').value = item.name
-                document.getElementById('preco').value = item.price
-                document.getElementById('quantidade').value = item.stock
-                document.getElementById('descricao').value = item.description
-            }, 300)
+async function carregarDadosProduto(id) {
+
+    await aguardeCarregamento(true)
+    await telaProduto('atualizar', id);
+    await aguardeCarregamento(false)
+    const dado = VETORDEPRODUTOSCLASSEPRODUTO.find((element) => element._id == id);
+    try {
+        document.getElementById('nome').value = dado.name
+        document.getElementById('preco').value = (parseFloat(dado.price)).toFixed(2)
+        if (dado.stock) {
+            document.getElementById('quantidade').value = parseInt(dado.stock)
         }
-    });
+        document.getElementById('descricao').value = dado.description
+    } catch (error) {
+        mensagemDeErro('Não foi possível carregar os dados do produto!')
+    }
 }
 
 //chamada de funcao de requisicao delete enviando Id da opcao selecionada
@@ -163,13 +192,15 @@ async function deletarProduto(id) {
 //chamada de funcao de requisicao create enviando dados em formato JSON para gravura
 async function cadastrarProduto() {
     try {
-        var json = `{"name": "${($('#nome').val()).toString()}",`
-        json += `"price": ${parseFloat($('#preco').val())},`
-        json += `"drink": false,`
+        var json = `{
+            "name": "${($('#nome').val()).toString()}",
+            "price": ${parseFloat($('#preco').val())},
+            "drink": false,`
         if (validaValoresCampo(['#quantidade']) && validaDadosCampo(['#quantidade'])) {
             json += `"stock": ${parseInt($('#quantidade').val())},`
         }
-        json += `"description": "${($('#descricao').val()).toString()}"}`
+        json += `"description": "${($('#descricao').val()).toString()}"
+        }`
 
         await aguardeCarregamento(true)
         await requisicaoPOST("items", JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
@@ -177,20 +208,22 @@ async function cadastrarProduto() {
         await mensagemDeAviso("Cadastrado com sucesso!");
         await telaProduto('cadastrar', null)
     } catch (error) {
-        mensagemDeErro('Não foi possível cadastrar!')
+        mensagemDeErro('Não foi possível cadastrar o produto!')
     }
 }
 
 //chamada de funcao de requisicao put enviando os dados e o Id da opcao selecionada
 async function atualizaProduto(id) {
     try {
-        var json = `{"name": "${($('#nome').val()).toString()}",`
-        json += `"price": ${parseFloat($('#preco').val())},`
-        json += `"drink": false,`
+        var json = `{
+            "name": "${($('#nome').val()).toString()}",
+            "price": ${parseFloat($('#preco').val())},
+            "drink": false,`
         if (validaValoresCampo(['#quantidade']) && validaDadosCampo(['#quantidade'])) {
             json += `"stock": ${parseInt($('#quantidade').val())},`
         }
-        json += `"description": "${($('#descricao').val()).toString()}"}`
+        json += `"description": "${($('#descricao').val()).toString()}"
+        }`
 
         await aguardeCarregamento(true)
         await requisicaoPUT("items/" + id, JSON.parse(json), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
