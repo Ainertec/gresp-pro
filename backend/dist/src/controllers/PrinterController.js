@@ -152,7 +152,7 @@ var PrinterController = /** @class */ (function () {
                         dir = process.env.NODE_ENV === 'test'
                             ? path_1.default.resolve(__dirname, '..', '..', '__tests__', 'recipes')
                             : process.env.DIR_PRODUCTION;
-                        return [4 /*yield*/, fs_1.default.writeFile(path_1.default.resolve(__dirname, '..', '..', '__tests__', 'recipes') + "/" + identification + ".rtf", buffer, { encoding: 'utf-8', flag: 'w' }, function (err) {
+                        return [4 /*yield*/, fs_1.default.writeFile(dir + "/" + identification + ".rtf", buffer, { encoding: 'utf-8', flag: 'w' }, function (err) {
                                 if (err)
                                     return res.status(400).json("" + err);
                                 return res.status(200).json('success');
