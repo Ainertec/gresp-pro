@@ -130,38 +130,38 @@ var PrinterController = /** @class */ (function () {
                             align: 'center',
                             borderTop: { size: 2, spacing: 100, color: jsrtf_1.default.Colors.GREEN },
                         });
-                        if (!order.items) return [3 /*break*/, 4];
-                        items = type
-                            ? this.toPrinterNew(order.items)
-                            : this.toPrinterUpdated(order.items, oldItems);
-                        myDoc.writeText('', contentBorder);
-                        myDoc.writeText('>>>>>>>>> Comanda <<<<<<<<<<', header);
-                        myDoc.writeText("N\u00FAmero: " + order.identification, header);
-                        type ? myDoc.writeText("Tipo: Novo", header) : myDoc.writeText("Tipo: Atualizado", header);
-                        // myDoc.writeText(`Hora: ${order.identification}`, header);
-                        myDoc.writeText('=========== Produtos ==========', contentBorder);
-                        myDoc.writeText("" + (items === null || items === void 0 ? void 0 : items.products), contentStyle);
-                        myDoc.writeText('=========== Bebidas ===========', contentBorder);
-                        myDoc.writeText("" + (items === null || items === void 0 ? void 0 : items.drinks), contentStyle);
-                        myDoc.writeText('', contentBorder);
-                        myDoc.writeText('========== Observação =========', contentStyle);
-                        myDoc.writeText("\n- " + (order.note ? order.note : 'Nenhuma.') + "\n", contentStyle);
-                        myDoc.writeText("- " + date, contentStyle);
-                        content = myDoc.createDocument();
-                        buffer = Buffer.from(content, 'binary');
-                        dir = process.env.NODE_ENV === 'test'
-                            ? path_1.default.resolve(__dirname, '..', '..', '__tests__', 'recipes')
-                            : process.env.DIR_PRODUCTION;
-                        return [4 /*yield*/, fs_1.default.writeFile(dir + "/" + identification + ".rtf", buffer, { encoding: 'utf-8', flag: 'w' }, function (err) {
+                        if (order.items) {
+                            items = type
+                                ? this.toPrinterNew(order.items)
+                                : this.toPrinterUpdated(order.items, oldItems);
+                            myDoc.writeText('', contentBorder);
+                            myDoc.writeText('>>>>>>>>> Comanda <<<<<<<<<<', header);
+                            myDoc.writeText("N\u00FAmero: " + order.identification, header);
+                            type ? myDoc.writeText("Tipo: Novo", header) : myDoc.writeText("Tipo: Atualizado", header);
+                            // myDoc.writeText(`Hora: ${order.identification}`, header);
+                            myDoc.writeText('=========== Produtos ==========', contentBorder);
+                            myDoc.writeText("" + (items === null || items === void 0 ? void 0 : items.products), contentStyle);
+                            myDoc.writeText('=========== Bebidas ===========', contentBorder);
+                            myDoc.writeText("" + (items === null || items === void 0 ? void 0 : items.drinks), contentStyle);
+                            myDoc.writeText('', contentBorder);
+                            myDoc.writeText('========== Observação =========', contentStyle);
+                            myDoc.writeText("\n- " + (order.note ? order.note : 'Nenhuma.') + "\n", contentStyle);
+                            myDoc.writeText("- " + date, contentStyle);
+                            content = myDoc.createDocument();
+                            buffer = Buffer.from(content, 'binary');
+                            dir = process.env.NODE_ENV === 'test'
+                                ? path_1.default.resolve(__dirname, '..', '..', '__tests__', 'recipes')
+                                : path_1.default.resolve('commands', 'commandsCreate');
+                            fs_1.default.writeFile(dir + "/" + identification + ".rtf", buffer, { encoding: 'utf-8', flag: 'w' }, function (err) {
                                 if (err)
                                     return res.status(400).json("" + err);
                                 return res.status(200).json('success');
-                            })];
-                    case 3:
-                        _b.sent();
-                        return [3 /*break*/, 5];
-                    case 4: return [2 /*return*/, res.status(400).json('There are no items')];
-                    case 5: return [2 /*return*/];
+                            });
+                        }
+                        else {
+                            return [2 /*return*/, res.status(400).json('There are no items')];
+                        }
+                        return [2 /*return*/];
                 }
             });
         });

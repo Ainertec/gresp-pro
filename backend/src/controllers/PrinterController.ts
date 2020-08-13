@@ -122,12 +122,11 @@ class PrinterController {
 
       const buffer = Buffer.from(content, 'binary');
 
-      const dir =
-        process.env.NODE_ENV === 'test'
-          ? path.resolve(__dirname, '..', '..', '__tests__', 'recipes')
-          : process.env.DIR_PRODUCTION;
+      const dir = process.env.NODE_ENV === 'test'
+        ? path.resolve(__dirname, '..', '..', '__tests__', 'recipes')
+        : path.resolve('commands', 'commandsCreate');
 
-      await fs.writeFile(
+      fs.writeFile(
         `${dir}/${identification}.rtf`,
         buffer,
         { encoding: 'utf-8', flag: 'w' },
