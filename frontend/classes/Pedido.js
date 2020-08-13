@@ -34,63 +34,84 @@ function ligacaoPedidoFacede(tipo) {
 //funcao tela de digitar identificacao do pedido
 function telaDigitarPedido(identificacao) {
 
-    let codigoHTML = '';
+    let codigoHTML = ``;
 
-    codigoHTML += '<div class="card-deck col-8 mx-auto d-block">'
-    codigoHTML += '<div class="input-group mb-3">'
-    codigoHTML += '<label class="h5" for="identificacao" style="margin-right: 15px">Buscar</label>'
+    codigoHTML += `<div class="card-deck col-8 mx-auto d-block">
+        <div class="input-group mb-3">
+            <label class="h5" for="identificacao" style="margin-right: 15px">Buscar</label>`
     if (identificacao == null) {
-        codigoHTML += '<input id="identificacao" type="Number" class="form-control mousetrap" placeholder="Número Pedido">'
-        codigoHTML += `<button onclick="if(validaDadosCampo(['#identificacao'])){efeitoPaginaPedido(); setTimeout(function(){$('#escondeDados4').slideDown(300);},300); buscarPedido()}else{mensagemDeErro('Informe um numero de pedido!'); mostrarCamposIncorrreto(['identificacao']);}" type="button" class="btn btn-outline-info">`
-        codigoHTML += '<span class="fas fa-search"></span> Buscar Pedido'
-        codigoHTML += '</button>'
+        codigoHTML += `<input id="identificacao" type="Number" class="form-control mousetrap" placeholder="Número Pedido">
+            <button onclick="if(validaDadosCampo(['#identificacao'])){efeitoPaginaPedido(); setTimeout(function(){$('#escondeDados4').slideDown(300);},300); buscarPedido()}else{mensagemDeErro('Informe um numero de pedido!'); mostrarCamposIncorrreto(['identificacao']);}" type="button" class="btn btn-outline-info">
+                <span class="fas fa-search"></span> Buscar Pedido
+            </button>`
     } else {
-        codigoHTML += `<input id="identificacao" type="Number" class="form-control mousetrap" value=${identificacao}>`
-        codigoHTML += `<button onclick="if(validaDadosCampo(['#identificacao'])){efeitoPaginaPedido(); setTimeout(function(){$('#escondeDados4').slideDown(300);},300); buscarPedido();}else{mensagemDeErro('Informe um numero de pedido!'); mostrarCamposIncorrreto(['identificacao']);}" type="button" class="btn btn-outline-info">`
-        codigoHTML += '<span class="fas fa-search"></span> Buscar Pedido'
-        codigoHTML += '</button>'
+        codigoHTML += `<input id="identificacao" type="Number" class="form-control mousetrap" value=${identificacao}>
+            <button onclick="if(validaDadosCampo(['#identificacao'])){efeitoPaginaPedido(); setTimeout(function(){$('#escondeDados4').slideDown(300);},300); buscarPedido();}else{mensagemDeErro('Informe um numero de pedido!'); mostrarCamposIncorrreto(['identificacao']);}" type="button" class="btn btn-outline-info">
+                <span class="fas fa-search"></span> Buscar Pedido
+            </button>`
+
         setTimeout(function () { if (validaDadosCampo(['#identificacao'])) { efeitoPaginaPedido(); setTimeout(function () { $('#escondeDados4').slideDown(300); }, 300); buscarPedido() } else { mensagemDeErro('Informe um numero de pedido!'); } }, 300);
     }
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
 
-    codigoHTML += '<div class="row">'
-    codigoHTML += '<div class="col border border-secondary rounded bg-white" style="padding: 0px">'
-
-    codigoHTML += '<div class="col-12 layer1" style="position: relative; height: 69vh; z-index: 1; overflow: scroll; margin-right: 0px; padding: 0px">'
-    codigoHTML += '<div class="col-12 rounded mx-auto" id="escondeDados2" style="margin-top: 10px; padding: 0px">'
-    codigoHTML += '<h5 style="margin-top:20px; margin-left: 5px">Produtos do pedido</h5>'
-    codigoHTML += '<div style="margin-top:20px; padding: 5px" class="col-12 rounded mx-auto d-block"><table class="table table-light table-sm"><thead class="thead-dark"><tr><th scope="col">Nome</th><th scope="col">Preço</th><th scope="col">Quantidade</th><th scope="col">#</th></tr></thead><tbody id="tabelaProdutos"></tbody></table></div>'
-    codigoHTML += '</div>'
-    codigoHTML += '<div class="col-12 rounded mx-auto" id="escondeDados3" style="margin-top: 10px; padding: 0px">'
-    codigoHTML += '<h5 style="margin-top:20px; margin-left: 5px">Bebidas do pedida</h5>'
-    codigoHTML += '<div style="margin-top:10px; padding: 5px" class="col-12 rounded mx-auto d-block"><table class="table table-light table-sm"><thead class="thead-dark"><tr><th scope="col">Nome</th><th scope="col">Preço</th><th scope="col">Quantidade</th><th scope="col">#</th></tr></thead><tbody id="tabelaBebidas"></tbody></table></div>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-
-    codigoHTML += '</div>'
-    codigoHTML += '<div class="col border border-secondary rounded bg-white" style="padding: 0px; margin-left: 2px">'
-
-    codigoHTML += '<div class="col-12 rounded mx-auto" id="escondeDados1" style="margin-top: 10px;">'
-    codigoHTML += '<h3 id="valorTotal"></h3>'
-    codigoHTML += '<hr class="my-6 bg-dark">'
-    codigoHTML += '</div>'
-    codigoHTML += '<div class="col-12 rounded mx-auto" id="escondeDados4" style="margin-top: 10px; padding: 7px">'
-    codigoHTML += '<div class="col-12 layer1" style="position: relative; height: 45vh; z-index: 1; overflow: scroll; margin-right: 0px; padding: 5px">'
-    codigoHTML += '<div class="col-11 rounded mx-auto d-block" style="margin-bottom: 40px"><button onclick="telaBuscaeExibirItens();" class="btn btn-warning btn-block"><span class="fas fa-utensils"> Adicionar produtos e bebidas <span class="fas fa-wine-glass-alt"></span></button></div>'
-    codigoHTML += '<hr class="my-6 bg-dark">'
-    codigoHTML += '<h5 style="margin-top:10px; margin-left: 10px">Observações</h5>'
-    codigoHTML += '<textArea id="observacao" class="form-control col-11 rounded mx-auto d-block border border-dark mousetrap" rows="5"></textArea>'
-    codigoHTML += '</div>'
-    codigoHTML += '<hr class="my-6 bg-dark">'
-    codigoHTML += '<div id="botaoFinalizarPedido" style="margin-top:10px" class="col-11 rounded mx-auto d-block"></div>'
-    codigoHTML += '</div>'
-
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-
-
-
+    codigoHTML += `</div>
+        </div>
+        <div class="row">
+            <div class="col border border-secondary rounded bg-white" style="padding: 0px">
+                <div class="col-12 layer1" style="position: relative; height: 69vh; z-index: 1; overflow: scroll; margin-right: 0px; padding: 0px">
+                    <div class="col-12 rounded mx-auto" id="escondeDados2" style="margin-top: 10px; padding: 0px">
+                        <h5 style="margin-top:20px; margin-left: 5px"><span class="fas fa-utensils"></span> Produtos do pedido</h5>
+                        <div style="margin-top:20px; padding: 5px" class="col-12 rounded mx-auto d-block">
+                            <table class="table table-light table-sm">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">Nome</th>
+                                        <th scope="col">Preço</th>
+                                        <th scope="col">Quantidade</th>
+                                        <th scope="col">#</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaProdutos">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-12 rounded mx-auto" id="escondeDados3" style="margin-top: 10px; padding: 0px">
+                        <h5 style="margin-top:20px; margin-left: 5px"><span class="fas fa-wine-glass-alt"></span> Bebidas do pedida</h5>
+                        <div style="margin-top:10px; padding: 5px" class="col-12 rounded mx-auto d-block">
+                            <table class="table table-light table-sm">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">Nome</th>
+                                        <th scope="col">Preço</th>
+                                        <th scope="col">Quantidade</th>
+                                        <th scope="col">#</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaBebidas">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col border border-secondary rounded bg-white" style="padding: 0px; margin-left: 2px">
+                <div class="col-12 rounded mx-auto" id="escondeDados1" style="margin-top: 10px;">
+                    <h3 id="valorTotal"></h3>
+                    <hr class="my-6 bg-dark">
+                </div>
+                <div class="col-12 rounded mx-auto" id="escondeDados4" style="margin-top: 10px; padding: 7px">
+                    <div class="col-12 layer1" style="position: relative; height: 40vh; z-index: 1; overflow: scroll; margin-right: 0px; padding: 5px">
+                        <div class="col-11 rounded mx-auto d-block" style="margin-bottom: 40px"><button onclick="telaBuscaeExibirItens();" class="btn btn-warning btn-block"><span class="fas fa-utensils"> Adicionar produtos e bebidas <span class="fas fa-wine-glass-alt"></span></button></div>
+                            <hr class="my-6 bg-dark">
+                            <h5 style="margin-top:10px; margin-left: 10px">Observações</h5>
+                            <textArea id="observacao" class="form-control col-11 rounded mx-auto d-block border border-dark mousetrap" rows="5"></textArea>
+                        </div>
+                        <hr class="my-6 bg-dark">
+                        <div id="botaoFinalizarPedido" style="margin-top:10px" class="col-11 rounded mx-auto d-block"></div>
+                        <div id="botaoReimprimir" style="margin-top:10px" class="col-11 rounded mx-auto d-block"></div>
+                    </div>
+                </div>
+            </div>`
 
 
     document.getElementById('janela2').innerHTML = codigoHTML;
@@ -102,7 +123,7 @@ function telaDigitarPedido(identificacao) {
 function telaLeituraDeQrCodePedido() {
     let codigoHTML = '';
 
-    codigoHTML += '<h4 class="text-center">Leitura QR Code</h4>'
+    codigoHTML += '<h4 class="text-center"><span class="fas fa-qrcode"></span> Leitura QR Code</h4>'
     codigoHTML += '<video id="preview" class="mx-auto d-block" style="margin-top:30px; background-color:#000; width:40vw; height:30vw; border-radius:30px;"></video>'
     codigoHTML += '<button onclick="telaLeituraDeQrCodePedido();" class="btn btn-outline-dark rounded mx-auto d-block" style="margin-top:15px"><span class="fas fa-sync"></span> Atualizar</button>'
 
@@ -134,7 +155,7 @@ async function telaExibirTodosOsPedidos() {
     let codigoHTML = '', json = await requisicaoGET("orders", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false)
 
-    codigoHTML += '<h4 class="text-center" style="margin-top:30px">Lista de Pedidos</h4>'
+    codigoHTML += '<h4 class="text-center" style="margin-top:30px"><span class="fas fa-clipboard-list"></span> Lista de pedidos</h4>'
     codigoHTML += '<table class="table table-light text-center col-10 mx-auto table-sm" style="margin-top:50px">'
     codigoHTML += '<thead class="thead-dark"><tr><th scope="col">Número</th><th scope="col">Valor Total</th><th scope="col">Data</th><th scope="col">#</th></tr></thead>'
     codigoHTML += '<tbody>'
@@ -143,7 +164,7 @@ async function telaExibirTodosOsPedidos() {
         codigoHTML += `<td class="table-info"><strong>${item.identification}</strong></td>`
         codigoHTML += `<td class="table-warning text-danger"><strong>R$ ${(item.total).toFixed(2)}</strong></td>`
         codigoHTML += `<td class="table-warning"><strong>${(item.updatedAt).split('.')[0]}</strong></td>`
-        codigoHTML += `<td><button class="btn btn-primary" onclick="telaDigitarPedido(this.value)" value=${item.identification}><span class="fas fa-edit iconsTam"></span></button></td>`
+        codigoHTML += `<td><button class="btn btn-primary btn-sm" onclick="telaDigitarPedido(this.value)" value=${item.identification}><span class="fas fa-check"></span> Abrir</button></td>`
         codigoHTML += '</tr>'
     });
     codigoHTML += '</tbody>'
@@ -182,6 +203,8 @@ async function buscarPedido() {
             document.getElementById('observacao').innerHTML = json.data.note;
             $('#escondeDados4').slideDown(300);
             botaoDeConfirmaçãoDePedido(`confirmarAcao('Atualizar este pedido!', 'cadastrarAtualizarPedido(this.value)', 'atualizar');`);
+            botaoDeConfirmaçãoDePedido(`confirmarAcao('Reimprimir pedido!', 'cadastrarAtualizarPedido(this.value)', 'atualizar');`);
+            botaoDeReimprimirDePedido();
             mensagemDeAviso('Pedido pronto para atualização!')
         } else {
             botaoDeConfirmaçãoDePedido(`confirmarAcao('Cadastrar este pedido!','cadastrarAtualizarPedido(this.value)', 'cadastrar');`);
@@ -200,6 +223,18 @@ function botaoDeConfirmaçãoDePedido(funcao) {
     codigoHTML += '</button>'
 
     document.getElementById('botaoFinalizarPedido').innerHTML = codigoHTML;
+
+}
+
+//funcao para criar sub menu de opcoes
+function botaoDeReimprimirDePedido() {
+    let codigoHTML = '';
+
+    codigoHTML += `<button id="botaoReimprimirPedido" onclick="confirmarAcao('Reimprimir este pedido!','reimprimirPedido();', '');" type="button" class="btn btn-outline-dark btn-block">`
+    codigoHTML += '<span class="fas fa-print"></span> Reimprimir Pedido'
+    codigoHTML += '</button>'
+
+    document.getElementById('botaoReimprimir').innerHTML = codigoHTML;
 
 }
 
@@ -241,9 +276,9 @@ function gerarTabeladeItensInseridos(json, quantidadeItem, pedidoTipo) {
 
     codigoHTML = `<tr scope="row" id="item${json._id}">`
     if (json.type == 'Produto') {
-        codigoHTML += `<td class="col-md-5 table-info"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(30, json.name)}</strong></td>`
+        codigoHTML += `<td class="col-md-5 table-info" title="${json.name}"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(30, json.name)}</strong></td>`
     } else {
-        codigoHTML += `<td class="col-md-5 table-info"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(30, json.name)}</strong></td>`
+        codigoHTML += `<td class="col-md-5 table-info" title="${json.name}><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(30, json.name)}</strong></td>`
     }
     codigoHTML += `<td class="col-md-2 table-warning text-danger"><strong>R$${(parseFloat(json.price)).toFixed(2)}</strong></td>`
     codigoHTML += `<td class="col-md-1 table-warning"><input class="form-control col-md-8 form-control-sm mousetrap" id="quantidade${json._id}" type="Number" value=${parseInt(quantidadeItem)}></td>`
@@ -311,46 +346,44 @@ function liberarSubMenu() {
 
 //funcao responsavel por gerar a tela de busca de novo itens para o pedido
 function telaBuscaeExibirItens() {
-    let codigoHTML = '';
+    let codigoHTML = ``;
 
-    codigoHTML += '<div class="modal" id="modalListaItensPedido" style="width: 99vw" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">'
-    codigoHTML += '<div class="modal-dialog modal-lg float-right" style="width: 42vw" role="document">'
-    codigoHTML += '<div class="modal-content" style="width: 42vw; height: 90vh; margin-top: 15px;">'
-    codigoHTML += '<div class="modal-header">'
-    codigoHTML += '<h5 class="modal-title">Produtos e Bebidas</h5>'
-    codigoHTML += '<button onclick="limparModal();" type="button" class="close" data-dismiss="modal" aria-label="Close">'
-    codigoHTML += '<span aria-hidden="true">&times;</span>'
-    codigoHTML += '</button>'
-    codigoHTML += '</div>'
-    codigoHTML += '<div class="modal-body">'
-
-    codigoHTML += '<form>'
-    codigoHTML += '<div class="form-row">'
-    codigoHTML += '<input id="nome" type="text" class="form-control col-md-9 mousetrap" placeholder="Nome Produto">'
-    codigoHTML += `<button onclick="if(validaDadosCampo(['#nome'])){$('#resposta').slideUp(300); setTimeout(function(){listaItens('nome')},300);}else{mensagemDeErro('Preencha o campo de busca!'); mostrarCamposIncorrreto(['nome']);}" type="button" class="btn btn-outline-info col-md-3">`
-    codigoHTML += '<span class="fas fa-search"></span> Buscar'
-    codigoHTML += '</button>'
-    codigoHTML += '<br/>'
-    codigoHTML += `<button onclick="$('#resposta').slideUp(300); setTimeout(function(){listaItens('todos')},300)" type="button" class="btn btn-outline-info btn-block" style="margin-top:10px;">`
-    codigoHTML += '<span class="fas fa-search-plus"></span> Exibir todos'
-    codigoHTML += '</button>'
-    codigoHTML += '</div>'
-    codigoHTML += '</form>'
-    codigoHTML += '<div class="row">'
-    codigoHTML += '<div class="col">'
-    codigoHTML += '<div id="respostaProduto" style="margin-top: 10px;"></div>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-    codigoHTML += '<div class="row">'
-    codigoHTML += '<div class="col">'
-    codigoHTML += '<div id="respostaBebida" style="margin-top: 10px;"></div>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
+    codigoHTML += `<div class="modal" id="modalListaItensPedido" style="width: 99vw" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg float-right" style="width: 42vw" role="document">
+            <div class="modal-content" style="width: 42vw; height: 90vh; margin-top: 15px;">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span class="fas fa-utensils"></span><span class="fas fa-wine-glass-alt"></span> Produtos e Bebidas</h5>
+                    <button onclick="limparModal();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-row">
+                            <input id="nome" type="text" class="form-control col-md-9 mousetrap" placeholder="Nome do produto">
+                            <button onclick="if(validaDadosCampo(['#nome'])){$('#resposta').slideUp(300); setTimeout(function(){listaItens('nome')},300);}else{mensagemDeErro('Preencha o campo de busca!'); mostrarCamposIncorrreto(['nome']);}" type="button" class="btn btn-outline-info col-md-3">
+                                <span class="fas fa-search"></span> Buscar
+                            </button>
+                            <br/>
+                            <button onclick="$('#resposta').slideUp(300); setTimeout(function(){listaItens('todos')},300)" type="button" class="btn btn-outline-info btn-block" style="margin-top:10px;">
+                                <span class="fas fa-search-plus"></span> Exibir todos
+                            </button>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="col">
+                            <div id="respostaProduto" style="margin-top: 10px;"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div id="respostaBebida" style="margin-top: 10px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`
 
 
     document.getElementById('modal').innerHTML = codigoHTML;
@@ -361,7 +394,7 @@ function telaBuscaeExibirItens() {
 //funcao para criar lista de produtos para adicionar
 async function listaItens(tipoBusca) {
 
-    let codigoHTML = '', codigoHTML2 = '', json = null, json2 = null;
+    let codigoHTML = ``, codigoHTML2 = ``, json = null, json2 = null;
 
     if (tipoBusca == 'todos') {
         await aguardeCarregamento(true)
@@ -373,44 +406,57 @@ async function listaItens(tipoBusca) {
         await aguardeCarregamento(false)
     }
 
-    codigoHTML += '<h5 class="text-center" style="margin-top:20px">Lista produtos</h5>'
-    codigoHTML += '<div class="col-12 layer1" style="position: relative; height: 25vh; z-index: 1; overflow: scroll; margin-right: 0px; padding: 0px">'
-    codigoHTML += '<table class="table table-light table-sm">'
-    codigoHTML += '<thead class="thead-dark"><tr><th scope="col">Nome</th><th scope="col">Preço</th><th scope="col">Quantidade</th><th scope="col">#</th></tr></thead>'
-    codigoHTML += '<tbody>'
+    codigoHTML += `<h5 class="text-center" style="margin-top:20px"><span class="fas fa-utensils"></span> Lista de produtos</h5>
+        <div class="col-12 layer1" style="position: relative; height: 25vh; z-index: 1; overflow: scroll; margin-right: 0px; padding: 0px">
+            <table class="table table-light table-sm">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Preço</th>
+                        <th scope="col">Quantidade</th>
+                        <th scope="col">#</th>
+                    </tr>
+                </thead>
+                <tbody>`
     json.data.forEach(function (item) {
         if (!item.drink) {
-            codigoHTML += '<tr>'
-            codigoHTML += `<td class="col-md-5 table-secondary"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(30, item.name)}</strong></td>`
-            codigoHTML += `<td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>`
-            codigoHTML += `<td class="col-md-2 table-warning"><input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" /></td>`
-            codigoHTML += `<td class="col-md-2"><button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('Produto', '${item._id}', '#quantidadeAdicionar${item._id}', 'novo')}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm"><span class="fas fa-plus"></span></button></td>`
-            codigoHTML += '</tr>'
+            codigoHTML += `<tr>
+                <td class="col-md-5 table-secondary" title="${item.name}"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(30, item.name)}</strong></td>
+                <td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>
+                <td class="col-md-2 table-warning"><input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" /></td>
+                <td class="col-md-2"><button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('Produto', '${item._id}', '#quantidadeAdicionar${item._id}', 'novo')}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm"><span class="fas fa-plus"></span></button></td>
+            </tr>`
         }
     });
-    codigoHTML += '</tbody>'
-    codigoHTML += '</table>'
-    codigoHTML += '</div>'
+    codigoHTML += `</tbody>
+        </table>
+    </div>`
 
-
-    codigoHTML2 += '<h5 class="text-center" style="margin-top:20px">Lista bebidas</h5>'
-    codigoHTML2 += '<div class="col-12 layer1" style="position: relative; height: 25vh; z-index: 1; overflow: scroll; margin-right: 0px; padding: 0px">'
-    codigoHTML2 += '<table class="table table-light table-sm">'
-    codigoHTML2 += '<thead class="thead-dark"><tr><th scope="col">Nome</th><th scope="col">Preço</th><th scope="col">Quantidade</th><th scope="col">#</th></tr></thead>'
-    codigoHTML2 += '<tbody>'
+    codigoHTML2 += `<h5 class="text-center" style="margin-top:20px"><span class="fas fa-wine-glass-alt"></span> Lista de bebidas</h5>
+        <div class="col-12 layer1" style="position: relative; height: 25vh; z-index: 1; overflow: scroll; margin-right: 0px; padding: 0px">
+            <table class="table table-light table-sm">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Preço</th>
+                        <th scope="col">Quantidade</th>
+                        <th scope="col">#</th>
+                    </tr>
+                </thead>
+                <tbody>`
     json.data.forEach(function (item) {
         if (item.drink) {
-            codigoHTML2 += '<tr>'
-            codigoHTML2 += `<td class="col-md-5 table-secondary"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(30, item.name)}</strong></td>`
-            codigoHTML2 += `<td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>`
-            codigoHTML2 += `<td class="col-md-2 table-warning"><input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" /></td>`
-            codigoHTML2 += `<td class="col-md-2"><button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('Bebida', '${item._id}', '#quantidadeAdicionar${item._id}', 'novo')}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm"><span class="fas fa-plus"></span></button></td>`
-            codigoHTML2 += '</tr>'
+            codigoHTML2 += `<tr>
+                <td class="col-md-5 table-secondary" title="${item.name}"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(30, item.name)}</strong></td>
+                <td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>
+                <td class="col-md-2 table-warning"><input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" /></td>
+                <td class="col-md-2"><button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('Bebida', '${item._id}', '#quantidadeAdicionar${item._id}', 'novo')}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm"><span class="fas fa-plus"></span></button></td>
+            </tr>`
         }
     });
-    codigoHTML2 += '</tbody>'
-    codigoHTML2 += '</table>'
-    codigoHTML2 += '</div>'
+    codigoHTML2 += `</tbody>
+        </table>
+    </div>`
 
     document.getElementById('respostaProduto').innerHTML = codigoHTML;
     document.getElementById('respostaBebida').innerHTML = codigoHTML2;
@@ -524,6 +570,21 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
             mensagemDeErro('Não foi possível atualizar o pedido!')
         }
     }
+}
+
+//funcao responsavel por reimprimir o pedido
+async function reimprimirPedido() {
+    let newOrder = `{
+        "identification":${$('#identificacao').val()},
+        "oldItems": [],
+        "type":true
+    }`
+
+    await aguardeCarregamento(true)
+    await requisicaoPOST(`printer`, JSON.parse(newOrder), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await aguardeCarregamento(true)
+    await mensagemDeAviso("Reimprimindo pedido...");
+
 }
 
 //funcao para inicializar/zerar todos os componentes da tela

@@ -17,5 +17,5 @@ function ajudaInformacoes() {
        <p><strong>esc</strong> -> Efetuar logout.</p> 
        <p>========================</p>`
 
-    document.getElementById(janela2).innerHTML = codigoHTML;
+    document.getElementById('janela2').innerHTML = codigoHTML;
 }

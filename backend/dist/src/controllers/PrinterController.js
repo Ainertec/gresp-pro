@@ -92,6 +92,7 @@ var PrinterController = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _a = req.body, identification = _a.identification, oldItems = _a.oldItems, type = _a.type;
+                        console.log(oldItems);
                         return [4 /*yield*/, Order_1.default.findOne({ closed: false, identification: identification })];
                     case 1:
                         order = _b.sent();
@@ -144,7 +145,7 @@ var PrinterController = /** @class */ (function () {
                         myDoc.writeText("" + (items === null || items === void 0 ? void 0 : items.drinks), contentStyle);
                         myDoc.writeText('', contentBorder);
                         myDoc.writeText('========== Observação =========', contentStyle);
-                        myDoc.writeText("- " + order.note + "\n", contentStyle);
+                        myDoc.writeText("\n- " + (order.note ? order.note : 'Nenhuma.') + "\n", contentStyle);
                         myDoc.writeText("- " + date, contentStyle);
                         content = myDoc.createDocument();
                         buffer = Buffer.from(content, 'binary');

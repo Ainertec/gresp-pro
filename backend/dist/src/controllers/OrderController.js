@@ -116,7 +116,7 @@ var OrderController = /** @class */ (function () {
     };
     OrderController.prototype.update = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, items, note, identification, orderInformations, finalPrice, order;
+            var _a, items, note, identification, orderInformations, finalPrice, order, newOrder;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -132,18 +132,23 @@ var OrderController = /** @class */ (function () {
                                 total: Number(finalPrice.toFixed(2)),
                                 note: note,
                             }, {
-                                new: true,
+                                new: false,
                             })];
                     case 2:
                         order = _b.sent();
+                        return [4 /*yield*/, Order_1.default.findOne({
+                                identification: identification,
+                                closed: false,
+                            }).populate('items.product')];
+                    case 3:
+                        newOrder = _b.sent();
                         if (!order)
                             return [2 /*return*/, res.status(400).json('identification does not exist')];
-                        return [4 /*yield*/, order.populate('items.product').execPopulate()];
-                    case 3:
-                        _b.sent();
-                        req.io.emit('updatedOrder', order);
+                        // await order.populate('items.product').execPopulate();
+                        req.io.emit('updatedOrder', newOrder);
                         return [2 /*return*/, res.json({
-                                order: order,
+                                order: newOrder,
+                                oldItems: order.items,
                                 stockAlert: orderInformations.alert.length === 0 ? undefined : orderInformations.alert,
                             })];
                 }

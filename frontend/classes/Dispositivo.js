@@ -9,7 +9,7 @@ function telaDeConfiguracaoDispositivo() {
     codigoHTML += '<div class="modal-dialog modal-dialog-scrollable" role="document">'
     codigoHTML += '<div class="modal-content">'
     codigoHTML += '<div class="modal-header">'
-    codigoHTML += '<h5 class="modal-title" id="modalDispositivo">Configurar Dispositivo</h5>'
+    codigoHTML += '<h5 class="modal-title" id="modalDispositivo"><span class="fas fa-mobile-alt"></span> Configurar Dispositivo</h5>'
     codigoHTML += '<button onclick="limparModal();" type="button" class="close" data-dismiss="modal" aria-label="Close">'
     codigoHTML += '<span aria-hidden="true">&times;</span>'
     codigoHTML += '</button>'

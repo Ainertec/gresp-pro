@@ -16,42 +16,38 @@ async function ligacaoRelatorioCaixaFacede() {
 
 //funcao para gerar tela de busca de relatorio de caixa
 function telaRelatorioDeCaixa() {
-    let codigoHTML = '';
+    let codigoHTML = ``;
 
-    codigoHTML += '<h3 class="text-center">Relatórios</h3>'
-    codigoHTML +=
-        '<div class="card-deck col-6 mx-auto d-block" style="margin-top:30px;">'
-    codigoHTML += '<div class="row">'
-    codigoHTML += '<div class="col">'
-    codigoHTML += '<h5 class="text-center">Data inicial</h5>'
-    codigoHTML += '<div class="input-group mb-3">'
-    codigoHTML +=
-        '<input id="dataInicio" type="date" class="form-control mousetrap" aria-label="Recipients username" aria-describedby="botaoBuscar">'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-    codigoHTML += '<div class="col">'
-    codigoHTML += '<h5 class="text-center">Data final</h5>'
-    codigoHTML += '<div class="input-group mb-3">'
-    codigoHTML +=
-        '<input id="dataFim" type="date" class="form-control mousetrap" aria-label="Recipients username" aria-describedby="botaoBuscar">'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-    codigoHTML +=
-        '<div class="btn-group btn-lg btn-block" role="group" aria-label="Basic example">'
-    codigoHTML +=
-        `<button onclick="if(validaDadosCampo(['#dataInicio','#dataFim'])){gerarGraficoLucroMensal('visualizar'); gerarGraficoQuantidadeVendasMensal('visualizar'); tabelaDeRelatorioCaixa('visualizar');}else{mensagemDeErro('Informe um Periodo!'); mostrarCamposIncorrreto(['dataInicio','dataFim']);}" type="button" class="btn btn-outline-primary"><span class="fas fa-search"></span> Relatórios periódicos</button>`
-    codigoHTML +=
-        '<button onclick="gerarGraficoLucroTotal(); gerarGraficoDemonstrativoVendaPorItem();" type="button" class="btn btn-outline-primary"><span class="fas fa-search"></span> Relatórios completos</button>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-
-
-    codigoHTML += '<div id="grafico0" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>'
-    codigoHTML += '<div id="grafico1" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>'
-    codigoHTML += '<div id="grafico2" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>'
-    codigoHTML += '<div id="grafico3" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>'
-    codigoHTML += '<div id="listaItens" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>'
+    codigoHTML += `<h3 class="text-center"><span class="fas fa-chart-line"></span> Relatórios</h3>
+        <div class="card-deck col-6 mx-auto d-block" style="margin-top:30px;">
+            <div class="row">
+                <div class="col">
+                    <h5 class="text-center">Data inicial</h5>
+                    <div class="input-group mb-3">
+                        <input id="dataInicio" type="date" class="form-control mousetrap" aria-label="Recipients username" aria-describedby="botaoBuscar">
+                    </div>
+                </div>
+                <div class="col">
+                    <h5 class="text-center">Data final</h5>
+                    <div class="input-group mb-3">
+                        <input id="dataFim" type="date" class="form-control mousetrap" aria-label="Recipients username" aria-describedby="botaoBuscar">
+                    </div>
+                </div>
+            </div>
+            <div class="btn-group btn-lg btn-block" role="group" aria-label="Basic example">
+                <button onclick="if(validaDadosCampo(['#dataInicio','#dataFim'])){gerarGraficoLucroMensal('visualizar'); gerarGraficoQuantidadeVendasMensal('visualizar'); tabelaDeRelatorioCaixa('visualizar');}else{mensagemDeErro('Informe um Periodo!'); mostrarCamposIncorrreto(['dataInicio','dataFim']);}" type="button" class="btn btn-outline-primary">
+                    <span class="fas fa-search"></span> Relatórios periódicos
+                </button>
+                <button onclick="gerarGraficoLucroTotal(); gerarGraficoDemonstrativoVendaPorItem();" type="button" class="btn btn-outline-primary">
+                    <span class="fas fa-search"></span> Relatórios completos
+                </button>
+            </div>
+        </div>
+        <div id="grafico0" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
+        <div id="grafico1" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
+        <div id="grafico2" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
+        <div id="grafico3" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
+        <div id="listaItens" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>`
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
