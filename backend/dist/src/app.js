@@ -39,7 +39,6 @@ var App = /** @class */ (function () {
         var _this = this;
         this.io.on('connection', function (socket) {
             socket.on('newFinished', function (data) {
-                console.log(data);
                 socket.broadcast.emit('hasFinished', data);
             });
         });

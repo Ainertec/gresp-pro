@@ -92,6 +92,7 @@ var PrinterController = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _a = req.body, identification = _a.identification, oldItems = _a.oldItems, type = _a.type;
+                        console.log(oldItems);
                         return [4 /*yield*/, Order_1.default.findOne({ closed: false, identification: identification })];
                     case 1:
                         order = _b.sent();
@@ -144,14 +145,14 @@ var PrinterController = /** @class */ (function () {
                         myDoc.writeText("" + (items === null || items === void 0 ? void 0 : items.drinks), contentStyle);
                         myDoc.writeText('', contentBorder);
                         myDoc.writeText('========== Observação =========', contentStyle);
-                        myDoc.writeText("- " + order.note + "\n", contentStyle);
+                        myDoc.writeText("\n- " + (order.note ? order.note : 'Nenhuma.') + "\n", contentStyle);
                         myDoc.writeText("- " + date, contentStyle);
                         content = myDoc.createDocument();
                         buffer = Buffer.from(content, 'binary');
                         dir = process.env.NODE_ENV === 'test'
                             ? path_1.default.resolve(__dirname, '..', '..', '__tests__', 'recipes')
                             : process.env.DIR_PRODUCTION;
-                        return [4 /*yield*/, fs_1.default.writeFile(dir + "/" + identification + ".rtf", buffer, { encoding: 'utf-8', flag: 'w' }, function (err) {
+                        return [4 /*yield*/, fs_1.default.writeFile(path_1.default.resolve(__dirname, '..', '..', '__tests__', 'recipes') + "/" + identification + ".rtf", buffer, { encoding: 'utf-8', flag: 'w' }, function (err) {
                                 if (err)
                                     return res.status(400).json("" + err);
                                 return res.status(200).json('success');
