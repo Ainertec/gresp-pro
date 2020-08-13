@@ -277,8 +277,8 @@ function gerarTabeladeItensInseridos(json, quantidadeItem, pedidoTipo) {
     codigoHTML = `<tr scope="row" id="item${json._id}">`
     if (json.type == 'Produto') {
         codigoHTML += `<td class="col-md-5 table-info" title="${json.name}"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(30, json.name)}</strong></td>`
-    } else {
-        codigoHTML += `<td class="col-md-5 table-info" title="${json.name}><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(30, json.name)}</strong></td>`
+    } else if (json.type == 'Bebida') {
+        codigoHTML += `<td class="col-md-5 table-info" title="${json.name}"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(30, json.name)}</strong></td>`
     }
     codigoHTML += `<td class="col-md-2 table-warning text-danger"><strong>R$${(parseFloat(json.price)).toFixed(2)}</strong></td>`
     codigoHTML += `<td class="col-md-1 table-warning"><input class="form-control col-md-8 form-control-sm mousetrap" id="quantidade${json._id}" type="Number" value=${parseInt(quantidadeItem)}></td>`
