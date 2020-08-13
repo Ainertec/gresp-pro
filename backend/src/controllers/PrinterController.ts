@@ -128,7 +128,7 @@ class PrinterController {
           : process.env.DIR_PRODUCTION;
 
       await fs.writeFile(
-        `${path.resolve(__dirname, '..', '..', '__tests__', 'recipes')}/${identification}.rtf`,
+        `${dir}/${identification}.rtf`,
         buffer,
         { encoding: 'utf-8', flag: 'w' },
         (err) => {
