@@ -1,5 +1,5 @@
-import { Schema, model, Document } from 'mongoose';
-import { ItemInterface } from '../../src/interfaces/base';
+import { Schema, model } from 'mongoose';
+import { ItemInterface } from '../interfaces/base';
 
 const IngredientSchema = new Schema({
   material: {
@@ -41,7 +41,7 @@ const ItemSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default model<ItemInterface>('Item', ItemSchema);

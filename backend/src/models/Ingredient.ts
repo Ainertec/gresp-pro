@@ -1,8 +1,8 @@
+/* eslint-disable no-param-reassign */
 import { Schema, model } from 'mongoose';
 import { IngredientInterface, ItemInterface } from '../interfaces/base';
 import Item from './Item';
 import getCost from '../utils/getItemsCost';
-import { item } from '../validations/itemSchema';
 
 const Unit = Object.freeze({
   kilogram: 'g',
@@ -44,7 +44,7 @@ const IngredientSchema = new Schema<IngredientInterface>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 Object.assign(IngredientSchema.statics, {
@@ -53,39 +53,50 @@ Object.assign(IngredientSchema.statics, {
 
 export { Unit };
 
-IngredientSchema.post<IngredientInterface>('findOneAndUpdate', async (document) => {
-  if (document) {
-    const ingredientID = document._id;
+IngredientSchema.post<IngredientInterface>(
+  'findOneAndUpdate',
+  async document => {
+    if (document) {
+      const ingredientID = document._id;
 
-    const items = await Item.find({ 'ingredients.material': { $in: ingredientID } });
-    await Promise.all(
-      items.map(async (item: ItemInterface) => {
-        if (item.ingredients) {
-          const cost = await getCost(item.ingredients);
-          item.cost = cost;
-          await item.save();
-        }
-      })
-    );
-  }
-});
+      const items = await Item.find({
+        'ingredients.material': { $in: ingredientID },
+      });
+      await Promise.all(
+        items.map(async (item: ItemInterface) => {
+          if (item.ingredients) {
+            const cost = await getCost(item.ingredients);
+            item.cost = cost;
+            await item.save();
+          }
+        }),
+      );
+    }
+  },
+);
 
-IngredientSchema.post<IngredientInterface>('findOneAndRemove', async (document) => {
-  if (document) {
-    const ingredientID = document._id;
-    const items = await Item.find({ 'ingredients.material': { $in: ingredientID } });
-    await Promise.all(
-      items.map(async (item: ItemInterface) => {
-        if (item.ingredients) {
-          const ingredientUpdated = item.ingredients.filter(
-            (ingredient) => String(ingredient.material) !== String(ingredientID)
-          );
-          item.ingredients = ingredientUpdated;
-          await item.save();
-        }
-      })
-    );
-  }
-});
+IngredientSchema.post<IngredientInterface>(
+  'findOneAndRemove',
+  async document => {
+    if (document) {
+      const ingredientID = document._id;
+      const items = await Item.find({
+        'ingredients.material': { $in: ingredientID },
+      });
+      await Promise.all(
+        items.map(async (item: ItemInterface) => {
+          if (item.ingredients) {
+            const ingredientUpdated = item.ingredients.filter(
+              ingredient =>
+                String(ingredient.material) !== String(ingredientID),
+            );
+            item.ingredients = ingredientUpdated;
+            await item.save();
+          }
+        }),
+      );
+    }
+  },
+);
 
 export default model<IngredientInterface>('Ingredient', IngredientSchema);

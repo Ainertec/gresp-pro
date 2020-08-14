@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import bcrypt from 'bcrypt';
 import { Document } from 'mongoose';
 
@@ -25,7 +26,7 @@ describe('Generate a hash password', () => {
     await User.deleteMany({});
   });
 
-  it('shuld encrypt user password', async () => {
+  it('should encrypt user password', async () => {
     const user = await factory.create<UserInterface>('User', {
       password: '123321',
     });

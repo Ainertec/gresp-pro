@@ -6,8 +6,7 @@ import { UserInterface } from '../../src/interfaces/base';
 import { closeConnection, openConnection } from '../utils/connection';
 import Token from '../utils/getToken';
 import factory from '../factories';
-import User from '../../src/models/User';
-import { Questions } from '../../src/models/User';
+import User, { Questions } from '../../src/models/User';
 
 const app = App.express;
 
@@ -40,7 +39,6 @@ describe('User Tests', () => {
   });
 
   it('should not create a admin user without admin privileges', async () => {
-    const token = await Token;
     const user = await factory.create<UserInterface>('User', {
       admin: false,
     });
@@ -61,7 +59,7 @@ describe('User Tests', () => {
 
   it('should not create a user with name already existent', async () => {
     const token = await Token;
-    const user = await factory.create<UserInterface>('User', {
+    await factory.create<UserInterface>('User', {
       name: 'Cleiton',
     });
 
@@ -97,7 +95,6 @@ describe('User Tests', () => {
   });
 
   it('should not update another user without admin privileges', async () => {
-    const token = await Token;
     const user = await factory.create<UserInterface>('User', {
       name: 'Cleiton',
     });
@@ -139,12 +136,11 @@ describe('User Tests', () => {
     expect(response.body).toEqual(
       expect.objectContaining({
         name: 'Cleiton',
-      })
+      }),
     );
   });
 
   it('should update a user without user provider', async () => {
-    const token = await Token;
     const user = await factory.create<UserInterface>('User');
     const user2 = await factory.create<UserInterface>('User', {
       admin: true,
@@ -165,12 +161,11 @@ describe('User Tests', () => {
       expect.objectContaining({
         name: user.name,
         response: 'Num sei',
-      })
+      }),
     );
   });
 
   it('should update a user without password provider', async () => {
-    const token = await Token;
     const user = await factory.create<UserInterface>('User');
     const user2 = await factory.create<UserInterface>('User', {
       admin: true,
@@ -190,7 +185,7 @@ describe('User Tests', () => {
     expect(response.body).toEqual(
       expect.objectContaining({
         name: 'Cleiton',
-      })
+      }),
     );
   });
 
@@ -238,7 +233,7 @@ describe('User Tests', () => {
         expect.objectContaining({
           name: 'Cleiton',
         }),
-      ])
+      ]),
     );
   });
 

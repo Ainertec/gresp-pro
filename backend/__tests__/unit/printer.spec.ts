@@ -1,6 +1,5 @@
 import request from 'supertest';
-import fs from 'fs';
-import path from 'path';
+
 import App from '../../src/app';
 import { OrderInterface, ItemInterface } from '../../src/interfaces/base';
 

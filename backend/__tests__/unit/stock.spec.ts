@@ -1,6 +1,13 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
+
 import request from 'supertest';
 import App from '../../src/app';
-import { OrderInterface, IngredientInterface, ItemInterface } from '../../src/interfaces/base';
+import {
+  OrderInterface,
+  IngredientInterface,
+  ItemInterface,
+} from '../../src/interfaces/base';
 
 import { closeConnection, openConnection } from '../utils/connection';
 import Token from '../utils/getToken';
@@ -41,7 +48,7 @@ describe('Stock controller', () => {
       ],
     });
 
-    const response = await request(app)
+    await request(app)
       .delete(`/orders/${order.identification}/dinheiro`)
       .set('Authorization', `Bearer ${token}`);
 
@@ -90,10 +97,13 @@ describe('Stock controller', () => {
       stock: 2000,
       name: 'farinha',
     });
-    const ingredient2 = await factory.create<IngredientInterface>('Ingredient', {
-      stock: 2000,
-      name: 'Chocolate',
-    });
+    const ingredient2 = await factory.create<IngredientInterface>(
+      'Ingredient',
+      {
+        stock: 2000,
+        name: 'Chocolate',
+      },
+    );
     const item = await factory.create<ItemInterface>('Item', {
       ingredients: [
         {
@@ -121,8 +131,9 @@ describe('Stock controller', () => {
 
     const orderArray = [item, item2];
 
-    for (const item of orderArray) {
-      if (item.ingredients) await subIngredientStock(item.ingredients, 2);
+    for (const orderItem of orderArray) {
+      if (orderItem.ingredients)
+        await subIngredientStock(orderItem.ingredients, 2);
     }
 
     const ingredientUpdated = await Ingredient.findOne({ _id: ingredient._id });
@@ -140,10 +151,13 @@ describe('Stock controller', () => {
       stock: 2000,
       name: 'farinha',
     });
-    const ingredient2 = await factory.create<IngredientInterface>('Ingredient', {
-      stock: 2000,
-      name: 'Chocolate',
-    });
+    const ingredient2 = await factory.create<IngredientInterface>(
+      'Ingredient',
+      {
+        stock: 2000,
+        name: 'Chocolate',
+      },
+    );
     const item = await factory.create<ItemInterface>('Item', {
       ingredients: [
         {

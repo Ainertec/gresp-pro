@@ -9,14 +9,16 @@ class KitchenController {
     const order = await Order.findOneAndUpdate(
       { identification, closed: false },
       { finished: true },
-      { new: true }
+      { new: true },
     ).populate('items.product');
 
     return res.json(order);
   }
 
   async index(req: Request, res: Response) {
-    const orders = await Order.find({ closed: false, finished: true }).populate('items.product');
+    const orders = await Order.find({ closed: false, finished: true }).populate(
+      'items.product',
+    );
     return res.json(orders);
   }
 }

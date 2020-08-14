@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { celebrate, Segments, Joi } from 'celebrate';
+import { celebrate } from 'celebrate';
 
 import UserController from './controllers/UserController';
 import SessionController from './controllers/SessionController';
@@ -19,8 +19,18 @@ import Authorization from './middlewares/Authorization';
 import session from './validations/sessionSchema';
 import serial from './validations/serialSchema';
 import { get, post } from './validations/forgotSchema';
-import { paramIdUser, user, userUpdate, paramName } from './validations/userSchema';
-import { item, paramIdItem, paramNameItem, queryPage } from './validations/itemSchema';
+import {
+  paramIdUser,
+  user,
+  userUpdate,
+  paramName,
+} from './validations/userSchema';
+import {
+  item,
+  paramIdItem,
+  paramNameItem,
+  queryPage,
+} from './validations/itemSchema';
 import {
   order,
   orderUpdate,
@@ -38,16 +48,28 @@ routes.post('/users/first', celebrate({ body: user }), UserController.store);
 
 // Serial
 
-routes.get('/serial_false', celebrate({ query: serial }), SerialController.exit);
+routes.get(
+  '/serial_false',
+  celebrate({ query: serial }),
+  SerialController.exit,
+);
 
 // Session
-routes.post('/sessions', celebrate({ body: session }), SessionController.create);
+routes.post(
+  '/sessions',
+  celebrate({ body: session }),
+  SessionController.create,
+);
 
 // Forgot Password
 
 routes.get('/forgot', celebrate({ query: get }), ForgotPasswordController.show);
 
-routes.post('/forgot', celebrate({ body: post }), ForgotPasswordController.store);
+routes.post(
+  '/forgot',
+  celebrate({ body: post }),
+  ForgotPasswordController.store,
+);
 
 routes.get('/users/questions', UserController.getQuestions);
 
@@ -56,26 +78,42 @@ routes.use(Authentication);
 // User
 
 routes.get('/users', UserController.index);
-routes.get('/users/:name', celebrate({ params: paramName }), UserController.show);
+routes.get(
+  '/users/:name',
+  celebrate({ params: paramName }),
+  UserController.show,
+);
 routes.post('/users', celebrate({ body: user }), UserController.create);
 routes.put(
   '/users/:id',
   celebrate({ params: paramIdUser, body: userUpdate }),
-  UserController.update
+  UserController.update,
 );
-routes.delete('/users/:id', celebrate({ params: paramIdUser }), UserController.delete);
+routes.delete(
+  '/users/:id',
+  celebrate({ params: paramIdUser }),
+  UserController.delete,
+);
 
 // Item
 
 routes.get(
   '/items/:name',
   celebrate({ params: paramNameItem, query: queryPage }),
-  ItemController.show
+  ItemController.show,
 );
 routes.get('/items', ItemController.index);
 routes.post('/items', celebrate({ body: item }), ItemController.create);
-routes.put('/items/:id', celebrate({ body: item, params: paramIdItem }), ItemController.update);
-routes.delete('/items/:id', celebrate({ params: paramIdItem }), ItemController.delete);
+routes.put(
+  '/items/:id',
+  celebrate({ body: item, params: paramIdItem }),
+  ItemController.update,
+);
+routes.delete(
+  '/items/:id',
+  celebrate({ params: paramIdItem }),
+  ItemController.delete,
+);
 
 // Ingredients
 
@@ -83,22 +121,22 @@ routes.get('/ingredients', IngredientController.index);
 routes.get(
   '/ingredients/:name',
   // celebrate({ params: validations.paramName }),
-  IngredientController.show
+  IngredientController.show,
 );
 routes.post(
   '/ingredients',
   // celebrate({ body: validations.ingredient }),
-  IngredientController.store
+  IngredientController.store,
 );
 routes.put(
   '/ingredients/:id',
   // celebrate({ body: validations.ingredient, params: validations.paramId }),
-  IngredientController.update
+  IngredientController.update,
 );
 routes.delete(
   '/ingredients/:id',
   // celebrate({ params: validations.paramId }),
-  IngredientController.delete
+  IngredientController.delete,
 );
 
 // Order
@@ -107,18 +145,18 @@ routes.get('/orders', OrderController.index);
 routes.get(
   '/orders/:identification',
   celebrate({ params: paramIdentification }),
-  OrderController.show
+  OrderController.show,
 );
 routes.post('/orders', celebrate({ body: order }), OrderController.create);
 routes.put(
   '/orders/:identification',
   celebrate({ body: orderUpdate, params: paramIdentification }),
-  OrderController.update
+  OrderController.update,
 );
 routes.delete(
   '/orders/:identification/:payment',
   celebrate({ params: paramIdenPayment }),
-  OrderController.delete
+  OrderController.delete,
 );
 
 // Kitchen
@@ -136,9 +174,17 @@ routes.use(Authorization);
 
 routes.delete('/reports', ReportController.delete);
 routes.get('/reports', celebrate({ query: report }), ReportController.show);
-routes.get('/reports/total', celebrate({ query: report }), ReportController.showTotal);
+routes.get(
+  '/reports/total',
+  celebrate({ query: report }),
+  ReportController.showTotal,
+);
 routes.get('/reports/all', ReportController.index);
 routes.get('/reports/products', ReportController.totalSoldProducts);
-routes.get('/reports/orders', celebrate({ query: report }), ReportController.showClosedOrders);
+routes.get(
+  '/reports/orders',
+  celebrate({ query: report }),
+  ReportController.showClosedOrders,
+);
 
 export default routes;

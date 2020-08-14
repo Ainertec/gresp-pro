@@ -1,8 +1,8 @@
 import 'dotenv';
-import express, { Request } from 'express';
+import express from 'express';
 import mongoose from 'mongoose';
 import { errors } from 'celebrate';
-import cors from 'cors';
+// import cors from 'cors';
 import socketio from 'socket.io';
 import http from 'http';
 
@@ -11,7 +11,9 @@ import { CustomRequest } from './interfaces/base';
 
 class App {
   public express: express.Application;
+
   public server: http.Server;
+
   public io: socketio.Server;
 
   public constructor() {
@@ -40,9 +42,10 @@ class App {
     this.express.use(routes);
     this.express.use(errors());
   }
+
   private webSocket() {
-    this.io.on('connection', (socket) => {
-      socket.on('newFinished', (data) => {
+    this.io.on('connection', socket => {
+      socket.on('newFinished', data => {
         socket.broadcast.emit('hasFinished', data);
       });
     });

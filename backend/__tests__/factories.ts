@@ -1,10 +1,9 @@
 import factory from 'factory-girl';
 import faker from 'faker';
-import User from '../src/models/User';
+import User, { Questions } from '../src/models/User';
 import Item from '../src/models/Item';
 import Order from '../src/models/Order';
 import Ingredient from '../src/models/Ingredient';
-import { Questions } from '../src/models/User';
 
 factory.define('User', User, {
   name: faker.name.firstName(),
@@ -45,7 +44,12 @@ factory.define('Order', Order, {
   closed: false,
   finished: false,
   payment: 'Dinhero',
-  items: [{ product: factory.assoc('Item', '_id'), quantity: faker.random.number(10) }],
+  items: [
+    {
+      product: factory.assoc('Item', '_id'),
+      quantity: faker.random.number(10),
+    },
+  ],
 });
 
 export default factory;

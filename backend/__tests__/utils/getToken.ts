@@ -1,5 +1,6 @@
-import factory from '../factories';
+/* eslint-disable camelcase */
 import { Document } from 'mongoose';
+import factory from '../factories';
 
 interface UserInterface extends Document {
   name: string;

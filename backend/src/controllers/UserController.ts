@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
-import User from '../models/User';
-import { Questions } from '../models/User';
+import User, { Questions } from '../models/User';
 
 interface CustomRequest extends Request {
   [userId: string]: any;
@@ -15,35 +15,36 @@ class UserController {
   public async index(req: Request, res: Response): Promise<Response> {
     const users = await User.find();
 
-    const serializadedUsers = users.map((user) => {
+    const serializedUsers = users.map(user => {
       return {
         ...user.toObject(),
         password_hash: undefined,
       };
     });
 
-    return res.json(serializadedUsers);
+    return res.json(serializedUsers);
   }
 
   public async show(req: Request, res: Response): Promise<Response> {
-    const name = req.params.name;
-    const users = await User.find({ name: { $regex: new RegExp(name), $options: 'i' } })
+    const { name } = req.params;
+    const users = await User.find({
+      name: { $regex: new RegExp(name), $options: 'i' },
+    });
 
-    const serializadedUser = users.map(user=>{
-     return { 
-       ...user.toObject(),
-      password_hash: undefined
+    const serializedUser = users.map(user => {
+      return {
+        ...user.toObject(),
+        password_hash: undefined,
+      };
+    });
 
-      }
-    }) 
-
-    return res.json(serializadedUser);
+    return res.json(serializedUser);
   }
 
   public async create(req: CustomRequest, res: Response): Promise<Response> {
-    const {  admin,name,question,password,response } = req.body;
-   
-    const userId = req.userId;
+    const { admin, name, question, password, response } = req.body;
+
+    const { userId } = req;
 
     const isValidQuestion = Questions.getQuestions().includes(question);
 
@@ -53,7 +54,7 @@ class UserController {
 
     const authUser = await User.findOne({ _id: userId });
 
-    const existUserName = await User.findOne({ name: name });
+    const existUserName = await User.findOne({ name });
 
     if (existUserName) {
       return res.status(400).json('name already exist');
@@ -82,7 +83,7 @@ class UserController {
 
     // const authUser = await User.findOne({ _id: userId });
 
-    const existUserName = await User.findOne({ name: name });
+    const existUserName = await User.findOne({ name });
 
     if (existUserName) {
       return res.status(400).json('name already exist');
@@ -102,7 +103,7 @@ class UserController {
   public async update(req: CustomRequest, res: Response): Promise<Response> {
     const { question, name, password, response, admin } = req.body;
     const { id } = req.params;
-    const userId = req.userId;
+    const { userId } = req;
 
     const isValidQuestion = Questions.getQuestions().includes(question);
 
@@ -111,7 +112,7 @@ class UserController {
     }
 
     if (name) {
-      const nameAlreadyExist = await User.findOne({ name: name });
+      const nameAlreadyExist = await User.findOne({ name });
       if (nameAlreadyExist) {
         return res.status(400).json('The name already been used');
       }
@@ -127,7 +128,7 @@ class UserController {
         },
         {
           new: true,
-        }
+        },
       );
 
       if (name && user) {

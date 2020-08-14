@@ -36,7 +36,7 @@ describe('should test a ingredient', () => {
     expect(response.body).toEqual(
       expect.objectContaining({
         priceUnit: 0.1,
-      })
+      }),
     );
   });
 
@@ -73,7 +73,7 @@ describe('should test a ingredient', () => {
     expect(response.body).toEqual(
       expect.objectContaining({
         priceUnit: 0.1,
-      })
+      }),
     );
   });
 
@@ -109,7 +109,9 @@ describe('should test a ingredient', () => {
     const token = await Token;
     await factory.createMany<IngredientInterface>('Ingredient', 4);
 
-    const response = await request(app).get('/ingredients').set('Authorization', `Bearer ${token}`);
+    const response = await request(app)
+      .get('/ingredients')
+      .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(200);
     expect(response.body.length).toBe(4);
@@ -117,8 +119,12 @@ describe('should test a ingredient', () => {
 
   it('should list all ingredients by name', async () => {
     const token = await Token;
-    await factory.create<IngredientInterface>('Ingredient', { name: 'Farinha' });
-    await factory.create<IngredientInterface>('Ingredient', { name: 'Chocolate' });
+    await factory.create<IngredientInterface>('Ingredient', {
+      name: 'Farinha',
+    });
+    await factory.create<IngredientInterface>('Ingredient', {
+      name: 'Chocolate',
+    });
 
     const response = await request(app)
       .get(`/ingredients/far`)
@@ -130,7 +136,7 @@ describe('should test a ingredient', () => {
         expect.objectContaining({
           name: 'Farinha',
         }),
-      ])
+      ]),
     );
   });
 });

@@ -13,17 +13,17 @@ class SessionController {
     const correctPassword = await user.checkPassword(password);
 
     if (!correctPassword) {
-      return response.status(401).json('incorrent password');
+      return response.status(401).json('incorrect password');
     }
     const token = user.generateToken();
 
-    const serializadedUser = {
+    const serializedUser = {
       ...user.toObject(),
       password_hash: undefined,
       response: undefined,
     };
     return response.json({
-      user: serializadedUser,
+      user: serializedUser,
       token,
     });
   }

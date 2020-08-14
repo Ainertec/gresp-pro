@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { Document } from 'mongoose';
-import { ItemInterface, CustomRequest } from '../../src/interfaces/base';
+import { ItemInterface, CustomRequest } from '../interfaces/base';
 
 import Order from '../models/Order';
 import Item from '../models/Item';
@@ -21,13 +21,14 @@ class OrderController {
     let total = 0;
     const alert = Array<string>();
     await Promise.all(
-      items.map(async (item) => {
+      items.map(async item => {
         const consumedItem = await Item.findOne({ _id: item.product });
         if (consumedItem) {
-          if (consumedItem.stock && consumedItem.stock <= 5) alert.push(consumedItem.name);
+          if (consumedItem.stock && consumedItem.stock <= 5)
+            alert.push(consumedItem.name);
           total += consumedItem.price * item.quantity;
         }
-      })
+      }),
     );
     return { total, alert };
   }
@@ -54,7 +55,10 @@ class OrderController {
     req.io.emit('newOrder', order);
     return res.json({
       order,
-      stockAlert: orderInformations.alert.length === 0 ? undefined : orderInformations.alert,
+      stockAlert:
+        orderInformations.alert.length === 0
+          ? undefined
+          : orderInformations.alert,
     });
   }
 
@@ -75,11 +79,11 @@ class OrderController {
       },
       {
         new: false,
-      }
+      },
     );
 
     const newOrder = await Order.findOne({
-      identification: identification,
+      identification,
       closed: false,
     }).populate('items.product');
 
@@ -91,7 +95,10 @@ class OrderController {
     return res.json({
       order: newOrder,
       oldItems: order.items,
-      stockAlert: orderInformations.alert.length === 0 ? undefined : orderInformations.alert,
+      stockAlert:
+        orderInformations.alert.length === 0
+          ? undefined
+          : orderInformations.alert,
     });
   }
 
@@ -101,22 +108,27 @@ class OrderController {
 
     const order = await Order.findOneAndUpdate(
       { identification, closed: false },
-      { closed: true, payment: payment },
-      { new: true }
+      { closed: true, payment },
+      { new: true },
     );
     req.io.emit('payment', order);
     return res.json('Order was closed with success!');
   }
 
   public async index(req: Request, res: Response) {
-    const orders = await Order.find({ closed: false }).populate('items.product');
+    const orders = await Order.find({ closed: false }).populate(
+      'items.product',
+    );
 
     return res.json(orders);
   }
 
   public async show(req: Request, res: Response) {
     const identification = Number(req.params.identification);
-    const order = await Order.findOne({ identification, closed: false }).populate('items.product');
+    const order = await Order.findOne({
+      identification,
+      closed: false,
+    }).populate('items.product');
 
     return res.json(order);
   }

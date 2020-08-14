@@ -38,6 +38,7 @@ export interface OrderInterface extends Document {
 }
 
 export interface CustomRequest extends Request {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [io: string]: any;
 }
 
@@ -47,7 +48,7 @@ export interface IngredientInterface extends Document {
   priceUnit: number;
   description?: string;
   unit: string;
-  stock: any;
+  stock: number;
 }
 
 export interface Ingredients {

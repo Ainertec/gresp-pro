@@ -100,7 +100,7 @@ describe('Order Controller', () => {
   it('should not update an order with invalid identification', async () => {
     const token = await Token;
 
-    const order = await factory.create<OrderInterface>('Order', {
+    await factory.create<OrderInterface>('Order', {
       identification: 123,
     });
 
@@ -141,9 +141,11 @@ describe('Order Controller', () => {
   it('should list all open orders ', async () => {
     const token = await Token;
 
-    const order = await factory.createMany<OrderInterface>('Order', 5);
+    await factory.createMany<OrderInterface>('Order', 5);
 
-    const response = await request(app).get(`/orders`).set('Authorization', `Bearer ${token}`);
+    const response = await request(app)
+      .get(`/orders`)
+      .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(200);
 
