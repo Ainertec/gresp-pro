@@ -1,6 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
 import { OrderInterface, ItemInterface } from '../interfaces/base';
 import Item from './Item';
+import { subIngredientStock } from '../utils/subIngredientStock';
 
 const ItemSchema = new Schema({
   product: {
@@ -46,17 +47,35 @@ const OrderSchema = new Schema(
   }
 );
 
+// OrderSchema.post<OrderInterface>('findOneAndUpdate', async (document) => {
+//   if (document && document.items && document.closed) {
+
+//     await Promise.all(
+//       document.items.map(async (item) => {
+//         const product = await Item.findOne({ _id: item.product });
+//         if (product && product.stock) {
+//           product.stock -= item.quantity;
+//           await product.save();
+//         }
+//       })
+//     );
+//   }
+// });
+
 OrderSchema.post<OrderInterface>('findOneAndUpdate', async (document) => {
   if (document && document.items && document.closed) {
-    await Promise.all(
-      document.items.map(async (item) => {
-        const product = await Item.findOne({ _id: item.product });
-        if (product && product.stock) {
+    for (const item of document.items) {
+      const product = await Item.findOne({ _id: item.product });
+
+      if (product) {
+        if (product.ingredients && product.ingredients.length > 0) {
+          await subIngredientStock(product.ingredients, item.quantity);
+        } else if (product.stock) {
           product.stock -= item.quantity;
           await product.save();
         }
-      })
-    );
+      }
+    }
   }
 });
 

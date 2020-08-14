@@ -30,6 +30,7 @@ import {
 import kitchen from './validations/kitchenSchema';
 import printer from './validations/printerValidation';
 import report from './validations/reportSchema';
+import IngredientController from './controllers/IngredientController';
 
 const routes = Router();
 
@@ -75,6 +76,30 @@ routes.get('/items', ItemController.index);
 routes.post('/items', celebrate({ body: item }), ItemController.create);
 routes.put('/items/:id', celebrate({ body: item, params: paramIdItem }), ItemController.update);
 routes.delete('/items/:id', celebrate({ params: paramIdItem }), ItemController.delete);
+
+// Ingredients
+
+routes.get('/ingredients', IngredientController.index);
+routes.get(
+  '/ingredients/:name',
+  // celebrate({ params: validations.paramName }),
+  IngredientController.show
+);
+routes.post(
+  '/ingredients',
+  // celebrate({ body: validations.ingredient }),
+  IngredientController.store
+);
+routes.put(
+  '/ingredients/:id',
+  // celebrate({ body: validations.ingredient, params: validations.paramId }),
+  IngredientController.update
+);
+routes.delete(
+  '/ingredients/:id',
+  // celebrate({ params: validations.paramId }),
+  IngredientController.delete
+);
 
 // Order
 

@@ -1,6 +1,16 @@
 import { Schema, model, Document } from 'mongoose';
 import { ItemInterface } from '../../src/interfaces/base';
 
+const IngredientSchema = new Schema({
+  material: {
+    type: Schema.Types.ObjectId,
+    ref: 'Ingredient',
+  },
+  quantity: {
+    type: Number,
+  },
+});
+
 const ItemSchema = new Schema(
   {
     name: {
@@ -23,6 +33,11 @@ const ItemSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    cost: {
+      type: Number,
+      required: true,
+    },
+    ingredients: [IngredientSchema],
   },
   {
     timestamps: true,

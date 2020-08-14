@@ -3,6 +3,7 @@ import faker from 'faker';
 import User from '../src/models/User';
 import Item from '../src/models/Item';
 import Order from '../src/models/Order';
+import Ingredient from '../src/models/Ingredient';
 import { Questions } from '../src/models/User';
 
 factory.define('User', User, {
@@ -19,7 +20,24 @@ factory.define('Item', Item, {
   description: faker.commerce.productAdjective(),
   drink: faker.random.boolean(),
   stock: faker.random.number(50),
+  cost: faker.commerce.price(),
+  ingredients: [
+    {
+      material: factory.assoc('Ingredient', '_id'),
+      quantity: faker.random.number(10),
+    },
+  ],
 });
+
+factory.define('Ingredient', Ingredient, {
+  name: faker.commerce.productName(),
+  price: faker.commerce.price(),
+  priceUnit: faker.commerce.price(),
+  unit: 'g',
+  stock: faker.random.number(100),
+  description: faker.commerce.productAdjective(),
+});
+
 factory.define('Order', Order, {
   identification: faker.random.number(999),
   total: faker.commerce.price(),

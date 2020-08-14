@@ -2,13 +2,15 @@ import { Document } from 'mongoose';
 import { Request } from 'express';
 
 export interface ItemInterface extends Document {
+  cost: number;
+  ingredients?: Ingredients[];
   name: string;
   price: number;
   description?: string;
   stock?: number;
   drink?: boolean;
 }
-export interface ItemsIterface {
+export interface ItemsInterface {
   product: ItemInterface;
   quantity: number;
 }
@@ -31,10 +33,24 @@ export interface OrderInterface extends Document {
   closed?: boolean;
   finished?: boolean;
   payment?: string;
-  items?: Array<ItemsIterface>;
+  items?: Array<ItemsInterface>;
   updatedAt?: Date;
 }
 
 export interface CustomRequest extends Request {
   [io: string]: any;
+}
+
+export interface IngredientInterface extends Document {
+  name: string;
+  price: number;
+  priceUnit: number;
+  description?: string;
+  unit: string;
+  stock: any;
+}
+
+export interface Ingredients {
+  material: IngredientInterface;
+  quantity: number;
 }

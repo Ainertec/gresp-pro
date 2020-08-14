@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 // import '../@types/jsrtg.d.ts'
 import jsRTF from 'jsrtf';
 import Order from '../models/Order';
-import { ItemsIterface } from '../interfaces/base';
+import { ItemsInterface } from '../interfaces/base';
 
 export interface OldItems {
   product: string;
@@ -17,7 +17,7 @@ class PrinterController {
     this.create = this.create.bind(this);
   }
 
-  private toPrinterUpdated(items: ItemsIterface[], oldItems: OldItems[]) {
+  private toPrinterUpdated(items: ItemsInterface[], oldItems: OldItems[]) {
     let products = '';
     let drinks = '';
 
@@ -43,7 +43,7 @@ class PrinterController {
     return { products, drinks };
   }
 
-  private toPrinterNew(items: ItemsIterface[]) {
+  private toPrinterNew(items: ItemsInterface[]) {
     let products = '';
     let drinks = '';
 
@@ -61,7 +61,6 @@ class PrinterController {
 
   async create(req: Request, res: Response) {
     const { identification, oldItems, type } = req.body;
-    console.log(oldItems);
     const order = await Order.findOne({ closed: false, identification });
 
     if (!order) return res.status(400).json('orders does not exist!');
@@ -122,9 +121,10 @@ class PrinterController {
 
       const buffer = Buffer.from(content, 'binary');
 
-      const dir = process.env.NODE_ENV === 'test'
-        ? path.resolve(__dirname, '..', '..', '__tests__', 'recipes')
-        : path.resolve('commands', 'commandsCreate');
+      const dir =
+        process.env.NODE_ENV === 'test'
+          ? path.resolve(__dirname, '..', '..', '__tests__', 'recipes')
+          : path.resolve('commands', 'commandsCreate');
 
       fs.writeFile(
         `${dir}/${identification}.rtf`,
