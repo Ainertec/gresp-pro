@@ -295,6 +295,6 @@ function telaGerarQRCode(numero, tipo) {
         });
     }
 
-    setTimeout(function () { window.print(); alert('entrei'); }, 1000);
+    setTimeout(function () { window.print(); }, 1000);
 
 }
