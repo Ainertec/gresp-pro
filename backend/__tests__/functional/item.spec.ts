@@ -8,7 +8,6 @@ import factory from '../factories';
 import Token from '../utils/getToken';
 import Item from '../../src/models/Item';
 import User from '../../src/models/User';
-import { response } from 'express';
 
 const app = App.express;
 
@@ -71,7 +70,7 @@ describe('Item Tests', () => {
     expect(response.body).toEqual(
       expect.objectContaining({
         cost: 1.25,
-      })
+      }),
     );
     expect(response.status).toBe(200);
   });
@@ -158,7 +157,7 @@ describe('Item Tests', () => {
       expect.objectContaining({
         name: 'Coca cola',
         cost: 1.25,
-      })
+      }),
     );
   });
 
@@ -235,7 +234,9 @@ describe('Item Tests', () => {
       name: 'pizza',
     });
 
-    const response = await request(app).get(`/items/p`).set('Authorization', `Bearer ${token}`);
+    const response = await request(app)
+      .get(`/items/p`)
+      .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(200);
   });

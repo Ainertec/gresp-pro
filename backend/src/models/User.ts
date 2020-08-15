@@ -1,8 +1,10 @@
-import { Schema, model, Document } from 'mongoose';
+/* eslint-disable func-names */
+/* eslint-disable camelcase */
+import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-import { UserInterface } from '../../src/interfaces/base';
+import { UserInterface } from '../interfaces/base';
 
 interface UserSchemaInterface extends UserInterface {
   password_hash: string;
@@ -58,7 +60,9 @@ UserSchema.pre<UserSchemaInterface>('save', async function (next) {
   next();
 });
 
-UserSchema.methods.checkPassword = function (password: string): Promise<boolean> {
+UserSchema.methods.checkPassword = function (
+  password: string,
+): Promise<boolean> {
   return bcrypt.compare(password, this.password_hash);
 };
 

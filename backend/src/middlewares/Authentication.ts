@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
 import { Request, Response, NextFunction } from 'express';
@@ -10,7 +11,11 @@ interface CustomRequest extends Request {
 }
 
 class Authentication {
-  public async auth(request: CustomRequest, response: Response, next: NextFunction) {
+  public async auth(
+    request: CustomRequest,
+    response: Response,
+    next: NextFunction,
+  ) {
     const authHeaders = request.headers.authorization;
 
     if (!authHeaders) {
@@ -21,7 +26,7 @@ class Authentication {
     try {
       const decoded = (await promisify(jwt.verify)(
         token,
-        String(process.env.APP_SECRET)
+        String(process.env.APP_SECRET),
       )) as VerifyResponse;
 
       request.userId = decoded.id;

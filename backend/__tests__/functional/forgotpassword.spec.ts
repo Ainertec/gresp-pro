@@ -1,5 +1,4 @@
 import request from 'supertest';
-import bycrypt from 'bcrypt';
 
 import { UserInterface } from '../../src/interfaces/base';
 
@@ -35,7 +34,7 @@ describe('Reset password', () => {
     expect(response.body).toEqual(
       expect.objectContaining({
         question: user.question,
-      })
+      }),
     );
   });
 

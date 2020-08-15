@@ -1,5 +1,7 @@
-import { Schema, model, Document } from 'mongoose';
-import { OrderInterface, ItemInterface } from '../interfaces/base';
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
+import { Schema, model } from 'mongoose';
+import { OrderInterface } from '../interfaces/base';
 import Item from './Item';
 import { subIngredientStock } from '../utils/subIngredientStock';
 
@@ -44,7 +46,7 @@ const OrderSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // OrderSchema.post<OrderInterface>('findOneAndUpdate', async (document) => {
@@ -62,7 +64,7 @@ const OrderSchema = new Schema(
 //   }
 // });
 
-OrderSchema.post<OrderInterface>('findOneAndUpdate', async (document) => {
+OrderSchema.post<OrderInterface>('findOneAndUpdate', async document => {
   if (document && document.items && document.closed) {
     for (const item of document.items) {
       const product = await Item.findOne({ _id: item.product });

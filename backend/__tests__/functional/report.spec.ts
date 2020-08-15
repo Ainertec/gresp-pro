@@ -1,5 +1,6 @@
 import request from 'supertest';
 
+import { sub } from 'date-fns';
 import { ItemInterface, UserInterface } from '../../src/interfaces/base';
 import App from '../../src/app';
 import { closeConnection, openConnection } from '../utils/connection';
@@ -8,7 +9,6 @@ import factory from '../factories';
 import Order from '../../src/models/Order';
 import Token from '../utils/getToken';
 import Item from '../../src/models/Item';
-import { sub } from 'date-fns';
 
 const app = App.express;
 
@@ -123,13 +123,15 @@ describe('Order Controller', () => {
       total: 100,
     });
 
-    const response = await request(app).get('/reports/all').set('Authorization', `Bearer ${token}`);
+    const response = await request(app)
+      .get('/reports/all')
+      .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
         total: '1200.00',
-      })
+      }),
     );
   });
 
@@ -183,7 +185,7 @@ describe('Order Controller', () => {
         expect.objectContaining({
           amount: 9,
         }),
-      ])
+      ]),
     );
     expect(response.status).toBe(200);
   });
@@ -248,7 +250,9 @@ describe('Order Controller', () => {
     });
     await factory.create('Order');
 
-    const response = await request(app).delete('/reports').set('Authorization', `Bearer ${token}`);
+    const response = await request(app)
+      .delete('/reports')
+      .set('Authorization', `Bearer ${token}`);
 
     const sales = await Order.find().countDocuments();
     expect(response.status).toBe(200);

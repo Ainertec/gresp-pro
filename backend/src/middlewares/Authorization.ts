@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable consistent-return */
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/User';
 
@@ -6,8 +8,12 @@ interface CustomRequest extends Request {
 }
 
 class Authentication {
-  public async auth(request: CustomRequest, response: Response, next: NextFunction) {
-    const userId = request.userId;
+  public async auth(
+    request: CustomRequest,
+    response: Response,
+    next: NextFunction,
+  ) {
+    const { userId } = request;
 
     const user = await User.findOne({ _id: userId });
 

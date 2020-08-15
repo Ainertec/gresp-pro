@@ -10,14 +10,18 @@ class ItemController {
     const count = await Item.find({
       name: { $regex: new RegExp(name), $options: 'i' },
     }).countDocuments({});
-    const items = await Item.find({ name: { $regex: new RegExp(name), $options: 'i' } })
+    const items = await Item.find({
+      name: { $regex: new RegExp(name), $options: 'i' },
+    })
       .skip((Number(page) - 1) * 10)
-      .limit(10);
+      .limit(10)
+      .populate('ingredients.material');
 
     res.header('X-Total-Count', String(count));
 
     return res.json(items);
   }
+
   public async index(req: Request, res: Response) {
     const { page = 1 } = req.query;
 
@@ -25,20 +29,34 @@ class ItemController {
 
     const items = await Item.find()
       .skip((Number(page) - 1) * 10)
-      .limit(10);
+      .limit(10)
+      .populate('ingredients.material');
 
     res.header('X-Total-Count', String(count));
 
     return res.json(items);
   }
+
   public async create(req: Request, res: Response): Promise<Response> {
-    const { name, price, description, stock, drink, ingredients, cost } = req.body;
+    const {
+      name,
+      price,
+      description,
+      stock,
+      drink,
+      ingredients,
+      cost,
+    } = req.body;
 
     if (!ingredients && !cost) {
-      return res.status(400).json('It is necessary to send an ingredients or a cost');
+      return res
+        .status(400)
+        .json('It is necessary to send an ingredients or a cost');
     }
     if (!ingredients && !stock) {
-      return res.status(400).json('It is necessary to send an ingredients or a stock');
+      return res
+        .status(400)
+        .json('It is necessary to send an ingredients or a stock');
     }
 
     const itemCost = ingredients ? await getCost(ingredients) : Number(cost);
@@ -50,20 +68,33 @@ class ItemController {
       stock: ingredients ? undefined : stock,
       drink,
       cost: itemCost,
-      ingredients: ingredients ? ingredients : undefined,
+      ingredients: ingredients || undefined,
     });
 
     return res.json(item);
   }
+
   public async update(req: Request, res: Response): Promise<Response> {
-    const { name, price, description, stock, drink, cost, ingredients } = req.body;
-    const id = req.params.id;
+    const {
+      name,
+      price,
+      description,
+      stock,
+      drink,
+      cost,
+      ingredients,
+    } = req.body;
+    const { id } = req.params;
 
     if (!ingredients && !cost) {
-      return res.status(400).json('It is necessary to send an ingredients or a cost');
+      return res
+        .status(400)
+        .json('It is necessary to send an ingredients or a cost');
     }
     if (!ingredients && !stock) {
-      return res.status(400).json('It is necessary to send an ingredients or a stock');
+      return res
+        .status(400)
+        .json('It is necessary to send an ingredients or a stock');
     }
 
     const itemCost = ingredients ? await getCost(ingredients) : Number(cost);
@@ -76,11 +107,11 @@ class ItemController {
         description,
         stock: ingredients ? undefined : stock,
         cost: itemCost,
-        drink: drink ? true : false,
+        drink: !!drink,
       },
       {
         new: true,
-      }
+      },
     );
     if (!item) return res.status(400).json('Item does not exist');
     if (ingredients) {
@@ -92,6 +123,7 @@ class ItemController {
 
     return res.json(item);
   }
+
   public async delete(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
 

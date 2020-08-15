@@ -107,16 +107,16 @@ class ReportController {
       })
       .sort({ amount: -1 });
 
-    const totalProducts = products.reduce((sum, product) => {
-      return sum + product.amount;
-    }, 0);
+    // const totalProducts = products.reduce((sum, product) => {
+    //   return sum + product.amount;
+    // }, 0);
 
-    const serializadedProducts = products.map((product) => {
-      return {
-        ...product,
-        amount: totalProducts,
-      };
-    });
+    // const serializedProducts = products.map(product => {
+    //   return {
+    //     ...product,
+    //     amount: totalProducts,
+    //   };
+    // });
     return res.json(products);
   }
 

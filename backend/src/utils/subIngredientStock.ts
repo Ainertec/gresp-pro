@@ -1,9 +1,12 @@
 import Ingredient from '../models/Ingredient';
 import { Ingredients } from '../interfaces/base';
 
-async function subIngredientStock(ingredients: Ingredients[], itemQuantity: number) {
+async function subIngredientStock(
+  ingredients: Ingredients[],
+  itemQuantity: number,
+) {
   await Promise.all(
-    ingredients.map(async (itemIngredient) => {
+    ingredients.map(async itemIngredient => {
       const ingredientPersisted = await Ingredient.findOne({
         _id: itemIngredient.material,
       });
@@ -13,7 +16,7 @@ async function subIngredientStock(ingredients: Ingredients[], itemQuantity: numb
 
         await ingredientPersisted.save();
       }
-    })
+    }),
   );
 }
 

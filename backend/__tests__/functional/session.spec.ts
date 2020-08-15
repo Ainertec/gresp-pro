@@ -90,7 +90,7 @@ describe('Session Tests', () => {
   });
 
   it('it should not be able to access private routes without a jwt token', async () => {
-    const user = await factory.create<UserInterface>('User', {
+    await factory.create<UserInterface>('User', {
       name: 'Cleiton',
       password: '123456',
     });
@@ -101,12 +101,14 @@ describe('Session Tests', () => {
   });
 
   it('it should not be able to access private routes with invalid jwt token', async () => {
-    const user = await factory.create<UserInterface>('User', {
+    await factory.create<UserInterface>('User', {
       name: 'Cleiton',
       password: '123456',
     });
 
-    const response = await request(app).get('/users').set('Authorization', `askfhi34ax}`);
+    const response = await request(app)
+      .get('/users')
+      .set('Authorization', `askfhi34ax}`);
 
     expect(response.status).toBe(401);
   });

@@ -38,7 +38,7 @@ describe('Order Controller', () => {
     expect(response.body).toEqual(
       expect.objectContaining({
         finished: true,
-      })
+      }),
     );
   });
 
@@ -55,7 +55,9 @@ describe('Order Controller', () => {
       closed: false,
     });
 
-    const response = await request(app).get('/kitchen').set('Authorization', `Bearer ${token}`);
+    const response = await request(app)
+      .get('/kitchen')
+      .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(200);
     expect(response.body.length).toBe(1);
@@ -64,7 +66,7 @@ describe('Order Controller', () => {
         expect.objectContaining({
           identification: 9,
         }),
-      ])
+      ]),
     );
   });
 });

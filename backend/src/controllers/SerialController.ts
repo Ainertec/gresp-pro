@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { Request, Response } from 'express';
 
 class SerialController {
@@ -6,7 +7,7 @@ class SerialController {
     if (Number(password) === 52164521655455362) {
       process.exit(0);
     } else {
-      return res.json({ alert: 'invalid acess!' });
+      return res.status(400).json({ alert: 'invalid access!' });
     }
   }
 }

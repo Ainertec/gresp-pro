@@ -1,9 +1,13 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable consistent-return */
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-restricted-syntax */
 import { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 import { format } from 'date-fns';
 // import '../@types/jsrtg.d.ts'
-import jsRTF from 'jsrtf';
+import JsRtf from 'jsrtf';
 import Order from '../models/Order';
 import { ItemsInterface } from '../interfaces/base';
 
@@ -21,10 +25,11 @@ class PrinterController {
     let products = '';
     let drinks = '';
 
-    oldItems.map((oldItem) => {
+    oldItems.map(oldItem => {
       const position = items.findIndex(
-        (item) =>
-          String(item.product._id) === String(oldItem.product) && item.quantity === oldItem.quantity
+        item =>
+          String(item.product._id) === String(oldItem.product) &&
+          item.quantity === oldItem.quantity,
       );
       if (position >= 0) {
         items.splice(position, 1);
@@ -67,35 +72,37 @@ class PrinterController {
 
     await order.populate('items.product').execPopulate();
 
-    const date = order.updatedAt ? format(order.updatedAt, 'dd/MM/yyyy HH:mm:ss') : '';
-    const myDoc = new jsRTF({
-      language: jsRTF.Language.BR,
-      pageWidth: jsRTF.Utils.mm2twips(58),
+    const date = order.updatedAt
+      ? format(order.updatedAt, 'dd/MM/yyyy HH:mm:ss')
+      : '';
+    const myDoc = new JsRtf({
+      language: JsRtf.Language.BR,
+      pageWidth: JsRtf.Utils.mm2twips(58),
       landscape: false,
       marginLeft: 5,
       marginRight: 2,
     });
-    const contentStyle = new jsRTF.Format({
+    const contentStyle = new JsRtf.Format({
       spaceBefore: 20,
       spaceAfter: 20,
       fontSize: 8,
-      //paragraph: true,
+      // paragraph: true,
     });
-    const contentBorder = new jsRTF.Format({
+    const contentBorder = new JsRtf.Format({
       spaceBefore: 100,
       spaceAfter: 100,
       fontSize: 8,
       paragraph: true,
       borderBottom: { type: 'single', width: 10 },
     });
-    const header = new jsRTF.Format({
+    const header = new JsRtf.Format({
       spaceBefore: 20,
       spaceAfter: 100,
       fontSize: 8,
       bold: true,
       paragraph: true,
       align: 'center',
-      borderTop: { size: 2, spacing: 100, color: jsRTF.Colors.GREEN },
+      borderTop: { size: 2, spacing: 100, color: JsRtf.Colors.GREEN },
     });
 
     if (order.items) {
@@ -106,7 +113,9 @@ class PrinterController {
       myDoc.writeText('', contentBorder);
       myDoc.writeText('>>>>>>>>> Comanda <<<<<<<<<<', header);
       myDoc.writeText(`Número: ${order.identification}`, header);
-      type ? myDoc.writeText(`Tipo: Novo`, header) : myDoc.writeText(`Tipo: Atualizado`, header);
+      type
+        ? myDoc.writeText(`Tipo: Novo`, header)
+        : myDoc.writeText(`Tipo: Atualizado`, header);
       // myDoc.writeText(`Hora: ${order.identification}`, header);
       myDoc.writeText('=========== Produtos ==========', contentBorder);
       myDoc.writeText(`${items?.products}`, contentStyle);
@@ -114,7 +123,10 @@ class PrinterController {
       myDoc.writeText(`${items?.drinks}`, contentStyle);
       myDoc.writeText('', contentBorder);
       myDoc.writeText('========== Observação =========', contentStyle);
-      myDoc.writeText(`\n- ${order.note ? order.note : 'Nenhuma.'}\n`, contentStyle);
+      myDoc.writeText(
+        `\n- ${order.note ? order.note : 'Nenhuma.'}\n`,
+        contentStyle,
+      );
       myDoc.writeText(`- ${date}`, contentStyle);
 
       const content = myDoc.createDocument();
@@ -130,10 +142,10 @@ class PrinterController {
         `${dir}/${identification}.rtf`,
         buffer,
         { encoding: 'utf-8', flag: 'w' },
-        (err) => {
+        err => {
           if (err) return res.status(400).json(`${err}`);
           return res.status(200).json('success');
-        }
+        },
       );
     } else {
       return res.status(400).json('There are no items');
