@@ -159,14 +159,14 @@ async function telaExibirTodosOsPedidos() {
     codigoHTML += '<table class="table table-light text-center col-10 mx-auto table-sm" style="margin-top:50px">'
     codigoHTML += '<thead class="thead-dark"><tr><th scope="col">Número</th><th scope="col">Valor Total</th><th scope="col">Data</th><th scope="col">#</th></tr></thead>'
     codigoHTML += '<tbody>'
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
         codigoHTML += '<tr>'
         codigoHTML += `<td class="table-info"><strong>${item.identification}</strong></td>`
         codigoHTML += `<td class="table-warning text-danger"><strong>R$ ${(item.total).toFixed(2)}</strong></td>`
         codigoHTML += `<td class="table-warning"><strong>${(item.updatedAt).split('.')[0]}</strong></td>`
         codigoHTML += `<td><button class="btn btn-primary btn-sm" onclick="telaDigitarPedido(this.value)" value=${item.identification}><span class="fas fa-check"></span> Abrir</button></td>`
         codigoHTML += '</tr>'
-    });
+    }
     codigoHTML += '</tbody>'
     codigoHTML += '</table>'
 
@@ -193,13 +193,13 @@ async function buscarPedido() {
         if (json.data != null) {
             document.getElementById('valorTotal').innerHTML = `Valor total: <span class="badge badge-success"> R$ ${json.data.total.toFixed(2)}</span>`;
             $('#escondeDados1').slideDown(300);
-            json.data.items.forEach(function (item) {
+            for (let item of json.data.items) {
                 if (!item.product.drink) {
                     adicionarItemaoPedido('Produto', item.product._id, item.quantity, 'atualizar');
                 } else {
                     adicionarItemaoPedido('Bebida', item.product._id, item.quantity, 'atualizar');
                 }
-            });
+            }
             document.getElementById('observacao').innerHTML = json.data.note;
             $('#escondeDados4').slideDown(300);
             botaoDeConfirmaçãoDePedido(`confirmarAcao('Atualizar este pedido!', 'cadastrarAtualizarPedido(this.value)', 'atualizar');`);
@@ -247,14 +247,14 @@ async function adicionarItemaoPedido(itemTipo, idItem, quantidadeItem, pedidoTip
     json = await requisicaoGET('items', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false)
 
-    VETORDEITENSCLASSEPEDIDO.forEach(function (item) {
+    for (let item of VETORDEITENSCLASSEPEDIDO) {
         if (item._id.toString() == idItem.toString()) {
             aux = false;
         }
-    });
+    }
 
     if (aux) {
-        json.data.forEach(function (item) {
+        for (let item of json.data) {
             if (item._id.toString() == idItem.toString()) {
                 item.type = itemTipo.toString();
                 VETORDEITENSCLASSEPEDIDO.push(item);
@@ -264,7 +264,7 @@ async function adicionarItemaoPedido(itemTipo, idItem, quantidadeItem, pedidoTip
                 }
                 gerarTabeladeItensInseridos(item, quantidadeItem, pedidoTipo)
             }
-        });
+        }
     } else {
         mensagemDeErro('Não é possível adicionar pois o mesmo já se encontra no pedido!')
     }
@@ -304,7 +304,8 @@ function gerarTabeladeItensInseridos(json, quantidadeItem, pedidoTipo) {
 
 //funcao responsavel por remover o item do pedido
 function removerItem(identification) {
-    VETORDEITENSCLASSEPEDIDO.forEach(function (item, indice) {
+    let indice = 0;
+    for (let item of VETORDEITENSCLASSEPEDIDO) {
         if (item._id.toString() == identification.toString()) {
             if (item.type == 'Produto') {
                 VETORDEITENSCLASSEPEDIDO.splice(indice, 1)
@@ -316,7 +317,8 @@ function removerItem(identification) {
                 mensagemDeAviso('Bebida removida com sucesso!')
             }
         }
-    });
+        indice++;
+    }
 }
 
 //funcao responsavel por liberar o menu lateral
@@ -418,16 +420,16 @@ async function listaItens(tipoBusca) {
                     </tr>
                 </thead>
                 <tbody>`
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
         if (!item.drink) {
             codigoHTML += `<tr>
-                <td class="col-md-5 table-secondary" title="${item.name}"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(30, item.name)}</strong></td>
-                <td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>
-                <td class="col-md-2 table-warning"><input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" /></td>
-                <td class="col-md-2"><button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('Produto', '${item._id}', '#quantidadeAdicionar${item._id}', 'novo')}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm"><span class="fas fa-plus"></span></button></td>
-            </tr>`
+                            <td class="col-md-5 table-secondary" title="${item.name}"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(30, item.name)}</strong></td>
+                            <td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>
+                            <td class="col-md-2 table-warning"><input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" /></td>
+                            <td class="col-md-2"><button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('Produto', '${item._id}', '#quantidadeAdicionar${item._id}', 'novo')}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm"><span class="fas fa-plus"></span></button></td>
+                        </tr>`
         }
-    });
+    }
     codigoHTML += `</tbody>
         </table>
     </div>`
@@ -444,16 +446,16 @@ async function listaItens(tipoBusca) {
                     </tr>
                 </thead>
                 <tbody>`
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
         if (item.drink) {
             codigoHTML2 += `<tr>
-                <td class="col-md-5 table-secondary" title="${item.name}"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(30, item.name)}</strong></td>
-                <td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>
-                <td class="col-md-2 table-warning"><input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" /></td>
-                <td class="col-md-2"><button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('Bebida', '${item._id}', '#quantidadeAdicionar${item._id}', 'novo')}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm"><span class="fas fa-plus"></span></button></td>
-            </tr>`
+                            <td class="col-md-5 table-secondary" title="${item.name}"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(30, item.name)}</strong></td>
+                            <td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>
+                            <td class="col-md-2 table-warning"><input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" /></td>
+                            <td class="col-md-2"><button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('Bebida', '${item._id}', '#quantidadeAdicionar${item._id}', 'novo')}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm"><span class="fas fa-plus"></span></button></td>
+                        </tr>`
         }
-    });
+    }
     codigoHTML2 += `</tbody>
         </table>
     </div>`
@@ -469,17 +471,17 @@ async function listaItens(tipoBusca) {
 async function cadastrarAtualizarPedido(tipoRequisicao) {
     let aux = true, condicaoComItens = false, condicaoSemQuantidade = true;
 
-    VETORDEITENSCLASSEPEDIDO.forEach(function (item) {
+    for (let item of VETORDEITENSCLASSEPEDIDO) {
         if (!validaDadosCampo(['#quantidade' + item._id]) || !validaValoresCampo(['#quantidade' + item._id])) {
             condicaoSemQuantidade = false;
             mostrarCamposIncorrreto(['quantidade' + item._id]);
         }
-    });
+    }
 
     try {
         let json = `{"identification":${parseInt($('#identificacao').val())},
                     "items":[`
-        VETORDEITENSCLASSEPEDIDO.forEach(function (item) {
+        for (let item of VETORDEITENSCLASSEPEDIDO) {
             if (aux) {
                 json += `{"product":"${item._id}","quantity":${parseInt($('#quantidade' + item._id).val())}}`
                 aux = false;
@@ -487,7 +489,7 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
             } else {
                 json += `,{"product":"${item._id}","quantity":${parseInt($('#quantidade' + item._id).val())}}`
             }
-        });
+        }
         if (validaDadosCampo(['#observacao'])) {
             json += `],"note":"${($('#observacao').val()).toString()}"}`
         } else {
@@ -530,21 +532,20 @@ async function cadastrarAtualizarPedido(tipoRequisicao) {
                 let updateOrder = `{
                     "identification":${$('#identificacao').val()},
                     "oldItems": [`
-                jsonDid.data.items.forEach(function (item) {
+                for (let item of jsonDid.data.items) {
                     if (aux) {
                         updateOrder += `{
-                                "product":"${item.product._id}",
-                                "quantity":${item.quantity}
-                            }`
+                                    "product":"${item.product._id}",
+                                    "quantity":${item.quantity}
+                                }`
                         aux = false;
                     } else {
                         updateOrder += `,{
-                                "product":"${item.product._id}",
-                                "quantity":${item.quantity}
-                            }`
+                                    "product":"${item.product._id}",
+                                    "quantity":${item.quantity}
+                                }`
                     }
-
-                });
+                }
                 updateOrder += `],
                     "type":false
                 }`

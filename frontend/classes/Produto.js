@@ -69,23 +69,23 @@ async function buscarProdutos(tipoBusca) {
             </thead>
             <tbody>`
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
         if (!item.drink) {
             VETORDEPRODUTOSCLASSEPRODUTO.push(item)
             codigoHTML += `<tr>
-                <th class="table-info" title="${item.name}"><span class="fas fa-utensils"></span> ${corrigirTamanhoString(20, item.name)}</th>
-                <td class="table-info" title="${item.description}">${corrigirTamanhoString(40, item.description)}</td>`
+                        <th class="table-info" title="${item.name}"><span class="fas fa-utensils"></span> ${corrigirTamanhoString(20, item.name)}</th>
+                        <td class="table-info" title="${item.description}">${corrigirTamanhoString(40, item.description)}</td>`
             if (item.stock != null) {
                 codigoHTML += `<td class="table-primary"><strong>${item.stock} Unid.</strong></td>`
             } else {
                 codigoHTML += `<td class="table-primary text-danger"><strong>0 Unid.</strong></td>`
             }
             codigoHTML += `<td class="table-warning text-danger"><strong>R$${(item.price).toFixed(2)}<strong></td>
-                    <th class="table-light"><button class="btn btn-primary btn-sm" onclick="carregarDadosProduto('${item._id}');"><span class="fas fa-pencil-alt iconsTam"></span> Editar</button></td>
-                    <th class="table-light"><button class="btn btn-outline-danger btn-sm" onclick="confirmarAcao('Excluir os dados do produto permanentemente!', 'deletarProduto(this.value)', '${item._id}');" ><span class="fas fa-trash-alt iconsTam"></span> Excluir</button></td>
-                </tr>`
+                            <th class="table-light"><button class="btn btn-primary btn-sm" onclick="carregarDadosProduto('${item._id}');"><span class="fas fa-pencil-alt iconsTam"></span> Editar</button></td>
+                            <th class="table-light"><button class="btn btn-outline-danger btn-sm" onclick="confirmarAcao('Excluir os dados do produto permanentemente!', 'deletarProduto(this.value)', '${item._id}');" ><span class="fas fa-trash-alt iconsTam"></span> Excluir</button></td>
+                        </tr>`
         }
-    });
+    }
     codigoHTML += `</tbody>
     </table>`
 

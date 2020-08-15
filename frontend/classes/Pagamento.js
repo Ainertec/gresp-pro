@@ -97,14 +97,14 @@ async function telaExibirTodosOsPedidosPagamento() {
             </thead>
             <tbody>`
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
         codigoHTML += `<tr>
-                <td class="table-info"><strong>${item.identification}</strong></td>
-                <td class="table-warning text-danger"><strong>R$${item.total.toFixed(2)}</strong></td>
-                <td class="table-warning"><strong>${(item.updatedAt).split('.')[0]}</strong></td>
-                <td><button class="btn btn-primary btn-sm" onclick="telaPagamento(this.value)" value="${item.identification}"><span class="fas fa-check"></span> Abrir</button></td>
-            </tr>`
-    });
+                    <td class="table-info"><strong>${item.identification}</strong></td>
+                    <td class="table-warning text-danger"><strong>R$${item.total.toFixed(2)}</strong></td>
+                    <td class="table-warning"><strong>${(item.updatedAt).split('.')[0]}</strong></td>
+                    <td><button class="btn btn-primary btn-sm" onclick="telaPagamento(this.value)" value="${item.identification}"><span class="fas fa-check"></span> Abrir</button></td>
+                </tr>`
+    }
     codigoHTML += `</tbody>
     </table>`
 
@@ -150,7 +150,7 @@ async function buscarDadosDoPedidoParaPagamento() {
                     </thead>
                     <tbody>`
         try {
-            json.data.items.forEach(function (item) {
+            for (let item of json.data.items) {
                 codigoHTML += '<tr scope="row">'
                 if (item.product.drink) {
                     codigoHTML += `<td class="table-info" title="${item.product.name}"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(40, item.product.name)}</strong></td>`
@@ -161,7 +161,7 @@ async function buscarDadosDoPedidoParaPagamento() {
                                 <td class="table-warning text-center"><strong>${parseInt(item.quantity)}</strong></td>
                                 <td class="table-warning text-danger"><strong>R$ ${(parseFloat(item.product.price) * parseInt(item.quantity)).toFixed(2)}</strong></td>
                             </tr>`
-            });
+            }
         } catch (Exception) {
             mensagemDeErro('Não foi possível carregar os itens!')
         }

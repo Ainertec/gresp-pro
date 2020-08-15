@@ -238,13 +238,13 @@ async function atualizarFuncionario() {
     if (validaDadosCampo(['#id', '#response'])) {
         let json = '{'
 
-        VETORDEFUNCIONARIOCLASSEFUNCIONARIO.forEach(function (item) {
+        for (let item of VETORDEFUNCIONARIOCLASSEFUNCIONARIO) {
             if (item._id == document.getElementById('id').value) {
                 if (item.name != $('#login').val()) {
                     json += `"name":"${$('#login').val()}",`
                 }
             }
-        })
+        }
 
         if (validaDadosCampo(['#senha'])) {
             json += `"password":"${$('#senha').val()}",`

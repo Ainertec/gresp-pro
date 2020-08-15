@@ -64,7 +64,7 @@ async function buscarEstoque(tipoBusca) {
                 </tr>
             </thead>
             <tbody>`
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
         VETORDEITENSESTOQUE.push(item);
         codigoHTML += '<tr>'
         if (item.drink) {
@@ -83,15 +83,15 @@ async function buscarEstoque(tipoBusca) {
             codigoHTML += `<td class="table-danger text-dark text-center"><strong>0 Unid.</strong></td>`
         }
         codigoHTML += `<td class="table-warning text-dark" style="width:10vw">
-                    <input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=1 />
-                </td>
-                <td class="table-secondary text-dark" style="width:10vw">
-                    <button onclick="if(validaDadosCampo(['#quantidade${item._id}']) && validaValoresCampo(['#quantidade${item._id}'])){confirmarAcao('Atualizar quantidade!', 'atualizarEstoque(this.value)', '${item._id}');}else{mensagemDeErro('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorrreto(['quantidade${item._id}']);}" class="btn btn-success btn-sm">
-                        <span class="fas fa-sync"></span> Alterar
-                    </button>
-                </td>
-            </tr>`
-    });
+                            <input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=1 />
+                        </td>
+                        <td class="table-secondary text-dark" style="width:10vw">
+                            <button onclick="if(validaDadosCampo(['#quantidade${item._id}']) && validaValoresCampo(['#quantidade${item._id}'])){confirmarAcao('Atualizar quantidade!', 'atualizarEstoque(this.value)', '${item._id}');}else{mensagemDeErro('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorrreto(['quantidade${item._id}']);}" class="btn btn-success btn-sm">
+                                <span class="fas fa-sync"></span> Alterar
+                            </button>
+                        </td>
+                    </tr>`
+    }
     codigoHTML += `</tbody>
         </table>`
 
@@ -132,10 +132,10 @@ async function atualizarEstoque(id) {
 function gerarGraficoEstoque(json) {
     let vetorNome = [], vetorQuantidade = [];
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
         vetorNome.push(corrigirTamanhoString(10, item.name))
         vetorQuantidade.push(item.stock)
-    });
+    }
 
     Highcharts.chart('grafico', {
         chart: {

@@ -66,22 +66,22 @@ function animacaoJanela2() {
 //funcao responsavel por validar os dados preenchidos nos campos
 function validaDadosCampo(campo) {
     var validacao = true;
-    campo.forEach(function (item) {
+    for (let item of campo) {
         if ($(item).val() == '' || $(item).val() == null) {
             validacao = false;
         }
-    });
+    }
     return validacao;
 }
 
 //funcao responsavel por validar valores invalidos nos campos(valores negativos)
 function validaValoresCampo(campo) {
     var validacao = true;
-    campo.forEach(function (item) {
+    for (let item of campo) {
         if (parseFloat($(item).val()) < 0.0 || parseFloat($(item).val()) == 0.0) {
             validacao = false;
         }
-    });
+    }
     return validacao;
 }
 
@@ -152,38 +152,38 @@ function corrigirTamanhoString(tamMax, texto) {
 
 //funcao resopnsavel por exibir cor defente no campo incorreto
 function mostrarCamposIncorrreto(campo) {
-    campo.forEach(function (item) {
+    for (let item of campo) {
         document.getElementById(item).classList.add('border');
         document.getElementById(item).classList.add('border-danger');
         setTimeout(function () {
             document.getElementById(item).classList.remove('border');
             document.getElementById(item).classList.remove('border-danger');
         }, 2000)
-    });
+    }
 }
 
 //funcao de animacao slideUp
 function animacaoSlideUp(idReferencia) {
-    idReferencia.forEach(function (item) {
+    for (let item of idReferencia) {
         $(item).slideUp(300)
-    });
+    }
 }
 
 //funcao animacao slideDown
 function animacaoSlideDown(idReferencia) {
-    idReferencia.forEach(function (item) {
+    for (let item of idReferencia) {
         $(item).slideDown(300)
-    });
+    }
 }
 
 //funcao responsavel por controlar a ativação e desativação de um botão
 function ativaDesativaBotao(campo, tempo) {
-    campo.forEach(function (item) {
+    for (let item of campo) {
         document.getElementById(item).disabled = true;
         setTimeout(function () {
             document.getElementById(item).disabled = false;
         }, tempo)
-    });
+    }
 }
 
 //funcao responsavel por gerar a tela de aguarde o carregamento

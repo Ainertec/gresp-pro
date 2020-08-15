@@ -67,23 +67,23 @@ async function buscarBebida(tipoBusca) {
                 </tr>
             </thead>
             <tbody>`
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
         if (item.drink) {
             VETORDEBEBIDASCLASSEBEBIDA.push(item)
             codigoHTML += `<tr>
-              <th class="table-info" title="${item.name}"><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(20, item.name)}</th>
-              <td class="table-info" title="${item.description}">${corrigirTamanhoString(40, item.description)}</td>`
+                      <th class="table-info" title="${item.name}"><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(20, item.name)}</th>
+                      <td class="table-info" title="${item.description}">${corrigirTamanhoString(40, item.description)}</td>`
             if (item.stock != null) {
                 codigoHTML += `<td class="table-primary"><strong>${item.stock} Unid.</strong></td>`
             } else {
                 codigoHTML += `<td class="table-primary text-danger"><strong>0 Unid.</strong></td>`
             }
             codigoHTML += `<td class="table-warning text-danger"><strong>R$${(item.price).toFixed(2)}<strong></td>
-              <th class="table-light"><button class="btn btn-primary btn-sm" onclick="carregarDadosBebida('${item._id}')"><span class="fas fa-pencil-alt"></span> Editar</button></td>
-              <th class="table-light"><button class="btn btn-outline-danger btn-sm" onclick="confirmarAcao('Excluir os dados da bebida permanentemente!', 'deleteBebida(this.value)', '${item._id}');" ><span class="fas fa-trash-alt"></span> Excluir</button></td>
-              </tr>`
+                      <th class="table-light"><button class="btn btn-primary btn-sm" onclick="carregarDadosBebida('${item._id}')"><span class="fas fa-pencil-alt"></span> Editar</button></td>
+                      <th class="table-light"><button class="btn btn-outline-danger btn-sm" onclick="confirmarAcao('Excluir os dados da bebida permanentemente!', 'deleteBebida(this.value)', '${item._id}');" ><span class="fas fa-trash-alt"></span> Excluir</button></td>
+                      </tr>`
         }
-    });
+    }
     codigoHTML += `</tbody>
       </table>`
 

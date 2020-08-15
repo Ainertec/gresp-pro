@@ -77,7 +77,7 @@ async function telaRespostaRelatorioProdutoseBebidas() {
     codigoHTML += `<tbody>`
     codigoHTML += `<tr class="table-primary text-dark"><td colspan="4">Produtos</td></tr>`
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
         if (!item.drink) {
             codigoHTML += `<tr class="table-light text-dark">`
             codigoHTML += `<td scope="col"><small>${corrigirTamanhoString(20, item.name)}</small></td>`
@@ -86,11 +86,11 @@ async function telaRespostaRelatorioProdutoseBebidas() {
             codigoHTML += `<td scope="col"><small>R$${(item.price).toFixed(2)}</small></td>`
             codigoHTML += `</tr>`
         }
-    });
+    }
 
     codigoHTML += `<tr class="table-primary text-dark"><td colspan="4">Bebidas</td></tr>`
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
         if (item.drink) {
             codigoHTML += `<tr class="table-light text-dark">`
             codigoHTML += `<td scope="col"><small>${corrigirTamanhoString(20, item.name)}</small></td>`
@@ -99,7 +99,7 @@ async function telaRespostaRelatorioProdutoseBebidas() {
             codigoHTML += `<td scope="col"><small>R$${(item.price).toFixed(2)}</small></td>`
             codigoHTML += `</tr>`
         }
-    });
+    }
 
     codigoHTML += `</tbody>`
     codigoHTML += `</table>`
@@ -217,17 +217,17 @@ async function telaRespostaListaTodosOsPedidosAbertos() {
     codigoHTML += `</thead>`
     codigoHTML += `<tbody>`
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
         codigoHTML += `<tr class="table-light text-dark">`
         codigoHTML += `<td scope="col"><small>${item.identification}</small></td>`
         codigoHTML += `<td scope="col"><small>`
-        item.items.forEach(function (item2) {
+        for (let item2 of item.items) {
             codigoHTML += `( ${corrigirTamanhoString(20, item2.product.name)} X ${item2.quantity} )`
-        });
+        }
         codigoHTML += `</small></td>`
         codigoHTML += `<td scope="col"><small>R$${(item.total).toFixed(2)}</small></td>`
         codigoHTML += `</tr>`
-    });
+    }
 
     codigoHTML += `</tbody>`
     codigoHTML += `</table>`

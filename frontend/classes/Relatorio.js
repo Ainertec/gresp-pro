@@ -125,9 +125,9 @@ async function gerarGraficoDemonstrativoVendaPorItem() {
     await aguardeCarregamento(false)
     let result = [];
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
         result.push(JSON.parse(`{"name":"${item._id.name}","data":[${item.amount}]}`))
-    });
+    }
 
     Highcharts.chart('grafico1', {
         chart: {
@@ -183,10 +183,10 @@ async function gerarGraficoLucroMensal(tipo) {
         await aguardeCarregamento(false)
     }
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
         vetorTotal.push(parseFloat(item.amount))
         vetorData.push(`${item._id.month} / ${item._id.year}`)
-    });
+    }
 
     Highcharts.chart('grafico2', {
         chart: {
@@ -253,10 +253,10 @@ async function gerarGraficoQuantidadeVendasMensal(tipo) {
         await aguardeCarregamento(false)
     }
 
-    json.data.forEach(function (item) {
+    for (let item of json.data) {
         vetorData.push((item._id.month + '/' + item._id.year).toString())
         vetorTotal.push(item.total)
-    });
+    }
 
     Highcharts.chart('grafico3', {
         chart: {
@@ -318,19 +318,19 @@ async function tabelaDeRelatorioCaixa(tipo) {
         codigoHTML += '</tr>'
         codigoHTML += '</thead>'
         codigoHTML += '<tbody>'
-        json.data.forEach(function (item) {
+        for (let item of json.data) {
             codigoHTML += '<tr class="table-light text-dark">'
             codigoHTML += `<td scope="col"><small>${(item.updatedAt).split(".")[0]}</small></td>`
             codigoHTML += `<td scope="col"><small>${item.identification}</small></td>`
             codigoHTML += `<td scope="col"><small>`
-            item.items.forEach(function (item2) {
+            for (let item2 of item.items) {
                 codigoHTML += `(${item2.product.name} X ${item2.quantity})`;
-            });
+            }
             codigoHTML += '</small></td>'
             codigoHTML += `<td scope="col"><small>${item.payment}</small></td>`
             codigoHTML += `<td scope="col"><small>R$${(item.total).toFixed(2)}</small></td>`
             codigoHTML += '</tr>'
-        });
+        }
         codigoHTML += '</tbody>'
         codigoHTML += '</table>'
 
