@@ -10,6 +10,7 @@ import KitchenController from './controllers/KitchenController';
 import SerialController from './controllers/SerialController';
 import PrinterController from './controllers/PrinterController';
 import ReportController from './controllers/ReportController';
+import CategoryController from './controllers/CategoryController';
 
 import Authentication from './middlewares/Authentication';
 import Authorization from './middlewares/Authorization';
@@ -138,6 +139,14 @@ routes.delete(
   // celebrate({ params: validations.paramId }),
   IngredientController.delete,
 );
+
+// Categories
+
+routes.get('/categories', CategoryController.index);
+routes.get('/categories/:id', CategoryController.show);
+routes.post('/categories', CategoryController.store);
+routes.put('/categories/:id', CategoryController.update);
+routes.delete('/categories/:id', CategoryController.delete);
 
 // Order
 

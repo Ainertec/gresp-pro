@@ -56,3 +56,8 @@ export interface Ingredients {
   material: IngredientInterface;
   quantity: number;
 }
+
+export interface ICategory extends Document {
+  name: string;
+  products: ItemsInterface[];
+}

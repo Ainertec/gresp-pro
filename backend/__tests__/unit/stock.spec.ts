@@ -44,6 +44,7 @@ describe('Stock controller', () => {
         {
           product: item._id,
           quantity: 5,
+          courtesy: false,
         },
       ],
     });
@@ -70,6 +71,7 @@ describe('Stock controller', () => {
         {
           product: item._id,
           quantity: 5,
+          courtesy: false,
         },
       ],
     });
@@ -187,10 +189,12 @@ describe('Stock controller', () => {
         {
           product: item._id,
           quantity: 2,
+          courtesy: false,
         },
         {
           product: item2._id,
           quantity: 3,
+          courtesy: false,
         },
       ],
       finished: false,

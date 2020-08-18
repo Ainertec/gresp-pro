@@ -21,6 +21,7 @@ class OrderController {
   private async getOrderTotalAndAlert(items: ItemsInterface[]) {
     let total = 0;
     const alert = Array<string>();
+
     await Promise.all(
       items.map(async item => {
         const consumedItem = await Item.findOne({ _id: item.product });

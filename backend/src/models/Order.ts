@@ -53,21 +53,6 @@ const OrderSchema = new Schema(
   },
 );
 
-// OrderSchema.post<OrderInterface>('findOneAndUpdate', async (document) => {
-//   if (document && document.items && document.closed) {
-
-//     await Promise.all(
-//       document.items.map(async (item) => {
-//         const product = await Item.findOne({ _id: item.product });
-//         if (product && product.stock) {
-//           product.stock -= item.quantity;
-//           await product.save();
-//         }
-//       })
-//     );
-//   }
-// });
-
 OrderSchema.post<OrderInterface>('findOneAndUpdate', async document => {
   if (document && document.items && document.closed) {
     for (const item of document.items) {

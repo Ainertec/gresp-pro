@@ -1,7 +1,7 @@
 ### Updates for Gresp
 
 [x] Manipulamento de estoque por ingredients e unitário
-[] Sistema de cortesia em um item, esse item sai 'de graça' sem somar no total, somente usuários admin.
+[x] Sistema de cortesia em um item, esse item sai 'de graça' sem somar no total, somente usuários admin.
 [] Busca por categoria e consequentemente separação por categoria.
 
 No sistema de cortesia, envia-se um campo nos 'items', como no exemplo:
@@ -23,9 +23,10 @@ _id,
 name,
 products:[product_id]
 }
+[bebidas] [bolos]
 
 
-categoria.find({_id:id}).populate(products).
+categoria.find({_id:id}).populate(products)
 
 const filterCategoria = categoria.map(cat=>{
   return{
