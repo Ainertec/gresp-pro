@@ -22,8 +22,8 @@ class PrinterController {
   }
 
   private toPrinterUpdated(items: ItemsInterface[], oldItems: OldItems[]) {
-    let products = '';
-    let drinks = '';
+    const products: ItemsInterface[] = [];
+    const drinks: ItemsInterface[] = [];
 
     oldItems.map(oldItem => {
       const position = items.findIndex(
@@ -35,32 +35,40 @@ class PrinterController {
         items.splice(position, 1);
       }
     });
-
-    for (const item of items) {
+    items.map(item => {
       if (item.product.drink) {
-        drinks += `* ${item?.product.name}
-- Quantidade: ${item.quantity}\n`;
+        drinks.push(item);
       } else {
-        products += `* ${item.product.name}
-- Quantidade: ${item.quantity}\n`;
+        products.push(item);
       }
-    }
+    });
     return { products, drinks };
+
+    //     for (const item of items) {
+    //       if (item.product.drink) {
+    //         drinks += `* ${item?.product.name}
+    // - Quantidade: ${item.quantity}\n
+    // ${item.courtesy && 'Cortesia'}`;
+    //       } else {
+    //         products += `* ${item.product.name}
+    // - Quantidade: ${item.quantity}\n
+    // ${item.courtesy && 'Cortesia'}`;
+    //       }
+    //     }
+    // return { products, drinks };
   }
 
   private toPrinterNew(items: ItemsInterface[]) {
-    let products = '';
-    let drinks = '';
+    const products: ItemsInterface[] = [];
+    const drinks: ItemsInterface[] = [];
 
-    for (const item of items) {
+    items.map(item => {
       if (item.product.drink) {
-        drinks += `* ${item.product.name}
-- Quantidade: ${item.quantity}\n`;
+        drinks.push(item);
       } else {
-        products += `* ${item.product.name}
-- Quantidade: ${item.quantity}\n`;
+        products.push(item);
       }
-    }
+    });
     return { products, drinks };
   }
 
@@ -86,7 +94,7 @@ class PrinterController {
       spaceBefore: 20,
       spaceAfter: 20,
       fontSize: 8,
-      // paragraph: true,
+      paragraph: true,
     });
     const contentBorder = new JsRtf.Format({
       spaceBefore: 100,
@@ -116,12 +124,24 @@ class PrinterController {
       type
         ? myDoc.writeText(`Tipo: Novo`, header)
         : myDoc.writeText(`Tipo: Atualizado`, header);
-      // myDoc.writeText(`Hora: ${order.identification}`, header);
       myDoc.writeText('=========== Produtos ==========', contentBorder);
-      myDoc.writeText(`${items?.products}`, contentStyle);
+      items.products.map(item => {
+        myDoc.writeText(
+          `* ${item.product.name} ${item.courtesy && '/ Cortesia'}`,
+          contentStyle,
+        );
+        myDoc.writeText(`- Quantidade: ${item.quantity}`, contentStyle);
+        // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
+      });
       myDoc.writeText('=========== Bebidas ===========', contentBorder);
-      myDoc.writeText(`${items?.drinks}`, contentStyle);
-      myDoc.writeText('', contentBorder);
+      items.drinks.map(item => {
+        myDoc.writeText(
+          `* ${item.product.name} ${item.courtesy && '/ Cortesia'}`,
+          contentStyle,
+        );
+        myDoc.writeText(`- Quantidade: ${item.quantity}`, contentStyle);
+        // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
+      });
       myDoc.writeText('========== Observação =========', contentStyle);
       myDoc.writeText(
         `\n- ${order.note ? order.note : 'Nenhuma.'}\n`,

@@ -1,17 +1,16 @@
 import { Joi } from 'celebrate';
-import { ArraySchema } from '@hapi/joi';
+import validObjectId from './validObjectId';
 
-import { ItemInterface } from '../interfaces/base';
-
-interface Items extends ArraySchema {
-  product: ItemInterface;
-  quantity: number;
-}
+const itemsArray = Joi.object().keys({
+  product: Joi.custom(validObjectId, 'valid id').required(),
+  quantity: Joi.number().required(),
+  courtesy: Joi.boolean(),
+});
 
 export const order = Joi.object().keys({
   note: Joi.string(),
   identification: Joi.number().required(),
-  items: Joi.array().required(),
+  items: Joi.array().items(itemsArray).required(),
 });
 export const orderUpdate = Joi.object().keys({
   note: Joi.string(),

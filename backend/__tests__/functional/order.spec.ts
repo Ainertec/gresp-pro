@@ -46,6 +46,40 @@ describe('Order Controller', () => {
     expect(response.status).toBe(200);
   });
 
+  it('should create a order with courtesy products', async () => {
+    const token = await Token;
+    const item = await factory.create<ItemInterface>('Item', {
+      stock: 5,
+      price: 2,
+    });
+    const item2 = await factory.create<ItemInterface>('Item', {
+      stock: 51,
+      price: 4,
+    });
+    const response = await request(app)
+      .post('/orders')
+      .send({
+        identification: 123,
+        note: 'Ola',
+        items: [
+          {
+            product: item._id,
+            quantity: 4,
+            courtesy: true,
+          },
+          {
+            product: item2._id,
+            quantity: 4,
+            courtesy: false,
+          },
+        ],
+      })
+      .set('Authorization', `Bearer ${token}`);
+    expect(response.body.order.total).toBe(16);
+    expect(response.body).toHaveProperty('stockAlert');
+    expect(response.status).toBe(200);
+  });
+
   it('should not create a order with already existent identification', async () => {
     const token = await Token;
     const item = await factory.create<ItemInterface>('Item');
@@ -93,6 +127,35 @@ describe('Order Controller', () => {
       })
       .set('Authorization', `Bearer ${token}`);
 
+    expect(response.body).toHaveProperty('stockAlert');
+    expect(response.status).toBe(200);
+  });
+
+  it('should update a order with courtesy product', async () => {
+    const token = await Token;
+
+    const order = await factory.create<OrderInterface>('Order', {
+      identification: 123,
+    });
+
+    const item = await factory.create<ItemInterface>('Item', {
+      stock: 5,
+    });
+
+    const response = await request(app)
+      .put(`/orders/${order.identification}`)
+      .send({
+        note: 'Ola',
+        items: [
+          {
+            product: item._id,
+            quantity: 5,
+            courtesy: true,
+          },
+        ],
+      })
+      .set('Authorization', `Bearer ${token}`);
+    expect(response.body.order.total).toBe(0);
     expect(response.body).toHaveProperty('stockAlert');
     expect(response.status).toBe(200);
   });
@@ -151,6 +214,7 @@ describe('Order Controller', () => {
 
     expect(response.body.length).toBe(5);
   });
+
   it('should list an open orders by identification ', async () => {
     const token = await Token;
 

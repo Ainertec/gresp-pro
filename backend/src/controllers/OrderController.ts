@@ -6,9 +6,10 @@ import { ItemInterface, CustomRequest } from '../interfaces/base';
 import Order from '../models/Order';
 import Item from '../models/Item';
 
-interface ItemsIterface extends Document {
+interface ItemsInterface extends Document {
   product: ItemInterface;
   quantity: number;
+  courtesy: boolean;
 }
 
 class OrderController {
@@ -17,7 +18,7 @@ class OrderController {
     this.update = this.update.bind(this);
   }
 
-  private async getOrderTotalAndAlert(items: ItemsIterface[]) {
+  private async getOrderTotalAndAlert(items: ItemsInterface[]) {
     let total = 0;
     const alert = Array<string>();
     await Promise.all(
@@ -26,7 +27,7 @@ class OrderController {
         if (consumedItem) {
           if (consumedItem.stock && consumedItem.stock <= 5)
             alert.push(consumedItem.name);
-          total += consumedItem.price * item.quantity;
+          total += item.courtesy ? 0 : consumedItem.price * item.quantity;
         }
       }),
     );
@@ -37,7 +38,7 @@ class OrderController {
     const { identification, items, note } = req.body;
 
     if (await Order.findOne({ identification, closed: false }))
-      return res.status(400).json('Order aready exist');
+      return res.status(400).json('Order already exist');
 
     const orderInformations = await this.getOrderTotalAndAlert(items);
     const finalPrice = orderInformations.total;

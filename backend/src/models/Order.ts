@@ -15,6 +15,10 @@ const ItemSchema = new Schema({
     type: Number,
     required: true,
   },
+  courtesy: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const OrderSchema = new Schema(

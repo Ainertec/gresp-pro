@@ -20,7 +20,7 @@ describe('Printer', () => {
   beforeEach(async () => {
     await Order.deleteMany({});
   });
-  it('shuld create a new recipe ', async () => {
+  it('should create a new recipe ', async () => {
     const token = await Token;
 
     const oldOrder = await factory.create<OrderInterface>('Order', {
@@ -38,17 +38,20 @@ describe('Printer', () => {
     expect(response.status).toBe(200);
   });
 
-  it('shuld create a recipe updated ', async () => {
+  it('should create a recipe updated ', async () => {
     const token = await Token;
 
     const item = await factory.create<ItemInterface>('Item', {
       name: 'Tomate',
+      price: 2,
     });
     const item1 = await factory.create<ItemInterface>('Item', {
       name: 'Manga',
+      price: 4,
     });
     const item2 = await factory.create<ItemInterface>('Item', {
       name: 'Chocolate',
+      price: 5,
     });
 
     const oldOrder = await factory.create<OrderInterface>('Order', {
@@ -57,10 +60,12 @@ describe('Printer', () => {
         {
           product: item._id,
           quantity: 5,
+          courtesy: false,
         },
         {
           product: item1._id,
           quantity: 5,
+          courtesy: true,
         },
       ],
     });
@@ -69,14 +74,17 @@ describe('Printer', () => {
       {
         product: item._id,
         quantity: 5,
+        courtesy: false,
       },
       {
         product: item1._id,
         quantity: 5,
+        courtesy: true,
       },
       {
         product: item2._id,
         quantity: 5,
+        courtesy: true,
       },
     ];
 
@@ -103,7 +111,7 @@ describe('Printer', () => {
     expect(response.status).toBe(200);
   });
 
-  it('shuld create a recipe with quantity updated', async () => {
+  it('should create a recipe with quantity updated', async () => {
     const token = await Token;
 
     const item = await factory.create<ItemInterface>('Item', {
@@ -122,10 +130,12 @@ describe('Printer', () => {
         {
           product: item1._id,
           quantity: 5,
+          courtesy: false,
         },
         {
           product: item._id,
           quantity: 5,
+          courtesy: false,
         },
       ],
     });
@@ -134,14 +144,17 @@ describe('Printer', () => {
       {
         product: item._id,
         quantity: 7,
+        courtesy: false,
       },
       {
         product: item1._id,
         quantity: 5,
+        courtesy: false,
       },
       {
         product: item2._id,
         quantity: 5,
+        courtesy: false,
       },
     ];
 

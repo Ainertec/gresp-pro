@@ -13,6 +13,7 @@ export interface ItemInterface extends Document {
 export interface ItemsInterface {
   product: ItemInterface;
   quantity: number;
+  courtesy: boolean;
 }
 
 export interface UserInterface extends Document {
