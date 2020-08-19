@@ -7,6 +7,7 @@ require("dotenv");
 var express_1 = __importDefault(require("express"));
 var mongoose_1 = __importDefault(require("mongoose"));
 var celebrate_1 = require("celebrate");
+// import cors from 'cors';
 var socket_io_1 = __importDefault(require("socket.io"));
 var http_1 = __importDefault(require("http"));
 var routes_1 = __importDefault(require("./routes"));

@@ -56,7 +56,7 @@ var SessionController = /** @class */ (function () {
     }
     SessionController.prototype.create = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, password, user, correctPassword, token, serializadedUser;
+            var _a, name, password, user, correctPassword, token, serializedUser;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -71,12 +71,12 @@ var SessionController = /** @class */ (function () {
                     case 2:
                         correctPassword = _b.sent();
                         if (!correctPassword) {
-                            return [2 /*return*/, response.status(401).json('incorrent password')];
+                            return [2 /*return*/, response.status(401).json('incorrect password')];
                         }
                         token = user.generateToken();
-                        serializadedUser = __assign(__assign({}, user.toObject()), { password_hash: undefined, response: undefined });
+                        serializedUser = __assign(__assign({}, user.toObject()), { password_hash: undefined, response: undefined });
                         return [2 /*return*/, response.json({
-                                user: serializadedUser,
+                                user: serializedUser,
                                 token: token,
                             })];
                 }

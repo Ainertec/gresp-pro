@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function () { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function () { return this; }), g;
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -50,39 +50,50 @@ var PrinterController = /** @class */ (function () {
         this.create = this.create.bind(this);
     }
     PrinterController.prototype.toPrinterUpdated = function (items, oldItems) {
-        var products = '';
-        var drinks = '';
+        var products = [];
+        var drinks = [];
         oldItems.map(function (oldItem) {
             var position = items.findIndex(function (item) {
-                return String(item.product._id) === String(oldItem.product) && item.quantity === oldItem.quantity;
+                return String(item.product._id) === String(oldItem.product) &&
+                    item.quantity === oldItem.quantity;
             });
             if (position >= 0) {
                 items.splice(position, 1);
             }
         });
-        for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
-            var item = items_1[_i];
+        items.map(function (item) {
             if (item.product.drink) {
-                drinks += "* " + (item === null || item === void 0 ? void 0 : item.product.name) + "\n- Quantidade: " + item.quantity + "\n";
+                drinks.push(item);
             }
             else {
-                products += "* " + item.product.name + "\n- Quantidade: " + item.quantity + "\n";
+                products.push(item);
             }
-        }
+        });
         return { products: products, drinks: drinks };
+        //     for (const item of items) {
+        //       if (item.product.drink) {
+        //         drinks += `* ${item?.product.name}
+        // - Quantidade: ${item.quantity}\n
+        // ${item.courtesy && 'Cortesia'}`;
+        //       } else {
+        //         products += `* ${item.product.name}
+        // - Quantidade: ${item.quantity}\n
+        // ${item.courtesy && 'Cortesia'}`;
+        //       }
+        //     }
+        // return { products, drinks };
     };
     PrinterController.prototype.toPrinterNew = function (items) {
-        var products = '';
-        var drinks = '';
-        for (var _i = 0, items_2 = items; _i < items_2.length; _i++) {
-            var item = items_2[_i];
+        var products = [];
+        var drinks = [];
+        items.map(function (item) {
             if (item.product.drink) {
-                drinks += "* " + item.product.name + "\n- Quantidade: " + item.quantity + "\n";
+                drinks.push(item);
             }
             else {
-                products += "* " + item.product.name + "\n- Quantidade: " + item.quantity + "\n";
+                products.push(item);
             }
-        }
+        });
         return { products: products, drinks: drinks };
     };
     PrinterController.prototype.create = function (req, res) {
@@ -100,7 +111,9 @@ var PrinterController = /** @class */ (function () {
                         return [4 /*yield*/, order.populate('items.product').execPopulate()];
                     case 2:
                         _b.sent();
-                        date = order.updatedAt ? date_fns_1.format(order.updatedAt, 'dd/MM/yyyy HH:mm:ss') : '';
+                        date = order.updatedAt
+                            ? date_fns_1.format(order.updatedAt, 'dd/MM/yyyy HH:mm:ss')
+                            : '';
                         myDoc = new jsrtf_1.default({
                             language: jsrtf_1.default.Language.BR,
                             pageWidth: jsrtf_1.default.Utils.mm2twips(58),
@@ -112,6 +125,7 @@ var PrinterController = /** @class */ (function () {
                             spaceBefore: 20,
                             spaceAfter: 20,
                             fontSize: 8,
+                            paragraph: true,
                         });
                         contentBorder = new jsrtf_1.default.Format({
                             spaceBefore: 100,
@@ -136,13 +150,21 @@ var PrinterController = /** @class */ (function () {
                             myDoc.writeText('', contentBorder);
                             myDoc.writeText('>>>>>>>>> Comanda <<<<<<<<<<', header);
                             myDoc.writeText("N\u00FAmero: " + order.identification, header);
-                            type ? myDoc.writeText("Tipo: Novo", header) : myDoc.writeText("Tipo: Atualizado", header);
-                            // myDoc.writeText(`Hora: ${order.identification}`, header);
+                            type
+                                ? myDoc.writeText("Tipo: Novo", header)
+                                : myDoc.writeText("Tipo: Atualizado", header);
                             myDoc.writeText('=========== Produtos ==========', contentBorder);
-                            myDoc.writeText("" + (items === null || items === void 0 ? void 0 : items.products), contentStyle);
+                            items.products.map(function (item) {
+                                myDoc.writeText("* " + item.product.name + " " + (item.courtesy && '/ Cortesia'), contentStyle);
+                                myDoc.writeText("- Quantidade: " + item.quantity, contentStyle);
+                                // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
+                            });
                             myDoc.writeText('=========== Bebidas ===========', contentBorder);
-                            myDoc.writeText("" + (items === null || items === void 0 ? void 0 : items.drinks), contentStyle);
-                            myDoc.writeText('', contentBorder);
+                            items.drinks.map(function (item) {
+                                myDoc.writeText("* " + item.product.name + " " + (item.courtesy && '/ Cortesia'), contentStyle);
+                                myDoc.writeText("- Quantidade: " + item.quantity, contentStyle);
+                                // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
+                            });
                             myDoc.writeText('========== Observação =========', contentStyle);
                             myDoc.writeText("\n- " + (order.note ? order.note : 'Nenhuma.') + "\n", contentStyle);
                             myDoc.writeText("- " + date, contentStyle);

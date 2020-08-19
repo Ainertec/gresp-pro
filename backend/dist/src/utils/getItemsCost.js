@@ -39,73 +39,36 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Questions = void 0;
-/* eslint-disable func-names */
-/* eslint-disable camelcase */
-var mongoose_1 = require("mongoose");
-var bcrypt_1 = __importDefault(require("bcrypt"));
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var Questions = Object.freeze({
-    first: 'Qual o modelo do seu primeiro carro?',
-    second: 'Qual o nome do seu melhor amigo de infância?',
-    third: 'Qual o nome do seu primeiro animal de estimação?',
-    fourth: 'Qual o nome da sua mãe?',
-    fifth: 'Qual sua cor preferida?',
-    getQuestions: function () {
-        var ques = [this.first, this.second, this.third, this.fourth, this.fifth];
-        return ques;
-    },
-});
-exports.Questions = Questions;
-var UserSchema = new mongoose_1.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    password_hash: {
-        type: String,
-    },
-    question: {
-        type: String,
-        enum: Object.values(Questions),
-        required: true,
-    },
-    admin: {
-        type: Boolean,
-        default: false,
-    },
-    response: {
-        type: String,
-        required: true,
-    },
-});
-Object.assign(UserSchema.statics, {
-    Questions: Questions,
-});
-UserSchema.virtual('password', { type: String, require: true });
-UserSchema.pre('save', function (next) {
+var Ingredient_1 = __importDefault(require("../models/Ingredient"));
+function getCost(ingredients) {
     return __awaiter(this, void 0, void 0, function () {
-        var hash;
+        var cost;
+        var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    if (!this.password) return [3 /*break*/, 2];
-                    return [4 /*yield*/, bcrypt_1.default.hash(this.password, 8)];
+                    cost = 0;
+                    return [4 /*yield*/, Promise.all(ingredients.map(function (itemIngredient) { return __awaiter(_this, void 0, void 0, function () {
+                            var ingredient;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, Ingredient_1.default.findOne({
+                                            _id: itemIngredient.material,
+                                        })];
+                                    case 1:
+                                        ingredient = _a.sent();
+                                        if (ingredient) {
+                                            cost += ingredient.priceUnit * itemIngredient.quantity;
+                                        }
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); }))];
                 case 1:
-                    hash = _a.sent();
-                    this.password_hash = hash;
-                    _a.label = 2;
-                case 2:
-                    next();
-                    return [2 /*return*/];
+                    _a.sent();
+                    return [2 /*return*/, cost];
             }
         });
     });
-});
-UserSchema.methods.checkPassword = function (password) {
-    return bcrypt_1.default.compare(password, this.password_hash);
-};
-UserSchema.methods.generateToken = function () {
-    return jsonwebtoken_1.default.sign({ id: this._id }, String(process.env.APP_SECRET));
-};
-exports.default = mongoose_1.model('User', UserSchema);
+}
+exports.default = getCost;

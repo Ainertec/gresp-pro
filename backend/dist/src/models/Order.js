@@ -39,8 +39,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
 var mongoose_1 = require("mongoose");
 var Item_1 = __importDefault(require("./Item"));
+var subIngredientStock_1 = require("../utils/subIngredientStock");
 var ItemSchema = new mongoose_1.Schema({
     product: {
         type: mongoose_1.Schema.Types.ObjectId,
@@ -50,6 +53,10 @@ var ItemSchema = new mongoose_1.Schema({
     quantity: {
         type: Number,
         required: true,
+    },
+    courtesy: {
+        type: Boolean,
+        default: false,
     },
 });
 var OrderSchema = new mongoose_1.Schema({
@@ -81,31 +88,36 @@ var OrderSchema = new mongoose_1.Schema({
     timestamps: true,
 });
 OrderSchema.post('findOneAndUpdate', function (document) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _i, _a, item, product;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                if (!(document && document.items && document.closed)) return [3 /*break*/, 2];
-                return [4 /*yield*/, Promise.all(document.items.map(function (item) { return __awaiter(void 0, void 0, void 0, function () {
-                        var product;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, Item_1.default.findOne({ _id: item.product })];
-                                case 1:
-                                    product = _a.sent();
-                                    if (!(product && product.stock)) return [3 /*break*/, 3];
-                                    product.stock -= item.quantity;
-                                    return [4 /*yield*/, product.save()];
-                                case 2:
-                                    _a.sent();
-                                    _a.label = 3;
-                                case 3: return [2 /*return*/];
-                            }
-                        });
-                    }); }))];
+                if (!(document && document.items && document.closed)) return [3 /*break*/, 7];
+                _i = 0, _a = document.items;
+                _b.label = 1;
             case 1:
-                _a.sent();
-                _a.label = 2;
-            case 2: return [2 /*return*/];
+                if (!(_i < _a.length)) return [3 /*break*/, 7];
+                item = _a[_i];
+                return [4 /*yield*/, Item_1.default.findOne({ _id: item.product })];
+            case 2:
+                product = _b.sent();
+                if (!product) return [3 /*break*/, 6];
+                if (!(product.ingredients && product.ingredients.length > 0)) return [3 /*break*/, 4];
+                return [4 /*yield*/, subIngredientStock_1.subIngredientStock(product.ingredients, item.quantity)];
+            case 3:
+                _b.sent();
+                return [3 /*break*/, 6];
+            case 4:
+                if (!product.stock) return [3 /*break*/, 6];
+                product.stock -= item.quantity;
+                return [4 /*yield*/, product.save()];
+            case 5:
+                _b.sent();
+                _b.label = 6;
+            case 6:
+                _i++;
+                return [3 /*break*/, 1];
+            case 7: return [2 /*return*/];
         }
     });
 }); });

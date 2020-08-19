@@ -65,7 +65,7 @@ var OrderController = /** @class */ (function () {
                                             if (consumedItem) {
                                                 if (consumedItem.stock && consumedItem.stock <= 5)
                                                     alert.push(consumedItem.name);
-                                                total += consumedItem.price * item.quantity;
+                                                total += item.courtesy ? 0 : consumedItem.price * item.quantity;
                                             }
                                             return [2 /*return*/];
                                     }
@@ -88,7 +88,7 @@ var OrderController = /** @class */ (function () {
                         return [4 /*yield*/, Order_1.default.findOne({ identification: identification, closed: false })];
                     case 1:
                         if (_b.sent())
-                            return [2 /*return*/, res.status(400).json('Order aready exist')];
+                            return [2 /*return*/, res.status(400).json('Order already exist')];
                         return [4 /*yield*/, this.getOrderTotalAndAlert(items)];
                     case 2:
                         orderInformations = _b.sent();
@@ -108,7 +108,9 @@ var OrderController = /** @class */ (function () {
                         req.io.emit('newOrder', order);
                         return [2 /*return*/, res.json({
                                 order: order,
-                                stockAlert: orderInformations.alert.length === 0 ? undefined : orderInformations.alert,
+                                stockAlert: orderInformations.alert.length === 0
+                                    ? undefined
+                                    : orderInformations.alert,
                             })];
                 }
             });
@@ -149,7 +151,9 @@ var OrderController = /** @class */ (function () {
                         return [2 /*return*/, res.json({
                                 order: newOrder,
                                 oldItems: order.items,
-                                stockAlert: orderInformations.alert.length === 0 ? undefined : orderInformations.alert,
+                                stockAlert: orderInformations.alert.length === 0
+                                    ? undefined
+                                    : orderInformations.alert,
                             })];
                 }
             });
@@ -192,7 +196,10 @@ var OrderController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         identification = Number(req.params.identification);
-                        return [4 /*yield*/, Order_1.default.findOne({ identification: identification, closed: false }).populate('items.product')];
+                        return [4 /*yield*/, Order_1.default.findOne({
+                                identification: identification,
+                                closed: false,
+                            }).populate('items.product')];
                     case 1:
                         order = _a.sent();
                         return [2 /*return*/, res.json(order)];

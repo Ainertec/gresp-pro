@@ -40,6 +40,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Item_1 = __importDefault(require("../models/Item"));
+var getItemsCost_1 = __importDefault(require("../utils/getItemsCost"));
+var Category_1 = __importDefault(require("../models/Category"));
 var ItemController = /** @class */ (function () {
     function ItemController() {
     }
@@ -51,12 +53,17 @@ var ItemController = /** @class */ (function () {
                     case 0:
                         _a = req.query.page, page = _a === void 0 ? 1 : _a;
                         name = req.params.name;
-                        return [4 /*yield*/, Item_1.default.find({ name: { $regex: new RegExp(name), $options: 'i' } }).countDocuments({})];
+                        return [4 /*yield*/, Item_1.default.find({
+                                name: { $regex: new RegExp(name), $options: 'i' },
+                            }).countDocuments({})];
                     case 1:
                         count = _b.sent();
-                        return [4 /*yield*/, Item_1.default.find({ name: { $regex: new RegExp(name), $options: 'i' } })
+                        return [4 /*yield*/, Item_1.default.find({
+                                name: { $regex: new RegExp(name), $options: 'i' },
+                            })
                                 .skip((Number(page) - 1) * 10)
-                                .limit(10)];
+                                .limit(10)
+                                .populate('ingredients.material')];
                     case 2:
                         items = _b.sent();
                         res.header('X-Total-Count', String(count));
@@ -77,7 +84,8 @@ var ItemController = /** @class */ (function () {
                         count = _b.sent();
                         return [4 /*yield*/, Item_1.default.find()
                                 .skip((Number(page) - 1) * 10)
-                                .limit(10)];
+                                .limit(10)
+                                .populate('ingredients.material')];
                     case 2:
                         items = _b.sent();
                         res.header('X-Total-Count', String(count));
@@ -88,20 +96,50 @@ var ItemController = /** @class */ (function () {
     };
     ItemController.prototype.create = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, price, description, stock, drink, item;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var _a, name, price, description, stock, drink, ingredients, cost, categoryId, itemCost, _b, item;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
-                        _a = req.body, name = _a.name, price = _a.price, description = _a.description, stock = _a.stock, drink = _a.drink;
+                        _a = req.body, name = _a.name, price = _a.price, description = _a.description, stock = _a.stock, drink = _a.drink, ingredients = _a.ingredients, cost = _a.cost, categoryId = _a.categoryId;
+                        if (!ingredients && !cost) {
+                            return [2 /*return*/, res
+                                    .status(400)
+                                    .json('It is necessary to send an ingredients or a cost')];
+                        }
+                        if (!ingredients && !stock) {
+                            return [2 /*return*/, res
+                                    .status(400)
+                                    .json('It is necessary to send an ingredients or a stock')];
+                        }
+                        if (!ingredients) return [3 /*break*/, 2];
+                        return [4 /*yield*/, getItemsCost_1.default(ingredients)];
+                    case 1:
+                        _b = _c.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        _b = Number(cost);
+                        _c.label = 3;
+                    case 3:
+                        itemCost = _b;
                         return [4 /*yield*/, Item_1.default.create({
                                 name: name,
                                 price: price,
                                 description: description,
-                                stock: stock,
+                                stock: ingredients ? undefined : stock,
                                 drink: drink,
+                                cost: Number(itemCost.toFixed(5)),
+                                ingredients: ingredients || null,
                             })];
-                    case 1:
-                        item = _b.sent();
+                    case 4:
+                        item = _c.sent();
+                        if (!categoryId) return [3 /*break*/, 6];
+                        return [4 /*yield*/, Category_1.default.findOneAndUpdate({ _id: categoryId }, { $addToSet: { products: item._id } })];
+                    case 5:
+                        _c.sent();
+                        _c.label = 6;
+                    case 6: return [4 /*yield*/, item.populate('ingredients.material').execPopulate()];
+                    case 7:
+                        _c.sent();
                         return [2 /*return*/, res.json(item)];
                 }
             });
@@ -109,25 +147,63 @@ var ItemController = /** @class */ (function () {
     };
     ItemController.prototype.update = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, price, description, stock, drink, id, item;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var _a, name, price, description, stock, drink, cost, ingredients, categoryId, id, itemCost, _b, item;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
-                        _a = req.body, name = _a.name, price = _a.price, description = _a.description, stock = _a.stock, drink = _a.drink;
+                        _a = req.body, name = _a.name, price = _a.price, description = _a.description, stock = _a.stock, drink = _a.drink, cost = _a.cost, ingredients = _a.ingredients, categoryId = _a.categoryId;
                         id = req.params.id;
+                        if (!ingredients && !cost) {
+                            return [2 /*return*/, res
+                                    .status(400)
+                                    .json('It is necessary to send an ingredients or a cost')];
+                        }
+                        if (!ingredients && !stock) {
+                            return [2 /*return*/, res
+                                    .status(400)
+                                    .json('It is necessary to send an ingredients or a stock')];
+                        }
+                        if (!ingredients) return [3 /*break*/, 2];
+                        return [4 /*yield*/, getItemsCost_1.default(ingredients)];
+                    case 1:
+                        _b = _c.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        _b = Number(cost);
+                        _c.label = 3;
+                    case 3:
+                        itemCost = _b;
                         return [4 /*yield*/, Item_1.default.findOneAndUpdate({ _id: id }, {
                                 name: name,
                                 price: price,
                                 description: description,
-                                stock: stock,
-                                drink: drink ? true : false,
+                                stock: ingredients ? undefined : stock,
+                                cost: Number(itemCost.toFixed(5)),
+                                drink: !!drink,
                             }, {
                                 new: true,
                             })];
-                    case 1:
-                        item = _b.sent();
+                    case 4:
+                        item = _c.sent();
                         if (!item)
                             return [2 /*return*/, res.status(400).json('Item does not exist')];
+                        if (ingredients) {
+                            item.ingredients = ingredients;
+                        }
+                        return [4 /*yield*/, item.save()];
+                    case 5:
+                        _c.sent();
+                        if (!categoryId) return [3 /*break*/, 8];
+                        return [4 /*yield*/, Category_1.default.findOneAndUpdate({ products: { $in: [item.id] } }, { $pull: { products: item.id } })];
+                    case 6:
+                        _c.sent();
+                        return [4 /*yield*/, Category_1.default.findOneAndUpdate({ _id: categoryId }, { $addToSet: { products: item._id } })];
+                    case 7:
+                        _c.sent();
+                        _c.label = 8;
+                    case 8: return [4 /*yield*/, item.populate('ingredients.material').execPopulate()];
+                    case 9:
+                        _c.sent();
                         return [2 /*return*/, res.json(item)];
                 }
             });

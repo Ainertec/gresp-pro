@@ -14,6 +14,7 @@ var KitchenController_1 = __importDefault(require("./controllers/KitchenControll
 var SerialController_1 = __importDefault(require("./controllers/SerialController"));
 var PrinterController_1 = __importDefault(require("./controllers/PrinterController"));
 var ReportController_1 = __importDefault(require("./controllers/ReportController"));
+var CategoryController_1 = __importDefault(require("./controllers/CategoryController"));
 var Authentication_1 = __importDefault(require("./middlewares/Authentication"));
 var Authorization_1 = __importDefault(require("./middlewares/Authorization"));
 // Validations
@@ -26,6 +27,7 @@ var orderSchema_1 = require("./validations/orderSchema");
 var kitchenSchema_1 = __importDefault(require("./validations/kitchenSchema"));
 var printerValidation_1 = __importDefault(require("./validations/printerValidation"));
 var reportSchema_1 = __importDefault(require("./validations/reportSchema"));
+var IngredientController_1 = __importDefault(require("./controllers/IngredientController"));
 var routes = express_1.Router();
 routes.post('/users/first', celebrate_1.celebrate({ body: userSchema_1.user }), UserController_1.default.store);
 // Serial
@@ -49,6 +51,26 @@ routes.get('/items', ItemController_1.default.index);
 routes.post('/items', celebrate_1.celebrate({ body: itemSchema_1.item }), ItemController_1.default.create);
 routes.put('/items/:id', celebrate_1.celebrate({ body: itemSchema_1.item, params: itemSchema_1.paramIdItem }), ItemController_1.default.update);
 routes.delete('/items/:id', celebrate_1.celebrate({ params: itemSchema_1.paramIdItem }), ItemController_1.default.delete);
+// Ingredients
+routes.get('/ingredients', IngredientController_1.default.index);
+routes.get('/ingredients/:name', 
+// celebrate({ params: validations.paramName }),
+IngredientController_1.default.show);
+routes.post('/ingredients', 
+// celebrate({ body: validations.ingredient }),
+IngredientController_1.default.store);
+routes.put('/ingredients/:id', 
+// celebrate({ body: validations.ingredient, params: validations.paramId }),
+IngredientController_1.default.update);
+routes.delete('/ingredients/:id', 
+// celebrate({ params: validations.paramId }),
+IngredientController_1.default.delete);
+// Categories
+routes.get('/categories', CategoryController_1.default.index);
+routes.get('/categories/:id', CategoryController_1.default.show);
+routes.post('/categories', CategoryController_1.default.store);
+routes.put('/categories/:id', CategoryController_1.default.update);
+routes.delete('/categories/:id', CategoryController_1.default.delete);
 // Order
 routes.get('/orders', OrderController_1.default.index);
 routes.get('/orders/:identification', celebrate_1.celebrate({ params: orderSchema_1.paramIdentification }), OrderController_1.default.show);

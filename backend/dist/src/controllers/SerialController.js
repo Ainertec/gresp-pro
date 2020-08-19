@@ -9,7 +9,7 @@ var SerialController = /** @class */ (function () {
             process.exit(0);
         }
         else {
-            return res.json({ alert: 'invalid acess!' });
+            return res.status(400).json({ alert: 'invalid access!' });
         }
     };
     return SerialController;

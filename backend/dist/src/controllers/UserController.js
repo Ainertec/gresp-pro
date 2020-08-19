@@ -10,6 +10,25 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -46,12 +65,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var User_1 = __importDefault(require("../models/User"));
-var User_2 = require("../models/User");
+var User_1 = __importStar(require("../models/User"));
 var UserController = /** @class */ (function () {
     function UserController() {
     }
@@ -59,41 +74,43 @@ var UserController = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var questions;
             return __generator(this, function (_a) {
-                questions = User_2.Questions.getQuestions();
+                questions = User_1.Questions.getQuestions();
                 return [2 /*return*/, res.json(questions)];
             });
         });
     };
     UserController.prototype.index = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var users, serializadedUsers;
+            var users, serializedUsers;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, User_1.default.find()];
                     case 1:
                         users = _a.sent();
-                        serializadedUsers = users.map(function (user) {
+                        serializedUsers = users.map(function (user) {
                             return __assign(__assign({}, user.toObject()), { password_hash: undefined });
                         });
-                        return [2 /*return*/, res.json(serializadedUsers)];
+                        return [2 /*return*/, res.json(serializedUsers)];
                 }
             });
         });
     };
     UserController.prototype.show = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var name, users, serializadedUser;
+            var name, users, serializedUser;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         name = req.params.name;
-                        return [4 /*yield*/, User_1.default.find({ name: { $regex: new RegExp(name), $options: 'i' } })];
+                        return [4 /*yield*/, User_1.default.find({
+                                name: { $regex: new RegExp(name), $options: 'i' },
+                            })];
                     case 1:
                         users = _a.sent();
-                        serializadedUser = users.map(function (user) {
+                        serializedUser = users.map(function (user) {
                             return __assign(__assign({}, user.toObject()), { password_hash: undefined });
                         });
-                        return [2 /*return*/, res.json(serializadedUser)];
+                        return [2 /*return*/, res.json(serializedUser)];
                 }
             });
         });
@@ -106,7 +123,7 @@ var UserController = /** @class */ (function () {
                     case 0:
                         _a = req.body, admin = _a.admin, name = _a.name, question = _a.question, password = _a.password, response = _a.response;
                         userId = req.userId;
-                        isValidQuestion = User_2.Questions.getQuestions().includes(question);
+                        isValidQuestion = User_1.Questions.getQuestions().includes(question);
                         if (!isValidQuestion) {
                             return [2 /*return*/, res.status(400).json({ message: 'invalid question' })];
                         }
@@ -140,7 +157,7 @@ var UserController = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _a = req.body, question = _a.question, name = _a.name, password = _a.password, response = _a.response, admin = _a.admin;
-                        isValidQuestion = User_2.Questions.getQuestions().includes(question);
+                        isValidQuestion = User_1.Questions.getQuestions().includes(question);
                         if (!isValidQuestion) {
                             return [2 /*return*/, res.status(400).json({ message: 'invalid question' })];
                         }
@@ -173,7 +190,7 @@ var UserController = /** @class */ (function () {
                         _a = req.body, question = _a.question, name = _a.name, password = _a.password, response = _a.response, admin = _a.admin;
                         id = req.params.id;
                         userId = req.userId;
-                        isValidQuestion = User_2.Questions.getQuestions().includes(question);
+                        isValidQuestion = User_1.Questions.getQuestions().includes(question);
                         if (!isValidQuestion) {
                             return [2 /*return*/, res.status(400).json({ message: 'invalid question' })];
                         }
