@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { Request } from 'express';
 
 export interface ItemInterface extends Document {

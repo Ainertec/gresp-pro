@@ -1,6 +1,10 @@
 import request from 'supertest';
 
-import { ItemInterface, IngredientInterface } from '../../src/interfaces/base';
+import {
+  ItemInterface,
+  IngredientInterface,
+  ICategory,
+} from '../../src/interfaces/base';
 import App from '../../src/app';
 
 import { closeConnection, openConnection } from '../utils/connection';
@@ -8,6 +12,7 @@ import factory from '../factories';
 import Token from '../utils/getToken';
 import Item from '../../src/models/Item';
 import User from '../../src/models/User';
+import Category from '../../src/models/Category';
 
 const app = App.express;
 
@@ -21,6 +26,7 @@ describe('Item Tests', () => {
   beforeEach(async () => {
     await Item.deleteMany({});
     await User.deleteMany({});
+    await Category.deleteMany({});
   });
 
   it('should create an item', async () => {
@@ -38,6 +44,30 @@ describe('Item Tests', () => {
       })
       .set('Authorization', `Bearer ${token}`);
 
+    expect(response.status).toBe(200);
+  });
+
+  it('should create an item and add a category', async () => {
+    const token = await Token;
+    const category = await factory.create<ICategory>('Category');
+
+    const response = await request(app)
+      .post('/items')
+      .send({
+        name: 'Coca cola',
+        price: 10.5,
+        description: 'Zero',
+        drink: true,
+        stock: 20,
+        cost: 50,
+        categoryId: category._id,
+      })
+      .set('Authorization', `Bearer ${token}`);
+    const categoryItems = await Category.find({ _id: category._id })
+      .populate('products')
+      .lean();
+
+    expect(categoryItems[0].products.length).toBe(3);
     expect(response.status).toBe(200);
   });
 
@@ -65,7 +95,7 @@ describe('Item Tests', () => {
         ],
       })
       .set('Authorization', `Bearer ${token}`);
-
+    // console.log(response.body.ingredients);
     expect(response.body).toHaveProperty('cost');
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -123,6 +153,41 @@ describe('Item Tests', () => {
       })
       .set('Authorization', `Bearer ${token}`);
 
+    expect(response.status).toBe(200);
+  });
+
+  it('should update a Item and change category', async () => {
+    const token = await Token;
+
+    const item = await factory.create<ItemInterface>('Item');
+    await factory.create<ICategory>('Category', {
+      products: [item._id],
+      name: 'Quentes',
+    });
+    const category2 = await factory.create<ICategory>('Category', {
+      products: [],
+      name: 'gelados',
+    });
+
+    const response = await request(app)
+      .put(`/items/${item._id}`)
+      .send({
+        name: 'Coca cola',
+        price: 10.5,
+        description: 'Zero',
+        cost: 50,
+        stock: 60,
+        categoryId: category2._id,
+      })
+      .set('Authorization', `Bearer ${token}`);
+    const categories = await Category.find({}).populate('products').lean();
+
+    expect(categories[0].products.length).toBe(0);
+    expect(categories[1].products[0]).toEqual(
+      expect.objectContaining({
+        name: 'Coca cola',
+      }),
+    );
     expect(response.status).toBe(200);
   });
 

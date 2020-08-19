@@ -14,7 +14,7 @@ class CategoryController {
     const categoryProducts = category.map(categoryItem => {
       return categoryItem.products;
     });
-    return response.json(categoryProducts);
+    return response.json(categoryProducts[0]);
   }
 
   async store(request: Request, response: Response) {
@@ -50,9 +50,9 @@ class CategoryController {
   async delete(request: Request, response: Response) {
     const { id } = request.params;
 
-    const category = await Category.deleteOne({ _id: id });
+    await Category.deleteOne({ _id: id });
 
-    return response.json(category);
+    return response.status(200).send();
   }
 }
 

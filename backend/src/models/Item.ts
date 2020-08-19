@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { ItemInterface } from '../interfaces/base';
+import Category from './Category';
 
 const IngredientSchema = new Schema({
   material: {
@@ -43,5 +44,22 @@ const ItemSchema = new Schema(
     timestamps: true,
   },
 );
+
+ItemSchema.post('deleteOne', document => {
+  if (document) {
+    const itemId = document._id;
+    Category.find({ products: { $in: [itemId] } }).then(categories => {
+      Promise.all(
+        categories.map(category =>
+          Category.findOneAndUpdate(
+            { _id: category._id },
+            { $pull: { products: itemId } },
+            { new: true },
+          ),
+        ),
+      );
+    });
+  }
+});
 
 export default model<ItemInterface>('Item', ItemSchema);

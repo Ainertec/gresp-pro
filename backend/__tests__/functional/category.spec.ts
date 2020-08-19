@@ -1,5 +1,4 @@
 import request from 'supertest';
-
 import { ItemInterface, ICategory } from '../../src/interfaces/base';
 import App from '../../src/app';
 
@@ -92,7 +91,7 @@ describe('Categories Tests', () => {
     const response = await request(app)
       .get(`/categories/${category._id}`)
       .set('Authorization', `Bearer ${token}`);
-    console.log(response.body);
+    expect(response.body.length).toBe(2);
     expect(response.status).toBe(200);
   });
 });

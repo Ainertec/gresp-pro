@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Item from '../models/Item';
 import getCost from '../utils/getItemsCost';
+import Category from '../models/Category';
 
 class ItemController {
   public async show(req: Request, res: Response) {
@@ -46,6 +47,7 @@ class ItemController {
       drink,
       ingredients,
       cost,
+      categoryId,
     } = req.body;
 
     if (!ingredients && !cost) {
@@ -71,6 +73,13 @@ class ItemController {
       ingredients: ingredients || undefined,
     });
 
+    if (categoryId) {
+      await Category.findOneAndUpdate(
+        { _id: categoryId },
+        { $addToSet: { products: item._id } },
+      );
+    }
+    await item.populate('ingredients.material').execPopulate();
     return res.json(item);
   }
 
@@ -83,6 +92,7 @@ class ItemController {
       drink,
       cost,
       ingredients,
+      categoryId,
     } = req.body;
     const { id } = req.params;
 
@@ -114,12 +124,25 @@ class ItemController {
       },
     );
     if (!item) return res.status(400).json('Item does not exist');
+
     if (ingredients) {
       item.ingredients = ingredients;
     }
     await item.save();
 
-    item.populate('ingredients.material');
+    if (categoryId) {
+      await Category.findOneAndUpdate(
+        { products: { $in: [item.id] } },
+        { $pull: { products: item.id } },
+      );
+
+      await Category.findOneAndUpdate(
+        { _id: categoryId },
+        { $addToSet: { products: item._id } },
+      );
+    }
+
+    await item.populate('ingredients.material').execPopulate();
 
     return res.json(item);
   }
