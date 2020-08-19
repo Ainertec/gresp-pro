@@ -141,7 +141,6 @@ export default function Home() {
       return Alert.alert('Ops!', 'Crie ou atualize o pedido para paga-lo!');
     setShowPay(true);
   }
-
   return (
     <Container>
       <Spinner

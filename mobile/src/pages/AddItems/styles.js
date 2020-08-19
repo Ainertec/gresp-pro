@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
 import { Animated, Dimensions } from 'react-native';
 import { ListItem } from 'react-native-elements';
+import { RectButton } from 'react-native-gesture-handler';
 const deviceWidth = Dimensions.get('window').width;
 
 export const Container = styled.View`
@@ -11,7 +12,8 @@ export const Container = styled.View`
 
 export const ItemList = styled(Animated.FlatList)`
   padding-top: 80px;
-  /* padding-bottom: 80px; */
+  /* margin-bottom: 20px; */
+  /* padding-bottom: 180px; */
 `;
 
 export const Item = styled(ListItem).attrs({
@@ -51,10 +53,34 @@ export const ActionButton = styled.TouchableOpacity`
   width: ${deviceWidth * 0.15}px;
   height: ${deviceWidth * 0.15}px;
   align-items: center;
+  z-index: 4;
   justify-content: center;
-  right: ${deviceWidth * 0.02}px;
-  bottom: ${deviceWidth * 0.02}px;
+  right: ${deviceWidth * 0.04}px;
+  bottom: ${deviceWidth * 0.07}px;
   /* background: #080705; */
   background: #e72847;
   border-radius: ${deviceWidth * 0.2}px;
+`;
+
+export const CategoryContainer = styled(RectButton)`
+  height: 80px;
+  width: 80px;
+  margin: 0 10px 20px 10px;
+  align-items: center;
+  justify-content: center;
+  /* background: #e72847; */
+  background: ${(props) => (props.color ? props.color : '#e72847')};
+  border-radius: 10px;
+`;
+export const Title = styled.Text`
+  font-weight: bold;
+  font-size: 15px;
+  text-align: center;
+  color: #fff;
+`;
+export const CategoryList = styled.FlatList`
+  position: absolute;
+  bottom: 0;
+  margin-right: 90px;
+  z-index: 1;
 `;

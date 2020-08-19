@@ -5,12 +5,14 @@ import { SearchBar } from '../../components/Form';
 import Icon from 'react-native-vector-icons/Feather';
 import api from '../../services/api';
 import Item from './Item';
-import { Container, ItemList, ActionButton } from './styles';
+import CategoryItem from './CategoryItem';
+import { Container, ItemList, ActionButton, CategoryList } from './styles';
 
 const deviceHeight = Dimensions.get('window').height;
 
 export default function AddItems({ navigation }) {
   const [items, setItems] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -50,8 +52,19 @@ export default function AddItems({ navigation }) {
     navigation.navigate('Home');
   }
 
+  async function loadCategories() {
+    const response = await api.get('/categories');
+    setCategories(response.data);
+  }
+
+  async function handleLoadCategoryProducts(id) {
+    const response = await api.get(`/categories/${id}`);
+    setItems(response.data);
+  }
+
   useEffect(() => {
     loadProducts();
+    loadCategories();
   }, []);
 
   const SEARCH_TRANSLATE = deviceHeight * 0.2;
@@ -82,7 +95,7 @@ export default function AddItems({ navigation }) {
       </Form>
 
       <ItemList
-        ListFooterComponentStyle={{ paddingBottom: 100 }}
+        ListFooterComponentStyle={{ paddingBottom: 160 }}
         ListFooterComponent={
           <View style={{ flex: 1 }}>
             {loading && <ActivityIndicator color='#ddd' size='large' />}
@@ -104,7 +117,17 @@ export default function AddItems({ navigation }) {
         scrollEventThrottle={16}
         renderItem={({ item }) => <Item item={item} />}
       />
-
+      <CategoryList
+        horizontal
+        data={categories}
+        keyExtractor={(itemKey) => String(itemKey._id)}
+        renderItem={({ item }) => (
+          <CategoryItem
+            item={item}
+            handleLoadCategoryProducts={handleLoadCategoryProducts}
+          />
+        )}
+      />
       <ActionButton onPress={ending}>
         <Icon name='send' size={25} color={'#fff'} />
       </ActionButton>
