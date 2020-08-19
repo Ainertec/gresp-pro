@@ -18,18 +18,19 @@ class CategoryController {
   }
 
   async store(request: Request, response: Response) {
-    const { name, products } = request.body;
+    const { name, products, color } = request.body;
 
     const category = await Category.create({
       name,
       products,
+      color,
     });
     await category.populate('products');
     return response.json(category);
   }
 
   async update(request: Request, response: Response) {
-    const { name, products } = request.body;
+    const { name, products, color } = request.body;
     const { id } = request.params;
 
     const category = await Category.findByIdAndUpdate(
@@ -37,6 +38,7 @@ class CategoryController {
       {
         name,
         products,
+        color,
       },
       { new: true },
     );

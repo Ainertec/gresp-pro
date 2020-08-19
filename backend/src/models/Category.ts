@@ -7,6 +7,10 @@ const ItemSchema = new Schema(
       type: String,
       required: true,
     },
+    color: {
+      type: String,
+      default: null,
+    },
     products: [
       {
         type: Schema.Types.ObjectId,
