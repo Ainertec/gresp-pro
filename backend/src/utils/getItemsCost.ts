@@ -3,6 +3,7 @@ import { Ingredients } from '../interfaces/base';
 
 async function getCost(ingredients: Ingredients[]) {
   let cost = 0;
+
   await Promise.all(
     ingredients.map(async itemIngredient => {
       const ingredient = await Ingredient.findOne({
@@ -13,6 +14,7 @@ async function getCost(ingredients: Ingredients[]) {
       }
     }),
   );
+
   return cost;
 }
 

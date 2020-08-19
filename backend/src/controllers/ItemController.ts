@@ -69,8 +69,8 @@ class ItemController {
       description,
       stock: ingredients ? undefined : stock,
       drink,
-      cost: itemCost,
-      ingredients: ingredients || undefined,
+      cost: Number(itemCost.toFixed(5)),
+      ingredients: ingredients || null,
     });
 
     if (categoryId) {
@@ -116,7 +116,7 @@ class ItemController {
         price,
         description,
         stock: ingredients ? undefined : stock,
-        cost: itemCost,
+        cost: Number(itemCost.toFixed(5)),
         drink: !!drink,
       },
       {
