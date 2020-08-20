@@ -1,7 +1,9 @@
-import React from 'react';
-import { FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 
+import ActionButton from '../../components/ActionButton';
+import PaymentModal from '../../components/PaymentModal';
 import {
   Container,
   Title,
@@ -15,6 +17,15 @@ import {
 
 const Details = () => {
   const order = useRoute().params;
+  const [showPay, setShowPay] = useState(false);
+  const [changed, setChanged] = useState(false);
+
+  async function handlePayment() {
+    if (order.total === undefined || changed === true)
+      return Alert.alert('Ops!', 'Crie ou atualize o pedido para paga-lo!');
+    setShowPay(true);
+  }
+
   return (
     <Container>
       <Title>Detalhes do Pedido</Title>
@@ -40,12 +51,23 @@ const Details = () => {
               size: 26,
             }}
             title={item.product.name}
-            rightTitle={`R$ ${item.product.price}`}
+            rightTitle={item.courtesy ? 'Cortesia' : `R$ ${item.product.price}`}
             subtitle={item.product.description}
             rightSubtitle={`Quant. ${item.quantity}`}
           />
         )}
       />
+      <ActionButton onPress={handlePayment} background>
+        <MaterialIcons
+          size={56}
+          reverse
+          raised
+          color='#a46810'
+          name='monetization-on'
+          onPress={handlePayment}
+        />
+      </ActionButton>
+      <PaymentModal showPay={showPay} setShowPay={setShowPay} order={order} />
     </Container>
   );
 };

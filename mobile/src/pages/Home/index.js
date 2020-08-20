@@ -45,15 +45,22 @@ export default function Home() {
   }
 
   async function itemRemove(id) {
-    const filterdItem = order.items.filter((item) => item.product._id !== id);
-    setOrder({ ...order, items: filterdItem });
+    const filteredItem = order.items.filter((item) => item.product._id !== id);
+    setOrder({ ...order, items: filteredItem });
   }
 
   function createOrder() {
+    const serializedItems = order.items.map((item) => {
+      return {
+        product: item.product._id,
+        quantity: item.quantity,
+        courtesy: item.courtesy,
+      };
+    });
     api
       .post(`orders`, {
         identification: Number(order.identification),
-        items: order.items,
+        items: serializedItems,
         note: order.note === '' || !order.note ? undefined : order.note,
       })
       .then((response) => {
@@ -75,6 +82,7 @@ export default function Home() {
       })
       .catch((error) => {
         if (error.request.status !== 200) {
+          console.log(error.response);
           return Alert.alert('Ops...', 'Falha ao criar pedido');
         }
       });
@@ -82,10 +90,16 @@ export default function Home() {
   }
 
   function updateOrder() {
-    console.log(order.note);
+    const serializedItems = order.items.map((item) => {
+      return {
+        product: item.product._id,
+        quantity: item.quantity,
+        courtesy: item.courtesy,
+      };
+    });
     api
       .put(`orders/${order.identification}`, {
-        items: order.items,
+        items: serializedItems,
         note: order.note === '' || !order.note ? undefined : order.note,
       })
       .then((response) => {
@@ -124,12 +138,13 @@ export default function Home() {
       return Alert.alert('Ops...', 'Necessário inserir items');
     }
     setIsSpinnerVisible(true);
-
-    if (order._id) {
-      updateOrder();
-    } else {
-      createOrder();
-    }
+    setTimeout(() => {
+      if (order._id) {
+        updateOrder();
+      } else {
+        createOrder();
+      }
+    }, 350);
 
     setTimeout(() => {
       setIsSpinnerVisible(false);

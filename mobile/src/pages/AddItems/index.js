@@ -6,7 +6,8 @@ import Icon from 'react-native-vector-icons/Feather';
 import api from '../../services/api';
 import Item from './Item';
 import CategoryItem from './CategoryItem';
-import { Container, ItemList, ActionButton, CategoryList } from './styles';
+import { Container, ItemList, CategoryList } from './styles';
+import ActionButton from '../../components/ActionButton';
 
 const deviceHeight = Dimensions.get('window').height;
 
@@ -95,7 +96,7 @@ export default function AddItems({ navigation }) {
       </Form>
 
       <ItemList
-        ListFooterComponentStyle={{ paddingBottom: 160 }}
+        ListFooterComponentStyle={{ paddingBottom: 90 }}
         ListFooterComponent={
           <View style={{ flex: 1 }}>
             {loading && <ActivityIndicator color='#ddd' size='large' />}

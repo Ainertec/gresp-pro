@@ -1,7 +1,8 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { Icon } from 'react-native-elements';
-
+import { FontAwesome5 } from '@expo/vector-icons';
 import { useOrder } from '../../contexts/order';
+import { useAuth } from '../../contexts/auth';
 
 import {
   ItemContainer,
@@ -11,9 +12,12 @@ import {
   RightContent,
   HomeItem,
 } from './styles';
+import { Text, View, Alert } from 'react-native';
 
 const Item = ({ item, setChanged, itemRemove }) => {
   const { order, setOrder } = useOrder();
+  const { user } = useAuth();
+  const [courtesy, setCourtesy] = useState(false);
 
   function changeQuantity(value) {
     setChanged(true);
@@ -26,21 +30,69 @@ const Item = ({ item, setChanged, itemRemove }) => {
       );
       const finalQuantity = existentItem.quantity + value;
       existentItem.quantity = finalQuantity > 0 ? finalQuantity : 1;
-      const serializadItems = order.items;
-      serializadItems[position] = existentItem;
+      const serializedItems = order.items;
+      serializedItems[position] = existentItem;
 
-      setOrder({ ...order, items: serializadItems });
+      setOrder({ ...order, items: serializedItems });
+    }
+  }
+
+  function handleToggleCourtesy(value) {
+    setCourtesy(value);
+    console.log(value);
+    setChanged(true);
+    const existentItem = order.items.find(
+      (itemData) => itemData.product._id === item.product._id
+    );
+    if (existentItem) {
+      const position = order.items.findIndex(
+        (item) => item.product._id === existentItem.product._id
+      );
+      existentItem.courtesy = value;
+      const serializedItems = order.items;
+      serializedItems[position] = existentItem;
+
+      setOrder({ ...order, items: serializedItems });
     }
   }
 
   return (
     <HomeItem
       leftAvatar={
-        item.product.drink ? (
-          <Icon name='local-drink' size={28} />
+        // user.admin ? (
+        courtesy ? (
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <FontAwesome5
+              name='creative-commons-nc'
+              size={28}
+              onPress={() => handleToggleCourtesy(false)}
+            />
+            <Text>Cortesia</Text>
+          </View>
         ) : (
-          <Icon name='restaurant' size={28} />
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Icon
+              name={item.product.drink ? 'local-bar' : 'local-dining'}
+              size={28}
+              onPress={() => {
+                user.admin
+                  ? handleToggleCourtesy(true)
+                  : Alert.alert(
+                      'Ops...',
+                      'Vocẽ não tem permissão para cortesia'
+                    );
+              }}
+            />
+            <Text>Add</Text>
+            <Text>Cortesia</Text>
+          </View>
         )
+        // ) : (
+        //   <Icon
+        //     name={item.product.drink ? 'local-bar' : 'local-dining'}
+        //     size={28}
+        //   />
+        // )
       }
       title={item.product.name}
       rightElement={

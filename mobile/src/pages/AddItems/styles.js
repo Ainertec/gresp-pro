@@ -12,8 +12,7 @@ export const Container = styled.View`
 
 export const ItemList = styled(Animated.FlatList)`
   padding-top: 80px;
-  /* margin-bottom: 20px; */
-  /* padding-bottom: 180px; */
+  margin-bottom: 80px;
 `;
 
 export const Item = styled(ListItem).attrs({
@@ -48,19 +47,19 @@ export const ItemContainer = styled.View`
   text-align: center;
 `;
 
-export const ActionButton = styled.TouchableOpacity`
-  position: absolute;
-  width: ${deviceWidth * 0.15}px;
-  height: ${deviceWidth * 0.15}px;
-  align-items: center;
-  z-index: 4;
-  justify-content: center;
-  right: ${deviceWidth * 0.04}px;
-  bottom: ${deviceWidth * 0.07}px;
-  /* background: #080705; */
-  background: #e72847;
-  border-radius: ${deviceWidth * 0.2}px;
-`;
+// export const ActionButton = styled.TouchableOpacity`
+//   position: absolute;
+//   width: ${deviceWidth * 0.15}px;
+//   height: ${deviceWidth * 0.15}px;
+//   align-items: center;
+//   z-index: 4;
+//   justify-content: center;
+//   right: ${deviceWidth * 0.04}px;
+//   bottom: ${deviceWidth * 0.07}px;
+//   /* background: #080705; */
+//   background: #e72847;
+//   border-radius: ${deviceWidth * 0.2}px;
+// `;
 
 export const CategoryContainer = styled(RectButton)`
   height: 80px;
@@ -82,5 +81,5 @@ export const CategoryList = styled.FlatList`
   position: absolute;
   bottom: 0;
   margin-right: 90px;
-  z-index: 1;
+  /* z-index: 1; */
 `;
