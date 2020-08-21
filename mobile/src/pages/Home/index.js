@@ -29,14 +29,15 @@ import {
 export default function Home() {
   const { order, setOrder } = useOrder();
   const [isSpinnerVisible, setIsSpinnerVisible] = useState(false);
+  const [showPay, setShowPay] = useState(false);
+  const [changed, setChanged] = useState(false);
+
   const orderErrorRef = useRef(null);
   const printerErrorRef = useRef(null);
   const identificationErrorRef = useRef(null);
   const itemsErrorRef = useRef(null);
   const paymentErroRef = useRef(null);
   const successRef = useRef(null);
-  const [showPay, setShowPay] = useState(false);
-  const [changed, setChanged] = useState(false);
 
   const navigation = useNavigation();
 
@@ -88,7 +89,6 @@ export default function Home() {
       })
       .catch(error => {
         if (error.request.status !== 200) {
-          console.log(error.response);
           return orderErrorRef.current.open();
         }
       });
@@ -193,12 +193,6 @@ export default function Home() {
               size={29}
               color="#000"
               style={{ marginRight: 20 }}
-              onPress={() =>
-                Alert.alert(
-                  'Observação',
-                  'Digite uma observação caso necessário.',
-                )
-              }
             />
           }
           defaultValue={order.note}

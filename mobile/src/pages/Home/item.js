@@ -24,11 +24,11 @@ const Item = ({ item, setChanged, itemRemove }) => {
   function changeQuantity(value) {
     setChanged(true);
     const existentItem = order.items.find(
-      (itemData) => itemData.product._id === item.product._id
+      itemData => itemData.product._id === item.product._id,
     );
     if (existentItem) {
       const position = order.items.findIndex(
-        (item) => item.product._id === existentItem.product._id
+        item => item.product._id === existentItem.product._id,
       );
       const finalQuantity = existentItem.quantity + value;
       existentItem.quantity = finalQuantity > 0 ? finalQuantity : 1;
@@ -41,14 +41,13 @@ const Item = ({ item, setChanged, itemRemove }) => {
 
   function handleToggleCourtesy(value) {
     setCourtesy(value);
-    console.log(value);
     setChanged(true);
     const existentItem = order.items.find(
-      (itemData) => itemData.product._id === item.product._id
+      itemData => itemData.product._id === item.product._id,
     );
     if (existentItem) {
       const position = order.items.findIndex(
-        (item) => item.product._id === existentItem.product._id
+        item => item.product._id === existentItem.product._id,
       );
       existentItem.courtesy = value;
       const serializedItems = order.items;
@@ -65,7 +64,7 @@ const Item = ({ item, setChanged, itemRemove }) => {
         courtesy ? (
           <CourtesyContent>
             <FontAwesome5
-              name='creative-commons-nc'
+              name="creative-commons-nc"
               size={28}
               onPress={() => handleToggleCourtesy(false)}
             />
@@ -81,7 +80,7 @@ const Item = ({ item, setChanged, itemRemove }) => {
                   ? handleToggleCourtesy(true)
                   : Alert.alert(
                       'Ops...',
-                      'Vocẽ não tem permissão para cortesia'
+                      'Vocẽ não tem permissão para cortesia',
                     );
               }}
             />
@@ -104,13 +103,13 @@ const Item = ({ item, setChanged, itemRemove }) => {
               <Icon
                 // reverse
                 raised
-                name='remove'
+                name="remove"
                 size={12}
                 onPress={() => changeQuantity(-1)}
               />
               <Quantity>{item.quantity}</Quantity>
               <Icon
-                name='add'
+                name="add"
                 raised
                 size={12}
                 onPress={() => changeQuantity(1)}
@@ -119,7 +118,7 @@ const Item = ({ item, setChanged, itemRemove }) => {
             <QuantityLabel>Quantidade</QuantityLabel>
           </ItemContainer>
           <Icon
-            name='clear'
+            name="clear"
             size={26}
             onPress={() => itemRemove(item.product._id)}
           />
