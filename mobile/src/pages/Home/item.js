@@ -11,6 +11,8 @@ import {
   QuantityLabel,
   RightContent,
   HomeItem,
+  CourtesyContent,
+  CourtesyText,
 } from './styles';
 import { Text, View, Alert } from 'react-native';
 
@@ -61,16 +63,16 @@ const Item = ({ item, setChanged, itemRemove }) => {
       leftAvatar={
         // user.admin ? (
         courtesy ? (
-          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <CourtesyContent>
             <FontAwesome5
               name='creative-commons-nc'
               size={28}
               onPress={() => handleToggleCourtesy(false)}
             />
-            <Text>Cortesia</Text>
-          </View>
+            <CourtesyText>Cortesia</CourtesyText>
+          </CourtesyContent>
         ) : (
-          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <CourtesyContent>
             <Icon
               name={item.product.drink ? 'local-bar' : 'local-dining'}
               size={28}
@@ -83,9 +85,9 @@ const Item = ({ item, setChanged, itemRemove }) => {
                     );
               }}
             />
-            <Text>Add</Text>
-            <Text>Cortesia</Text>
-          </View>
+            <CourtesyText>Adicionar</CourtesyText>
+            <CourtesyText>Cortesia</CourtesyText>
+          </CourtesyContent>
         )
         // ) : (
         //   <Icon

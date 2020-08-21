@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Alert, FlatList, View } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { FlatList, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
 import { useOrder } from '../../contexts/order';
+import Alert from '../../components/Alert';
 
 import api from '../../services/api';
 
-import PaymentModal from './paymentModal';
+import PaymentModal from '../../components/PaymentModal';
 
 import ItemList from './item';
 
@@ -28,7 +29,12 @@ import {
 export default function Home() {
   const { order, setOrder } = useOrder();
   const [isSpinnerVisible, setIsSpinnerVisible] = useState(false);
-
+  const orderErrorRef = useRef(null);
+  const printerErrorRef = useRef(null);
+  const identificationErrorRef = useRef(null);
+  const itemsErrorRef = useRef(null);
+  const paymentErroRef = useRef(null);
+  const successRef = useRef(null);
   const [showPay, setShowPay] = useState(false);
   const [changed, setChanged] = useState(false);
 
@@ -36,7 +42,7 @@ export default function Home() {
 
   function handleNavigateItems() {
     if (!order.identification) {
-      Alert.alert('Ops...', 'É necessário informar a identificação primeiro');
+      identificationErrorRef.current.open();
       navigation.navigate('QrReader');
       return;
     }
@@ -45,12 +51,12 @@ export default function Home() {
   }
 
   async function itemRemove(id) {
-    const filteredItem = order.items.filter((item) => item.product._id !== id);
+    const filteredItem = order.items.filter(item => item.product._id !== id);
     setOrder({ ...order, items: filteredItem });
   }
 
   function createOrder() {
-    const serializedItems = order.items.map((item) => {
+    const serializedItems = order.items.map(item => {
       return {
         product: item.product._id,
         quantity: item.quantity,
@@ -63,7 +69,7 @@ export default function Home() {
         items: serializedItems,
         note: order.note === '' || !order.note ? undefined : order.note,
       })
-      .then((response) => {
+      .then(response => {
         setOrder(response.data.order);
         setChanged(false);
         api
@@ -72,25 +78,25 @@ export default function Home() {
             type: true,
           })
           .then(() => {
-            return Alert.alert('Tudo certo!', 'Pedido criado');
+            return successRef.current.open();
           })
-          .catch((error) => {
+          .catch(error => {
             if (error.request.status !== 200) {
-              return Alert.alert('Ops...', 'Falha ao imprimir pedido');
+              return printerErrorRef.current.open();
             }
           });
       })
-      .catch((error) => {
+      .catch(error => {
         if (error.request.status !== 200) {
           console.log(error.response);
-          return Alert.alert('Ops...', 'Falha ao criar pedido');
+          return orderErrorRef.current.open();
         }
       });
     setIsSpinnerVisible(false);
   }
 
   function updateOrder() {
-    const serializedItems = order.items.map((item) => {
+    const serializedItems = order.items.map(item => {
       return {
         product: item.product._id,
         quantity: item.quantity,
@@ -102,7 +108,7 @@ export default function Home() {
         items: serializedItems,
         note: order.note === '' || !order.note ? undefined : order.note,
       })
-      .then((response) => {
+      .then(response => {
         setOrder(response.data.order);
         setChanged(false);
         api
@@ -112,17 +118,17 @@ export default function Home() {
             oldItems: response.data.oldItems,
           })
           .then(() => {
-            return Alert.alert('Tudo certo!', 'Pedido atualizado');
+            return successRef.current.open();
           })
-          .catch((error) => {
+          .catch(error => {
             if (error.request.status !== 200) {
-              return Alert.alert('Ops...', 'Falha ao imprimir pedido');
+              return printerErrorRef.current.open();
             }
           });
       })
-      .catch((error) => {
+      .catch(error => {
         if (error.request.status !== 200) {
-          return Alert.alert('Ops...', 'Falha ao atualizar pedido');
+          return orderErrorRef.current.open();
         }
       });
     setIsSpinnerVisible(false);
@@ -130,12 +136,12 @@ export default function Home() {
 
   async function sendOrder() {
     if (!order.identification) {
-      Alert.alert('Ops...', 'É necessário a identificação');
+      identificationErrorRef.current.open();
       navigation.navigate('QrReader');
       return;
     }
     if (order.items.length === 0 || order.items.length === undefined) {
-      return Alert.alert('Ops...', 'Necessário inserir items');
+      return itemsErrorRef.current.open();
     }
     setIsSpinnerVisible(true);
     setTimeout(() => {
@@ -153,7 +159,7 @@ export default function Home() {
 
   async function handlePayment() {
     if (order.total === undefined || changed === true)
-      return Alert.alert('Ops!', 'Crie ou atualize o pedido para paga-lo!');
+      return paymentErroRef.current.open();
     setShowPay(true);
   }
   return (
@@ -161,7 +167,7 @@ export default function Home() {
       <Spinner
         visible={isSpinnerVisible}
         textContent={'Carregando...'}
-        animation='fade'
+        animation="fade"
         textStyle={{ color: '#fff', alignSelf: 'center' }}
       />
       <FlatList
@@ -169,7 +175,7 @@ export default function Home() {
         ListFooterComponentStyle={{ paddingBottom: 20 }}
         ListFooterComponent={<View style={{ flex: 1 }}></View>}
         data={order.items}
-        keyExtractor={(item) => String(item.product._id)}
+        keyExtractor={item => String(item.product._id)}
         renderItem={({ item }) => (
           <ItemList
             item={item}
@@ -183,24 +189,24 @@ export default function Home() {
         <TextInput
           leftIcon={
             <Icon
-              name='edit'
+              name="edit"
               size={29}
-              color='#000'
+              color="#000"
               style={{ marginRight: 20 }}
               onPress={() =>
                 Alert.alert(
                   'Observação',
-                  'Digite uma observação caso necessário.'
+                  'Digite uma observação caso necessário.',
                 )
               }
             />
           }
           defaultValue={order.note}
-          onChangeText={(text) => (order.note = text)}
+          onChangeText={text => (order.note = text)}
           multiline={true}
           numberOfLines={2}
           editable={true}
-          placeholder='Digite uma observação'
+          placeholder="Digite uma observação"
         />
       </Form>
 
@@ -209,9 +215,9 @@ export default function Home() {
           <AddIcon>
             <Icon
               style={{ marginBottom: 10 }}
-              color='black'
+              color="black"
               size={26}
-              name='add-circle'
+              name="add-circle"
               onPress={handleNavigateItems}
             />
             <AddIconLabel>Adicionar</AddIconLabel>
@@ -224,8 +230,8 @@ export default function Home() {
             style={{ marginBottom: 10 }}
             reverse
             raised
-            color='#a46810'
-            name='monetization-on'
+            color="#a46810"
+            name="monetization-on"
             onPress={handlePayment}
           />
           <Total>Total: R$ {order.total}</Total>
@@ -233,14 +239,45 @@ export default function Home() {
             style={{ marginBottom: 10 }}
             reverse
             raised
-            color='#7b1b53'
-            name='send'
+            color="#7b1b53"
+            name="send"
             onPress={sendOrder}
           />
         </FooterNavigation>
       </FooterContainer>
 
-      <PaymentModal showPay={showPay} setShowPay={setShowPay} />
+      <PaymentModal showPay={showPay} setShowPay={setShowPay} order={order} />
+      <Alert
+        ref={identificationErrorRef}
+        title="Ops..."
+        subtitle="É necessário informar a identificação"
+      />
+      <Alert
+        ref={printerErrorRef}
+        title="Ops..."
+        subtitle="Falha ao imprimir o pedido"
+      />
+      <Alert
+        ref={orderErrorRef}
+        title="Ops..."
+        subtitle="Ocorreu um erro ao criar o pedido"
+      />
+      <Alert
+        ref={itemsErrorRef}
+        title="Ops..."
+        subtitle="É necessário inserir items para criar o pedido"
+      />
+      <Alert
+        ref={paymentErroRef}
+        title="Ops..."
+        subtitle="Crie ou atualize o pedido para paga-lo"
+      />
+      <Alert
+        ref={successRef}
+        title="Tudo certo"
+        subtitle="Pedido criado com sucesso"
+        success
+      />
     </Container>
   );
 }

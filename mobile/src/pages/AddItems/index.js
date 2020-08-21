@@ -41,7 +41,7 @@ export default function AddItems({ navigation }) {
           page: pageNumber,
         },
       })
-      .catch((error) => {});
+      .catch(error => {});
 
     setItems(newItems ? response.data : [...items, ...response.data]);
     setTotal(Math.ceil(Number(response.headers['x-total-count']) / 10));
@@ -90,7 +90,7 @@ export default function AddItems({ navigation }) {
           style={{
             transform: [{ translateY: heightSearch }],
           }}
-          name='name'
+          name="name"
           onSubmitEditing={() => formRef.current.submitForm()}
         />
       </Form>
@@ -99,21 +99,21 @@ export default function AddItems({ navigation }) {
         ListFooterComponentStyle={{ paddingBottom: 90 }}
         ListFooterComponent={
           <View style={{ flex: 1 }}>
-            {loading && <ActivityIndicator color='#ddd' size='large' />}
+            {loading && <ActivityIndicator color="#ddd" size="large" />}
           </View>
         }
         data={items}
         showsVerticalScrollIndicator={false}
         onEndReached={() => loadProducts()}
         onEndReachedThreshold={0.2}
-        keyExtractor={(itemKey) => String(itemKey._id)}
+        keyExtractor={itemKey => String(itemKey._id)}
         onScroll={Animated.event(
           [
             {
               nativeEvent: { contentOffset: { y: scrollFlatlist } },
             },
           ],
-          { useNativeDriver: true }
+          { useNativeDriver: true },
         )}
         scrollEventThrottle={16}
         renderItem={({ item }) => <Item item={item} />}
@@ -121,7 +121,7 @@ export default function AddItems({ navigation }) {
       <CategoryList
         horizontal
         data={categories}
-        keyExtractor={(itemKey) => String(itemKey._id)}
+        keyExtractor={itemKey => String(itemKey._id)}
         renderItem={({ item }) => (
           <CategoryItem
             item={item}
@@ -130,7 +130,7 @@ export default function AddItems({ navigation }) {
         )}
       />
       <ActionButton onPress={ending}>
-        <Icon name='send' size={25} color={'#fff'} />
+        <Icon name="send" size={25} color={'#fff'} />
       </ActionButton>
     </Container>
   );

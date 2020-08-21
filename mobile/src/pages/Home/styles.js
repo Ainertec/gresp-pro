@@ -137,3 +137,11 @@ export const TotalPayment = styled.Text`
   font-size: 20px;
   text-align: center;
 `;
+export const CourtesyContent = styled.View`
+  align-items: center;
+  justify-content: center;
+`;
+export const CourtesyText = styled.Text`
+  font-size: 11px;
+  font-weight: bold;
+`;

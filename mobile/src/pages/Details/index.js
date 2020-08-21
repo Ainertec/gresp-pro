@@ -67,7 +67,12 @@ const Details = () => {
           onPress={handlePayment}
         />
       </ActionButton>
-      <PaymentModal showPay={showPay} setShowPay={setShowPay} order={order} />
+      <PaymentModal
+        showPay={showPay}
+        setShowPay={setShowPay}
+        order={order}
+        goBack
+      />
     </Container>
   );
 };
