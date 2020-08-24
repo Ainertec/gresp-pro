@@ -20,7 +20,7 @@ export const orderUpdate = Joi.object().keys({
 export const paramIdentification = {
   identification: Joi.number().required(),
 };
-export const paramIdenPayment = {
+export const paramIdentPayment = {
   identification: Joi.number().required(),
   payment: Joi.string().required(),
 };
