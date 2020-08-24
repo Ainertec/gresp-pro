@@ -76,14 +76,15 @@ var CategoryController = /** @class */ (function () {
     };
     CategoryController.prototype.store = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, products, category;
+            var _a, name, products, color, category;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = request.body, name = _a.name, products = _a.products;
+                        _a = request.body, name = _a.name, products = _a.products, color = _a.color;
                         return [4 /*yield*/, Category_1.default.create({
                                 name: name,
                                 products: products,
+                                color: color,
                             })];
                     case 1:
                         category = _b.sent();
@@ -97,15 +98,16 @@ var CategoryController = /** @class */ (function () {
     };
     CategoryController.prototype.update = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, products, id, category;
+            var _a, name, products, color, id, category;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = request.body, name = _a.name, products = _a.products;
+                        _a = request.body, name = _a.name, products = _a.products, color = _a.color;
                         id = request.params.id;
                         return [4 /*yield*/, Category_1.default.findByIdAndUpdate({ _id: id }, {
                                 name: name,
                                 products: products,
+                                color: color,
                             }, { new: true })];
                     case 1:
                         category = _b.sent();

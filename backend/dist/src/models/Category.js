@@ -6,6 +6,10 @@ var ItemSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
+    color: {
+        type: String,
+        default: null,
+    },
     products: [
         {
             type: mongoose_1.Schema.Types.ObjectId,
