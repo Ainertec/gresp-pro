@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/interface-name-prefix */
 /* eslint-disable react/prop-types */
 import React from 'react';
-// import { MdLocalCafe, MdLocalDining } from 'react-icons/md';
 import {
   Container,
   Content,
@@ -9,6 +8,7 @@ import {
   HeaderContent,
   ItemTitle,
   ItemIcon,
+  ItemIconDrink,
   ItemPrice,
   Description,
   ItemInformation,
@@ -18,6 +18,7 @@ interface IProduct {
   name: string;
   description: string;
   price: number;
+  drink?: boolean;
 }
 
 interface ICategory {
@@ -40,7 +41,7 @@ const CategoryBlock: React.FC<Props> = ({ categoryInformation }) => {
           <ItemInformation key={product.name}>
             <HeaderContent>
               <header>
-                <ItemIcon />
+                {product.drink ? <ItemIconDrink /> : <ItemIcon />}
                 <ItemTitle>{product.name}</ItemTitle>
               </header>
 

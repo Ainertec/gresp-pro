@@ -14,15 +14,6 @@ export const Content = styled.div`
   display: flex;
   flex-direction: column;
   padding: 1rem 0.4rem;
-
-  @media (min-width: 700px) {
-    display: grid;
-    column-gap: 10rem;
-
-    grid-template-columns: 1fr 1fr;
-
-    padding: 3rem 4rem;
-  }
 `;
 
 export const Title = styled.h3`
@@ -48,6 +39,12 @@ export const HeaderContent = styled.div`
   }
 `;
 export const ItemIcon = styled(MdLocalCafe)`
+  fill: #fff;
+  width: 1.9rem;
+  height: 1.9rem;
+  flex-shrink: 0;
+`;
+export const ItemIconDrink = styled(MdLocalDining)`
   fill: #fff;
   width: 1.9rem;
   height: 1.9rem;
@@ -83,5 +80,7 @@ export const ItemInformation = styled.article`
 
   @media (min-width: 700px) {
     padding: 1.8rem 2.5rem;
+    /* border-bottom: 1px solid #fff;
+    border-radius: 0.8rem; */
   }
 `;

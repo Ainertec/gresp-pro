@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import background from '../../assets/background.jpg';
+import background from '../../assets/background.svg';
 
 export const Container = styled.div`
   flex-direction: column;
@@ -13,15 +13,34 @@ export const Container = styled.div`
   background-image: url(${background});
   background-position: 30% 45%;
   background-size: cover;
+  /* position: relative; */
 
   > main {
     display: flex;
     flex-direction: column;
     max-width: 1200px;
+    @media (min-width: 700px) {
+      display: grid;
+      column-gap: 4rem;
+
+      grid-template-columns: 1fr 1fr;
+
+      padding: 3rem 4rem;
+    }
   }
   > nav {
     display: flex;
     justify-content: center;
+    align-items: center;
+    min-height: 7rem;
+    padding-top: 0.8rem;
+    @media (max-width: 700px) {
+      position: relative;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
   }
 
   > h1 {
@@ -77,6 +96,16 @@ export const CategoryList = styled.section`
   }
   @media (max-width: 700px) {
     margin: 0 5.4rem 0.5rem 5.4rem;
+    position: fixed;
+    /* top: 0;
+  bottom: 0; */
+    /* left: 0;
+    right: 0; */
+
+    transition: 0.2s transform cubic-bezier(0.2, 0, 0, 1);
+    &.fixed {
+      transform: translateY(-9rem);
+    }
   }
 `;
 
@@ -95,6 +124,9 @@ export const CategoryItemButton = styled.a`
   transition: background-color 0.2s;
   &:hover {
     background: rgba(185, 31, 31, 0.6);
+  }
+  @media (max-width: 700px) {
+    opacity: 0.9;
   }
 
   margin: 0 0.5rem;

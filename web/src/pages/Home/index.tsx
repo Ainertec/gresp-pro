@@ -1,16 +1,38 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Container, CategoryList, CategoryItemButton } from './styles';
 import CategoryBlock from '../../components/CategoryBlock';
 
+import api from '../../services/api';
+
 const Home: React.FC = () => {
+  const [categories, setCategories] = useState([]);
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    api.get('categories/menu').then(response => {
+      setCategories(response.data);
+    });
+  }, []);
+  useEffect(() => {
+    function onScroll() {
+      setScrollY(window.scrollY);
+      console.log(window.scrollY);
+    }
+    window.addEventListener('scroll', onScroll);
+
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const classes = scrollY >= 50 ? 'fixed' : '';
+
   return (
     <Container>
       <h1>Cardápio</h1>
       <h3>Selecione uma Categoria</h3>
       <nav>
-        <CategoryList>
+        <CategoryList className={classes}>
           {categoriesFake.map(category => (
             <CategoryItemButton
               key={category.id}
