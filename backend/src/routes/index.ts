@@ -46,6 +46,7 @@ import report from '../validations/reportSchema';
 import kitchen from '../validations/kitchenSchema';
 import printer from '../validations/printerValidation';
 import serial from '../validations/serialSchema';
+import CategoryController from '../controllers/CategoryController';
 
 const routes = Router();
 
@@ -58,6 +59,8 @@ routes.get(
 // Sessions
 const sessionRoutes = new SessionRoutes(routes);
 sessionRoutes.getRoutes({ session, forgot, forgotGet });
+
+routes.get('/categories/menu', CategoryController.index);
 
 // Authentication
 routes.use(Authentication);

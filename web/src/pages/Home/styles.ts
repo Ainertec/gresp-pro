@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+
+import { shade } from 'polished';
 import background from '../../assets/background.svg';
 
 export const Container = styled.div`
@@ -7,13 +9,13 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   width: 100vw;
+  height: 100%;
   padding-bottom: 8vh;
   overflow: hidden;
 
   background-image: url(${background});
   background-position: 30% 45%;
   background-size: cover;
-  /* position: relative; */
 
   > main {
     display: flex;
@@ -33,6 +35,7 @@ export const Container = styled.div`
     justify-content: center;
     align-items: center;
     min-height: 7rem;
+
     padding-top: 0.8rem;
     @media (max-width: 700px) {
       position: relative;
@@ -96,6 +99,7 @@ export const CategoryList = styled.section`
   }
   @media (max-width: 700px) {
     margin: 0 5.4rem 0.5rem 5.4rem;
+    max-width: 30rem;
     position: fixed;
     /* top: 0;
   bottom: 0; */
@@ -114,7 +118,7 @@ export const CategoryItemButton = styled.a`
   display: flex;
   height: 4.3rem;
   min-width: 9rem;
-  background: rgba(185, 31, 31);
+  background: ${props => (props.color ? props.color : 'darkred')};
   border-radius: 0.8rem;
   justify-content: center;
   align-items: center;
@@ -123,7 +127,8 @@ export const CategoryItemButton = styled.a`
   text-decoration: none;
   transition: background-color 0.2s;
   &:hover {
-    background: rgba(185, 31, 31, 0.6);
+    background: ${props =>
+      props.color ? shade(0.25, props.color) : shade(0.25, 'darkred')};
   }
   @media (max-width: 700px) {
     opacity: 0.9;

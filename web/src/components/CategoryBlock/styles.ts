@@ -8,7 +8,6 @@ export const Container = styled.div`
   border-radius: 0.8rem;
   padding: 2rem 0.4rem;
   margin: 2rem 2.5rem;
-  /* max-width: 1300px; */
 `;
 export const Content = styled.div`
   display: flex;
@@ -34,9 +33,6 @@ export const HeaderContent = styled.div`
     display: flex;
     align-items: center;
   }
-  @media (min-width: 700px) {
-    /* padding-right: 7rem; */
-  }
 `;
 export const ItemIcon = styled(MdLocalCafe)`
   fill: #fff;
@@ -54,7 +50,7 @@ export const ItemTitle = styled.h4`
   font-size: 1.8rem;
   line-height: 1.9rem;
   padding-left: 0.7rem;
-
+  max-width: 90%;
   text-align: center;
 
   color: #ffffff;
@@ -80,7 +76,5 @@ export const ItemInformation = styled.article`
 
   @media (min-width: 700px) {
     padding: 1.8rem 2.5rem;
-    /* border-bottom: 1px solid #fff;
-    border-radius: 0.8rem; */
   }
 `;

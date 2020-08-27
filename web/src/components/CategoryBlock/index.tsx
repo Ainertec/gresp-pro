@@ -16,20 +16,21 @@ import {
 
 interface IProduct {
   name: string;
+  _id: string;
   description: string;
   price: number;
   drink?: boolean;
 }
 
-interface ICategory {
+export interface ICategory {
   name: string;
-  // id: string;
+  _id: string;
+  color: string;
   products: IProduct[];
 }
 
 interface Props {
   categoryInformation: ICategory;
-  key?: string;
 }
 
 const CategoryBlock: React.FC<Props> = ({ categoryInformation }) => {
@@ -37,8 +38,8 @@ const CategoryBlock: React.FC<Props> = ({ categoryInformation }) => {
     <Container id={categoryInformation.name.replace(/\s/g, '')}>
       <Title>{categoryInformation.name}</Title>
       <Content>
-        {categoryInformation.products.map(product => (
-          <ItemInformation key={product.name}>
+        {categoryInformation.products.map((product: IProduct) => (
+          <ItemInformation key={product._id}>
             <HeaderContent>
               <header>
                 {product.drink ? <ItemIconDrink /> : <ItemIcon />}

@@ -14,6 +14,7 @@ export default createGlobalStyle`
     min-height: 100%;
   
   } */
+
   *, button, input {
     font-family: Roboto, sans-serif;
   }
@@ -21,12 +22,14 @@ export default createGlobalStyle`
 
   html,body, #root {
     min-height: 100%;
+    /* height: 100%; */
   }
 
   #root{
   display:flex;
   align-items: center;
   justify-content:center;
+  height: 100%;
   
 }
 

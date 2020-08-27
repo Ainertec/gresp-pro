@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { Container, CategoryList, CategoryItemButton } from './styles';
-import CategoryBlock from '../../components/CategoryBlock';
+import CategoryBlock, { ICategory } from '../../components/CategoryBlock';
 
 import api from '../../services/api';
 
@@ -13,12 +13,12 @@ const Home: React.FC = () => {
   useEffect(() => {
     api.get('categories/menu').then(response => {
       setCategories(response.data);
+      console.log('data backend', response.data);
     });
   }, []);
   useEffect(() => {
     function onScroll() {
       setScrollY(window.scrollY);
-      console.log(window.scrollY);
     }
     window.addEventListener('scroll', onScroll);
 
@@ -33,9 +33,10 @@ const Home: React.FC = () => {
       <h3>Selecione uma Categoria</h3>
       <nav>
         <CategoryList className={classes}>
-          {categoriesFake.map(category => (
+          {categories.map((category: ICategory) => (
             <CategoryItemButton
-              key={category.id}
+              color={category.color}
+              key={category._id}
               href={`#${category.name.replace(/\s/g, '')}`}
             >
               <h4>{category.name}</h4>
@@ -44,8 +45,8 @@ const Home: React.FC = () => {
         </CategoryList>
       </nav>
       <main>
-        {categoriesFake.map(category => (
-          <CategoryBlock key={category.name} categoryInformation={category} />
+        {categories.map((category: ICategory) => (
+          <CategoryBlock key={category._id} categoryInformation={category} />
         ))}
       </main>
 
