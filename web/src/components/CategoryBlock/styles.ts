@@ -8,6 +8,8 @@ export const Container = styled.div`
   border-radius: 0.8rem;
   padding: 2rem 0.4rem;
   margin: 2rem 2.5rem;
+
+  /* overflow: auto; */
 `;
 export const Content = styled.div`
   display: flex;

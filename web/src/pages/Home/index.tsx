@@ -13,7 +13,6 @@ const Home: React.FC = () => {
   useEffect(() => {
     api.get('categories/menu').then(response => {
       setCategories(response.data);
-      console.log('data backend', response.data);
     });
   }, []);
   useEffect(() => {

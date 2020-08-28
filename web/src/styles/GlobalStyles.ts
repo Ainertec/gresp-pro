@@ -10,10 +10,7 @@ export default createGlobalStyle`
     padding:0;
     box-sizing:border-box;
   }
-  /* html {
-    min-height: 100%;
-  
-  } */
+ 
 
   *, button, input {
     font-family: Roboto, sans-serif;
@@ -29,7 +26,8 @@ export default createGlobalStyle`
   display:flex;
   align-items: center;
   justify-content:center;
-  height: 100%;
+  /* height: 100%; */
+  
   
 }
 

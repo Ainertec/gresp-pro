@@ -7,20 +7,18 @@ export const Container = styled.div`
   flex-direction: column;
   display: flex;
   align-items: center;
-  justify-content: center;
+
   width: 100vw;
-  height: 100%;
+  min-height: 100vh;
   padding-bottom: 8vh;
-  overflow: hidden;
 
   background-image: url(${background});
   background-position: 30% 45%;
   background-size: cover;
 
   > main {
-    display: flex;
-    flex-direction: column;
     max-width: 1200px;
+
     @media (min-width: 700px) {
       display: grid;
       column-gap: 4rem;
