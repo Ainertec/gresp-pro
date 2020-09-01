@@ -47,8 +47,9 @@ var getItemsCost_1 = __importDefault(require("../utils/getItemsCost"));
 var Unit = Object.freeze({
     kilogram: 'g',
     liter: 'ml',
+    unity: 'u',
     getUnit: function () {
-        var unit = [this.kilogram, this.liter];
+        var unit = [this.kilogram, this.liter, this.unity];
         return unit;
     },
 });

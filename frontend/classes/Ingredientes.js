@@ -160,7 +160,7 @@ function telaIngrediente(tipoRequisicao, id) {
                                 <select class="form-control" id="unidademedidaingrediente">
                                     <option value="g">G (Grama)</option>
                                     <option value="ml">ML (Mililitro)</option>
-                                    <option value="unidade">Unid. (Unidade)</option>
+                                    <option value="u">Unid. (Unidade)</option>
                                 </select>
                             </div>
                         </div>
