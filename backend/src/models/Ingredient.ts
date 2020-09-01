@@ -7,9 +7,10 @@ import getCost from '../utils/getItemsCost';
 const Unit = Object.freeze({
   kilogram: 'g',
   liter: 'ml',
+  unity:'u'
 
   getUnit() {
-    const unit = [this.kilogram, this.liter];
+    const unit = [this.kilogram, this.liter,this.unity];
     return unit;
   },
 });
