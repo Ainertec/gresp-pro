@@ -18,10 +18,10 @@ function telaDeBuscarEstoque() {
     let codigoHTML = ``;
 
     codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
-        <h4 class="text-center"><span class="fas fa-boxes"></span> Buscar produto ou bebida</h4>
+        <h4 class="text-center"><span class="fas fa-boxes"></span> Buscar ingredientes e itens</h4>
         <div class="card-deck col-6 mx-auto d-block">
             <div class="input-group mb-3">
-                <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do produto ou bebida">
+                <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do ingrediente ou item">
                 <button onclick="if(validaDadosCampo(['#nome'])){buscarEstoque('nome');}else{mensagemDeErro('Preencha o campo nome!'); mostrarCamposIncorrreto(['nome']);}" type="button" class="btn btn-outline-info btn-sm">
                     <span class="fas fa-search"></span> Buscar
                 </button>
