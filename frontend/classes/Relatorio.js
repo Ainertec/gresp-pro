@@ -18,7 +18,8 @@ async function ligacaoRelatorioCaixaFacede() {
 function telaRelatorioDeCaixa() {
     let codigoHTML = ``;
 
-    codigoHTML += `<h3 class="text-center"><span class="fas fa-chart-line"></span> Relatórios</h3>
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+        <h4 class="text-center"><span class="fas fa-chart-line"></span> Relatórios</h4>
         <div class="card-deck col-6 mx-auto d-block" style="margin-top:30px;">
             <div class="row">
                 <div class="col">
@@ -43,6 +44,8 @@ function telaRelatorioDeCaixa() {
                 </button>
             </div>
         </div>
+    </div>
+
         <div id="grafico0" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
         <div id="grafico1" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
         <div id="grafico2" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>

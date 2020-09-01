@@ -1,5 +1,11 @@
 //---------------------------------- Classe funcionalidades-----------------------------------------
 
+// importação
+const $ = require('jquery');
+require('bootstrap');
+const Highcharts = require('highcharts');
+const { format, parseISO } = require('date-fns');
+
 //funcao de incializacao basica funcionalidade
 $(document).ready(function () {
     limparTelaDeMensagem();

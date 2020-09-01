@@ -17,20 +17,22 @@ function ligacaoEstoqueFacede() {
 function telaDeBuscarEstoque() {
     let codigoHTML = ``;
 
-    codigoHTML += `<h4 class="text-center"><span class="fas fa-boxes"></span> Buscar produto ou bebida</h4>
-        <div class="card-deck col-8 mx-auto d-block">
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+        <h4 class="text-center"><span class="fas fa-boxes"></span> Buscar produto ou bebida</h4>
+        <div class="card-deck col-6 mx-auto d-block">
             <div class="input-group mb-3">
-                <input id="nome" type="text" class="form-control mousetrap" placeholder="Nome do produto ou bebida">
-                <button onclick="if(validaDadosCampo(['#nome'])){buscarEstoque('nome');}else{mensagemDeErro('Preencha o campo nome!'); mostrarCamposIncorrreto(['nome']);}" type="button" class="btn btn-outline-info">
+                <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do produto ou bebida">
+                <button onclick="if(validaDadosCampo(['#nome'])){buscarEstoque('nome');}else{mensagemDeErro('Preencha o campo nome!'); mostrarCamposIncorrreto(['nome']);}" type="button" class="btn btn-outline-info btn-sm">
                     <span class="fas fa-search"></span> Buscar
                 </button>
                 <br/>
-                <button onclick="buscarEstoque('todos');" type="button" class="btn btn-outline-info btn-block" style="margin-top:10px;">
+                <button onclick="buscarEstoque('todos');" type="button" class="btn btn-outline-info btn-block btn-sm" style="margin-top:10px;">
                     <span class="fas fa-search-plus"></span> Exibir todos
                 </button>
             </div>
         </div>
-        <div id="resposta"></div>`
+    </div>
+    <div id="resposta"></div>`
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
@@ -51,19 +53,22 @@ async function buscarEstoque(tipoBusca) {
 
     VETORDEITENSESTOQUE = [];
 
-    codigoHTML += `<div id="grafico" class="col-10 mx-auto" style="margin-top:30px; height: 50vh"></div>
-        <h5 class="text-center" style="margin-top:50px">Atualizar estoque do produto ou bebida</h5>
-        <table class="table table-bordered table-sm col-12 mx-auto" style="margin-top:10px">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Descrição</th>
-                    <th scope="col">Quantidade</th>
-                    <th scope="col">Adicionar</th>
-                    <th scope="col">#</th>
-                </tr>
-            </thead>
-            <tbody>`
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+            <div id="grafico" class="col-10 mx-auto" style="height: 50vh"></div>
+        </div>
+            <div class="shadow-lg p-3 mb-5 bg-white rounded">
+            <h5 class="text-center">Atualizar estoque do produto ou bebida</h5>
+            <table class="table table-bordered table-sm col-12 mx-auto" style="margin-top:10px">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Descrição</th>
+                        <th scope="col">Quantidade</th>
+                        <th scope="col">Adicionar</th>
+                        <th scope="col">#</th>
+                    </tr>
+                </thead>
+                <tbody>`
     for (let item of json.data) {
         VETORDEITENSESTOQUE.push(item);
         codigoHTML += '<tr>'
@@ -83,17 +88,18 @@ async function buscarEstoque(tipoBusca) {
             codigoHTML += `<td class="table-danger text-dark text-center"><strong>0 Unid.</strong></td>`
         }
         codigoHTML += `<td class="table-warning text-dark" style="width:10vw">
-                            <input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=1 />
-                        </td>
-                        <td class="table-secondary text-dark" style="width:10vw">
-                            <button onclick="if(validaDadosCampo(['#quantidade${item._id}']) && validaValoresCampo(['#quantidade${item._id}'])){confirmarAcao('Atualizar quantidade!', 'atualizarEstoque(this.value)', '${item._id}');}else{mensagemDeErro('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorrreto(['quantidade${item._id}']);}" class="btn btn-success btn-sm">
-                                <span class="fas fa-sync"></span> Alterar
-                            </button>
-                        </td>
-                    </tr>`
+                                <input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=1 />
+                            </td>
+                            <td class="table-secondary text-dark" style="width:10vw">
+                                <button onclick="if(validaDadosCampo(['#quantidade${item._id}']) && validaValoresCampo(['#quantidade${item._id}'])){confirmarAcao('Atualizar quantidade!', 'atualizarEstoque(this.value)', '${item._id}');}else{mensagemDeErro('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorrreto(['quantidade${item._id}']);}" class="btn btn-success btn-sm">
+                                    <span class="fas fa-sync"></span> Alterar
+                                </button>
+                            </td>
+                        </tr>`
     }
     codigoHTML += `</tbody>
-        </table>`
+            </table>
+        </div>`
 
     if (json.data[0] == null) {
         document.getElementById('resposta').innerHTML = `<h5 class="text-center" style="margin-top:20vh;"><span class="fas fa-exclamation-triangle"></span> Nenhum produto ou bebida encontrado!</h5>`;

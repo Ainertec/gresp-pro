@@ -29,11 +29,13 @@ var reportSchema_1 = __importDefault(require("../validations/reportSchema"));
 var kitchenSchema_1 = __importDefault(require("../validations/kitchenSchema"));
 var printerValidation_1 = __importDefault(require("../validations/printerValidation"));
 var serialSchema_1 = __importDefault(require("../validations/serialSchema"));
+var CategoryController_1 = __importDefault(require("../controllers/CategoryController"));
 var routes = express_1.Router();
 routes.get('/serial_false', celebrate_1.celebrate({ query: serialSchema_1.default }), SerialController_1.default.exit);
 // Sessions
 var sessionRoutes = new Session_routes_1.SessionRoutes(routes);
 sessionRoutes.getRoutes({ session: sessionSchema_1.default, forgot: forgotSchema_1.post, forgotGet: forgotSchema_1.get });
+routes.get('/categories/menu', CategoryController_1.default.index);
 // Authentication
 routes.use(Authentication_1.default);
 // Users

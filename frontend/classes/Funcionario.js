@@ -27,7 +27,8 @@ function autenticacaoFuncionarioFacede() {
 function telaFuncionario() {
     let codigoHTML = ``
 
-    codigoHTML += `<h3 class="text-center"><span class="fas fa-user-tie"></span> Funcionário(Administrador)</h3>
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+        <h4 class="text-center"><span class="fas fa-user-tie"></span> Funcionário(Administrador)</h4>
         <div class="card-deck col-6 mx-auto d-block" style="margin-top:30px;">
             <h5 class="text-center">Buscar funcionário</h5>
             <div class="input-group mb-3">
@@ -42,10 +43,13 @@ function telaFuncionario() {
                 </button>
             </div>
         </div>
-        <div id="localDaLista" hidden class="col-8 rounded mx-auto layer1" style="position: relative; height: 300px; z-index: 1; overflow: scroll; margin-top:20px;">
+    </div>
+    <div id="localDaLista" hidden class="col-8 rounded mx-auto layer1" style="position: relative; height: 300px; z-index: 1; overflow: scroll; margin-top:20px;">
+        <div class="shadow-lg p-3 mb-5 bg-white rounded">
             <div id="listaFuncionarios"></div>
         </div>
-        <div id="dadosFuncionario"></div>`
+    </div>
+    <div id="dadosFuncionario"></div>`
 
     return codigoHTML
 }
@@ -54,7 +58,8 @@ function telaFuncionario() {
 function carregarTelaDadosFuncionario(tipo, tipo2) {
     let codigoHTML = ``
 
-    codigoHTML += `<h5 class="text-center"><span class="fas fa-user"></span> Dados Funcionário</h5>
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
+        <h5 class="text-center"><span class="fas fa-user"></span> Dados Funcionário</h5>
         <div class="card-deck col-8 mx-auto d-block" style="margin-top:30px;">
             <form>
                 <div class="form-row">
@@ -111,7 +116,8 @@ function carregarTelaDadosFuncionario(tipo, tipo2) {
     }
     codigoHTML += `</div>
             </form>
-        </div>`
+        </div>
+    </div>`
 
     return codigoHTML
 }
@@ -185,8 +191,7 @@ async function buscarFuncionario(tipo, busca) {
         }
 
         document.getElementById('localDaLista').hidden = false
-        document.getElementById('listaFuncionarios').innerHTML =
-            '<h5 class="text-center">Lista Funcionários</h5>'
+        document.getElementById('listaFuncionarios').innerHTML = `<h5 class="text-center">Lista Funcionários</h5>`
 
         while (json.data[cont]) {
             VETORDEFUNCIONARIOCLASSEFUNCIONARIO.push(json.data[cont])

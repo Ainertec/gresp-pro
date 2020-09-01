@@ -7,7 +7,7 @@ require("dotenv");
 var express_1 = __importDefault(require("express"));
 var mongoose_1 = __importDefault(require("mongoose"));
 var celebrate_1 = require("celebrate");
-// import cors from 'cors';
+var cors_1 = __importDefault(require("cors"));
 var socket_io_1 = __importDefault(require("socket.io"));
 var http_1 = __importDefault(require("http"));
 var routes_1 = __importDefault(require("./routes"));
@@ -24,6 +24,7 @@ var App = /** @class */ (function () {
     }
     App.prototype.middlewares = function () {
         this.express.use(express_1.default.json());
+        this.express.use(cors_1.default());
     };
     App.prototype.database = function () {
         mongoose_1.default.connect('mongodb://localhost:27017/gresp_pro', {

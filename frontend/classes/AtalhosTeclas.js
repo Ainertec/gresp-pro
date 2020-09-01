@@ -1,5 +1,7 @@
 //------------------------------------- teclas de atalho principal software --------------------------------
 
+var Mousetrap = require('mousetrap');
+
 //variavel de estado de execucao do atalhos globais
 let ATIVACAODEATALHOGERAL = true;
 

@@ -1,5 +1,7 @@
 // /----------------------------------------------------setor requisicao --------------------------------------------------------
 
+const axios = require("axios");
+
 // funcao de requisicao get sem paramentro JSON
 async function requisicaoGET(url, authorization) {
 	let retorno

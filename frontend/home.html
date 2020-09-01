@@ -15,28 +15,17 @@
 
   <div id="carregamento"></div>
 
-  <nav id="navbarTotal" class="navbar navCor"
-    style="padding-top: 0px; padding-right: 2px; border-bottom-right-radius: 20px;">
-    <img src="logo.png" class="navbar-brand" style="width: 100px;" alt="...">
+  <nav id="navbarTotal" class="navbar navCor shadow-lg p-2 mb-2"
+    style="padding-right: 2px; border-radius: 20px; margin: 5px;">
+    <img src="logo.png" class="navbar-brand" style="width: 80px;" alt="...">
     <div id="mensagemDeErro" class="justify-content-center"></div>
     <ul class="nav justify-content-end">
       <li class="nav-item" id="statusLogin" style="margin-right: 15px;"></li>
-      <li class="nav-item">
-        <div class="btn-group" role="group" style="border-radius: 5px;">
-          <a class="btn btn-outline-light" onclick="janelaTamanho();" style="padding-top: 0px; padding-bottom: 0px"
-            href="#"><span class="fas fa-expand-alt"></span></a>
-          <a class="btn btn-outline-danger" href="javascript:window.close()"
-            style="padding-top: 0px; padding-bottom: 0px; padding-left: 20px; padding-right: 20px"><span
-              class="fas fa-times"></span></a>
-        </div>
-      </li>
     </ul>
   </nav>
 
   <div id="janelaTotal" class="container-fluid">
     <div id="modal"></div>
-
-    <hr class="my-6 bg-dark">
 
     <div class="row">
 
@@ -44,53 +33,59 @@
         style="height: 80vh; border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
         <h5 class="text-center" style="margin-top: 15px;">Menu</h5>
         <div id="mensagemSubMenu"></div>
-        <ul id="submenu" class="list-group list-group-flush">
-          <a onclick="animacaoJanela2(); setTimeout(function(){menuPagamentoPedido(); liberarMouseTrap();},100) "
-            class="list-group-item list-group-item-action list-group-item-dark" href="#"
-            style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
-              class="fas fa-donate iconsTam"></span> Pagamento</a>
-          <a onclick="animacaoJanela2(); setTimeout(function(){menuPedido(); liberarMouseTrap();},100) "
-            class="list-group-item list-group-item-action list-group-item-dark" href="#"
-            style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
-              class="fas fa-file-signature iconsTam"></span> Pedido</a>
-          <a onclick="animacaoJanela2(); setTimeout(function(){pedidosCozinhaFacede();},100) "
-            class="list-group-item list-group-item-action list-group-item-dark" href="#"
-            style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
-              class="fas fa-utensils iconsTam"></span> Cozinha</a>
-          <a onclick="animacaoJanela2(); setTimeout(function(){ligacaoEstoqueFacede();},100) "
-            class="list-group-item list-group-item-action list-group-item-dark" href="#"
-            style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
-              class="fas fa-dolly iconsTam"></span> Estoque</a>
-          <a onclick="animacaoJanela2(); setTimeout(function(){menuProdutoeBebida(); liberarMouseTrap();},100) "
-            class="list-group-item list-group-item-action list-group-item-dark" href="#"
-            style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
-              class="fas fa-cart-plus iconsTam"></span> Produto e Bebida</a>
-          <a onclick="animacaoJanela2(); setTimeout(function(){autenticacaoFuncionarioFacede(); liberarMouseTrap();},100) "
-            class="list-group-item list-group-item-action list-group-item-dark" href="#"
-            style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
-              class="fas fa-user-tie iconsTam"></span> Funcionário</a>
-          <a onclick="animacaoJanela2(); setTimeout(function(){ligacaoRelatorioCaixaFacede();},100) "
-            class="list-group-item list-group-item-action list-group-item-dark" href="#"
-            style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
-              class="fas fa-chart-line iconsTam"></span> Relatório Caixa</a>
-          <a onclick="animacaoJanela2(); setTimeout(function(){menuImpressao(); liberarMouseTrap();},100) "
-            class="list-group-item list-group-item-action list-group-item-dark" href="#"
-            style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
-              class="fas fa-print iconsTam"></span> Impressão</a>
-          <a onclick="telaDeConfiguracaoDispositivo();"
-            class="list-group-item list-group-item-action list-group-item-dark" href="#"
-            style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
-              class="fas fa-mobile-alt iconsTam"></span> Dispositivos</a>
-          <a onclick="animacaoJanela2(); setTimeout(function(){ajudaInformacoes();},100) "
-            class="list-group-item list-group-item-action list-group-item-dark" href="#"
-            style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
-              class="fas fa-question-circle iconsTam"></span> Ajuda</a>
-        </ul>
+        <div class="col-12 layer1" style="position: relative; height: 74vh; z-index: 1; overflow: scroll; margin: 0px;">
+          <ul id="submenu" class="list-group list-group-flush">
+            <a onclick="animacaoJanela2(); setTimeout(function(){menuPagamentoPedido(); liberarMouseTrap();},100) "
+              class="list-group-item list-group-item-action list-group-item-dark" href="#"
+              style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
+                class="fas fa-donate iconsTam"></span> Pagamento</a>
+            <a onclick="animacaoJanela2(); setTimeout(function(){menuPedido(); liberarMouseTrap();},100) "
+              class="list-group-item list-group-item-action list-group-item-dark" href="#"
+              style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
+                class="fas fa-file-signature iconsTam"></span> Pedido</a>
+            <a onclick="animacaoJanela2(); setTimeout(function(){pedidosCozinhaFacede();},100) "
+              class="list-group-item list-group-item-action list-group-item-dark" href="#"
+              style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
+                class="fas fa-utensils iconsTam"></span> Cozinha</a>
+            <a onclick="animacaoJanela2(); setTimeout(function(){menuEstoque()},100) "
+              class="list-group-item list-group-item-action list-group-item-dark" href="#"
+              style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
+                class="fas fa-dolly iconsTam"></span> Estoque</a>
+            <a onclick="animacaoJanela2(); setTimeout(function(){menuProdutoeBebida(); liberarMouseTrap();},100) "
+              class="list-group-item list-group-item-action list-group-item-dark" href="#"
+              style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
+                class="fas fa-cart-plus iconsTam"></span> Produto e Bebida</a>
+            <a onclick="animacaoJanela2(); setTimeout(function(){menuProdutoeBebida(); liberarMouseTrap();},100) "
+              class="list-group-item list-group-item-action list-group-item-dark" href="#"
+              style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
+                class="fas fa-filter iconsTam"></span> Categoria</a>
+            <a onclick="animacaoJanela2(); setTimeout(function(){autenticacaoFuncionarioFacede(); liberarMouseTrap();},100) "
+              class="list-group-item list-group-item-action list-group-item-dark" href="#"
+              style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
+                class="fas fa-user-tie iconsTam"></span> Funcionário</a>
+            <a onclick="animacaoJanela2(); setTimeout(function(){ligacaoRelatorioCaixaFacede();},100) "
+              class="list-group-item list-group-item-action list-group-item-dark" href="#"
+              style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
+                class="fas fa-chart-line iconsTam"></span> Relatório Caixa</a>
+            <a onclick="animacaoJanela2(); setTimeout(function(){menuImpressao(); liberarMouseTrap();},100) "
+              class="list-group-item list-group-item-action list-group-item-dark" href="#"
+              style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
+                class="fas fa-print iconsTam"></span> Impressão</a>
+            <a onclick="telaDeConfiguracaoDispositivo();"
+              class="list-group-item list-group-item-action list-group-item-dark" href="#"
+              style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
+                class="fas fa-mobile-alt iconsTam"></span> Dispositivos</a>
+            <a onclick="animacaoJanela2(); setTimeout(function(){ajudaInformacoes();},100) "
+              class="list-group-item list-group-item-action list-group-item-dark" href="#"
+              style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
+                class="fas fa-question-circle iconsTam"></span> Ajuda</a>
+          </ul>
+        </div>
       </section>
 
       <main class="col-10" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;">
         <div class="col-12 layer1"
-          style="position: relative; height: 80vh; z-index: 1; overflow: scroll; margin-right: 0px;">
+          style="position: relative; height: 83vh; z-index: 1; overflow: scroll; margin-right: 0px;">
           <div id="janela2" style="margin-top: 10px;">
             <div class="row">
               <div class="col">
@@ -124,20 +119,8 @@
 
   </div>
 
-
-  <script src="./axios/axios.js"></script>
-  <script src="./bootstrap/js/jquery.min.js"></script>
-  <script src="./bootstrap/js/qrcode.js"></script>
-  <script src="./bootstrap/js/popper.min.js" crossorigin="anonymous"></script>
-  <script src="./bootstrap/js/bootstrap.min.js"
-    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-    crossorigin="anonymous"></script>
   <script src="./bootstrap/js/instascan.min.js"></script>
-  <script src="./bootstrap/js/highchartsgrafico.js"></script>
-  <script src="./bootstrap/js/mousetrap.min.js"></script>
-  <script src="./bootstrap/js/printThis.js"></script>
-  <script src="./bootstrap/js/socketio.js"></script>
-
+  <script src="./bootstrap/js/qrcode.js"></script>
 
   <script src="./classes/Bebida.js"></script>
   <script src="./classes/Funcionalidade.js"></script>

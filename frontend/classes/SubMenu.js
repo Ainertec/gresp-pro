@@ -57,24 +57,28 @@ function menuImpressao() {
 function menuProdutoeBebida() {
     let codigoHTML = ``;
 
-    codigoHTML += `<h3 style="margin-top:10vh;" class="text-center"><span class="fas fa-utensils"></span> Produtos</h3>
-        <div class="card-deck mx-auto" style="margin-top:5vh;">
-            <button onclick="ligacaoProdutoFacede('cadastrar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px">
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded" style="margin-top:5vh;">
+        <h3 class="text-center"><span class="fas fa-utensils"></span> Produtos</h3>
+        <div class="card-deck mx-auto">
+            <button onclick="ligacaoProdutoFacede('cadastrar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; height: 20vh; width: 20vw;">
                 <span class="fas fa-plus"></span> Cadastrar Produto <span class="fas fa-utensils"></span>
             </button>
-            <button onclick="ligacaoProdutoFacede('atualizar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px">
+            <button onclick="ligacaoProdutoFacede('atualizar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; height: 20vh; width: 20vw;">
                 <span class="fas fa-search"></span> Buscar Produto <span class="fas fa-utensils"></span>
             </button>
         </div>
-        <h3 style="margin-top:10vh;" class="text-center"><span class="fas fa-wine-glass-alt"></span> Bebidas</h3>
-        <div class="card-deck mx-auto" style="margin-top:5vh;">
-            <button onclick="ligacaoBebidaFacede('cadastrar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px">
+    </div>
+    <div class="shadow-lg p-3 mb-5 bg-white rounded">
+        <h3 class="text-center"><span class="fas fa-wine-glass-alt"></span> Bebidas</h3>
+        <div class="card-deck mx-auto">
+            <button onclick="ligacaoBebidaFacede('cadastrar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; height: 20vh; width: 20vw;">
                 <span class="fas fa-plus"></span> Cadastrar Bebida <span class="fas fa-wine-glass-alt"></span>
             </button>
-            <button onclick="ligacaoBebidaFacede('atualizar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px">
+            <button onclick="ligacaoBebidaFacede('atualizar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; height: 20vh; width: 20vw;">
                 <span class="fas fa-search"></span> Buscar Bebida <span class="fas fa-wine-glass-alt"></span>
             </button>
-        </div>`
+        </div>
+    </div>`
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
@@ -85,18 +89,20 @@ function menuProdutoeBebida() {
 function menuPedido() {
     let codigoHTML = ``;
 
-    codigoHTML += `<h3 class="text-center"><span class="fas fa-file-signature"></span> Pedido</h3>
-        <div class="card-deck mx-auto" style="margin-top:30px;">
-            <button onclick="ligacaoPedidoFacede('digitar');" type="button" class="btn btn-light border border-dark btn-lg col-8 mx-auto" style="margin-top: 10px">
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded" style="margin-top:5vh">
+        <h3 class="text-center" style="margin-top:30px;"><span class="fas fa-file-signature"></span> Pedido</h3>
+        <div class="card-deck mx-auto" style="margin-top:80px;">
+            <button onclick="ligacaoPedidoFacede('digitar');" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
                 <span class="fas fa-keyboard"></span> Digitar Código
             </button>
-            <button onclick="ligacaoPedidoFacede('qrcode');" type="button" class="btn btn-light border border-dark btn-lg col-8 mx-auto" style="margin-top: 10px">
+            <button onclick="ligacaoPedidoFacede('qrcode');" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
                 <span class="fas fa-camera"></span> Ler QR Code
             </button>
-            <button onclick="animacaoSlideUp(['#janela2']); setTimeout(function(){ligacaoPedidoFacede('lista');},300);" type="button" class="btn btn-light border border-dark btn-lg col-8 mx-auto" style="margin-top: 10px">
+            <button onclick="animacaoSlideUp(['#janela2']); setTimeout(function(){ligacaoPedidoFacede('lista');},300);" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
                 <span class="fas fa-list-alt"></span> Exibir Todos
             </button>
-        </div>`
+        </div>
+    </div>`
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
@@ -107,17 +113,40 @@ function menuPedido() {
 function menuPagamentoPedido() {
     let codigoHTML = ``;
 
-    codigoHTML += `<h3 class="text-center"><span class="fas fa-donate"></span> Pagamento</h3>
-        <div class="card-deck mx-auto" style="margin-top:30px;">
-            <button onclick="ligacaoPagamentoFacede('digitar');" type="button" class="btn btn-light border border-dark btn-lg mx-auto col-8" style="margin-top: 10px">
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded" style="margin-top:5vh">
+        <h3 class="text-center" style="margin-top:30px;"><span class="fas fa-donate"></span> Pagamento</h3>
+        <div class="card-deck mx-auto" style="margin-top:80px;">
+            <button onclick="ligacaoPagamentoFacede('digitar');" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
                 <span class="fas fa-keyboard"></span> Digitar Código
             </button>
-            <button onclick="ligacaoPagamentoFacede('qrcode');" type="button" class="btn btn-light border border-dark btn-lg mx-auto col-8" style="margin-top: 10px">
+            <button onclick="ligacaoPagamentoFacede('qrcode');" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
                 <span class="fas fa-camera"></span> Ler QR Code
             </button>
-            <button onclick="animacaoSlideUp(['#janela2']); setTimeout(function(){ligacaoPagamentoFacede('lista');},300);" type="button" class="btn btn-light border border-dark btn-lg mx-auto col-8" style="margin-top: 10px">
+            <button onclick="animacaoSlideUp(['#janela2']); setTimeout(function(){ligacaoPagamentoFacede('lista');},300);" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
                 <span class="fas fa-list-alt"></span> Exibir Todos
             </button>
+        </div>
+        </div>`
+
+    document.getElementById('janela2').innerHTML = codigoHTML;
+}
+
+// -----------------------------------------------SUB MENU ESTOQUE ------------------------------------------------------
+
+//funcao menu de opcoes para estoque
+function menuEstoque() {
+    let codigoHTML = ``;
+
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded" style="margin-top:5vh">
+        <h3 class="text-center" style="margin-top:30px;"><span class="fas fa-donate"></span> Estoque</h3>
+        <div class="card-deck mx-auto" style="margin-top:80px;">
+            <button onclick="ligacaoPagamentoFacede('digitar');" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
+                <span class="fas fa-keyboard"></span> Cadastrar ingrediente
+            </button>
+            <button onclick="ligacaoEstoqueFacede();" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
+                <span class="fas fa-camera"></span> Buscar estoque
+            </button>
+        </div>
         </div>`
 
     document.getElementById('janela2').innerHTML = codigoHTML;
