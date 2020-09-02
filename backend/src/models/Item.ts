@@ -34,6 +34,10 @@ const ItemSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    available: {
+      type: Boolean,
+      default: true,
+    },
     cost: {
       type: Number,
       required: true,

@@ -96,11 +96,11 @@ var ItemController = /** @class */ (function () {
     };
     ItemController.prototype.create = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, price, description, stock, drink, ingredients, cost, categoryId, itemCost, _b, item;
+            var _a, name, price, description, stock, drink, ingredients, cost, categoryId, available, itemCost, _b, item;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        _a = req.body, name = _a.name, price = _a.price, description = _a.description, stock = _a.stock, drink = _a.drink, ingredients = _a.ingredients, cost = _a.cost, categoryId = _a.categoryId;
+                        _a = req.body, name = _a.name, price = _a.price, description = _a.description, stock = _a.stock, drink = _a.drink, ingredients = _a.ingredients, cost = _a.cost, categoryId = _a.categoryId, available = _a.available;
                         if (!ingredients && !cost) {
                             return [2 /*return*/, res
                                     .status(400)
@@ -129,6 +129,7 @@ var ItemController = /** @class */ (function () {
                                 drink: drink,
                                 cost: Number(itemCost.toFixed(5)),
                                 ingredients: ingredients || null,
+                                available: available,
                             })];
                     case 4:
                         item = _c.sent();
@@ -147,11 +148,11 @@ var ItemController = /** @class */ (function () {
     };
     ItemController.prototype.update = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, name, price, description, stock, drink, cost, ingredients, categoryId, id, itemCost, _b, item;
+            var _a, name, price, description, stock, drink, cost, ingredients, categoryId, available, id, itemCost, _b, item;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        _a = req.body, name = _a.name, price = _a.price, description = _a.description, stock = _a.stock, drink = _a.drink, cost = _a.cost, ingredients = _a.ingredients, categoryId = _a.categoryId;
+                        _a = req.body, name = _a.name, price = _a.price, description = _a.description, stock = _a.stock, drink = _a.drink, cost = _a.cost, ingredients = _a.ingredients, categoryId = _a.categoryId, available = _a.available;
                         id = req.params.id;
                         if (!ingredients && !cost) {
                             return [2 /*return*/, res
@@ -189,6 +190,9 @@ var ItemController = /** @class */ (function () {
                             return [2 /*return*/, res.status(400).json('Item does not exist')];
                         if (ingredients) {
                             item.ingredients = ingredients;
+                        }
+                        if (available !== undefined) {
+                            item.available = available;
                         }
                         return [4 /*yield*/, item.save()];
                     case 5:

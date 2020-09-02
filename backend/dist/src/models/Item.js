@@ -35,6 +35,10 @@ var ItemSchema = new mongoose_1.Schema({
         type: Boolean,
         default: false,
     },
+    available: {
+        type: Boolean,
+        default: true,
+    },
     cost: {
         type: Number,
         required: true,

@@ -1,4 +1,4 @@
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
 import { Request } from 'express';
 
 export interface ItemInterface extends Document {
@@ -9,6 +9,7 @@ export interface ItemInterface extends Document {
   description?: string;
   stock?: number;
   drink?: boolean;
+  available?: boolean;
 }
 export interface ItemsInterface {
   product: ItemInterface;

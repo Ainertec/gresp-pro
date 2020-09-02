@@ -48,6 +48,7 @@ class ItemController {
       ingredients,
       cost,
       categoryId,
+      available,
     } = req.body;
 
     if (!ingredients && !cost) {
@@ -71,6 +72,7 @@ class ItemController {
       drink,
       cost: Number(itemCost.toFixed(5)),
       ingredients: ingredients || null,
+      available,
     });
 
     if (categoryId) {
@@ -93,6 +95,7 @@ class ItemController {
       cost,
       ingredients,
       categoryId,
+      available,
     } = req.body;
     const { id } = req.params;
 
@@ -127,6 +130,9 @@ class ItemController {
 
     if (ingredients) {
       item.ingredients = ingredients;
+    }
+    if (available !== undefined) {
+      item.available = available;
     }
     await item.save();
 

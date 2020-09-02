@@ -41,6 +41,7 @@ describe('Item Tests', () => {
         drink: true,
         stock: 20,
         cost: 50,
+        available: false,
       })
       .set('Authorization', `Bearer ${token}`);
 
@@ -150,6 +151,7 @@ describe('Item Tests', () => {
         description: 'Zero',
         cost: 50,
         stock: 60,
+        available: false,
       })
       .set('Authorization', `Bearer ${token}`);
 
