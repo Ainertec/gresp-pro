@@ -58,24 +58,13 @@ function menuProdutoeBebida() {
     let codigoHTML = ``;
 
     codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded" style="margin-top:5vh;">
-        <h3 class="text-center"><span class="fas fa-utensils"></span> Produtos</h3>
-        <div class="card-deck mx-auto">
+        <h3 class="text-center" style="margin-top:30px;"><span class="fas fa-utensils"></span> Produtos <span class="fas fa-wine-glass-alt"></span></h3>
+        <div class="card-deck mx-auto" style="margin-top:80px;">
             <button onclick="ligacaoProdutoFacede('cadastrar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; height: 20vh; width: 20vw;">
-                <span class="fas fa-plus"></span> Cadastrar Produto <span class="fas fa-utensils"></span>
+                <span class="fas fa-plus"></span> Criar Produto <span class="fas fa-utensils"></span> <span class="fas fa-wine-glass-alt"></span>
             </button>
             <button onclick="ligacaoProdutoFacede('atualizar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; height: 20vh; width: 20vw;">
-                <span class="fas fa-search"></span> Buscar Produto <span class="fas fa-utensils"></span>
-            </button>
-        </div>
-    </div>
-    <div class="shadow-lg p-3 mb-5 bg-white rounded">
-        <h3 class="text-center"><span class="fas fa-wine-glass-alt"></span> Bebidas</h3>
-        <div class="card-deck mx-auto">
-            <button onclick="ligacaoBebidaFacede('cadastrar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; height: 20vh; width: 20vw;">
-                <span class="fas fa-plus"></span> Cadastrar Bebida <span class="fas fa-wine-glass-alt"></span>
-            </button>
-            <button onclick="ligacaoBebidaFacede('atualizar');" type="button" class="btn btn-light border border-dark btn-lg col-5 mx-auto" style="margin: 5px; height: 20vh; width: 20vw;">
-                <span class="fas fa-search"></span> Buscar Bebida <span class="fas fa-wine-glass-alt"></span>
+                <span class="fas fa-search"></span> Buscar Produto <span class="fas fa-utensils"></span> <span class="fas fa-wine-glass-alt"></span>
             </button>
         </div>
     </div>`
@@ -138,13 +127,55 @@ function menuEstoque() {
     let codigoHTML = ``;
 
     codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded" style="margin-top:5vh">
-        <h3 class="text-center" style="margin-top:30px;"><span class="fas fa-donate"></span> Estoque</h3>
+        <h3 class="text-center" style="margin-top:30px;"><span class="fas fa-boxes"></span> Estoque</h3>
         <div class="card-deck mx-auto" style="margin-top:80px;">
-            <button onclick="ligacaoPagamentoFacede('digitar');" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
-                <span class="fas fa-keyboard"></span> Cadastrar ingrediente
+            <button onclick="ligacaoEstoqueFacede('produto');" type="button" class="btn btn-light border col-5 border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
+                <span class="fas fa-search"></span> Buscar Produtos <span class="fas fa-utensils"></span> <span class="fas fa-wine-glass-alt"></span>
             </button>
-            <button onclick="ligacaoEstoqueFacede();" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
-                <span class="fas fa-camera"></span> Buscar estoque
+            <button onclick="ligacaoEstoqueFacede('ingrediente');" type="button" class="btn btn-light border col-5 border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
+                <span class="fas fa-search"></span> Buscar ingrediente <span class="fas fa-carrot"></span>
+            </button>
+        </div>
+        </div>`
+
+    document.getElementById('janela2').innerHTML = codigoHTML;
+}
+
+// -----------------------------------------------SUB MENU CATEGORIA ------------------------------------------------------
+
+//funcao menu de opcoes para categoria
+function menuCategoria() {
+    let codigoHTML = ``;
+
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded" style="margin-top:5vh">
+        <h3 class="text-center" style="margin-top:30px;"><span class="fas fa-filter"></span> Categoria</h3>
+        <div class="card-deck mx-auto" style="margin-top:80px;">
+            <button onclick="ligacaoCategoriaFacede('cadastrar');" type="button" class="btn btn-light border col-5 border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
+                <span class="fas fa-plus"></span> Criar categoria <span class="fas fa-filter"></span>
+            </button>
+            <button onclick="ligacaoCategoriaFacede('atualizar');" type="button" class="btn btn-light border col-5 border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
+                <span class="fas fa-search"></span> Buscar categoria <span class="fas fa-filter"></span>
+            </button>
+        </div>
+        </div>`
+
+    document.getElementById('janela2').innerHTML = codigoHTML;
+}
+
+// -----------------------------------------------SUB MENU INGREDIENTES ------------------------------------------------------
+
+//funcao menu de opcoes para ingrediente
+function menuIngrediente() {
+    let codigoHTML = ``;
+
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded" style="margin-top:5vh">
+        <h3 class="text-center" style="margin-top:30px;"><span class="fas fa-carrot"></span> Ingrediente</h3>
+        <div class="card-deck mx-auto" style="margin-top:80px;">
+            <button onclick="ligacaoIngredienteFacede('cadastrar');" type="button" class="btn btn-light border col-5 border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
+                <span class="fas fa-plus"></span> Criar ingrediente <span class="fas fa-carrot"></span>
+            </button>
+            <button onclick="ligacaoIngredienteFacede('atualizar');" type="button" class="btn btn-light border col-5 border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
+                <span class="fas fa-search"></span> Buscar ingrediente <span class="fas fa-carrot"></span>
             </button>
         </div>
         </div>`

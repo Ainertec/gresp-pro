@@ -120,7 +120,7 @@ function confirmarAcao(mensagem, funcao, value) {
     codigoHTML += '</div>'
     codigoHTML += '</div>'
 
-    document.getElementById('modal').innerHTML = codigoHTML;
+    document.getElementById('alert2').innerHTML = codigoHTML;
 
     $('#modalAviso').modal('show');
 }

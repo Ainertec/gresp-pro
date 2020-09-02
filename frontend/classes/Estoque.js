@@ -3,30 +3,34 @@
 let VETORDEITENSESTOQUE = [];
 
 //funcao responsavel por fazer a ligação necessaria com a tela de estoque
-function ligacaoEstoqueFacede() {
+function ligacaoEstoqueFacede(tipo) {
     const situacao = autenticacaoLogin();
 
     if (JSON.parse(situacao).tipo == 'Administrador' || JSON.parse(situacao).tipo == 'Comum') {
-        telaDeBuscarEstoque();
+        telaDeBuscarEstoque(tipo);
     } else {
         mensagemDeErro('Usuário não autorizado!')
     }
 }
 
 //funcao para gerar tela de busca de bebidas
-function telaDeBuscarEstoque() {
+function telaDeBuscarEstoque(tipo) {
     let codigoHTML = ``;
 
-    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
-        <h4 class="text-center"><span class="fas fa-boxes"></span> Buscar produto ou bebida</h4>
-        <div class="card-deck col-6 mx-auto d-block">
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">`
+    if (tipo == 'produto') {
+        codigoHTML += `<h4 class="text-center"><span class="fas fa-boxes"></span> Buscar produtos</h4>`
+    } else {
+        codigoHTML += `<h4 class="text-center"><span class="fas fa-boxes"></span> Buscar ingredientes</h4>`
+    }
+    codigoHTML += `<div class="card-deck col-6 mx-auto d-block">
             <div class="input-group mb-3">
-                <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do produto ou bebida">
-                <button onclick="if(validaDadosCampo(['#nome'])){buscarEstoque('nome');}else{mensagemDeErro('Preencha o campo nome!'); mostrarCamposIncorrreto(['nome']);}" type="button" class="btn btn-outline-info btn-sm">
+                <input id="nome" type="text" class="form-control form-control-sm mousetrap" placeholder="Nome do item">
+                <button onclick="if(validaDadosCampo(['#nome'])){buscarEstoque('nome', '${tipo}');}else{mensagemDeErro('Preencha o campo nome!'); mostrarCamposIncorrreto(['nome']);}" type="button" class="btn btn-outline-info btn-sm">
                     <span class="fas fa-search"></span> Buscar
                 </button>
                 <br/>
-                <button onclick="buscarEstoque('todos');" type="button" class="btn btn-outline-info btn-block btn-sm" style="margin-top:10px;">
+                <button onclick="buscarEstoque('todos', '${tipo}');" type="button" class="btn btn-outline-info btn-block btn-sm" style="margin-top:10px;">
                     <span class="fas fa-search-plus"></span> Exibir todos
                 </button>
             </div>
@@ -38,17 +42,31 @@ function telaDeBuscarEstoque() {
 }
 
 //funcao para fazer busca via GET de todas as bebidas
-async function buscarEstoque(tipoBusca) {
+async function buscarEstoque(tipoBusca, tipo) {
     let codigoHTML = ``, json = null;
 
-    if (tipoBusca == 'nome') {
-        await aguardeCarregamento(true)
-        json = await requisicaoGET("items/" + $("#nome").val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
-        await aguardeCarregamento(false)
-    } else if (tipoBusca == 'todos') {
-        await aguardeCarregamento(true)
-        json = await requisicaoGET("items", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
-        await aguardeCarregamento(false)
+    if (tipo == 'produto') {
+        if (tipoBusca == 'nome') {
+            await aguardeCarregamento(true)
+            json = await requisicaoGET(`items/${$("#nome").val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+            json.data = json.data.map((element) => element.stock != null)
+            await aguardeCarregamento(false)
+        } else if (tipoBusca == 'todos') {
+            await aguardeCarregamento(true)
+            json = await requisicaoGET(`items`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+            json.data = json.data.filter((element) => element.stock != null)
+            await aguardeCarregamento(false)
+        }
+    } else if (tipo == 'ingrediente') {
+        if (tipoBusca == 'nome') {
+            await aguardeCarregamento(true)
+            json = await requisicaoGET(`ingredients/${$("#nome").val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+            await aguardeCarregamento(false)
+        } else if (tipoBusca == 'todos') {
+            await aguardeCarregamento(true)
+            json = await requisicaoGET(`ingredients`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+            await aguardeCarregamento(false)
+        }
     }
 
     VETORDEITENSESTOQUE = [];
@@ -62,9 +80,10 @@ async function buscarEstoque(tipoBusca) {
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">Nome</th>
-                        <th scope="col">Descrição</th>
+                        <th scope="col">Preço unidade</th>
                         <th scope="col">Quantidade</th>
-                        <th scope="col">Adicionar</th>
+                        <th scope="col">Adicionar quantidade</th>
+                        <th scope="col">Preço de custo</th>
                         <th scope="col">#</th>
                     </tr>
                 </thead>
@@ -73,25 +92,44 @@ async function buscarEstoque(tipoBusca) {
         VETORDEITENSESTOQUE.push(item);
         codigoHTML += '<tr>'
         if (item.drink) {
-            codigoHTML += `<td class="table-secondary text-dark" title="${item.name}"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
+            codigoHTML += `<td class="table-warning text-dark" title="${item.name}"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
+        } else if (item.drink == false) {
+            codigoHTML += `<td class="table-warning text-dark" title="${item.name}"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
         } else {
-            codigoHTML += `<td class="table-secondary text-dark" title="${item.name}"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
+            codigoHTML += `<td class="table-warning text-dark" title="${item.name}"><strong><span class="fas fa-boxes"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
         }
-        codigoHTML += `<td class="table-secondary text-dark" title="${item.description}">${corrigirTamanhoString(40, item.description)}</td>`
-        if (item.stock) {
-            if (parseInt(item.stock) > 5) {
-                codigoHTML += `<td class="table-success text-dark text-center"><strong>${item.stock} Unid.</strong></td>`
-            } else {
-                codigoHTML += `<td class="table-danger text-dark text-center"><strong>${item.stock} Unid.</strong></td>`
-            }
+        codigoHTML += `<th class="table-warning text-dark" style="width:10vw">R$${(parseFloat(item.priceUnit ? item.priceUnit : item.cost)).toFixed(2)}</th>`
+        if (item.unit == 'g') {
+            codigoHTML += `<td class="table-${item.stock > 2000 ? 'success' : 'danger'} text-dark text-center"><strong>${item.stock} g</strong></td>`
+        } else if (item.unit == 'ml') {
+            codigoHTML += `<td class="table-${item.stock > 3000 ? 'success' : 'danger'} text-dark text-center"><strong>${item.stock} ml</strong></td>`
         } else {
-            codigoHTML += `<td class="table-danger text-dark text-center"><strong>0 Unid.</strong></td>`
+            codigoHTML += `<td class="table-${item.stock > 5 ? 'success' : 'danger'} text-dark text-center"><strong>${item.stock} unid.</strong></td>`
         }
-        codigoHTML += `<td class="table-warning text-dark" style="width:10vw">
-                                <input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=1 />
+        codigoHTML += `<td class="table-warning text-dark" style="width:15vw">
+                                <div class="input-group input-group-sm">
+                                    <input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=10 />
+                                    <div class="input-group-prepend">`
+        if (item.unit == 'g') {
+            codigoHTML += `<span class="input-group-text">g</span>`
+        } else if (item.unit == 'ml') {
+            codigoHTML += `<span class="input-group-text">ml</span>`
+        } else {
+            codigoHTML += `<span class="input-group-text">unid.</span>`
+        }
+        codigoHTML += `</div>
+                                </div>                        
                             </td>
-                            <td class="table-secondary text-dark" style="width:10vw">
-                                <button onclick="if(validaDadosCampo(['#quantidade${item._id}']) && validaValoresCampo(['#quantidade${item._id}'])){confirmarAcao('Atualizar quantidade!', 'atualizarEstoque(this.value)', '${item._id}');}else{mensagemDeErro('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorrreto(['quantidade${item._id}']);}" class="btn btn-success btn-sm">
+                            <td class="table-warning text-dark" style="width:15vw">
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">R$</span>
+                                    </div>
+                                    <input class="form-control form-control-sm mousetrap" type="Number" id="precocusto${item._id}" value=${tipo == 'produto' ? (parseFloat(item.cost)).toFixed(2) : (parseFloat(item.price)).toFixed(2)} />
+                                </div>
+                            </td>
+                            <td class="table-secondary text-dark" style="width:7vw">
+                                <button onclick="if(validaDadosCampo(['#quantidade${item._id}']) && validaValoresCampo(['#quantidade${item._id}'])){confirmarAcao('Atualizar quantidade!', 'atualizarEstoque(this.value,${tipo == 'produto' ? true : false})', '${item._id}');}else{mensagemDeErro('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorrreto(['quantidade${item._id}']);}" class="btn btn-success btn-sm">
                                     <span class="fas fa-sync"></span> Alterar
                                 </button>
                             </td>
@@ -110,7 +148,7 @@ async function buscarEstoque(tipoBusca) {
 }
 
 //funcao para salvar atualizar quantidade de produtos no estoque
-async function atualizarEstoque(id) {
+async function atualizarEstoque(id, tipo) {
     const dado = VETORDEITENSESTOQUE.find((element) => element._id == id);
 
     try {
@@ -118,17 +156,35 @@ async function atualizarEstoque(id) {
         delete dado.createdAt
         delete dado.updatedAt
         delete dado.__v
-        if (dado.stock) {
-            dado.stock = parseInt(dado.stock) + parseInt($('#quantidade' + id).val())
+
+        if (tipo) {
+            delete dado.ingredients
+            dado.cost = (parseFloat(document.getElementById(`precocusto${id}`).value)).toFixed(2)
         } else {
-            dado.stock = parseInt($('#quantidade' + id).val())
+            delete dado.priceUnit
+            dado.price = (parseFloat(document.getElementById(`precocusto${id}`).value)).toFixed(2)
+        }
+
+
+        if (dado.stock) {
+            dado.stock = parseInt(dado.stock) + parseInt($(`#quantidade${id}`).val())
+        } else {
+            dado.stock = parseInt($(`#quantidade${id}`).val())
         }
 
         await aguardeCarregamento(true)
-        await requisicaoPUT('items/' + id, dado, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        if (tipo) {
+            await requisicaoPUT(`items/${id}`, dado, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        } else {
+            await requisicaoPUT(`ingredients/${id}`, dado, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        }
         await aguardeCarregamento(false)
         await mensagemDeAviso('Atualizado com sucesso!');
-        await telaDeBuscarEstoque();
+        if (tipo) {
+            await telaDeBuscarEstoque('produto');
+        } else {
+            await telaDeBuscarEstoque('ingrediente');
+        }
     } catch (error) {
         mensagemDeErro('Não foi possível atualizar a quantidade do produto!')
     }

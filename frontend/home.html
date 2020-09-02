@@ -26,11 +26,13 @@
 
   <div id="janelaTotal" class="container-fluid">
     <div id="modal"></div>
+    <div id="modal2"></div>
+    <div id="alert2"></div>
 
     <div class="row">
 
       <section class="col-2 bg.bg-transparent"
-        style="height: 80vh; border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
+        style="height: 80vh; border-top-right-radius: 10px; border-bottom-right-radius: 10px; padding: 0px;">
         <h5 class="text-center" style="margin-top: 15px;">Menu</h5>
         <div id="mensagemSubMenu"></div>
         <div class="col-12 layer1" style="position: relative; height: 74vh; z-index: 1; overflow: scroll; margin: 0px;">
@@ -54,8 +56,12 @@
             <a onclick="animacaoJanela2(); setTimeout(function(){menuProdutoeBebida(); liberarMouseTrap();},100) "
               class="list-group-item list-group-item-action list-group-item-dark" href="#"
               style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
-                class="fas fa-cart-plus iconsTam"></span> Produto e Bebida</a>
-            <a onclick="animacaoJanela2(); setTimeout(function(){menuProdutoeBebida(); liberarMouseTrap();},100) "
+                class="fas fa-cart-plus iconsTam"></span> Produtos</a>
+            <a onclick="animacaoJanela2(); setTimeout(function(){menuIngrediente(); liberarMouseTrap();},100) "
+              class="list-group-item list-group-item-action list-group-item-dark" href="#"
+              style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
+                class="fas fa-carrot iconsTam"></span> Ingredientes</a>
+            <a onclick="animacaoJanela2(); setTimeout(function(){menuCategoria(); liberarMouseTrap();},100) "
               class="list-group-item list-group-item-action list-group-item-dark" href="#"
               style="border-bottom-right-radius: 10px; border-top-left-radius: 10px;"><span
                 class="fas fa-filter iconsTam"></span> Categoria</a>
@@ -122,7 +128,6 @@
   <script src="./bootstrap/js/instascan.min.js"></script>
   <script src="./bootstrap/js/qrcode.js"></script>
 
-  <script src="./classes/Bebida.js"></script>
   <script src="./classes/Funcionalidade.js"></script>
   <script src="./classes/Login.js"></script>
   <script src="./classes/Pagamento.js"></script>
@@ -138,6 +143,8 @@
   <script src="./classes/Ajuda.js"></script>
   <script src="./classes/AtalhosTeclas.js"></script>
   <script src="./classes/Cozinha.js"></script>
+  <script src="./classes/Categoria.js"></script>
+  <script src="./classes/Ingrediente.js"></script>
 
 </body>
 
