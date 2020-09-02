@@ -44,6 +44,7 @@ async function buscarCategoria() {
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">Nome</th>
+                    <th scope="col">Cor de referencia</th>
                     <th scope="col">Editar</th>
                     <th scope="col">Excluir</th>
                 </tr>
@@ -53,10 +54,11 @@ async function buscarCategoria() {
     for (let item of json.data) {
         VETORDECATEGORIACLASSECATEGORIA.push(item)
         codigoHTML += `<tr>
-                <th style="background-color:${item.color};" title="${item.name}">
-                    <h6 style="color: #fff; mix-blend-mode: exclusion;">
-                        <span class="fas fa-filter"></span> ${corrigirTamanhoString(20, item.name)}
-                    </h6>
+                <th title="${item.name}">
+                    <span class="fas fa-filter"></span> ${corrigirTamanhoString(20, item.name)}
+                </th>
+                <th>
+                    <div style="background-color:${item.color}; width:60px; height:20px; border-radius:5px;"></div>
                 </th>
                 <th class="table-light" style="width:10vw;">
                     <button class="btn btn-primary btn-sm" onclick="carregarDadosCategoria('${item._id}');">
