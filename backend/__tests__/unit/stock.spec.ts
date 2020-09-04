@@ -36,6 +36,7 @@ describe('Stock controller', () => {
 
     const item = await factory.create<ItemInterface>('Item', {
       stock: 25,
+      available: true,
       ingredients: undefined,
     });
 

@@ -61,5 +61,5 @@ export interface Ingredients {
 export interface ICategory extends Document {
   name: string;
   color: string;
-  products: ItemsInterface[];
+  products: ItemInterface[];
 }

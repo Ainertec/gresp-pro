@@ -60,7 +60,7 @@ routes.get(
 const sessionRoutes = new SessionRoutes(routes);
 sessionRoutes.getRoutes({ session, forgot, forgotGet });
 
-routes.get('/categories/menu', CategoryController.index);
+routes.get('/categories/menu', CategoryController.indexMenu);
 
 // Authentication
 routes.use(Authentication);

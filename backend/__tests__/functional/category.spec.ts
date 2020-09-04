@@ -74,6 +74,32 @@ describe('Categories Tests', () => {
     expect(response.body.length).toBe(4);
     expect(response.status).toBe(200);
   });
+
+  it('Should list all products of a category menu', async () => {
+    const token = await Token;
+
+    const item = await factory.create<ItemInterface>('Item', {
+      name: 'Coca cola',
+      available: true,
+    });
+    const item3 = await factory.create<ItemInterface>('Item', {
+      name: 'Coca colaaaaa',
+      available: true,
+    });
+    const item2 = await factory.create<ItemInterface>('Item', {
+      name: 'Guaraná',
+      available: false,
+    });
+    const category = await factory.create<ICategory>('Category', {
+      name: 'Bebidas geladas',
+      products: [item._id, item2._id, item3._id],
+    });
+
+    const response = await request(app).get(`/categories/menu`);
+    // .set('Authorization', `Bearer ${token}`);
+    // expect(response.body.length).toBe(2);
+    expect(response.status).toBe(200);
+  });
   it('Should list all products of a category', async () => {
     const token = await Token;
 

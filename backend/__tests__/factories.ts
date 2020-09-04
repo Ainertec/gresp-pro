@@ -21,6 +21,7 @@ factory.define('Item', Item, {
   drink: faker.random.boolean(),
   stock: faker.random.number(50),
   cost: faker.commerce.price(),
+  available: true,
   ingredients: [
     {
       material: factory.assoc('Ingredient', '_id'),

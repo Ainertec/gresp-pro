@@ -24,10 +24,19 @@ class OrderController {
 
     await Promise.all(
       items.map(async item => {
-        const consumedItem = await Item.findOne({ _id: item.product });
+        const consumedItem = await Item.findOne({ _id: item.product }).populate(
+          'ingredients.material',
+        );
         if (consumedItem) {
-          if (consumedItem.stock && consumedItem.stock <= 5)
+          if (consumedItem.stock && consumedItem.stock <= 10)
             alert.push(consumedItem.name);
+          if (consumedItem.ingredients) {
+            consumedItem.ingredients.map(ingredient => {
+              if (ingredient.material.stock <= 10) {
+                alert.push(consumedItem.name);
+              }
+            });
+          }
           total += item.courtesy ? 0 : consumedItem.price * item.quantity;
         }
       }),
