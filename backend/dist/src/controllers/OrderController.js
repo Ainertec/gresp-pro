@@ -59,12 +59,19 @@ var OrderController = /** @class */ (function () {
                                 var consumedItem;
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
-                                        case 0: return [4 /*yield*/, Item_1.default.findOne({ _id: item.product })];
+                                        case 0: return [4 /*yield*/, Item_1.default.findOne({ _id: item.product }).populate('ingredients.material')];
                                         case 1:
                                             consumedItem = _a.sent();
                                             if (consumedItem) {
-                                                if (consumedItem.stock && consumedItem.stock <= 5)
+                                                if (consumedItem.stock && consumedItem.stock <= 10)
                                                     alert.push(consumedItem.name);
+                                                if (consumedItem.ingredients) {
+                                                    consumedItem.ingredients.map(function (ingredient) {
+                                                        if (ingredient.material.stock <= 10) {
+                                                            alert.push(consumedItem.name);
+                                                        }
+                                                    });
+                                                }
                                                 total += item.courtesy ? 0 : consumedItem.price * item.quantity;
                                             }
                                             return [2 /*return*/];

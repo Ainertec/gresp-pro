@@ -56,6 +56,27 @@ var CategoryController = /** @class */ (function () {
             });
         });
     };
+    CategoryController.prototype.indexMenu = function (request, response) {
+        return __awaiter(this, void 0, void 0, function () {
+            var categories, categoriesSerializer;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, Category_1.default.find({}).populate('products').lean()];
+                    case 1:
+                        categories = _a.sent();
+                        categoriesSerializer = categories.map(function (category) {
+                            return {
+                                name: category.name,
+                                color: category.color,
+                                _id: category._id,
+                                products: category.products.filter(function (product) { return product.available === true; }),
+                            };
+                        });
+                        return [2 /*return*/, response.json(categoriesSerializer)];
+                }
+            });
+        });
+    };
     CategoryController.prototype.show = function (request, response) {
         return __awaiter(this, void 0, void 0, function () {
             var id, category, categoryProducts;
