@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, View, Alert } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
 import { useOrder } from '../../contexts/order';
-import Alert from '../../components/Alert';
+import AlertRN from '../../components/Alert';
 
 import api from '../../services/api';
 
@@ -73,6 +73,12 @@ export default function Home() {
       .then(response => {
         setOrder(response.data.order);
         setChanged(false);
+        if (response.data.stockAlert) {
+          Alert.alert(
+            'Atenção',
+            `Seu estoque para o(s) produto(s) ${response.data.stockAlert} está(ão) acabando!`,
+          );
+        }
         api
           .post('printer', {
             identification: order.identification,
@@ -111,6 +117,12 @@ export default function Home() {
       .then(response => {
         setOrder(response.data.order);
         setChanged(false);
+        if (response.data.stockAlert) {
+          Alert.alert(
+            'Atenção',
+            `Seu estoque para o(s) produto(s) ${response.data.stockAlert} está(ão) acabando!`,
+          );
+        }
         api
           .post('printer', {
             identification: order.identification,
@@ -241,32 +253,32 @@ export default function Home() {
       </FooterContainer>
 
       <PaymentModal showPay={showPay} setShowPay={setShowPay} order={order} />
-      <Alert
+      <AlertRN
         ref={identificationErrorRef}
         title="Ops..."
         subtitle="É necessário informar a identificação"
       />
-      <Alert
+      <AlertRN
         ref={printerErrorRef}
         title="Ops..."
         subtitle="Falha ao imprimir o pedido"
       />
-      <Alert
+      <AlertRN
         ref={orderErrorRef}
         title="Ops..."
         subtitle="Ocorreu um erro ao criar o pedido"
       />
-      <Alert
+      <AlertRN
         ref={itemsErrorRef}
         title="Ops..."
         subtitle="É necessário inserir items para criar o pedido"
       />
-      <Alert
+      <AlertRN
         ref={paymentErroRef}
         title="Ops..."
         subtitle="Crie ou atualize o pedido para paga-lo"
       />
-      <Alert
+      <AlertRN
         ref={successRef}
         title="Tudo certo"
         subtitle="Pedido criado com sucesso"

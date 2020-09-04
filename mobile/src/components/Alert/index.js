@@ -14,8 +14,8 @@ const Alert = React.forwardRef(
   ({ title, handleClosed, subtitle, success, rest }, ref) => (
     <ModalC
       ref={ref}
-      position='top'
-      entry='top'
+      position="top"
+      entry="top"
       coverScreen
       animationDuration={300}
       swipeToClose
@@ -34,7 +34,7 @@ const Alert = React.forwardRef(
         <FooterText>OK</FooterText>
       </Footer>
     </ModalC>
-  )
+  ),
 );
 
 export default Alert;
