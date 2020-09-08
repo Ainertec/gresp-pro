@@ -68,6 +68,7 @@ async function buscarProdutos(tipoBusca) {
                     <th scope="col">Preço de venda</th>
                     <th scope="col">Editar</th>
                     <th scope="col">Excluir</th>
+                    <th scope="col">Disponível</th>
                 </tr>
             </thead>
             <tbody>`
@@ -81,7 +82,17 @@ async function buscarProdutos(tipoBusca) {
                         <th class="table-warning text-danger"><strong>R$${(item.price).toFixed(2)}<strong></th>
                         <td class="table-light"><button class="btn btn-primary btn-sm" onclick="carregarDadosProduto('${item._id}');"><span class="fas fa-pencil-alt iconsTam"></span> Editar</button></td>
                         <td class="table-light"><button class="btn btn-outline-danger btn-sm" onclick="confirmarAcao('Excluir os dados do produto permanentemente!', 'deletarProduto(this.value)', '${item._id}');" ><span class="fas fa-trash-alt iconsTam"></span> Excluir</button></td>
-                    </tr>`
+                        <td class="table-light">
+                            <div class="custom-control custom-switch">`
+        if (item.available) {
+            codigoHTML += `<input type="checkbox" onclick="this.checked? disponibilizarIndisponibilizarProduto('${item._id}',true) : disponibilizarIndisponibilizarProduto('${item._id}',false) " class="custom-control-input custom-switch" id="botaoselectdisponivel${item._id}" checked=true>`
+        } else {
+            codigoHTML += `<input type="checkbox" onclick="this.checked? disponibilizarIndisponibilizarProduto('${item._id}',true) : disponibilizarIndisponibilizarProduto('${item._id}',false) " class="custom-control-input custom-switch" id="botaoselectdisponivel${item._id}">`
+        }
+        codigoHTML += `<label class="custom-control-label" for="botaoselectdisponivel${item._id}">Disponível</label>
+                    </div>
+                </td>
+            </tr>`
     }
     codigoHTML += `</tbody>
         </table>
@@ -345,7 +356,8 @@ async function cadastrarProduto() {
                     "cost": ${(parseFloat(document.getElementById('precocustoproduto').value)).toFixed(2)},`
             }
             json += `"drink": ${document.getElementById(`tipoproduto`).value},
-                "description":"${document.getElementById('descricao').value}"
+                "description":"${document.getElementById('descricao').value}",
+                "available":true
             }`
 
             json = JSON.parse(json)
@@ -396,7 +408,8 @@ async function atualizaProduto(id) {
                     "cost": ${(parseFloat(document.getElementById('precocustoproduto').value)).toFixed(2)},`
             }
             json += `"drink": ${document.getElementById(`tipoproduto`).value},
-                "description":"${document.getElementById('descricao').value}"
+                "description":"${document.getElementById('descricao').value}",
+                "available":true
             }`
 
             json = JSON.parse(json)
@@ -416,5 +429,34 @@ async function atualizaProduto(id) {
         }
     } catch (error) {
         mensagemDeErro('Não foi possível atualizar!')
+    }
+}
+
+//funcao responsavel por disponibilizar ou não um produto
+async function disponibilizarIndisponibilizarProduto(id, disponivel) {
+    const dado = VETORDEPRODUTOSCLASSEPRODUTO.find((element) => element._id == id);
+
+    delete dado._id
+    delete dado.createdAt
+    delete dado.updatedAt
+    delete dado.__v
+
+    if (dado.ingredients != null) {
+        delete dado.cost
+        delete dado.stock
+    } else {
+        delete dado.ingredients
+    }
+
+    dado.available = disponivel
+
+    await aguardeCarregamento(true)
+    await requisicaoPUT(`items/${id}`, dado, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await aguardeCarregamento(false)
+
+    if (validaDadosCampo(['#nome'])) {
+        await buscarProdutos('nome')
+    } else {
+        await buscarProdutos('todos')
     }
 }
