@@ -429,7 +429,7 @@ async function telaBuscaeExibirItens() {
                             <button class="btn btn-outline-secondary btn-sm btn-block dropdown-toggle" type="button" id="botaocategoriapedido" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="fas fa-filter"></span> Categorias
                             </button>
-                            <div class="dropdown-menu" style="opacity:0.8;" aria-labelledby="botaocategoriapedido">
+                            <div class="dropdown-menu" style="border-radius:30px;" aria-labelledby="botaocategoriapedido">
                                 <div class="row" style="margin:5px;">
                                     <div class="col" id="col1catpedido">
                                     </div>

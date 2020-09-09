@@ -6,30 +6,40 @@ require('bootstrap');
 const Highcharts = require('highcharts');
 const { format, parseISO } = require('date-fns');
 
-//funcao de incializacao basica funcionalidade
-$(document).ready(function () {
-    limparTelaDeMensagem();
-})
-
 //funcao para gerar mensagem de erro
 function mensagemDeErro(mensagem) {
-    document.getElementById('mensagemDeErro').innerHTML = `<span class="badge badge-danger h5">${mensagem}</span>`
-    $('#mensagemDeErro').animate({ width: 'show' })
-    limparTelaDeMensagem();
+    document.getElementById('mensagemDeErro').innerHTML = `<div class="toast shadow-lg mb-5 bg-white rounded" role="alert" data-delay="5000" aria-atomic="true" style="opacity:0.9;">
+        <div class="toast-header bg-danger text-light">
+            <span class="fas fa-exclamation-triangle" style="margin-right:5px;"></span>
+            <strong class="mr-auto">Atenção</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            <strong>${mensagem}</strong>
+        </div>
+    </div>`
+
+    $('.toast').toast('show')
 }
 
 //funcao para gerar mensagem de aviso
 function mensagemDeAviso(mensagem) {
-    document.getElementById('mensagemDeErro').innerHTML = `<span class="badge badge-success h5">${mensagem}</span>`
-    $('#mensagemDeErro').animate({ width: 'show' })
-    limparTelaDeMensagem();
-}
+    document.getElementById('mensagemDeErro').innerHTML = `<div class="toast shadow-lg mb-5 bg-white rounded" role="alert" data-delay="5000" aria-atomic="true" style="opacity:0.9;">
+        <div class="toast-header bg-success text-light">
+            <span class="fas fa-check-double" style="margin-right:5px;"></span>
+            <strong class="mr-auto">Informação</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            <strong>${mensagem}</strong>
+        </div>
+    </div>`
 
-//funcao para limpar tela de mensagens
-function limparTelaDeMensagem() {
-    setTimeout(function () {
-        $('#mensagemDeErro').animate({ width: 'hide' })
-    }, 3000)
+    $('.toast').toast('show')
 }
 
 //funcao responsavel por imprimir na impressora
@@ -98,27 +108,28 @@ function buscarSessionUser() {
 
 //funcao reponsavel por alertar o usuario sobre executar determinada acao
 function confirmarAcao(mensagem, funcao, value) {
-    var codigoHTML = '';
-    codigoHTML += '<div class="modal fade" id="modalAviso" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">'
-    codigoHTML += '<div class="modal-dialog" role="document">'
-    codigoHTML += '<div class="modal-content">'
-    codigoHTML += '<div class="modal-header">'
-    codigoHTML += '<h5 class="modal-title">Atenção</h5>'
-    codigoHTML += '</div>'
-    codigoHTML += '<div class="modal-body">'
-    codigoHTML += `<p>${mensagem} Deseja continuar?</p>`
-    codigoHTML += '</div>'
-    codigoHTML += '<div class="modal-footer">'
-    codigoHTML += '<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Não</button>'
+    let codigoHTML = ``;
+
+    codigoHTML += `<div class="modal fade" id="modalAviso" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Atenção</h5>
+                </div>
+                <div class="modal-body"> 
+                    <p>${mensagem} Deseja continuar?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Não</button>`
     if (value != null) {
         codigoHTML += `<button onclick="${funcao}; document.getElementById('modal').innerHTML='';" value="${value}" type="button" class="btn btn-primary" data-dismiss="modal">Sim</button>`
     } else {
         codigoHTML += `<button onclick=${funcao}; document.getElementById('modal').innerHTML='';" type="button" class="btn btn-primary" data-dismiss="modal">Sim</button>`
     }
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
+    codigoHTML += `</div>
+            </div>
+        </div>
+    </div>`
 
     document.getElementById('alert2').innerHTML = codigoHTML;
 
@@ -126,7 +137,7 @@ function confirmarAcao(mensagem, funcao, value) {
 }
 
 //funcao resopnsavel por gerenciar o tamanho da janela
-function janelaTamanho() {
+/*function janelaTamanho() {
     if ((document.fullScreenElement && document.fullScreenElement !== null) ||
         (!document.mozFullScreen && !document.webkitIsFullScreen)) {
         if (document.documentElement.requestFullScreen) {
@@ -145,7 +156,7 @@ function janelaTamanho() {
             document.webkitCancelFullScreen();
         }
     }
-}
+}*/
 
 //funcao responsavel por manipular o tamanho da string de exibição(caso seja muito grande)
 function corrigirTamanhoString(tamMax, texto) {

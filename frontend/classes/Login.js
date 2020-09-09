@@ -3,23 +3,40 @@
 //tela de login
 function telaAutenticacao() {
 
-    var codigoHTML;
+    let codigoHTML = ``;
 
-    codigoHTML = '<h3 class="text-center">Acesso</h3>'
-    codigoHTML += '<form class="text-center" style="margin-top:30px;">'
-    codigoHTML += '<h1><span class="fas fa-user-circle"></span></h1>'
-    codigoHTML += '<div class="form-row col-5 rounded mx-auto d-block">'
-    codigoHTML += '<input id="login" type="text" class="form-control mb-2 mousetrap" placeholder="Login">'
-    codigoHTML += '<input id="senha" type="password" class="form-control mb-2 mousetrap" placeholder="Senha">'
-    codigoHTML += `<button onclick="if(validaDadosCampo(['#login','#senha'])){ativaDesativaBotao(['botaoefetuarlogin'],1000); efetuarLogin();}else{mensagemDeErro('Preencha todos os campos!'); mostrarCamposIncorrreto(['login','senha']);}" id="botaoefetuarlogin" type="button" class="btn btn-primary border border-dark col-md-3">`
-    codigoHTML += '<span class="fas fa-key"></span> Acessar'
-    codigoHTML += '</button>'
-    codigoHTML += `<a href="#" onclick="if(validaDadosCampo(['#login'])){telaRecuperarSenha();}else{mensagemDeErro('Digite o nome de usuario!'); mostrarCamposIncorrreto(['login']);}" style="margin-left:20px;" class="col-md-3">Esqueceu a senha?</a>`
-    codigoHTML += '</div>'
-    codigoHTML += '</form>'
-    codigoHTML += '<div id="areaRecuperarSenha"></div>'
+    codigoHTML += `<div class="modal" id="modaltelalogin">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><span class="fas fa-user-shield"></span> Login</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="shadow-lg p-3 mb-3 bg-white rounded">
+                            <h3 class="text-center">Acesso</h3>
+                            <form class="text-center">
+                                <h1><span class="fas fa-user-circle"></span></h1>
+                                <div class="form-row col-7 rounded mx-auto d-block">
+                                    <input id="login" type="text" class="form-control mb-2 mousetrap" placeholder="Login">
+                                    <input id="senha" type="password" class="form-control mb-2 mousetrap" placeholder="Senha">
+                                    <button onclick="if(validaDadosCampo(['#login','#senha'])){ativaDesativaBotao(['botaoefetuarlogin'],1000); efetuarLogin();}else{mensagemDeErro('Preencha todos os campos!'); mostrarCamposIncorrreto(['login','senha']);}" id="botaoefetuarlogin" type="button" class="btn btn-primary border border-dark col-md-3">
+                                        <span class="fas fa-key"></span> Acessar
+                                    </button>
+                                    <a href="#" onclick="if(validaDadosCampo(['#login'])){telaRecuperarSenha();}else{mensagemDeErro('Digite o nome de usuario!'); mostrarCamposIncorrreto(['login']);}" style="margin-left:20px;" class="col-md-3">Esqueceu a senha?</a>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="areaRecuperarSenha"></div>
+                    </div>
+                </div>
+            </div>
+        </div>`
 
-    document.getElementById('janela2').innerHTML = codigoHTML;
+    document.getElementById('modal').innerHTML = codigoHTML;
+    $('#modaltelalogin').modal('show')
 
     atalhosTeclaLogin();
 
@@ -27,7 +44,7 @@ function telaAutenticacao() {
 
 //funcao responsavel por gerar a tela de recuperacao de senha
 async function telaRecuperarSenha() {
-    let codigoHTML = '';
+    let codigoHTML = ``;
 
     try {
         await aguardeCarregamento(true)
@@ -37,18 +54,19 @@ async function telaRecuperarSenha() {
         )
         await aguardeCarregamento(false)
 
-        codigoHTML += '<h4 class="text-center" style="margin-top:30px;">Recuperar conta</h4>'
-        codigoHTML += '<div class="text-center" style="margin-top:10px;">'
-        codigoHTML += '<div class="form-row col-5 rounded mx-auto d-block">'
-        codigoHTML += `<label for="pergunta">Responda a pergunta de segurança: ${questao.data.question}</label>`
-        codigoHTML += '<input id="pergunta" type="text" class="form-control mb-2 mousetrap" placeholder="Resposta">'
-        codigoHTML += '<input id="novaSenha" type="password" class="form-control mb-2 mousetrap" placeholder="Digite uma nova senha">'
-        codigoHTML += `<button onclick="if(validaDadosCampo(['#login','#pergunta','#novaSenha'])){recuperarSenha();}else{mensagemDeErro('Preencha os campos login, pergunta e nova senha!'); mostrarCamposIncorrreto(['login','pergunta','novaSenha']);}" type="button" class="btn btn-success border border-dark">`
-        codigoHTML += '<span class="fas fa-user-lock"></span> Recuperar'
-        codigoHTML += '</button>'
-        codigoHTML += '</div>'
-        codigoHTML += '</div>'
-        codigoHTML += '</div>'
+        codigoHTML += `<div class="shadow-lg p-3 mb-3 bg-white rounded">
+            <h4 class="text-center">Recuperar conta</h4>
+            <div class="text-center" style="margin-top:10px;">
+                <div class="form-row col-5 rounded mx-auto d-block">
+                    <label for="pergunta">Responda a pergunta de segurança: ${questao.data.question}</label>
+                    <input id="pergunta" type="text" class="form-control mb-2 mousetrap" placeholder="Resposta">
+                    <input id="novaSenha" type="password" class="form-control mb-2 mousetrap" placeholder="Digite uma nova senha">
+                    <button onclick="if(validaDadosCampo(['#login','#pergunta','#novaSenha'])){recuperarSenha();}else{mensagemDeErro('Preencha os campos login, pergunta e nova senha!'); mostrarCamposIncorrreto(['login','pergunta','novaSenha']);}" type="button" class="btn btn-success border border-dark">
+                        <span class="fas fa-user-lock"></span> Recuperar
+                    </button>
+                </div>
+            </div>
+        </div>`
 
         document.getElementById('areaRecuperarSenha').innerHTML = codigoHTML;
 
