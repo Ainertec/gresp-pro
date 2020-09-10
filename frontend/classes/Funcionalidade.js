@@ -206,7 +206,7 @@ function ativaDesativaBotao(campo, tempo) {
 //funcao responsavel por gerar a tela de aguarde o carregamento
 let timerCarregador;
 function aguardeCarregamento(tipo) {
-    let contCarregador = 0, codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 100vh; width: 100vw; z-index:1055;">
+    let contCarregador = 0, codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 99.4vh; width: 100vw; z-index:1055;">
       <h5 class="text-center text-light">
         <img src="./img/loading.gif" class="rounded mx-auto d-block" style="height: 30px; width: 30px; margin-top: 48vh;">
         Aguarde...
@@ -220,7 +220,7 @@ function aguardeCarregamento(tipo) {
             contCarregador++;
 
             if (contCarregador > 20) {
-                codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 99.2vh; width: 100vw; z-index:1055; border-radius:10px;">
+                codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 99.4vh; width: 100vw; z-index:1055; border-radius:10px;">
             <h5 class="text-center text-light" style="margin-top: 48vh;">
               Ops... Ouve algum problema! Tente novamente.
             </h5>
