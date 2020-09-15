@@ -35,7 +35,7 @@ export interface OrderInterface extends Document {
   closed?: boolean;
   finished?: boolean;
   payment?: string;
-  items?: Array<ItemsInterface>;
+  items: Array<ItemsInterface>;
   updatedAt?: Date;
 }
 

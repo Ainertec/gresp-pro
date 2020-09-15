@@ -1,7 +1,8 @@
-import { sub, parseISO, isValid } from 'date-fns';
+import { sub, parseISO, isValid, endOfDay, startOfDay } from 'date-fns';
 import { Request, Response } from 'express';
 import Order from '../models/Order';
 import { ItemInterface } from '../interfaces/base';
+import { OrdersProfitUseCase } from '../UseCases/Report/OrderProfitUseCase';
 
 interface ProductsTotalSold extends ItemInterface {
   amount: number;
@@ -9,27 +10,13 @@ interface ProductsTotalSold extends ItemInterface {
 
 class ReportController {
   public async show(req: Request, res: Response) {
-    const initial = String(req.query.initial);
-    const final = String(req.query.final);
-
-    const initialDate = parseISO(initial);
-    const finalDate = parseISO(final);
-
-    if (!isValid(initialDate) && !isValid(finalDate))
-      return res.status(400).json({ message: 'invalid date' });
-
-    const orders = await Order.aggregate()
-      .match({
-        createdAt: { $gte: initialDate, $lte: finalDate },
-        closed: true,
-      })
-      .group({
-        _id: { month: { $month: '$createdAt' }, year: { $year: '$createdAt' } },
-        amount: { $sum: '$total' },
-      })
-      .sort({ amount: -1 });
-
-    return res.json(orders);
+    try {
+      const orderProfitUseCase = new OrdersProfitUseCase(Order);
+      const orders = await orderProfitUseCase.execute();
+      return res.json(orders);
+    } catch (error) {
+      return res.status(400).json(error.message);
+    }
   }
 
   public async showTotal(req: Request, res: Response) {
@@ -74,18 +61,15 @@ class ReportController {
     return res.json(orders);
   }
 
-  public async index(req: Request, res: Response) {
-    const orders = await Order.find();
-
-    const totalOrders = orders.reduce((sum, order) => {
-      return sum + order.total;
-    }, 0);
-
-    return res.json({ total: totalOrders.toFixed(2) });
-  }
-
   public async totalSoldProducts(req: Request, res: Response) {
+    const initial = startOfDay(new Date());
+    const final = endOfDay(new Date());
+
     const products = await Order.aggregate<ProductsTotalSold>()
+      .match({
+        createdAt: { $gte: initial, $lte: final },
+        closed: true,
+      })
       .unwind('items')
       .lookup({
         from: 'items',
@@ -104,6 +88,9 @@ class ReportController {
           drink: '$products.drink',
         },
         amount: { $sum: '$items.quantity' },
+        soldout: {
+          $sum: { $multiply: ['$items.quantity', '$products.price'] },
+        },
       })
       .sort({ amount: -1 });
 

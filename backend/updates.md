@@ -2,7 +2,7 @@
 
 [x] Manipulamento de estoque por ingredients e unitário
 [x] Sistema de cortesia em um item, esse item sai 'de graça' sem somar no total, somente usuários admin.
-[] Busca por categoria e consequentemente separação por categoria.
+[x] Busca por categoria e consequentemente separação por categoria.
 
 No sistema de cortesia, envia-se um campo nos 'items', como no exemplo:
 

@@ -24,38 +24,40 @@ describe('Order Controller', () => {
     await Item.deleteMany({});
   });
 
-  it('shold list closed orders amount by an informated date ', async () => {
+  it('should list closed orders amount by an informed date ', async () => {
     const token = await Token;
-
+    const product = await factory.create<ItemInterface>('Item', {
+      cost: 10,
+    });
     await factory.createMany('Order', 3, {
-      createdAt: new Date(2020, 3, 1),
       closed: true,
     });
     await factory.createMany('Order', 3, {
-      createdAt: new Date(2020, 5, 30),
       closed: true,
     });
     await factory.createMany('Order', 3, {
-      createdAt: new Date(2020, 7, 30),
       closed: true,
     });
     await factory.createMany('Order', 3, {
-      createdAt: new Date(2020, 2, 30),
       closed: true,
+      items: [
+        {
+          product: product._id,
+          quantity: 5,
+          courtesy: true,
+        },
+      ],
     });
 
     const response = await request(app)
       .get('/reports')
-      .query({
-        initial: '2020-06-01',
-        final: '2020-08-30',
-      })
+
       .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(200);
   });
 
-  it('shold list closed orders total by an informated date ', async () => {
+  it('should list closed orders total by an informed date ', async () => {
     const token = await Token;
 
     await factory.createMany('Order', 3, {
@@ -86,56 +88,7 @@ describe('Order Controller', () => {
     expect(response.status).toBe(200);
   });
 
-  it('shold not list closed orders amount with invalide date period ', async () => {
-    const token = await Token;
-
-    const response = await request(app)
-      .get('/reports')
-      .query({
-        initial: '2020-13-01',
-        final: '2020-08-33',
-      })
-      .set('Authorization', `Bearer ${token}`);
-    expect(response.status).toBe(400);
-  });
-
-  it('shold list closed orders amount ', async () => {
-    const token = await Token;
-
-    await factory.createMany('Order', 3, {
-      createdAt: new Date(2020, 3, 1),
-      closed: true,
-      total: 100,
-    });
-    await factory.createMany('Order', 3, {
-      createdAt: new Date(2020, 5, 30),
-      closed: true,
-      total: 100,
-    });
-    await factory.createMany('Order', 3, {
-      createdAt: new Date(2020, 7, 30),
-      closed: true,
-      total: 100,
-    });
-    await factory.createMany('Order', 3, {
-      createdAt: new Date(2020, 2, 30),
-      closed: true,
-      total: 100,
-    });
-
-    const response = await request(app)
-      .get('/reports/all')
-      .set('Authorization', `Bearer ${token}`);
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(
-      expect.objectContaining({
-        total: '1200.00',
-      }),
-    );
-  });
-
-  it('shold list items with amount quantity ', async () => {
+  it('should list items with amount quantity ', async () => {
     const token = await Token;
 
     const item = await factory.create<ItemInterface>('Item', {
@@ -147,7 +100,6 @@ describe('Order Controller', () => {
     });
 
     await factory.createMany('Order', 2, {
-      createdAt: new Date(2020, 3, 1),
       items: [
         {
           product: item._id,
@@ -161,7 +113,6 @@ describe('Order Controller', () => {
       total: 100,
     });
     await factory.createMany('Order', 3, {
-      createdAt: new Date(2020, 5, 30),
       items: [
         {
           product: item._id,
@@ -179,11 +130,11 @@ describe('Order Controller', () => {
     const response = await request(app)
       .get('/reports/products')
       .set('Authorization', `Bearer ${token}`);
-
+    // console.log(response.body);
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          amount: 9,
+          amount: 6,
         }),
       ]),
     );
@@ -209,7 +160,6 @@ describe('Order Controller', () => {
     const token = await Token;
 
     await factory.createMany('Order', 3, {
-      createdAt: new Date(2020, 3, 1),
       closed: true,
       total: 100,
     });
