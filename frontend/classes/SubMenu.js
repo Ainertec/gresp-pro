@@ -4,48 +4,29 @@
 function menuImpressao() {
     let codigoHTML = ``;
 
-    codigoHTML += `<h3 class="text-center"><span class="fas fa-print"></span> Impressão</h3>
-        <div class="card-deck mx-auto" style="margin-top:50px;">
-            <div class="input-group border border-dark col-8 mx-auto" style="margin-top:10px; padding: 0px">
-                <div class="input-group-prepend">
-                    <label class="input-group-text" for="quantidade">Quantidade</label>
-                </div>
-                <div class="custom-file">
-                    <input type="Number" class="form-control mousetrap" id="quantidade" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
-                </div>
-                <div class="input-group-append">
-                    <button onclick="if(validaDadosCampo(['#quantidade']) && validaValoresCampo(['#quantidade'])){telaGerarQRCode(quantidade.value, 'random');}else{mensagemDeErro('Valor inválido para o campo quantidade!'); mostrarCamposIncorrreto(['quantidade']);}" class="btn btn-light border border-dark" type="button">
-                        <span class="fas fa-qrcode"></span> Impressão Comanda
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="card-deck mx-auto" style="margin-top:50px;">
-            <div class="input-group border border-dark col-8 mx-auto" style="margin-top:10px; padding: 0px">
-                <div class="input-group-prepend">
-                    <label class="input-group-text">Digite um Número</label>
-                </div>
-                <div class="custom-file">
-                    <input type="Number" class="form-control mousetrap" id="comandaOpcNumber" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon3">
-                </div>
-                <div class="input-group-append">
-                    <button onclick="if(validaDadosCampo(['#comandaOpcNumber']) && validaValoresCampo(['#comandaOpcNumber'])){telaGerarQRCode(comandaOpcNumber.value,null);}else{mensagemDeErro('Valor inválido para o campo número!'); mostrarCamposIncorrreto(['comandaOpcNumber']);}" class="btn btn-light border border-dark" type="button">
-                        <span class="fas fa-qrcode"></span> Impressão Comanda
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="card-deck mx-auto col-8" style="margin-top:50px;">
-            <button onclick="ligacaoRelatorioFacede('produtosebebidas');" type="button" class="btn btn-light border border-dark col-4" style="margin: 5px">
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded" style="margin-top:5vh">
+        <h3 class="text-center" style="margin-top:30px;"><span class="fas fa-print"></span> Impressão</h3>
+        <div class="card-deck mx-auto" style="margin-top:80px;">
+            <button onclick="modalImpressaoComandaQrcode(true);" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
+                <span class="fas fa-qrcode"></span> Comanda aleatória
+            </button>
+            <button onclick="modalImpressaoComandaQrcode(false);" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
+                <span class="fas fa-qrcode"></span> Comanda especifica
+            </button>
+            <button onclick="modalImpressaoComandaQrcode(false);" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
+                <span class="fas fa-qrcode"></span> Post cardápio
+            </button>
+            <button onclick="ligacaoRelatorioFacede('produtosebebidas');" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
                 <span class="fas fa-file-alt"></span> Impressão Relatório Produtos
             </button>
-            <button onclick="ligacaoRelatorioFacede('relatoriocaixa');" type="button" class="btn btn-light border border-dark col-3" style="margin: 5px">
+            <button onclick="ligacaoRelatorioFacede('relatoriocaixa');" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
                 <span class="fas fa-file-invoice-dollar"></span> Impressão Relatório Caixa
             </button>
-            <button onclick="ligacaoRelatorioFacede('pedidosabertos');" type="button" class="btn btn-light border border-dark col-4" style="margin: 5px">
+            <button onclick="ligacaoRelatorioFacede('pedidosabertos');" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
                 <span class="fas fa-file-signature"></span> Impressão Pedidos Abertos
             </button>
-        </div>`
+        </div>
+    </div>`
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 
@@ -115,7 +96,7 @@ function menuPagamentoPedido() {
                 <span class="fas fa-list-alt"></span> Exibir Todos
             </button>
         </div>
-        </div>`
+    </div>`
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 }

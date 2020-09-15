@@ -17,28 +17,32 @@ async function telaPedidosCozinha() {
     let codigoHTML = ``, json = await requisicaoGET("orders", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false)
 
-    codigoHTML += `<h4 class="text-center"><span class="fas fa-clipboard-list"></span> Lista de pedidos</h4>
-        <div class="list-group col-10 mx-auto sm" style="margin-top:30px;">`
+    codigoHTML += `<div class="shadow-lg p-3 mb-4 bg-white rounded">
+            <h4 class="text-center"><span class="fas fa-clipboard-list"></span> Lista de pedidos</h4>
+        </div>
+        <div class="shadow-lg p-3 mb-4 bg-white rounded">
+            <div class="list-group col-10 mx-auto sm" style="margin-top:30px;">`
     for (let item of json.data) {
         if (!item.finished) {
             codigoHTML += `<a onclick="confirmarAcao('Colocar pedido como disponível para entrega!', 'entregarPedido(${item.identification})', null);" href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1"><span class="fas fa-concierge-bell"></span> Pedido nº: ${item.identification}<h5>
-                            <small>Data/Hora: ${(item.updatedAt).split('.')[0]}</small>
-                        </div>
-                        <small title="${item.note}">Descrição: ${corrigirTamanhoString(60, item.note)}</small>
-                    </a>`
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1 text-danger"><span class="fas fa-concierge-bell"></span> Pedido nº: ${item.identification}<h5>
+                                <small>Data/Hora: ${(item.updatedAt).split('.')[0]}</small>
+                            </div>
+                            <small title="${item.note}">Descrição: ${corrigirTamanhoString(60, item.note)}</small>
+                        </a>`
         } else {
             codigoHTML += `<a onclick="confirmarAcao('Colocar pedido como disponível para entrega!', 'entregarPedido(${item.identification})', null);" href="#" class="list-group-item list-group-item-action disabled">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">Pedido nº: ${item.identification}<h5>
-                            <small>Data/Hora: ${(item.updatedAt).split('.')[0]}</small>
-                        </div>
-                        <small title="${item.note}">Descrição: ${corrigirTamanhoString(60, item.note)}</small>
-                    </a>`
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">Pedido nº: ${item.identification}<h5>
+                                <small>Data/Hora: ${(item.updatedAt).split('.')[0]}</small>
+                            </div>
+                            <small title="${item.note}">Descrição: ${corrigirTamanhoString(60, item.note)}</small>
+                        </a>`
         }
     }
-    codigoHTML += `</div>`
+    codigoHTML += `</div>
+                </div>`
 
     if (json.data[0] == null) {
         document.getElementById('janela2').innerHTML = `<h5 class="text-center" style="margin-top:40vh;"><span class="fas fa-exclamation-triangle"></span> Não existe pedido em aberto!</h5>`;

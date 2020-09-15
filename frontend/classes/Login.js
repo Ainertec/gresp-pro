@@ -122,7 +122,7 @@ async function efetuarLogin() {
         )
         await aguardeCarregamento(false)
 
-        if (!json) {
+        if (!json.data) {
             mensagemDeErro('Login/senha incorretos ou usuario inexistente!')
             telaAutenticacao()
         } else if (json.data.user._id) {

@@ -29,7 +29,6 @@
     "jquery": "^3.5.1",
     "mousetrap": "^1.6.5",
     "popper.js": "^1.16.1",
-    "print-this": "^1.15.1",
     "socket.io": "^2.3.0"
   }
 }

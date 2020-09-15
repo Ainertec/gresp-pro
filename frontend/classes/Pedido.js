@@ -214,10 +214,11 @@ async function telaExibirTodosOsPedidos() {
             </thead>
             <tbody>`
     for (let item of json.data) {
+        const date = format(parseISO(item.createdAt), 'dd/MM/yyyy HH:mm:ss')
         codigoHTML += `<tr>
             <td class="table-info"><strong>${item.identification}</strong></td>
             <td class="table-warning text-danger"><strong>R$ ${(item.total).toFixed(2)}</strong></td>
-            <td class="table-warning"><strong>${(item.updatedAt).split('.')[0]}</strong></td>
+            <td class="table-warning"><strong>${date}</strong></td>
             <td>
                 <button class="btn btn-primary btn-sm" onclick="modalBuscarPedido(this.value)" value=${item.identification}>
                     <span class="fas fa-check"></span> Abrir
@@ -318,6 +319,7 @@ async function adicionarItemaoPedido(idItem, quantidadeItem, pedidoTipo, cortesi
 //funcao responsavel por criar a tabela com os itens inseridos
 function gerarTabeladeItensInseridos(json, quantidadeItem, pedidoTipo, cortesia) {
     let codigoHTML = '';
+    const situacao = autenticacaoLogin()
 
     codigoHTML = `<tr scope="row" id="item${json._id}">
         <td class="col-md-5 table-info" title="${json.name}">
@@ -328,10 +330,14 @@ function gerarTabeladeItensInseridos(json, quantidadeItem, pedidoTipo, cortesia)
         <td class="col-md-2 table-warning text-danger"><strong>R$${(parseFloat(json.price)).toFixed(2)}</strong></td>
         <td class="col-md-1 table-warning">
             <div class="custom-control custom-switch">`
-    if (cortesia) {
-        codigoHTML += `<input type="checkbox" class="custom-control-input" id="checkbox${json._id}" checked>`
+    if (JSON.parse(situacao).tipo == 'Administrador') {
+        if (cortesia) {
+            codigoHTML += `<input type="checkbox" class="custom-control-input" id="checkbox${json._id}" checked>`
+        } else {
+            codigoHTML += `<input type="checkbox" class="custom-control-input" id="checkbox${json._id}">`
+        }
     } else {
-        codigoHTML += `<input type="checkbox" class="custom-control-input" id="checkbox${json._id}">`
+        codigoHTML += `<input type="checkbox" class="custom-control-input" id="checkbox${json._id}" disabled>`
     }
     codigoHTML += `<label class="custom-control-label" for="checkbox${json._id}"><span class="fab fa-creative-commons-nc"></span></label>
             </div>
