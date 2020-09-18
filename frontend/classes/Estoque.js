@@ -140,7 +140,7 @@ async function buscarEstoque(tipoBusca, tipo) {
         </div>`
 
     if (json.data[0] == null) {
-        document.getElementById('resposta').innerHTML = `<h5 class="text-center" style="margin-top:20vh;"><span class="fas fa-exclamation-triangle"></span> Nenhum produto ou bebida encontrado!</h5>`;
+        document.getElementById('resposta').innerHTML = `<h5 class="text-center" style="margin-top:20vh;"><span class="fas fa-exclamation-triangle"></span> Nenhum produto ou ingrediente encontrado!</h5>`;
     } else {
         document.getElementById('resposta').innerHTML = codigoHTML;
         setTimeout(function () { gerarGraficoEstoque(json); }, 300)

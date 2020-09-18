@@ -45,18 +45,42 @@ function mensagemDeAviso(mensagem) {
 //funcao responsavel por imprimir na impressora
 function imprimirImpressora(idReferencia) {
     let conteudo;
-    conteudo = `<style>
-        .row {
-            display: grid;
-            grid-template-columns: auto auto;
-            grid-gap: 50px;
-            padding: 50px;
-        }
-        .text-center{
-            text-align: center;
-        }
-    </style>`
+
+    conteudo = `<!doctype html>
+        <html lang="pt-br">
+
+            <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                <link href="fontawesome-free/css/all.css" rel="stylesheet">
+                <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css"
+                    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+                <title>Gresp Pro</title>
+                <link rel="stylesheet" type="text/css" href="./bootstrap/css/escopo-css-pagina.css">
+                <style>
+                    .row {
+                        display: grid;
+                        grid-template-columns: auto auto;
+                        grid-gap: 50px;
+                        padding: 50px;
+                    }
+                    .text-center{
+                        text-align: center;
+                    }
+                </style>
+            </head>
+
+        <body>`
     conteudo += document.getElementById(idReferencia).innerHTML
+
+    conteudo += `<script>
+                    const $ = require('jquery');
+                    require('bootstrap');
+                    const Highcharts = require('highcharts');
+                    const { format, parseISO } = require('date-fns');
+            <script>
+        </body>
+    </html>`
 
     let tela_impressao = window.open('about:blank', '_blank', 'nodeIntegration=yes');
 

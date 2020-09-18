@@ -60,7 +60,8 @@ function telaGerarRelatorioProdutoseBebidas() {
 //funcao para gerar tela de resposta com todos os produtos e bebidas
 async function telaRespostaRelatorioProdutoseBebidas() {
     await aguardeCarregamento(true)
-    let codigoHTML = ``, json = await requisicaoGET(`items`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    let codigoHTML = ``, json = await requisicaoGET(`items`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }),
+        json2 = await requisicaoGET(`ingredients`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false)
 
 
@@ -79,29 +80,25 @@ async function telaRespostaRelatorioProdutoseBebidas() {
             </tr>`
 
     for (let item of json.data) {
-        if (!item.drink) {
-            codigoHTML += `<tr class="table-light text-dark">
-                <td scope="col"><small>${corrigirTamanhoString(20, item.name)}</small></td>
-                <td scope="col"><small>${corrigirTamanhoString(40, item.description)}</small></td>
-                <td scope="col"><small>${item.stock}</small></td>
-                <td scope="col"><small>R$${(item.price).toFixed(2)}</small></td>
-            </tr>`
-        }
+        codigoHTML += `<tr class="table-light text-dark">
+            <td scope="col"><small>${corrigirTamanhoString(20, item.name)}</small></td>
+            <td scope="col"><small>${corrigirTamanhoString(40, item.description)}</small></td>
+            <td scope="col"><small>${item.stock ? item.stock + ' unid.' : 'Ingredientes'}</small></td>
+            <td scope="col"><small>R$${(item.price).toFixed(2)}</small></td>
+        </tr>`
     }
 
     codigoHTML += `<tr class="table-primary text-dark">
-        <td colspan="4">Bebidas</td>
+        <td colspan="4">Ingredientes</td>
     </tr>`
 
-    for (let item of json.data) {
-        if (item.drink) {
-            codigoHTML += `<tr class="table-light text-dark">
-                <td scope="col"><small>${corrigirTamanhoString(20, item.name)}</small></td>
-                <td scope="col"><small>${corrigirTamanhoString(40, item.description)}</small></td>
-                <td scope="col"><small>${item.stock}</small></td>
-                <td scope="col"><small>R$${(item.price).toFixed(2)}</small></td>
-            </tr>`
-        }
+    for (let item of json2.data) {
+        codigoHTML += `<tr class="table-light text-dark">
+            <td scope="col"><small>${corrigirTamanhoString(20, item.name)}</small></td>
+            <td scope="col"><small>${corrigirTamanhoString(40, item.description)}</small></td>
+            <td scope="col"><small>${item.stock} ${item.unit == 'u' ? 'unid.' : item.unit}</small></td>
+            <td scope="col"><small>R$${(item.price).toFixed(2)}</small></td>
+        </tr>`
     }
 
     codigoHTML += `</tbody>
@@ -214,7 +211,7 @@ async function telaRespostaListaTodosOsPedidosAbertos() {
             <tr>
                 <td scope="col"><small>Identificação</small></td>
                 <td scope="col"><small>Lista itens por Nome</small></td>
-                <td scope="col"><small>Valor</small></td>
+                <td scope="col"><small>Valor total</small></td>
             </tr>
         </thead>
         <tbody>`
