@@ -35,7 +35,7 @@ routes.get('/serial_false', celebrate_1.celebrate({ query: serialSchema_1.defaul
 // Sessions
 var sessionRoutes = new Session_routes_1.SessionRoutes(routes);
 sessionRoutes.getRoutes({ session: sessionSchema_1.default, forgot: forgotSchema_1.post, forgotGet: forgotSchema_1.get });
-routes.get('/categories/menu', CategoryController_1.default.index);
+routes.get('/categories/menu', CategoryController_1.default.indexMenu);
 // Authentication
 routes.use(Authentication_1.default);
 // Users

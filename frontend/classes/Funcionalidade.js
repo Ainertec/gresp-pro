@@ -6,56 +6,89 @@ require('bootstrap');
 const Highcharts = require('highcharts');
 const { format, parseISO } = require('date-fns');
 
-//funcao de incializacao basica funcionalidade
-$(document).ready(function () {
-    limparTelaDeMensagem();
-})
-
 //funcao para gerar mensagem de erro
 function mensagemDeErro(mensagem) {
-    document.getElementById('mensagemDeErro').innerHTML = `<span class="badge badge-danger h5">${mensagem}</span>`
-    $('#mensagemDeErro').animate({ width: 'show' })
-    limparTelaDeMensagem();
+    document.getElementById('mensagemDeErro').innerHTML = `<div class="toast shadow-lg mb-5 bg-white rounded" role="alert" data-delay="5000" aria-atomic="true" style="opacity:0.9;">
+        <div class="toast-header bg-danger text-light">
+            <span class="fas fa-exclamation-triangle" style="margin-right:5px;"></span>
+            <strong class="mr-auto">Atenção</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            <strong>${mensagem}</strong>
+        </div>
+    </div>`
+
+    $('.toast').toast('show')
 }
 
 //funcao para gerar mensagem de aviso
 function mensagemDeAviso(mensagem) {
-    document.getElementById('mensagemDeErro').innerHTML = `<span class="badge badge-success h5">${mensagem}</span>`
-    $('#mensagemDeErro').animate({ width: 'show' })
-    limparTelaDeMensagem();
-}
+    document.getElementById('mensagemDeErro').innerHTML = `<div class="toast shadow-lg mb-5 bg-white rounded" role="alert" data-delay="5000" aria-atomic="true" style="opacity:0.9;">
+        <div class="toast-header bg-success text-light">
+            <span class="fas fa-check-double" style="margin-right:5px;"></span>
+            <strong class="mr-auto">Informação</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            <strong>${mensagem}</strong>
+        </div>
+    </div>`
 
-//funcao para limpar tela de mensagens
-function limparTelaDeMensagem() {
-    setTimeout(function () {
-        $('#mensagemDeErro').animate({ width: 'hide' })
-    }, 3000)
+    $('.toast').toast('show')
 }
 
 //funcao responsavel por imprimir na impressora
 function imprimirImpressora(idReferencia) {
-    $(idReferencia).printThis({
-        debug: false,               // show the iframe for debugging
-        importCSS: true,            // import parent page css
-        importStyle: false,         // import style tags
-        printContainer: true,       // print outer container/$.selector
-        loadCSS: "./../bootstrap/css/escopo-css-impressao.css",                // path to additional css file - use an array [] for multiple
-        pageTitle: "",              // add title to print page
-        removeInline: false,        // remove inline styles from print elements
-        removeInlineSelector: "*",  // custom selectors to filter inline styles. removeInline must be true
-        printDelay: 222,            // variable print delay
-        header: false,               // prefix to html
-        footer: null,               // postfix to html
-        base: false,                // preserve the BASE tag or accept a string for the URL
-        formValues: true,           // preserve input/form values
-        canvas: false,              // copy canvas content
-        doctypeString: false,       // enter a different doctype for older markup
-        removeScripts: false,       // remove script tags from print content
-        copyTagClasses: false,      // copy classes from the html & body tag
-        beforePrintEvent: null,     // function for printEvent in iframe
-        beforePrint: null,          // function called before iframe is filled
-        afterPrint: null            // function called before iframe is removed
-    });
+    let conteudo;
+
+    conteudo = `<!doctype html>
+        <html lang="pt-br">
+
+            <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                <link href="fontawesome-free/css/all.css" rel="stylesheet">
+                <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css"
+                    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+                <title>Gresp Pro</title>
+                <link rel="stylesheet" type="text/css" href="./bootstrap/css/escopo-css-pagina.css">
+                <style>
+                    .row {
+                        display: grid;
+                        grid-template-columns: auto auto;
+                        grid-gap: 50px;
+                        padding: 50px;
+                    }
+                    .text-center{
+                        text-align: center;
+                    }
+                </style>
+            </head>
+
+        <body>`
+    conteudo += document.getElementById(idReferencia).innerHTML
+
+    conteudo += `<script>
+                    const $ = require('jquery');
+                    require('bootstrap');
+                    const Highcharts = require('highcharts');
+                    const { format, parseISO } = require('date-fns');
+            <script>
+        </body>
+    </html>`
+
+    let tela_impressao = window.open('about:blank', '_blank', 'nodeIntegration=yes');
+
+    tela_impressao.document.write(conteudo);
+    setTimeout(() => {
+        tela_impressao.window.print();
+        tela_impressao.window.close();
+    }, 1000);
 }
 
 //funcao responsavel por limpar o modal de impressao
@@ -98,27 +131,28 @@ function buscarSessionUser() {
 
 //funcao reponsavel por alertar o usuario sobre executar determinada acao
 function confirmarAcao(mensagem, funcao, value) {
-    var codigoHTML = '';
-    codigoHTML += '<div class="modal fade" id="modalAviso" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">'
-    codigoHTML += '<div class="modal-dialog" role="document">'
-    codigoHTML += '<div class="modal-content">'
-    codigoHTML += '<div class="modal-header">'
-    codigoHTML += '<h5 class="modal-title">Atenção</h5>'
-    codigoHTML += '</div>'
-    codigoHTML += '<div class="modal-body">'
-    codigoHTML += `<p>${mensagem} Deseja continuar?</p>`
-    codigoHTML += '</div>'
-    codigoHTML += '<div class="modal-footer">'
-    codigoHTML += '<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Não</button>'
+    let codigoHTML = ``;
+
+    codigoHTML += `<div class="modal fade" id="modalAviso" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Atenção</h5>
+                </div>
+                <div class="modal-body"> 
+                    <p>${mensagem} Deseja continuar?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Não</button>`
     if (value != null) {
         codigoHTML += `<button onclick="${funcao}; document.getElementById('modal').innerHTML='';" value="${value}" type="button" class="btn btn-primary" data-dismiss="modal">Sim</button>`
     } else {
         codigoHTML += `<button onclick=${funcao}; document.getElementById('modal').innerHTML='';" type="button" class="btn btn-primary" data-dismiss="modal">Sim</button>`
     }
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
+    codigoHTML += `</div>
+            </div>
+        </div>
+    </div>`
 
     document.getElementById('alert2').innerHTML = codigoHTML;
 
@@ -126,7 +160,7 @@ function confirmarAcao(mensagem, funcao, value) {
 }
 
 //funcao resopnsavel por gerenciar o tamanho da janela
-function janelaTamanho() {
+/*function janelaTamanho() {
     if ((document.fullScreenElement && document.fullScreenElement !== null) ||
         (!document.mozFullScreen && !document.webkitIsFullScreen)) {
         if (document.documentElement.requestFullScreen) {
@@ -145,7 +179,7 @@ function janelaTamanho() {
             document.webkitCancelFullScreen();
         }
     }
-}
+}*/
 
 //funcao responsavel por manipular o tamanho da string de exibição(caso seja muito grande)
 function corrigirTamanhoString(tamMax, texto) {
@@ -195,7 +229,7 @@ function ativaDesativaBotao(campo, tempo) {
 //funcao responsavel por gerar a tela de aguarde o carregamento
 let timerCarregador;
 function aguardeCarregamento(tipo) {
-    let contCarregador = 0, codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 100vh; width: 100vw; z-index:1055;">
+    let contCarregador = 0, codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 99.4vh; width: 100vw; z-index:1055;">
       <h5 class="text-center text-light">
         <img src="./img/loading.gif" class="rounded mx-auto d-block" style="height: 30px; width: 30px; margin-top: 48vh;">
         Aguarde...
@@ -209,7 +243,7 @@ function aguardeCarregamento(tipo) {
             contCarregador++;
 
             if (contCarregador > 20) {
-                codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 99.2vh; width: 100vw; z-index:1055; border-radius:10px;">
+                codigoHTML = `<div style="background-color: rgba(0, 0, 0, 0.8); position: absolute; height: 99.4vh; width: 100vw; z-index:1055; border-radius:10px;">
             <h5 class="text-center text-light" style="margin-top: 48vh;">
               Ops... Ouve algum problema! Tente novamente.
             </h5>

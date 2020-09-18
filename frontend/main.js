@@ -13,7 +13,9 @@ home.on('ready', function () {
     title: 'Gresp Pro',
     autoHideMenuBar: true,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      nativeWindowOpen: true,
+      nodeIntegrationInSubFrames: true
     }
   });
   //janelaPrincipal.on('close', () =>{janelaPrincipal=null; shell.openItem("C://gresppro-x64//executaveis_modulos//impressaoClose.vbs");})

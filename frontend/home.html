@@ -13,12 +13,14 @@
 
 <body>
 
+  <div id="mensagemDeErro"
+    style="position: absolute; z-index:1060; top: 0; right: 0; min-height: 200px; margin-right: 20px; margin-top: 60px;">
+  </div>
   <div id="carregamento"></div>
 
   <nav id="navbarTotal" class="navbar navCor shadow-lg p-2 mb-2"
     style="padding-right: 2px; border-radius: 20px; margin: 5px;">
     <img src="logo.png" class="navbar-brand" style="width: 80px;" alt="...">
-    <div id="mensagemDeErro" class="justify-content-center"></div>
     <ul class="nav justify-content-end">
       <li class="nav-item" id="statusLogin" style="margin-right: 15px;"></li>
     </ul>
@@ -34,8 +36,8 @@
       <section class="col-2 bg.bg-transparent"
         style="height: 80vh; border-top-right-radius: 10px; border-bottom-right-radius: 10px; padding: 0px;">
         <h5 class="text-center" style="margin-top: 15px;">Menu</h5>
-        <div id="mensagemSubMenu"></div>
         <div class="col-12 layer1" style="position: relative; height: 74vh; z-index: 1; overflow: scroll; margin: 0px;">
+          <div id="mensagemSubMenu"></div>
           <ul id="submenu" class="list-group list-group-flush">
             <a onclick="animacaoJanela2(); setTimeout(function(){menuPagamentoPedido(); liberarMouseTrap();},100) "
               class="list-group-item list-group-item-action list-group-item-dark" href="#"
@@ -93,21 +95,8 @@
         <div class="col-12 layer1"
           style="position: relative; height: 83vh; z-index: 1; overflow: scroll; margin-right: 0px;">
           <div id="janela2" style="margin-top: 10px;">
-            <div class="row">
-              <div class="col">
-                <div
-                  style="background-color:#42173f; border-top-left-radius: 60px; border-bottom-right-radius: 60px; width: 380px;">
-                  <img src="logo.png" class="rounded mx-auto d-block" style="width: 100px; margin-top:35vh"></div>
-              </div>
-              <div class="col">
-                <h3 class="text-center" style="margin-top: 35vh;">Bem Vindo!</h3>
-              </div>
-              <div class="col">
-                <div
-                  style="background-color:#42173f; border-top-left-radius: 60px; border-bottom-right-radius: 60px; width: 380px;">
-                  <img src="logo.png" class="rounded mx-auto d-block" style="width: 100px; margin-top:35vh"></div>
-              </div>
-            </div>
+            <img src="img/plano.gif" class="shadow p-3 mb-5 bg-white mx-auto d-block"
+              style=" width: 49vw; margin-top:5vh; border-radius: 60px;">
           </div>
         </div>
       </main>
