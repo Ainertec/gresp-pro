@@ -180,4 +180,31 @@ describe('Printer', () => {
 
     expect(response.status).toBe(200);
   });
+
+  it('should create a productsReport ', async () => {
+    const token = await Token;
+
+    await factory.createMany<OrderInterface>('Order', 4, {
+      closed: true,
+    });
+
+    const response = await request(app)
+      .get(`/printer/products`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(200);
+  });
+  it('should create a ordersReport ', async () => {
+    const token = await Token;
+
+    await factory.createMany<OrderInterface>('Order', 4, {
+      closed: true,
+    });
+
+    const response = await request(app)
+      .get(`/printer/orders`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(200);
+  });
 });

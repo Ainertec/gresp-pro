@@ -13,5 +13,7 @@ export class PrinterRoutes {
       celebrate({ body: validations.printer }),
       PrinterController.create,
     );
+    this.routes.get('/printer/products', PrinterController.show);
+    this.routes.get('/printer/orders', PrinterController.index);
   }
 }
