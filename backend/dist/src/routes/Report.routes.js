@@ -12,9 +12,8 @@ var ReportRoutes = /** @class */ (function () {
     }
     ReportRoutes.prototype.getRoutes = function (validations) {
         this.routes.delete('/reports', ReportController_1.default.delete);
-        this.routes.get('/reports', celebrate_1.celebrate({ query: validations.report }), ReportController_1.default.show);
+        this.routes.get('/reports', ReportController_1.default.show);
         this.routes.get('/reports/total', celebrate_1.celebrate({ query: validations.report }), ReportController_1.default.showTotal);
-        this.routes.get('/reports/all', ReportController_1.default.index);
         this.routes.get('/reports/products', ReportController_1.default.totalSoldProducts);
         this.routes.get('/reports/orders', celebrate_1.celebrate({ query: validations.report }), ReportController_1.default.showClosedOrders);
     };

@@ -39,12 +39,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var path_1 = __importDefault(require("path"));
-var fs_1 = __importDefault(require("fs"));
 var date_fns_1 = require("date-fns");
-// import '../@types/jsrtg.d.ts'
 var jsrtf_1 = __importDefault(require("jsrtf"));
 var Order_1 = __importDefault(require("../models/Order"));
+var print_1 = require("../utils/print");
+var SoldsProductsTotalUseCase_1 = require("../UseCases/Report/SoldsProductsTotalUseCase");
+var OrderProfitUseCase_1 = require("../UseCases/Report/OrderProfitUseCase");
 var PrinterController = /** @class */ (function () {
     function PrinterController() {
         this.create = this.create.bind(this);
@@ -70,18 +70,6 @@ var PrinterController = /** @class */ (function () {
             }
         });
         return { products: products, drinks: drinks };
-        //     for (const item of items) {
-        //       if (item.product.drink) {
-        //         drinks += `* ${item?.product.name}
-        // - Quantidade: ${item.quantity}\n
-        // ${item.courtesy && 'Cortesia'}`;
-        //       } else {
-        //         products += `* ${item.product.name}
-        // - Quantidade: ${item.quantity}\n
-        // ${item.courtesy && 'Cortesia'}`;
-        //       }
-        //     }
-        // return { products, drinks };
     };
     PrinterController.prototype.toPrinterNew = function (items) {
         var products = [];
@@ -98,7 +86,7 @@ var PrinterController = /** @class */ (function () {
     };
     PrinterController.prototype.create = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, identification, oldItems, type, order, date, myDoc, contentStyle, contentBorder, header, items, content, buffer, dir;
+            var _a, identification, oldItems, type, order, date, myDoc, contentStyle, contentBorder, header, items, content;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -169,18 +157,134 @@ var PrinterController = /** @class */ (function () {
                             myDoc.writeText("\n- " + (order.note ? order.note : 'Nenhuma.') + "\n", contentStyle);
                             myDoc.writeText("- " + date, contentStyle);
                             content = myDoc.createDocument();
-                            buffer = Buffer.from(content, 'binary');
-                            dir = process.env.NODE_ENV === 'test'
-                                ? path_1.default.resolve(__dirname, '..', '..', '__tests__', 'recipes')
-                                : path_1.default.resolve('commands', 'commandsCreate');
-                            fs_1.default.writeFile(dir + "/" + identification + ".rtf", buffer, { encoding: 'utf-8', flag: 'w' }, function (err) {
-                                if (err)
-                                    return res.status(400).json("" + err);
-                                return res.status(200).json('success');
-                            });
+                            try {
+                                print_1.printFile(content, String(identification));
+                                return [2 /*return*/, res.status(200).send()];
+                            }
+                            catch (error) {
+                                return [2 /*return*/, res.status(400).json(error.message)];
+                            }
                         }
                         else {
                             return [2 /*return*/, res.status(400).json('There are no items')];
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PrinterController.prototype.show = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var products, myDoc, contentStyle, contentBorder, header, date, content;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, new SoldsProductsTotalUseCase_1.SoldsProductsTotalUseCase(Order_1.default).execute()];
+                    case 1:
+                        products = _a.sent();
+                        myDoc = new jsrtf_1.default({
+                            language: jsrtf_1.default.Language.BR,
+                            pageWidth: jsrtf_1.default.Utils.mm2twips(58),
+                            landscape: false,
+                            marginLeft: 5,
+                            marginRight: 2,
+                        });
+                        contentStyle = new jsrtf_1.default.Format({
+                            spaceBefore: 20,
+                            spaceAfter: 20,
+                            fontSize: 8,
+                            paragraph: true,
+                        });
+                        contentBorder = new jsrtf_1.default.Format({
+                            spaceBefore: 100,
+                            spaceAfter: 100,
+                            fontSize: 8,
+                            paragraph: true,
+                            borderBottom: { type: 'single', width: 10 },
+                        });
+                        header = new jsrtf_1.default.Format({
+                            spaceBefore: 20,
+                            spaceAfter: 100,
+                            fontSize: 8,
+                            bold: true,
+                            paragraph: true,
+                            align: 'center',
+                            borderTop: { size: 2, spacing: 100, color: jsrtf_1.default.Colors.GREEN },
+                        });
+                        date = date_fns_1.format(new Date(), 'dd/MM/yyyy HH:mm:ss');
+                        myDoc.writeText('', contentBorder);
+                        myDoc.writeText('>>>>>>>>> Relatório de Produtos <<<<<<<<<<', header);
+                        products.map(function (product) {
+                            myDoc.writeText("Name:" + product._id.name + " ", contentStyle);
+                            myDoc.writeText("Price:" + product._id.price + " ", contentStyle);
+                            myDoc.writeText("Estoque:" + product._id.stock + " ", contentStyle);
+                            myDoc.writeText("Receita:" + product.amount + " ", contentStyle);
+                            myDoc.writeText("Qt.vendida:" + product.soldout + " ", contentBorder);
+                        });
+                        myDoc.writeText("Relat\u00F3rio referente ao dia:" + date + " ", header);
+                        content = myDoc.createDocument();
+                        try {
+                            print_1.printFile(content, 'productsReport');
+                            return [2 /*return*/, res.status(200).send()];
+                        }
+                        catch (error) {
+                            return [2 /*return*/, res.status(400).json(error.message)];
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PrinterController.prototype.index = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var ordersProfit, myDoc, contentStyle, contentBorder, header, date, content;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, new OrderProfitUseCase_1.OrdersProfitUseCase(Order_1.default).execute()];
+                    case 1:
+                        ordersProfit = _a.sent();
+                        myDoc = new jsrtf_1.default({
+                            language: jsrtf_1.default.Language.BR,
+                            pageWidth: jsrtf_1.default.Utils.mm2twips(58),
+                            landscape: false,
+                            marginLeft: 5,
+                            marginRight: 2,
+                        });
+                        contentStyle = new jsrtf_1.default.Format({
+                            spaceBefore: 20,
+                            spaceAfter: 20,
+                            fontSize: 8,
+                            paragraph: true,
+                        });
+                        contentBorder = new jsrtf_1.default.Format({
+                            spaceBefore: 100,
+                            spaceAfter: 100,
+                            fontSize: 8,
+                            paragraph: true,
+                            borderBottom: { type: 'single', width: 10 },
+                        });
+                        header = new jsrtf_1.default.Format({
+                            spaceBefore: 20,
+                            spaceAfter: 100,
+                            fontSize: 8,
+                            bold: true,
+                            paragraph: true,
+                            align: 'center',
+                            borderTop: { size: 2, spacing: 100, color: jsrtf_1.default.Colors.GREEN },
+                        });
+                        date = date_fns_1.format(new Date(), 'dd/MM/yyyy HH:mm:ss');
+                        myDoc.writeText('', contentBorder);
+                        myDoc.writeText('>>>>>>>>> Relatório de Produtos <<<<<<<<<<', header);
+                        myDoc.writeText("Total L\u00EDquido:" + ordersProfit.netValue + " ", header);
+                        myDoc.writeText("Total bruto :" + ordersProfit.total + " ", header);
+                        myDoc.writeText("Total gasto com cortesia:" + ordersProfit.totalCourtesy + " ", header);
+                        myDoc.writeText("Relat\u00F3rio referente ao dia:" + date + " ", header);
+                        content = myDoc.createDocument();
+                        try {
+                            print_1.printFile(content, 'ordersReport');
+                            return [2 /*return*/, res.status(200).send()];
+                        }
+                        catch (error) {
+                            return [2 /*return*/, res.status(400).json(error.message)];
                         }
                         return [2 /*return*/];
                 }

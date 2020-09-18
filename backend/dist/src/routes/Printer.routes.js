@@ -12,6 +12,8 @@ var PrinterRoutes = /** @class */ (function () {
     }
     PrinterRoutes.prototype.getRoutes = function (validations) {
         this.routes.post('/printer', celebrate_1.celebrate({ body: validations.printer }), PrinterController_1.default.create);
+        this.routes.get('/printer/products', PrinterController_1.default.show);
+        this.routes.get('/printer/orders', PrinterController_1.default.index);
     };
     return PrinterRoutes;
 }());

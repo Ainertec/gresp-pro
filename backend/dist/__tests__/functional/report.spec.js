@@ -68,52 +68,56 @@ describe('Order Controller', function () {
             }
         });
     }); });
-    it('shold list closed orders amount by an informated date ', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var token, response;
+    it('should list closed orders amount by an informed date ', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token, product, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, getToken_1.default];
                 case 1:
                     token = _a.sent();
-                    return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
-                            createdAt: new Date(2020, 3, 1),
-                            closed: true,
+                    return [4 /*yield*/, factories_1.default.create('Item', {
+                            cost: 10,
                         })];
                 case 2:
-                    _a.sent();
+                    product = _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
-                            createdAt: new Date(2020, 5, 30),
                             closed: true,
                         })];
                 case 3:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
-                            createdAt: new Date(2020, 7, 30),
                             closed: true,
                         })];
                 case 4:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
-                            createdAt: new Date(2020, 2, 30),
                             closed: true,
                         })];
                 case 5:
                     _a.sent();
+                    return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
+                            closed: true,
+                            items: [
+                                {
+                                    product: product._id,
+                                    quantity: 5,
+                                    courtesy: true,
+                                },
+                            ],
+                        })];
+                case 6:
+                    _a.sent();
                     return [4 /*yield*/, supertest_1.default(app)
                             .get('/reports')
-                            .query({
-                            initial: '2020-06-01',
-                            final: '2020-08-30',
-                        })
                             .set('Authorization', "Bearer " + token)];
-                case 6:
+                case 7:
                     response = _a.sent();
                     expect(response.status).toBe(200);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('shold list closed orders total by an informated date ', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('should list closed orders total by an informed date ', function () { return __awaiter(void 0, void 0, void 0, function () {
         var token, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -158,76 +162,7 @@ describe('Order Controller', function () {
             }
         });
     }); });
-    it('shold not list closed orders amount with invalide date period ', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var token, response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, getToken_1.default];
-                case 1:
-                    token = _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app)
-                            .get('/reports')
-                            .query({
-                            initial: '2020-13-01',
-                            final: '2020-08-33',
-                        })
-                            .set('Authorization', "Bearer " + token)];
-                case 2:
-                    response = _a.sent();
-                    expect(response.status).toBe(400);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('shold list closed orders amount ', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var token, response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, getToken_1.default];
-                case 1:
-                    token = _a.sent();
-                    return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
-                            createdAt: new Date(2020, 3, 1),
-                            closed: true,
-                            total: 100,
-                        })];
-                case 2:
-                    _a.sent();
-                    return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
-                            createdAt: new Date(2020, 5, 30),
-                            closed: true,
-                            total: 100,
-                        })];
-                case 3:
-                    _a.sent();
-                    return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
-                            createdAt: new Date(2020, 7, 30),
-                            closed: true,
-                            total: 100,
-                        })];
-                case 4:
-                    _a.sent();
-                    return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
-                            createdAt: new Date(2020, 2, 30),
-                            closed: true,
-                            total: 100,
-                        })];
-                case 5:
-                    _a.sent();
-                    return [4 /*yield*/, supertest_1.default(app)
-                            .get('/reports/all')
-                            .set('Authorization', "Bearer " + token)];
-                case 6:
-                    response = _a.sent();
-                    expect(response.status).toBe(200);
-                    expect(response.body).toEqual(expect.objectContaining({
-                        total: '1200.00',
-                    }));
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it('shold list items with amount quantity ', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('should list items with amount quantity ', function () { return __awaiter(void 0, void 0, void 0, function () {
         var token, item, item2, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -246,7 +181,6 @@ describe('Order Controller', function () {
                 case 3:
                     item2 = _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 2, {
-                            createdAt: new Date(2020, 3, 1),
                             items: [
                                 {
                                     product: item._id,
@@ -262,7 +196,6 @@ describe('Order Controller', function () {
                 case 4:
                     _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
-                            createdAt: new Date(2020, 5, 30),
                             items: [
                                 {
                                     product: item._id,
@@ -283,9 +216,10 @@ describe('Order Controller', function () {
                             .set('Authorization', "Bearer " + token)];
                 case 6:
                     response = _a.sent();
+                    // console.log(response.body);
                     expect(response.body).toEqual(expect.arrayContaining([
                         expect.objectContaining({
-                            amount: 9,
+                            amount: 6,
                         }),
                     ]));
                     expect(response.status).toBe(200);
@@ -324,7 +258,6 @@ describe('Order Controller', function () {
                 case 1:
                     token = _a.sent();
                     return [4 /*yield*/, factories_1.default.createMany('Order', 3, {
-                            createdAt: new Date(2020, 3, 1),
                             closed: true,
                             total: 100,
                         })];

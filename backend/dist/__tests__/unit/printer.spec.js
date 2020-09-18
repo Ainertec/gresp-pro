@@ -258,4 +258,48 @@ describe('Printer', function () {
             }
         });
     }); });
+    it('should create a productsReport ', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, getToken_1.default];
+                case 1:
+                    token = _a.sent();
+                    return [4 /*yield*/, factories_1.default.createMany('Order', 4, {
+                            closed: true,
+                        })];
+                case 2:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app)
+                            .get("/printer/products")
+                            .set('Authorization', "Bearer " + token)];
+                case 3:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should create a ordersReport ', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, getToken_1.default];
+                case 1:
+                    token = _a.sent();
+                    return [4 /*yield*/, factories_1.default.createMany('Order', 4, {
+                            closed: true,
+                        })];
+                case 2:
+                    _a.sent();
+                    return [4 /*yield*/, supertest_1.default(app)
+                            .get("/printer/orders")
+                            .set('Authorization', "Bearer " + token)];
+                case 3:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
 });

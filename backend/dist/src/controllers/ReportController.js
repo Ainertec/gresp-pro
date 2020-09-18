@@ -41,34 +41,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var date_fns_1 = require("date-fns");
 var Order_1 = __importDefault(require("../models/Order"));
+var OrderProfitUseCase_1 = require("../UseCases/Report/OrderProfitUseCase");
+var SoldsProductsTotalUseCase_1 = require("../UseCases/Report/SoldsProductsTotalUseCase");
 var ReportController = /** @class */ (function () {
     function ReportController() {
     }
     ReportController.prototype.show = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var initial, final, initialDate, finalDate, orders;
+            var orderProfitUseCase, orders, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        initial = String(req.query.initial);
-                        final = String(req.query.final);
-                        initialDate = date_fns_1.parseISO(initial);
-                        finalDate = date_fns_1.parseISO(final);
-                        if (!date_fns_1.isValid(initialDate) && !date_fns_1.isValid(finalDate))
-                            return [2 /*return*/, res.status(400).json({ message: 'invalid date' })];
-                        return [4 /*yield*/, Order_1.default.aggregate()
-                                .match({
-                                createdAt: { $gte: initialDate, $lte: finalDate },
-                                closed: true,
-                            })
-                                .group({
-                                _id: { month: { $month: '$createdAt' }, year: { $year: '$createdAt' } },
-                                amount: { $sum: '$total' },
-                            })
-                                .sort({ amount: -1 })];
+                        _a.trys.push([0, 2, , 3]);
+                        orderProfitUseCase = new OrderProfitUseCase_1.OrdersProfitUseCase(Order_1.default);
+                        return [4 /*yield*/, orderProfitUseCase.execute()];
                     case 1:
                         orders = _a.sent();
                         return [2 /*return*/, res.json(orders)];
+                    case 2:
+                        error_1 = _a.sent();
+                        return [2 /*return*/, res.status(400).json(error_1.message)];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -125,60 +118,22 @@ var ReportController = /** @class */ (function () {
             });
         });
     };
-    ReportController.prototype.index = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var orders, totalOrders;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, Order_1.default.find()];
-                    case 1:
-                        orders = _a.sent();
-                        totalOrders = orders.reduce(function (sum, order) {
-                            return sum + order.total;
-                        }, 0);
-                        return [2 /*return*/, res.json({ total: totalOrders.toFixed(2) })];
-                }
-            });
-        });
-    };
     ReportController.prototype.totalSoldProducts = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var products;
+            var soldsProductsUseCase, products, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, Order_1.default.aggregate()
-                            .unwind('items')
-                            .lookup({
-                            from: 'items',
-                            localField: 'items.product',
-                            foreignField: '_id',
-                            as: 'products',
-                        })
-                            .unwind('products')
-                            .group({
-                            _id: {
-                                id: '$products._id',
-                                name: '$products.name',
-                                description: '$products.description',
-                                price: '$products.price',
-                                stock: '$products.stock',
-                                drink: '$products.drink',
-                            },
-                            amount: { $sum: '$items.quantity' },
-                        })
-                            .sort({ amount: -1 })];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        soldsProductsUseCase = new SoldsProductsTotalUseCase_1.SoldsProductsTotalUseCase(Order_1.default);
+                        return [4 /*yield*/, soldsProductsUseCase.execute()];
                     case 1:
                         products = _a.sent();
-                        // const totalProducts = products.reduce((sum, product) => {
-                        //   return sum + product.amount;
-                        // }, 0);
-                        // const serializedProducts = products.map(product => {
-                        //   return {
-                        //     ...product,
-                        //     amount: totalProducts,
-                        //   };
-                        // });
                         return [2 /*return*/, res.json(products)];
+                    case 2:
+                        error_2 = _a.sent();
+                        return [2 /*return*/, res.status(400).json(error_2.message)];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
