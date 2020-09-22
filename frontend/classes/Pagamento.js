@@ -251,9 +251,9 @@ async function buscarDadosDoPedidoParaPagamento(identificacao) {
 async function efetuarPagamento(identificacao) {
     try {
         await aguardeCarregamento(true)
-        const result = await requisicaoDELETE(`orders/${identificacao}/${$('#formaPagamento').val()}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        await requisicaoDELETE(`orders/${identificacao}/${$('#formaPagamento').val()}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false)
-        await mensagemDeAviso(`Pagamento efetuado para o pedido nº ${result.data.identification}!`);
+        await mensagemDeAviso(`Pagamento efetuado para o pedido nº ${identificacao}!`);
         await setTimeout(function () { menuPagamentoPedido(); }, 500)
     } catch (error) {
         mensagemDeErro('Não foi possível efetuar o pagamento!')

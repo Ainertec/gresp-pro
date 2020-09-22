@@ -11,9 +11,9 @@ function menuImpressao() {
                 <span class="fas fa-qrcode"></span> Comanda aleatória
             </button>
             <button onclick="modalImpressaoComandaQrcode(false);" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
-                <span class="fas fa-qrcode"></span> Comanda especifica
+                <span class="fas fa-qrcode"></span> Comanda específica
             </button>
-            <button onclick="modalImpressaoComandaQrcode(false);" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
+            <button onclick="modalImpressaoPostCardapio();" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
                 <span class="fas fa-qrcode"></span> Post cardápio
             </button>
             <button onclick="ligacaoRelatorioFacede('produtosebebidas');" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">

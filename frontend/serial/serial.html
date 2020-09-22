@@ -13,18 +13,9 @@
 
 <body>
 
-  <nav class="navbar navCor" style="padding-top: 0px; padding-right: 2px; border-bottom-right-radius: 20px;">
-    <img src="../logo.png" class="navbar-brand" style="width: 100px;" alt="...">
-    <div id="mensagemDeErro" class="justify-content-center"></div>
-    <ul class="nav justify-content-end">
-      <li class="nav-item">
-        <div class="btn-group" role="group" style="border-radius: 5px;">
-          <a class="btn btn-outline-danger" href="javascript:window.close()"
-            style="padding-top: 0px; padding-bottom: 0px; padding-left: 20px; padding-right: 20px"><span
-              class="fas fa-times"></span></a>
-        </div>
-      </li>
-    </ul>
+  <nav id="navbarTotal" class="navbar navCor shadow-lg p-2 mb-2"
+    style="padding-right: 2px; border-radius: 20px; margin: 5px;">
+    <img src="../img/logo.png" class="navbar-brand" style="width: 80px;" alt="...">
   </nav>
 
   <div id="janelaTotal" class="container">
@@ -69,18 +60,7 @@
 
   </div>
 
-
-  <script src="./../axios/axios.js"></script>
-  <script src="./../bootstrap/js/jquery.min.js"></script>
-  <script src="./../bootstrap/js/qrcode.js"></script>
-  <script src="./../bootstrap/js/popper.min.js"
-    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-    crossorigin="anonymous"></script>
-  <script src="./../bootstrap/js/bootstrap.min.js"
-    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-    crossorigin="anonymous"></script>
-
-
+  <script src="../classes/Funcionario.js"></script>
   <script src="./Serial.js"></script>
 
 </body>

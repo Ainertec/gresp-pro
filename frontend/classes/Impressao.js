@@ -128,7 +128,6 @@ function telaGerarRelatorioDeCaixa() {
                 <div id="relatorioCaixa" class="modal-body">
                     <div class="text-center">
                         <h3>Relatório de caixa</h3>
-                        <div id="grafico0"></div>
                         <div id="grafico1"></div>
                         <div id="grafico2"></div>
                         <div id="grafico3"></div>
@@ -151,15 +150,11 @@ async function telaRespostaRelatorioDeCaixa() {
 
     await aguardeCarregamento(true)
 
-    await gerarGraficoLucroTotal();
-
     await gerarGraficoDemonstrativoVendaPorItem();
-
-    await gerarGraficoLucroMensal('impressao');
-
-    await gerarGraficoQuantidadeVendasMensal('impressao');
-
-    await tabelaDeRelatorioCaixa('impressao');
+    await gerarGraficoGanhoGastoMensal();
+    await gerarGraficoQuantidadeVendas();
+    await gerarGraficoDemonstrativoVendaPorItem();
+    await tabelaDeRelatorioCaixa();
 
     await aguardeCarregamento(false)
 
@@ -261,8 +256,8 @@ function modalImpressaoComandaQrcode(aleatorio) {
                             <input id="identificacao" type="Number" class="form-control form-control-sm mx-auto mousetrap" style="margin:20px;" placeholder="${aleatorio ? 'Digite a quantidade' : 'Digite o número da comanda'}">
                         </div>
                         <div class="shadow p-3 mb-5 bg-white rounded">
-                            <button onclick="if(validaDadosCampo(['#identificacao'])){telaGerarQRCode('${aleatorio ? 'random' : null}');}else{mensagemDeErro('Preencha o campo de identifição!'); mostrarCamposIncorrreto(['identificacao']);}" type="button" class="btn btn-outline-info btn-block btn-sm">
-                                <span class="fas fa-search"></span> Gerar Comanda
+                            <button onclick="if(validaDadosCampo(['#identificacao'])){telaGerarQRCodeComanda('${aleatorio ? 'random' : null}');}else{mensagemDeErro('Preencha o campo de identifição!'); mostrarCamposIncorrreto(['identificacao']);}" type="button" class="btn btn-outline-info btn-block btn-sm">
+                                <span class="fas fa-check"></span> Gerar Comanda
                             </button>
                         </div>
                     </div>
@@ -275,8 +270,8 @@ function modalImpressaoComandaQrcode(aleatorio) {
     $('#modalimpressaoComanda').modal('show')
 }
 
-// funcao para gerar o QR code
-function telaGerarQRCode(tipo) {
+// funcao para gerar o QR code comanda
+function telaGerarQRCodeComanda(tipo) {
 
     let vetorDeRandomico = [];
 
@@ -295,14 +290,14 @@ function telaGerarQRCode(tipo) {
         codigoHTML += `<hr style="bg-light; size:30px">
             <div class="row">
                 <div class="col-sm">
-                    <img src="logo.png" class="rounded mx-auto d-block" style="width: 30vw; margin-top: 15vh;" align="middle">
+                    <img src="img/logoImpressao.png" class="rounded mx-auto d-block" style="width: 30vw; margin-top: 15vh;" align="middle">
                     <h1 class="text-dark" style="margin-top: 15vh;">${vetorDeRandomico[cont]}</h1>
                     <div class="qrcode rounded mx-auto d-block" id="qr${cont}" style="margin-top: 5vh" align="middle">
                     </div>
                 </div>`
         if (vetorDeRandomico[cont + 1]) {
             codigoHTML += `<div class="col-sm">
-                <img src="logo.png" class="rounded mx-auto d-block" style="width: 30vw; margin-top: 15vh;" align="middle">
+                <img src="img/logoImpressao.png" class="rounded mx-auto d-block" style="width: 30vw; margin-top: 15vh;" align="middle">
                 <h1 class="text-dark" style="margin-top: 15vh;">${vetorDeRandomico[cont + 1]}</h1>
                 <div class="qrcode rounded mx-auto d-block" id="qr${(cont + 1)}" style="margin-top: 5vh" align="middle">
                 </div>
@@ -326,4 +321,92 @@ function telaGerarQRCode(tipo) {
             correctLevel: QRCode.CorrectLevel.H
         });
     }
+}
+
+// ------------------------------------------------- Gerar Post Cardápio -------------------------------------------
+
+//funcao responsavel por gerar o modal de dado resferentes a impressão do post de cardápio
+function modalImpressaoPostCardapio() {
+    let codigoHTML = ``;
+
+    codigoHTML += `<div class="modal" id="modalimpressaoPostCardapio">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span class="fas fa-clipboard-list"></span> Gerar post cardápio</h5>
+                    <button onclick="imprimirImpressora('bodyMoadalImpressaoPostCardapio');" type="button" class="btn btn-primary" style="margin-left:10px;">
+                        Imprimir
+                    </button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                 </div>
+                <div class="modal-body" id="bodyMoadalImpressaoPostCardapio">
+                    <div class="col-8 mx-auto">
+                        <h5 class="text-center"> Dados do Post</h5>
+                        <div class="shadow p-3 mb-3 bg-white rounded">
+                            <input id="nomewifi" type="text" class="form-control form-control-sm mx-auto mousetrap" style="margin:20px;" placeholder="Digite o nome da rede wifi">
+                        </div>
+                        <div class="shadow p-3 mb-5 bg-white rounded">
+                            <button onclick="if(validaDadosCampo(['#nomewifi'])){telaGerarQRCodePostCardapio();}else{mensagemDeErro('Preencha o campo de nome rede wifi!'); mostrarCamposIncorrreto(['nomewifi']);}" type="button" class="btn btn-outline-info btn-block btn-sm">
+                                <span class="fas fa-check"></span> Gerar post
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`
+
+    document.getElementById('modal').innerHTML = codigoHTML;
+    $('#modalimpressaoPostCardapio').modal('show')
+}
+
+// funcao para gerar o QR code comanda
+function telaGerarQRCodePostCardapio() {
+    let codigoHTML = ``, ip;
+
+    codigoHTML += `<div class="text-center container">
+        <hr style="bg-light; size:30px">
+            <div class="row">
+                <div class="col-sm">
+                    <img src="img/logoImpressao.png" class="rounded mx-auto d-block" style="width: 30vw; margin-top: 15vh;" align="middle">
+                    <h1 class="text-dark" style="margin-top: 15vh;">Cardápio digital:</h1>
+                    <h4>1) Conecte-se com a rede wifi ${document.getElementById('nomewifi').value}</h4>
+                    <h4>2) Acesse o link ou faça a leitura do qrcode abaixo</h4>
+                    <a href="#" id="campoLinkIP"></a>
+                    <div class="qrcode rounded mx-auto d-block" id="qr" style="margin-top: 5vh" align="middle">
+                    </div>
+                </div>
+            </div>
+        <hr style="margin-top: 580px; bg-light; size:30px">
+    </div>`
+
+    document.getElementById('bodyMoadalImpressaoPostCardapio').innerHTML = codigoHTML;
+
+
+    window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;//compatibility for Firefox and chrome
+    var pc = new RTCPeerConnection({ iceServers: [] }), noop = function () { };
+    pc.createDataChannel('');//create a bogus data channel
+    pc.createOffer(pc.setLocalDescription.bind(pc), noop);// create offer and set local description
+    pc.onicecandidate = function (ice) {
+        if (ice && ice.candidate && ice.candidate.candidate) {
+            var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
+            ip = myIP.toString();
+            pc.onicecandidate = noop;
+        }
+    };
+
+    setTimeout(function () {
+        document.getElementById('campoLinkIP').innerHTML = `http://${ip}:3000`
+
+        new QRCode("qr", {
+            text: `http://${ip}:3000`,
+            width: 200,
+            height: 200,
+            colorDark: "black",
+            colorLight: "white",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    }, 300)
 }

@@ -468,12 +468,9 @@ async function telaBuscaeExibirItens() {
 async function categoriaProdutoPedido() {
     let json = await requisicaoGET(`categories`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }), aux = 1;
 
-    console.log(json)
-
     for (let item of json.data) {
         if (aux == 1) {
             $(`#col${aux}catpedido`).append(`<a class="dropdown-item" onclick="document.getElementById('botaocategoriapedido').value='${item._id}'; listaItens('categoria');" href="#" style="background-color:${item.color}; border-radius:30px; padding:15px;"><h6 style="color:#fff; mix-blend-mode: exclusion;">${item.name}</h6></a>`)
-            console.log(`<a class="dropdown-item" href="#" style="color:${item.color}">${item.name}</a>`)
             aux = 2;
         } else if (aux == 2) {
             $(`#col${aux}catpedido`).append(`<a class="dropdown-item" onclick="document.getElementById('botaocategoriapedido').value='${item._id}'; listaItens('categoria');" href="#" style="background-color:${item.color}; border-radius:30px; padding:15px;"><h6 style="color:#fff; mix-blend-mode: exclusion;">${item.name}</h6></a>`)
