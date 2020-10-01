@@ -67,7 +67,7 @@ export const Description = styled.p`
   font-size: 1.4rem;
   line-height: 1.4rem;
   max-width: 60%;
-  margin-top: 3vh;
+  margin-top: 2vh;
   color: #ffffff;
 `;
 export const ItemInformation = styled.article`
