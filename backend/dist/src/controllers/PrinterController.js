@@ -212,7 +212,7 @@ var PrinterController = /** @class */ (function () {
                         });
                         date = date_fns_1.format(new Date(), 'dd/MM/yyyy HH:mm:ss');
                         myDoc.writeText('', contentBorder);
-                        myDoc.writeText('>>>>>>>>> Relatório de Produtos <<<<<<<<<<', header);
+                        myDoc.writeText('>>>>> Relatório de Produtos <<<<<', header);
                         products.map(function (product) {
                             myDoc.writeText("Name:" + product._id.name + " ", contentStyle);
                             myDoc.writeText("Price:" + product._id.price + " ", contentStyle);
@@ -273,7 +273,7 @@ var PrinterController = /** @class */ (function () {
                         });
                         date = date_fns_1.format(new Date(), 'dd/MM/yyyy HH:mm:ss');
                         myDoc.writeText('', contentBorder);
-                        myDoc.writeText('>>>>>>>>> Relatório de Produtos <<<<<<<<<<', header);
+                        myDoc.writeText('>>>> Relatório de Produtos <<<<<', header);
                         myDoc.writeText("Total L\u00EDquido:" + ordersProfit.netValue + " ", header);
                         myDoc.writeText("Total bruto :" + ordersProfit.total + " ", header);
                         myDoc.writeText("Total gasto com cortesia:" + ordersProfit.totalCourtesy + " ", header);

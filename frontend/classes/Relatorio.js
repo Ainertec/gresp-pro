@@ -21,7 +21,7 @@ function telaRelatorioDeCaixa() {
     codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
         <h4 class="text-center"><span class="fas fa-chart-line"></span> Relatórios</h4>
         <div class="col-6 mx-auto" style="margin-top:20px;">
-            <button class="btn btn-warning btn-block btn-sm">
+            <button onclick="imprimirRelatorioProdutoeOrders();" class="btn btn-warning btn-block btn-sm">
                 <span class="fas fa-print"></span> Imprimir Relatório
             </button>
         </div>
@@ -239,7 +239,7 @@ async function gerarGraficoQuantidadeVendas() {
     let dia = new Date().getDate(),
         mes = new Date().getMonth() + 1,
         ano = new Date().getFullYear();
-    let json = await requisicaoGET(`reports/total?initial=${ano}-${mes > 9 ? mes : '0' + mes}-${dia > 9 ? dia : '0' + mes}&final=${ano}-${mes > 9 ? mes : '0' + mes}-${dia > 9 ? dia + 1 : '0' + dia + 1}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    let json = await requisicaoGET(`reports/total?initial=${ano}-${mes > 9 ? mes : '0' + mes}-${dia > 9 ? dia : '0' + dia}&final=${ano}-${mes > 9 ? mes : '0' + mes}-${dia > 9 ? dia + 1 : '0' + (dia + 1)}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false)
 
     for (let item of json.data) {
@@ -289,7 +289,7 @@ async function tabelaDeRelatorioCaixa() {
         let dia = new Date().getDate(),
             mes = new Date().getMonth() + 1,
             ano = new Date().getFullYear();
-        json = await requisicaoGET(`reports/orders?initial=${ano}-${mes > 9 ? mes : '0' + mes}-${dia > 9 ? dia : '0' + mes}&final=${ano}-${mes > 9 ? mes : '0' + mes}-${dia > 9 ? dia + 1 : '0' + dia + 1}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        json = await requisicaoGET(`reports/orders?initial=${ano}-${mes > 9 ? mes : '0' + mes}-${dia > 9 ? dia : '0' + dia}&final=${ano}-${mes > 9 ? mes : '0' + mes}-${dia > 9 ? dia + 1 : '0' + (dia + 1)}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false)
 
         codigoHTML += `<h5>Lista de Pedidos Fechados do Dia</h5>
@@ -326,5 +326,17 @@ async function tabelaDeRelatorioCaixa() {
     } catch (error) {
 
         document.getElementById('listaItens').innerHTML = 'Não foi possivel carregar a lista!' + error
+    }
+}
+
+//funcao responsavel por imprimir o relatorio geral
+async function imprimirRelatorioProdutoeOrders() {
+    try {
+        await aguardeCarregamento(true)
+        await requisicaoGET(`printer/orders`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        await requisicaoGET(`printer/products`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        await aguardeCarregamento(false)
+    } catch (error) {
+        await aguardeCarregamento(false)
     }
 }

@@ -181,7 +181,7 @@ class PrinterController {
     });
     const date = format(new Date(), 'dd/MM/yyyy HH:mm:ss');
     myDoc.writeText('', contentBorder);
-    myDoc.writeText('>>>>>>>>> Relatório de Produtos <<<<<<<<<<', header);
+    myDoc.writeText('>>>>> Relatório de Produtos <<<<<', header);
     products.map(product => {
       myDoc.writeText(`Name:${product._id.name} `, contentStyle);
       myDoc.writeText(`Price:${product._id.price} `, contentStyle);
@@ -233,7 +233,7 @@ class PrinterController {
     const date = format(new Date(), 'dd/MM/yyyy HH:mm:ss');
 
     myDoc.writeText('', contentBorder);
-    myDoc.writeText('>>>>>>>>> Relatório de Produtos <<<<<<<<<<', header);
+    myDoc.writeText('>>>> Relatório de Produtos <<<<<', header);
 
     myDoc.writeText(`Total Líquido:${ordersProfit.netValue} `, header);
     myDoc.writeText(`Total bruto :${ordersProfit.total} `, header);

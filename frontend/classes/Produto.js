@@ -371,6 +371,7 @@ async function cadastrarProduto() {
             await aguardeCarregamento(false)
             await adicionarProdutoEmCategoria(document.getElementById('categoriaproduto').value, result.data._id)
             document.getElementById('modal').innerHTML = ''
+            inicializacaoClasseProduto();
         } else {
             mensagemDeErro('Adicione pelo menos um ingrediente!')
         }
@@ -459,4 +460,11 @@ async function disponibilizarIndisponibilizarProduto(id, disponivel) {
     } else {
         await buscarProdutos('todos')
     }
+}
+
+//funcao responsavel por inicializar as variaveis da classe produto
+function inicializacaoClasseProduto() {
+    VETORDEPRODUTOSCLASSEPRODUTO = [];
+    VETORDEINGREDIENTESCLASSEPRODUTO = [];
+    VETORDECATEGORIASCLASSEPRODUTO = [];
 }

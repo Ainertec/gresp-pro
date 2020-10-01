@@ -37,6 +37,7 @@ function menuImpressao() {
 //funcao menu de opcoes para produto
 function menuProdutoeBebida() {
     let codigoHTML = ``;
+    inicializacaoClasseProduto();
 
     codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded" style="margin-top:5vh;">
         <h3 class="text-center" style="margin-top:30px;"><span class="fas fa-utensils"></span> Produtos <span class="fas fa-wine-glass-alt"></span></h3>

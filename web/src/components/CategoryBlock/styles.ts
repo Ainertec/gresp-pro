@@ -36,13 +36,13 @@ export const HeaderContent = styled.div`
     align-items: center;
   }
 `;
-export const ItemIcon = styled(MdLocalCafe)`
+export const ItemIcon = styled(MdLocalDining)`
   fill: #fff;
   width: 1.9rem;
   height: 1.9rem;
   flex-shrink: 0;
 `;
-export const ItemIconDrink = styled(MdLocalDining)`
+export const ItemIconDrink = styled(MdLocalCafe)`
   fill: #fff;
   width: 1.9rem;
   height: 1.9rem;
@@ -60,13 +60,14 @@ export const ItemTitle = styled.h4`
 export const ItemPrice = styled.h4`
   font-size: 1.9rem;
   line-height: 1.9rem;
-
+  margin-left: 10vw;
   color: #ffffff;
 `;
 export const Description = styled.p`
   font-size: 1.4rem;
   line-height: 1.4rem;
   max-width: 60%;
+  margin-top: 3vh;
   color: #ffffff;
 `;
 export const ItemInformation = styled.article`
