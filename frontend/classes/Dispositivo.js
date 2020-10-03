@@ -3,25 +3,27 @@
 
 //funcao responsavel por gerar a tela de ip de configuracao do dispositivo celular
 function telaDeConfiguracaoDispositivo() {
-    var codigoHTML = '';
+    let codigoHTML = ``;
 
-    codigoHTML += '<div class="modal fade" id="modalConfigDispositivo" tabindex="-1" role="dialog" aria-labelledby="modalDispositivo" aria-hidden="true">'
-    codigoHTML += '<div class="modal-dialog modal-dialog-scrollable" role="document">'
-    codigoHTML += '<div class="modal-content">'
-    codigoHTML += '<div class="modal-header">'
-    codigoHTML += '<h5 class="modal-title" id="modalDispositivo"><span class="fas fa-mobile-alt"></span> Configurar Dispositivo</h5>'
-    codigoHTML += '<button onclick="limparModal();" type="button" class="close" data-dismiss="modal" aria-label="Close">'
-    codigoHTML += '<span aria-hidden="true">&times;</span>'
-    codigoHTML += '</button>'
-    codigoHTML += '</div>'
-    codigoHTML += '<div class="modal-body">'
-    codigoHTML += '<p>Faça a leitura do código QR abaixo com seu dispositivo celular para efetuar a configuração básica!</p>'
-    codigoHTML += '<div class="qrcode rounded mx-auto d-block" id="qr2" style="margin-top: 30px;" align="middle"></div>'
-    codigoHTML += '<h3 id="ipNumber" class="text-danger text-center" style="margin-top: 10px;"></h3>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
-    codigoHTML += '</div>'
+    codigoHTML += `<div class="modal fade" id="modalConfigDispositivo" tabindex="-1" role="dialog" aria-labelledby="modalDispositivo" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDispositivo">
+                        <span class="fas fa-mobile-alt"></span> Configurar Dispositivo
+                    </h5>
+                    <button onclick="limparModal();" type="button" class="close btn-outline-danger" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Faça a leitura do código QR abaixo com seu dispositivo celular para efetuar a configuração básica!</p>
+                    <div class="qrcode rounded mx-auto d-block" id="qr2" style="margin-top: 30px;" align="middle"></div>
+                    <h3 id="ipNumber" class="text-danger text-center" style="margin-top: 10px;"></h3>
+                </div>
+            </div>
+        </div>
+    </div>`
 
     document.getElementById('modal').innerHTML = codigoHTML;
 

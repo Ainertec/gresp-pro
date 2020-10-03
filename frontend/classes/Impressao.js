@@ -36,7 +36,7 @@ function telaGerarRelatorioProdutoseBebidas() {
                     <button onclick="imprimirImpressora('relatorioProdutoseBebidas'); $('modalRelatorioProdutoseBebidas').modal('hide');" type="button" class="btn btn-primary" style="margin-left:10px;">
                         Imprimir
                     </button>
-                    <button onclick="limparModal();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button onclick="limparModal();" type="button" class="close btn-outline-danger" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -121,7 +121,7 @@ function telaGerarRelatorioDeCaixa() {
                     <button onclick="imprimirImpressora('relatorioCaixa'); $('modalRelatorioDeCaixa').modal('hide');" type="button" class="btn btn-primary" style="margin-left:10px;">
                         Imprimir
                     </button>
-                    <button onclick="limparModal();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button onclick="limparModal();" type="button" class="close btn-outline-danger" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -174,7 +174,7 @@ function telaGerarListaTodosOsPedidosAbertos() {
                     <button onclick="imprimirImpressora('listaTodosPedidos'); $('#modalListaTodosProdutosAbertos').modal('hide');" type="button" class="btn btn-primary" style="margin-left:10px;">
                         Imprimir
                     </button>
-                    <button onclick="limparModal();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button onclick="limparModal();" type="button" class="close btn-outline-danger" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -245,7 +245,7 @@ function modalImpressaoComandaQrcode(aleatorio) {
                     <button onclick="imprimirImpressora('bodyMoadalImpressaoComanda');" type="button" class="btn btn-primary" style="margin-left:10px;">
                         Imprimir
                     </button>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close btn-outline-danger" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                  </div>
@@ -337,7 +337,7 @@ function modalImpressaoPostCardapio() {
                     <button onclick="imprimirImpressora('bodyMoadalImpressaoPostCardapio');" type="button" class="btn btn-primary" style="margin-left:10px;">
                         Imprimir
                     </button>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close btn-outline-danger" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                  </div>

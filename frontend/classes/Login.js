@@ -10,7 +10,7 @@ function telaAutenticacao() {
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title"><span class="fas fa-user-shield"></span> Login</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close btn-outline-danger" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -82,8 +82,7 @@ async function recuperarSenha() {
         const result = await requisicaoPOST(
             'forgot',
             JSON.parse(
-                `{"name":"${document.getElementById('login').value}","response":"${
-                document.getElementById('pergunta').value
+                `{"name":"${document.getElementById('login').value}","response":"${document.getElementById('pergunta').value
                 }","password":"${document.getElementById('novaSenha').value}"}`
             ),
             null
@@ -114,8 +113,7 @@ async function efetuarLogin() {
         const json = await requisicaoPOST(
             'sessions',
             JSON.parse(
-                `{"name":"${document.getElementById('login').value}","password":"${
-                document.getElementById('senha').value
+                `{"name":"${document.getElementById('login').value}","password":"${document.getElementById('senha').value
                 }"}`
             ),
             null

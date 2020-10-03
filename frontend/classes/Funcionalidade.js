@@ -42,6 +42,25 @@ function mensagemDeAviso(mensagem) {
     $('.toast').toast('show')
 }
 
+//funcao para gerar mensagem de aviso sobre estoque
+function mensagemEstoque(mensagem) {
+    document.getElementById('alertStock').innerHTML = `<div class="toast shadow-lg mb-5 bg-white rounded" role="alert" data-delay="5000" aria-atomic="true" style="opacity:0.9;">
+        <div class="toast-header bg-warning text-light">
+            <span class="fas fa-exclamation-triangle" style="margin-right:5px;"></span>
+            <strong class="mr-auto">Estoque</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            <strong>${mensagem}</strong>
+        </div>
+    </div>`
+
+    $('.toast').toast('show')
+    setTimeout(function () { document.getElementById('alertStock').innerHTML = '' }, 5300)
+}
+
 //funcao responsavel por imprimir na impressora
 function imprimirImpressora(idReferencia) {
     let conteudo;
@@ -137,10 +156,12 @@ function confirmarAcao(mensagem, funcao, value) {
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Atenção</h5>
+                    <h5 class="modal-title text-danger">
+                        <span class="fas fa-exclamation-triangle" style="margin-right:5px;"></span> Atenção
+                    </h5>
                 </div>
                 <div class="modal-body"> 
-                    <p>${mensagem} Deseja continuar?</p>
+                    <p><strong>${mensagem} Deseja continuar?</strong></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Não</button>`

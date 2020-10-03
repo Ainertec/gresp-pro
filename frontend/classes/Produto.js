@@ -118,7 +118,7 @@ async function telaProduto(tipoRequisicao, id) {
         <div class="modal-content">
             <div class="modal-header">
             <h5 class="modal-title"><span class="fas fa-utensils"></span> Dados do produto <span class="fas fa-wine-glass-alt"></span></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close btn-outline-danger" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             </div>

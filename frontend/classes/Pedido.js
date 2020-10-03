@@ -49,7 +49,7 @@ function modalBuscarPedido(identificacao) {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"><span class="fas fa-clipboard-list"></span> Buscar Pedido</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close btn-outline-danger" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                  </div>
@@ -384,10 +384,12 @@ function liberarSubMenu() {
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Atenção</h5>
+                    <h5 class="modal-title text-danger">
+                        <span class="fas fa-exclamation-triangle" style="margin-right:5px;"></span> Atenção
+                    </h5>
                 </div>
                 <div class="modal-body">
-                    <p>Ao sair da tela você perderá todos os novos dados do pedido caso não o tenha finalizado! Deseja continuar?</p>
+                    <p><strong>Ao sair da tela você perderá todos os novos dados do pedido caso não o tenha finalizado! Deseja continuar?</strong></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Não</button>
@@ -410,7 +412,7 @@ async function telaBuscaeExibirItens() {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"><span class="fas fa-utensils"></span> Produtos e Bebidas <span class="fas fa-wine-glass-alt"></span></h5>
-                    <button onclick="limparModal();" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button onclick="limparModal();" type="button" class="close btn-outline-danger" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -588,6 +590,11 @@ async function cadastrarAtualizarPedido(tipoRequisicao, identificacao) {
                 await aguardeCarregamento(false)
 
                 await mensagemDeAviso("Pedido cadastrado com sucesso!");
+                try {
+                    if (result.data.stockAlert[0]) {
+                        await mensagemEstoque(`O estoque referente ao (s) produto(s) (${result.data.stockAlert.join()}), está acabando, verifique o estoque!`);
+                    }
+                } catch (error) { }
                 await buscarPedido(identificacao);
                 await setTimeout(function () { menuPedido(); }, 1500)
 
@@ -604,11 +611,11 @@ async function cadastrarAtualizarPedido(tipoRequisicao, identificacao) {
                 await aguardeCarregamento(true)
 
                 let jsonDid = await requisicaoGET(`orders/${identificacao}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-                let json2 = json, aux = true, vetorDeItensAtualizarPedido = [];
+                let json2 = json, vetorDeItensAtualizarPedido = [];
 
                 delete json2.identification
 
-                await requisicaoPUT(`orders/${identificacao}`, json2, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+                let result = await requisicaoPUT(`orders/${identificacao}`, json2, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
 
                 await aguardeCarregamento(false)
 
@@ -632,6 +639,11 @@ async function cadastrarAtualizarPedido(tipoRequisicao, identificacao) {
                 await requisicaoPOST(`printer`, updateOrder, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
                 await aguardeCarregamento(false)
 
+                try {
+                    if (result.data.stockAlert[0]) {
+                        await mensagemEstoque(`O estoque referente ao (s) produto(s) (${result.data.stockAlert.join()}), está acabando, verifique o estoque!`);
+                    }
+                } catch (error) { }
                 await mensagemDeAviso("Pedido atualizado com sucesso!");
                 await buscarPedido(identificacao);
                 await setTimeout(function () { menuPedido(); }, 1500)
