@@ -674,7 +674,7 @@ async function reimprimirPedido() {
 
     await aguardeCarregamento(true)
     await requisicaoPOST(`printer`, JSON.parse(newOrder), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-    await aguardeCarregamento(true)
+    await aguardeCarregamento(false)
     await mensagemDeAviso("Reimprimindo pedido...");
 
 }
