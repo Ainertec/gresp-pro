@@ -8,10 +8,10 @@ export async function signIn(name, password) {
       password,
     })
     .catch((error) => {
-      console.log(error.request);
+      
       return error.request;
     });
-  console.log(response);
+ 
 
   return response;
 }
