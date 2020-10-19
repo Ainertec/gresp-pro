@@ -140,7 +140,7 @@ function telaIngrediente(tipoRequisicao, id) {
                             <input id="nomeingrediente" type="text" class="form-control mousetrap" placeholder="Nome do ingrediente">
                         </div>
                         <div class="col-6">
-                            <label>Preço de custo: </label>
+                            <label>Preço de custo (total): </label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">R$</span>

@@ -260,7 +260,7 @@ async function parteEstoqueTelaDeProduto(tipo) {
             </div>
         </div>
         <div class="col-6">
-            <label>Preço de custo: </label>
+            <label>Preço de custo (unid.): </label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">R$</span>
