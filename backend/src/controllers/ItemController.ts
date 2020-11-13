@@ -38,6 +38,24 @@ class ItemController {
     return res.json(items);
   }
 
+  public async showDesk(req: Request, res: Response) {
+    const { name } = req.params;
+
+    const items = await Item.find({
+      name: { $regex: new RegExp(name), $options: 'i' },
+    })
+      .populate('ingredients.material');
+
+    return res.json(items);
+  }
+
+  public async indexDesk(req: Request, res: Response) {
+    const items = await Item.find()
+      .populate('ingredients.material');
+
+    return res.json(items);
+  }
+
   public async create(req: Request, res: Response): Promise<Response> {
     const {
       name,

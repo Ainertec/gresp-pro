@@ -94,6 +94,38 @@ var ItemController = /** @class */ (function () {
             });
         });
     };
+    ItemController.prototype.showDesk = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var name, items;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        name = req.params.name;
+                        return [4 /*yield*/, Item_1.default.find({
+                                name: { $regex: new RegExp(name), $options: 'i' },
+                            })
+                                .populate('ingredients.material')];
+                    case 1:
+                        items = _a.sent();
+                        return [2 /*return*/, res.json(items)];
+                }
+            });
+        });
+    };
+    ItemController.prototype.indexDesk = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var items;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, Item_1.default.find()
+                            .populate('ingredients.material')];
+                    case 1:
+                        items = _a.sent();
+                        return [2 /*return*/, res.json(items)];
+                }
+            });
+        });
+    };
     ItemController.prototype.create = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, name, price, description, stock, drink, ingredients, cost, categoryId, available, itemCost, _b, item;

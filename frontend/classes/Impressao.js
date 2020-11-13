@@ -60,7 +60,7 @@ function telaGerarRelatorioProdutoseBebidas() {
 //funcao para gerar tela de resposta com todos os produtos e bebidas
 async function telaRespostaRelatorioProdutoseBebidas() {
     await aguardeCarregamento(true)
-    let codigoHTML = ``, json = await requisicaoGET(`items`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }),
+    let codigoHTML = ``, json = await requisicaoGET(`itemsDesk`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } }),
         json2 = await requisicaoGET(`ingredients`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false)
 

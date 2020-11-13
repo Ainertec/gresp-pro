@@ -48,12 +48,13 @@ async function buscarEstoque(tipoBusca, tipo) {
     if (tipo == 'produto') {
         if (tipoBusca == 'nome') {
             await aguardeCarregamento(true)
-            json = await requisicaoGET(`items/${$("#nome").val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
-            json.data = json.data.map((element) => element.stock != null)
+            json = await requisicaoGET(`itemsDesk/${$("#nome").val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+            json.data = json.data.filter((element) => element.stock != null)
+            console.log(json.data)
             await aguardeCarregamento(false)
         } else if (tipoBusca == 'todos') {
             await aguardeCarregamento(true)
-            json = await requisicaoGET(`items`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+            json = await requisicaoGET(`itemsDesk`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
             json.data = json.data.filter((element) => element.stock != null)
             await aguardeCarregamento(false)
         }

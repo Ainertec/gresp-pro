@@ -298,7 +298,7 @@ async function adicionarItemaoPedido(idItem, quantidadeItem, pedidoTipo, cortesi
     let json = null;
 
     await aguardeCarregamento(true)
-    json = await requisicaoGET(`items`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    json = await requisicaoGET(`itemsDesk`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false)
 
     const existe = VETORDEITENSCLASSEPEDIDO.findIndex((element) => element._id == idItem)
@@ -491,11 +491,11 @@ async function listaItens(tipoBusca) {
 
     if (tipoBusca == 'todos') {
         await aguardeCarregamento(true)
-        json = await requisicaoGET(`items`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        json = await requisicaoGET(`itemsDesk`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false)
     } else if (tipoBusca == 'nome') {
         await aguardeCarregamento(true)
-        json = await requisicaoGET(`items/${$('#nome').val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        json = await requisicaoGET(`itemsDesk/${$('#nome').val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false)
     } else if (tipoBusca == 'categoria') {
         await aguardeCarregamento(true)
