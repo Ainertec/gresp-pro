@@ -5,7 +5,7 @@ import ReportController from '../controllers/ReportController';
 import { IValidationReport } from './routesDTO';
 
 export class ReportRoutes {
-  constructor(private routes: Router) {}
+  constructor(private routes: Router) { }
 
   getRoutes(validations: IValidationReport) {
     this.routes.delete('/reports', ReportController.delete);
@@ -22,5 +22,6 @@ export class ReportRoutes {
       celebrate({ query: validations.report }),
       ReportController.showClosedOrders,
     );
+    this.routes.get('/reports/coststock', ReportController.costStock);
   }
 }

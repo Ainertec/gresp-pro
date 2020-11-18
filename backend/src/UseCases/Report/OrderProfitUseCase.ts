@@ -3,7 +3,7 @@ import { startOfDay, endOfDay } from 'date-fns';
 import { OrderInterface } from '../../interfaces/base';
 
 export class OrdersProfitUseCase {
-  constructor(private OrderModel: Model<OrderInterface>) {}
+  constructor(private OrderModel: Model<OrderInterface>) { }
 
   public async execute() {
     const initial = startOfDay(new Date());
@@ -33,6 +33,14 @@ export class OrdersProfitUseCase {
         }, 0)
       );
     }, 0);
+    const totalCost = ordersProfit.reduce((sum, order) => {
+      return (
+        sum +
+        order.items.reduce((sum2, item) => {
+          return sum2 + (item.quantity * item.product.cost);
+        }, 0)
+      );
+    }, 0);
 
     const filteredTotal = totalOrders - totalProducts;
 
@@ -41,6 +49,7 @@ export class OrdersProfitUseCase {
       total: totalOrders.toFixed(2),
       netValue: filteredTotal.toFixed(2),
       totalCourtesy: totalCourtesy.toFixed(2),
+      totalCost: totalCost.toFixed(2),
     };
   }
 }

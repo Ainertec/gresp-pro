@@ -114,7 +114,7 @@ class PrinterController {
       myDoc.writeText('=========== Produtos ==========', contentBorder);
       items.products.map(item => {
         myDoc.writeText(
-          `* ${item.product.name} ${item.courtesy && '/ Cortesia'}`,
+          `* ${item.product.name} ${item.courtesy ? '/ Cortesia' : ''}`,
           contentStyle,
         );
         myDoc.writeText(`- Quantidade: ${item.quantity}`, contentStyle);
@@ -123,7 +123,7 @@ class PrinterController {
       myDoc.writeText('=========== Bebidas ===========', contentBorder);
       items.drinks.map(item => {
         myDoc.writeText(
-          `* ${item.product.name} ${item.courtesy && '/ Cortesia'}`,
+          `* ${item.product.name} ${item.courtesy ? '/ Cortesia' : ''}`,
           contentStyle,
         );
         myDoc.writeText(`- Quantidade: ${item.quantity}`, contentStyle);

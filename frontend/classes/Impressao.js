@@ -132,6 +132,7 @@ function telaGerarRelatorioDeCaixa() {
                         <div id="grafico2"></div>
                         <div id="grafico3"></div>
                         <div id="listaItens"></div>
+                        <div id="listaDadosGerais"></div>
                         <hr style="margin-top:10px;">
                     </div>
                 </div>
@@ -155,6 +156,7 @@ async function telaRespostaRelatorioDeCaixa() {
     await gerarGraficoQuantidadeVendas();
     await gerarGraficoDemonstrativoVendaPorItem();
     await tabelaDeRelatorioCaixa();
+    await tabelaGeralDeRelatorios();
 
     await aguardeCarregamento(false)
 

@@ -30,7 +30,8 @@ function telaRelatorioDeCaixa() {
         <div id="grafico1" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
         <div id="grafico2" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
         <div id="grafico3" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
-        <div id="listaItens" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>`
+        <div id="listaItens" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>
+        <div id="listaDadosGerais" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>`
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 
@@ -40,6 +41,7 @@ function telaRelatorioDeCaixa() {
         gerarGraficoQuantidadeVendas();
         gerarGraficoDemonstrativoVendaPorItem();
         tabelaDeRelatorioCaixa();
+        tabelaGeralDeRelatorios();
     }, 300)
 }
 
@@ -130,45 +132,6 @@ async function gerarGraficoDemonstrativoVendaPorItem() {
             }
         }]
     });
-
-    /* Highcharts.chart('grafico1', {
-         chart: {
-             type: 'column'
-         },
-         title: {
-             text: 'Demonstrativo de Relação de Venda de Produtos e Bebidas'
-         },
-         subtitle: {
-             text: 'Este gráfico demostra a quantidade vendida de cada item.'
-         },
-         xAxis: {
-             categories: [
-                 'Items'
-             ],
-             crosshair: true
-         },
-         yAxis: {
-             min: 0,
-             title: {
-                 text: 'Quantidade (Unid.)'
-             }
-         },
-         tooltip: {
-             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-             pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                 '<td style="padding:0"><b>{point.y:.0f} unid.</b></td></tr>',
-             footerFormat: '</table>',
-             shared: true,
-             useHTML: true
-         },
-         plotOptions: {
-             column: {
-                 pointPadding: 0.2,
-                 borderWidth: 0
-             }
-         },
-         series: result
-     });*/
 }
 
 //funcao responsavel por gerar o relatorio de lucro mensal
@@ -300,6 +263,7 @@ async function tabelaDeRelatorioCaixa() {
                         <td scope="col"><small>Identificação</small></td>
                         <td scope="col"><small>Lista itens</small></td>
                         <td scope="col"><small>Forma pagamento</small></td>
+                        <td scope="col"><small>Custo</small></td>
                         <td scope="col"><small>Valor</small></td>
                     </tr>
                 </thead>
@@ -307,15 +271,16 @@ async function tabelaDeRelatorioCaixa() {
 
         for (let item of json.data) {
             codigoHTML += `<tr class="table-light text-dark">
-                <td scope="col"><small><strong>${format(parseISO(item.updatedAt), 'dd/MM/yyyy HH:mm:ss')}</strong></small></td>
-                <td scope="col"><small><strong>${item.identification}</strong></small></td>
+                <td scope="col"><small><strong>${format(parseISO(item.order.updatedAt), 'dd/MM/yyyy HH:mm:ss')}</strong></small></td>
+                <td scope="col"><small><strong>${item.order.identification}</strong></small></td>
                 <td scope="col"><small>`
-            for (let item2 of item.items) {
+            for (let item2 of item.order.items) {
                 codigoHTML += `(<strong>${item2.product.name}</strong> X ${item2.quantity}${item2.courtesy ? ' - <strong class="text-primary">Cortesia</strong>' : ''})`;
             }
             codigoHTML += `</small></td>
-                    <td scope="col"><small><strong>${item.payment}</strong></small></td>
-                    <td scope="col" class="text-danger"><small><strong>R$${(item.total).toFixed(2)}</strong></small></td>
+                    <td scope="col"><small><strong>${item.order.payment}</strong></small></td>
+                    <td scope="col" class="text-danger"><small><strong>R$${(item.costTotal).toFixed(2)}</strong></small></td>
+                    <td scope="col" class="text-danger"><small><strong>R$${(item.order.total).toFixed(2)}</strong></small></td>
                 </tr>`
         }
         codigoHTML += `</tbody>
@@ -326,6 +291,60 @@ async function tabelaDeRelatorioCaixa() {
     } catch (error) {
 
         document.getElementById('listaItens').innerHTML = 'Não foi possivel carregar a lista!' + error
+    }
+}
+
+//funcao para gerar tabela com todos os pedidos registrados no caixa
+async function tabelaGeralDeRelatorios() {
+    let codigoHTML = ``;
+
+    try {
+        await aguardeCarregamento(true)
+        let json = await requisicaoGET(`reports`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        let json2 = await requisicaoGET(`reports/coststock`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        await aguardeCarregamento(false)
+
+        codigoHTML += `<h5>Informações gerais</h5>
+            <table class="table table-dark table-bordered text-center">
+                <thead class="thead-dark">
+                    <tr>
+                        <td scope="col"><small>Informação</small></td>
+                        <td scope="col"><small>Valor</small></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-light text-dark">
+                        <td scope="col"><small><strong>Valor recebido bruto(Dia)</strong></small></td>
+                        <td scope="col" class="text-danger"><small><strong>R$${json.data.total}</strong></small></td>
+                    </tr>
+                    <tr class="table-light text-dark">
+                        <td scope="col"><small><strong>Valor recebido bruto(Total)</strong></small></td>
+                        <td scope="col" class="text-danger"><small><strong>R$${(json2.data.totalOrder).toFixed(2)}</strong></small></td>
+                    </tr>
+                    <tr class="table-light text-dark">
+                        <td scope="col"><small><strong>Receita de valor com descontos(Dia)</strong></small></td>
+                        <td scope="col" class="text-danger"><small><strong>R$${json.data.netValue}</strong></small></td>
+                    </tr>
+                    <tr class="table-light text-dark">
+                        <td scope="col"><small><strong>Gastos totais com cortesia(Dia)</strong></small></td>
+                        <td scope="col" class="text-danger"><small><strong>R$-${json.data.totalCourtesy}</strong></small></td>
+                    </tr>
+                    <tr class="table-light text-dark">
+                        <td scope="col"><small><strong>Gastos com produtos(Dia)</strong></small></td>
+                        <td scope="col" class="text-danger"><small><strong>R$-${json.data.totalCost}</strong></small></td>
+                    </tr>
+                    <tr class="table-light text-dark">
+                        <td scope="col"><small><strong>Valor total em estoque(Total)</strong></small></td>
+                        <td scope="col" class="text-danger"><small><strong>R$${(json2.data.costTotalStock).toFixed(2)}</strong></small></td>
+                    </tr>
+                </tbody>
+            </table>`
+
+        document.getElementById('listaDadosGerais').innerHTML = codigoHTML;
+
+    } catch (error) {
+
+        document.getElementById('listaDadosGerais').innerHTML = 'Não foi possivel carregar a lista!' + error
     }
 }
 

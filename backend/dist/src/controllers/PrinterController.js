@@ -143,13 +143,13 @@ var PrinterController = /** @class */ (function () {
                                 : myDoc.writeText("Tipo: Atualizado", header);
                             myDoc.writeText('=========== Produtos ==========', contentBorder);
                             items.products.map(function (item) {
-                                myDoc.writeText("* " + item.product.name + " " + (item.courtesy && '/ Cortesia'), contentStyle);
+                                myDoc.writeText("* " + item.product.name + " " + (item.courtesy ? '/ Cortesia' : ''), contentStyle);
                                 myDoc.writeText("- Quantidade: " + item.quantity, contentStyle);
                                 // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
                             });
                             myDoc.writeText('=========== Bebidas ===========', contentBorder);
                             items.drinks.map(function (item) {
-                                myDoc.writeText("* " + item.product.name + " " + (item.courtesy && '/ Cortesia'), contentStyle);
+                                myDoc.writeText("* " + item.product.name + " " + (item.courtesy ? '/ Cortesia' : ''), contentStyle);
                                 myDoc.writeText("- Quantidade: " + item.quantity, contentStyle);
                                 // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
                             });

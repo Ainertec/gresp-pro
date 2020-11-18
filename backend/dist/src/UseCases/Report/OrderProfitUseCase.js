@@ -44,7 +44,7 @@ var OrdersProfitUseCase = /** @class */ (function () {
     }
     OrdersProfitUseCase.prototype.execute = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var initial, final, ordersProfit, totalOrders, totalProducts, totalCourtesy, filteredTotal;
+            var initial, final, ordersProfit, totalOrders, totalProducts, totalCourtesy, totalCost, filteredTotal;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -72,12 +72,19 @@ var OrdersProfitUseCase = /** @class */ (function () {
                                     return sum2 + (item.courtesy ? item.quantity * item.product.cost : 0);
                                 }, 0));
                         }, 0);
+                        totalCost = ordersProfit.reduce(function (sum, order) {
+                            return (sum +
+                                order.items.reduce(function (sum2, item) {
+                                    return sum2 + (item.quantity * item.product.cost);
+                                }, 0));
+                        }, 0);
                         filteredTotal = totalOrders - totalProducts;
                         return [2 /*return*/, {
                                 orders: ordersProfit,
                                 total: totalOrders.toFixed(2),
                                 netValue: filteredTotal.toFixed(2),
                                 totalCourtesy: totalCourtesy.toFixed(2),
+                                totalCost: totalCost.toFixed(2),
                             }];
                 }
             });

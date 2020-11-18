@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var date_fns_1 = require("date-fns");
 var Order_1 = __importDefault(require("../models/Order"));
+var Item_1 = __importDefault(require("../models/Item"));
 var OrderProfitUseCase_1 = require("../UseCases/Report/OrderProfitUseCase");
 var SoldsProductsTotalUseCase_1 = require("../UseCases/Report/SoldsProductsTotalUseCase");
 var ReportController = /** @class */ (function () {
@@ -62,6 +63,36 @@ var ReportController = /** @class */ (function () {
                         error_1 = _a.sent();
                         return [2 /*return*/, res.status(400).json(error_1.message)];
                     case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ReportController.prototype.costStock = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var item, orders, costTotalStock, totalOrder, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, Item_1.default.find()];
+                    case 1:
+                        item = _a.sent();
+                        return [4 /*yield*/, Order_1.default.find({
+                                closed: true,
+                            }).populate('items.product')];
+                    case 2:
+                        orders = _a.sent();
+                        costTotalStock = item.reduce(function (sum, element) {
+                            return sum + element.cost * (element.stock ? element.stock : 0);
+                        }, 0);
+                        totalOrder = orders.reduce(function (sum, element) {
+                            return sum + element.total;
+                        }, 0);
+                        return [2 /*return*/, res.json({ costTotalStock: costTotalStock, totalOrder: totalOrder })];
+                    case 3:
+                        error_2 = _a.sent();
+                        return [2 /*return*/, res.status(400).json(error_2.message)];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -97,7 +128,7 @@ var ReportController = /** @class */ (function () {
     };
     ReportController.prototype.showClosedOrders = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var initial, final, initialDate, finalDate, orders;
+            var initial, final, initialDate, finalDate, orders, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -113,14 +144,24 @@ var ReportController = /** @class */ (function () {
                             }).populate('items.product')];
                     case 1:
                         orders = _a.sent();
-                        return [2 /*return*/, res.json(orders)];
+                        result = orders.map(function (order) {
+                            var costTotal = 0;
+                            order.items.forEach(function (element) {
+                                costTotal += element.product.cost * element.quantity;
+                            });
+                            return {
+                                order: order,
+                                costTotal: costTotal
+                            };
+                        });
+                        return [2 /*return*/, res.json(result)];
                 }
             });
         });
     };
     ReportController.prototype.totalSoldProducts = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var soldsProductsUseCase, products, error_2;
+            var soldsProductsUseCase, products, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -131,8 +172,8 @@ var ReportController = /** @class */ (function () {
                         products = _a.sent();
                         return [2 /*return*/, res.json(products)];
                     case 2:
-                        error_2 = _a.sent();
-                        return [2 /*return*/, res.status(400).json(error_2.message)];
+                        error_3 = _a.sent();
+                        return [2 /*return*/, res.status(400).json(error_3.message)];
                     case 3: return [2 /*return*/];
                 }
             });
