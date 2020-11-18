@@ -527,11 +527,17 @@ async function listaItens(tipoBusca) {
                             <td class="col-md-2 table-warning">
                                 <input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" />
                             </td>
-                            <td class="col-md-2">
-                                <button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('${item._id}', '#quantidadeAdicionar${item._id}', 'novo', false)}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm">
+                            <td class="col-md-2">`
+        if (item.available) {
+            codigoHTML += `<button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('${item._id}', '#quantidadeAdicionar${item._id}', 'novo', false)}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm">
                                     <span class="fas fa-plus"></span>
-                                </button>
-                            </td>
+                                </button>`
+        } else {
+            codigoHTML += `<button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('${item._id}', '#quantidadeAdicionar${item._id}', 'novo', false)}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-danger btn-sm" disabled>
+                                    <span class="fas fa-plus"></span>
+                                </button>`
+        }
+        codigoHTML += `</td>
                         </tr>`
     }
     codigoHTML += `</tbody>
