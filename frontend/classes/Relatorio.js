@@ -322,15 +322,15 @@ async function tabelaGeralDeRelatorios() {
                         <td scope="col" class="text-danger"><small><strong>R$${(json2.data.totalOrder).toFixed(2)}</strong></small></td>
                     </tr>
                     <tr class="table-light text-dark">
-                        <td scope="col"><small><strong>Receita de valor com descontos(Dia)</strong></small></td>
+                        <td scope="col"><small><strong>Receitas menos custos(Dia)</strong></small></td>
                         <td scope="col" class="text-danger"><small><strong>R$${json.data.netValue}</strong></small></td>
                     </tr>
                     <tr class="table-light text-dark">
-                        <td scope="col"><small><strong>Gastos totais com cortesia(Dia)</strong></small></td>
+                        <td scope="col"><small><strong>Gastos com cortesia(Dia)</strong></small></td>
                         <td scope="col" class="text-danger"><small><strong>R$-${json.data.totalCourtesy}</strong></small></td>
                     </tr>
                     <tr class="table-light text-dark">
-                        <td scope="col"><small><strong>Gastos com produtos(Dia)</strong></small></td>
+                        <td scope="col"><small><strong>Custos com pedidos(Dia)</strong></small></td>
                         <td scope="col" class="text-danger"><small><strong>R$-${json.data.totalCost}</strong></small></td>
                     </tr>
                     <tr class="table-light text-dark">
