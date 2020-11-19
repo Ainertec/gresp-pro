@@ -28,7 +28,7 @@ home.on('ready', function () {
   //shell.openItem("C://gresppro-x64//executaveis_modulos//startMongo.vbs")
   //shell.openItem("C://gresppro-x64//executaveis_modulos//startNode.vbs")
   //shell.openItem("C://gresppro-x64//executaveis_modulos//impressao.vbs")
-  //shell.openItem("C://gresppro-x64//executaveis_modulos//web.vbs")
+  //shell.openItem("C://gresppro-x64//executaveis_modulos//startWeb.vbs")
 
   var data = new Date();
 
