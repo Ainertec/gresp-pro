@@ -24,9 +24,6 @@ function telaRelatorioDeCaixa() {
             <button onclick="imprimirRelatorioProdutoeOrders();" class="btn btn-warning btn-block btn-sm">
                 <span class="fas fa-print"></span> Imprimir Relatório
             </button>
-            <button onclick="telaModuloFinanceiro();" class="btn btn-primary btn-block btn-sm">
-                <span class="fas fa-print"></span> Modulo Financeiro
-            </button>
         </div>
     </div>
 

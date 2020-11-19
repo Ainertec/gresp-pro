@@ -1,9 +1,15 @@
 //-------------------------------- Classe Modulo Financeiro -----------------------------------
 
-function telaModuloFinanceiro() {
+async function telaModuloFinanceiro() {
     let codigoHTML = ``;
 
     try {
+
+        await aguardeCarregamento(true)
+        let json = await requisicaoGET('reports/productsmes', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        await aguardeCarregamento(false)
+
+        console.log(json);
 
         codigoHTML += `<h5>Informações gerais</h5>
             <table class="table table-dark table-bordered text-center">

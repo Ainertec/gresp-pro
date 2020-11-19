@@ -17,6 +17,7 @@ export class ReportRoutes {
     );
 
     this.routes.get('/reports/products', ReportController.totalSoldProducts);
+    this.routes.get('/reports/productsmes', ReportController.totalSoldProductsMes);
     this.routes.get(
       '/reports/orders',
       celebrate({ query: validations.report }),

@@ -110,6 +110,16 @@ class ReportController {
     }
   }
 
+  public async totalSoldProductsMes(req: Request, res: Response) {
+    try {
+      const soldsProductsUseCase = new SoldsProductsTotalUseCase(Order);
+      const products = await soldsProductsUseCase.executeMes();
+      return res.json(products);
+    } catch (error) {
+      return res.status(400).json(error.message);
+    }
+  }
+
   public async delete(req: Request, res: Response) {
     const date = sub(new Date(), { years: 2 });
 

@@ -182,6 +182,26 @@ var ReportController = /** @class */ (function () {
             });
         });
     };
+    ReportController.prototype.totalSoldProductsMes = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var soldsProductsUseCase, products, error_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        soldsProductsUseCase = new SoldsProductsTotalUseCase_1.SoldsProductsTotalUseCase(Order_1.default);
+                        return [4 /*yield*/, soldsProductsUseCase.executeMes()];
+                    case 1:
+                        products = _a.sent();
+                        return [2 /*return*/, res.json(products)];
+                    case 2:
+                        error_4 = _a.sent();
+                        return [2 /*return*/, res.status(400).json(error_4.message)];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     ReportController.prototype.delete = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var date;
