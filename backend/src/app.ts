@@ -5,6 +5,7 @@ import { errors } from 'celebrate';
 import cors from 'cors';
 import socketio from 'socket.io';
 import http from 'http';
+const compression = require('compression');
 
 import routes from './routes';
 import { CustomRequest } from './interfaces/base';
@@ -40,6 +41,7 @@ class App {
   }
 
   private routes(): void {
+    this.express.use(compression());
     this.express.use(routes);
     this.express.use(errors());
   }
