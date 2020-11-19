@@ -23,8 +23,12 @@ class ReportController {
 
   public async costStock(req: Request, res: Response) {
     try {
+      const initial = String(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-01`);
+      const final = String(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-31`);
+
       const item = await Item.find();
       const orders = await Order.find({
+        createdAt: { $gte: initial, $lte: final },
         closed: true,
       }).populate('items.product');
 

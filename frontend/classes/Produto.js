@@ -266,6 +266,14 @@ async function parteEstoqueTelaDeProduto(tipo) {
                     <span class="input-group-text">R$</span>
                 </div>
                 <input id="precocustoproduto" type="Number" class="form-control mousetrap" placeholder="Preço de custo">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">%</button>
+                    <div class="dropdown-menu">`
+        for (let i = 5; i <= 90; i += 5) {
+            codigoHTML += `<a class="dropdown-item" onclick="calcularValorDeCustoPorPorcentagem(${i});" href="#">${i}%</a>`
+        }
+        codigoHTML += `</div>
+                </div>
             </div>
         </div>`
     }
@@ -460,6 +468,12 @@ async function disponibilizarIndisponibilizarProduto(id, disponivel) {
     } else {
         await buscarProdutos('todos')
     }
+}
+
+//funcao responsavel por gerar valor de custo a partir de porcentagem do valor de venda
+function calcularValorDeCustoPorPorcentagem(porcentagem) {
+    let valorCusto = (parseFloat(document.getElementById('precovendaproduto').value ? document.getElementById('precovendaproduto').value : 0.0) * parseInt(porcentagem)) / 100;
+    document.getElementById('precocustoproduto').value = valorCusto.toFixed(2);
 }
 
 //funcao responsavel por inicializar as variaveis da classe produto

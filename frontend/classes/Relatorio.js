@@ -24,6 +24,9 @@ function telaRelatorioDeCaixa() {
             <button onclick="imprimirRelatorioProdutoeOrders();" class="btn btn-warning btn-block btn-sm">
                 <span class="fas fa-print"></span> Imprimir Relatório
             </button>
+            <button onclick="telaModuloFinanceiro();" class="btn btn-primary btn-block btn-sm">
+                <span class="fas fa-print"></span> Modulo Financeiro
+            </button>
         </div>
     </div>
 
@@ -318,7 +321,7 @@ async function tabelaGeralDeRelatorios() {
                         <td scope="col" class="text-danger"><small><strong>R$${json.data.total}</strong></small></td>
                     </tr>
                     <tr class="table-light text-dark">
-                        <td scope="col"><small><strong>Valor recebido bruto(Total)</strong></small></td>
+                        <td scope="col"><small><strong>Valor recebido bruto(Mês)</strong></small></td>
                         <td scope="col" class="text-danger"><small><strong>R$${(json2.data.totalOrder).toFixed(2)}</strong></small></td>
                     </tr>
                     <tr class="table-light text-dark">
@@ -327,11 +330,11 @@ async function tabelaGeralDeRelatorios() {
                     </tr>
                     <tr class="table-light text-dark">
                         <td scope="col"><small><strong>Gastos com cortesia(Dia)</strong></small></td>
-                        <td scope="col" class="text-danger"><small><strong>R$-${json.data.totalCourtesy}</strong></small></td>
+                        <td scope="col" class="text-danger"><small><strong>R$${json.data.totalCourtesy}</strong></small></td>
                     </tr>
                     <tr class="table-light text-dark">
                         <td scope="col"><small><strong>Custos com pedidos(Dia)</strong></small></td>
-                        <td scope="col" class="text-danger"><small><strong>R$-${json.data.totalCost}</strong></small></td>
+                        <td scope="col" class="text-danger"><small><strong>R$${json.data.totalCost}</strong></small></td>
                     </tr>
                     <tr class="table-light text-dark">
                         <td scope="col"><small><strong>Valor total em estoque(Total)</strong></small></td>

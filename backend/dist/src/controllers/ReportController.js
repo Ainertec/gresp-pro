@@ -69,15 +69,18 @@ var ReportController = /** @class */ (function () {
     };
     ReportController.prototype.costStock = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var item, orders, costTotalStock, totalOrder, error_2;
+            var initial, final, item, orders, costTotalStock, totalOrder, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
+                        initial = String(new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-01");
+                        final = String(new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-31");
                         return [4 /*yield*/, Item_1.default.find()];
                     case 1:
                         item = _a.sent();
                         return [4 /*yield*/, Order_1.default.find({
+                                createdAt: { $gte: initial, $lte: final },
                                 closed: true,
                             }).populate('items.product')];
                     case 2:
