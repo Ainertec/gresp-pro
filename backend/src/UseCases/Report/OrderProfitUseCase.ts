@@ -5,9 +5,9 @@ import { OrderInterface } from '../../interfaces/base';
 export class OrdersProfitUseCase {
   constructor(private OrderModel: Model<OrderInterface>) { }
 
-  public async execute() {
-    const initial = startOfDay(new Date());
-    const final = endOfDay(new Date());
+  public async execute(reqInicial: String, reqFinal: String) {
+    const initial = String(reqInicial);
+    const final = String(reqFinal);
 
     const ordersProfit = await this.OrderModel.find({
       createdAt: { $gte: initial, $lte: final },

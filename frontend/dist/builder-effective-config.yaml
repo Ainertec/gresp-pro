@@ -1,5 +1,0 @@
-directories:
-  output: dist
-  buildResources: build
-appId: com.gresppro.app
-electronVersion: 7.3.2

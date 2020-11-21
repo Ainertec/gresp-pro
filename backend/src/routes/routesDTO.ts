@@ -42,6 +42,7 @@ export interface IValidationOrder {
 
 export interface IValidationReport {
   report: Joi.ObjectSchema;
+  reportDelete: { id: Joi.AnySchema };
 }
 
 export interface IValidationKitchen {

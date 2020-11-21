@@ -1,7 +1,11 @@
 import { Joi } from 'celebrate';
+import validObjectId from './validObjectId';
 
-const report = Joi.object().keys({
+export const report = Joi.object().keys({
   initial: Joi.string().required(),
   final: Joi.string().required(),
 });
-export default report;
+
+export const reportDelete = {
+  id: Joi.custom(validObjectId, 'valid id').required(),
+};

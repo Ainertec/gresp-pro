@@ -42,7 +42,7 @@ import {
   paramIdentPayment,
   paramIdentification,
 } from '../validations/orderSchema';
-import report from '../validations/reportSchema';
+import { report, reportDelete } from '../validations/reportSchema';
 import kitchen from '../validations/kitchenSchema';
 import printer from '../validations/printerValidation';
 import serial from '../validations/serialSchema';
@@ -116,6 +116,7 @@ routes.use(Authorization);
 const reportRoutes = new ReportRoutes(routes);
 reportRoutes.getRoutes({
   report,
+  reportDelete,
 });
 
 export default routes;

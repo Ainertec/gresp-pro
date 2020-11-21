@@ -12,9 +12,11 @@ interface ProductsTotalSold extends ItemInterface {
 
 class ReportController {
   public async show(req: Request, res: Response) {
+    const initial = String(req.query.initial);
+    const final = String(req.query.final);
     try {
       const orderProfitUseCase = new OrdersProfitUseCase(Order);
-      const orders = await orderProfitUseCase.execute();
+      const orders = await orderProfitUseCase.execute(initial, final);
       return res.json(orders);
     } catch (error) {
       return res.status(400).json(error.message);
@@ -23,8 +25,8 @@ class ReportController {
 
   public async costStock(req: Request, res: Response) {
     try {
-      const initial = String(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-01`);
-      const final = String(`${new Date().getFullYear()}-${new Date().getMonth() + 1}-31`);
+      const initial = String(req.query.initial);
+      const final = String(req.query.final);
 
       const item = await Item.find();
       const orders = await Order.find({
@@ -121,12 +123,20 @@ class ReportController {
   }
 
   public async delete(req: Request, res: Response) {
-    const date = sub(new Date(), { years: 2 });
+    const date = sub(new Date(), { years: 5 });
 
     await Order.deleteMany({
       createdAt: { $lte: date },
       closed: true,
     });
+
+    return res.status(200).send();
+  }
+
+  public async deleteOne(req: Request, res: Response) {
+    const id = String(req.query._id);
+
+    await Order.deleteOne({ order: { _id: id } });
 
     return res.status(200).send();
   }

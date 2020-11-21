@@ -49,20 +49,24 @@ var ReportController = /** @class */ (function () {
     }
     ReportController.prototype.show = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var orderProfitUseCase, orders, error_1;
+            var initial, final, orderProfitUseCase, orders, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        orderProfitUseCase = new OrderProfitUseCase_1.OrdersProfitUseCase(Order_1.default);
-                        return [4 /*yield*/, orderProfitUseCase.execute()];
+                        initial = String(req.query.initial);
+                        final = String(req.query.final);
+                        _a.label = 1;
                     case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        orderProfitUseCase = new OrderProfitUseCase_1.OrdersProfitUseCase(Order_1.default);
+                        return [4 /*yield*/, orderProfitUseCase.execute(initial, final)];
+                    case 2:
                         orders = _a.sent();
                         return [2 /*return*/, res.json(orders)];
-                    case 2:
+                    case 3:
                         error_1 = _a.sent();
                         return [2 /*return*/, res.status(400).json(error_1.message)];
-                    case 3: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -74,8 +78,8 @@ var ReportController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        initial = String(new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-01");
-                        final = String(new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-31");
+                        initial = String(req.query.initial);
+                        final = String(req.query.final);
                         return [4 /*yield*/, Item_1.default.find()];
                     case 1:
                         item = _a.sent();
@@ -208,11 +212,26 @@ var ReportController = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        date = date_fns_1.sub(new Date(), { years: 2 });
+                        date = date_fns_1.sub(new Date(), { years: 5 });
                         return [4 /*yield*/, Order_1.default.deleteMany({
                                 createdAt: { $lte: date },
                                 closed: true,
                             })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, res.status(200).send()];
+                }
+            });
+        });
+    };
+    ReportController.prototype.deleteOne = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var id;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        id = String(req.query._id);
+                        return [4 /*yield*/, Order_1.default.deleteOne({ order: { _id: id } })];
                     case 1:
                         _a.sent();
                         return [2 /*return*/, res.status(200).send()];

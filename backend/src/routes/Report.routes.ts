@@ -9,7 +9,8 @@ export class ReportRoutes {
 
   getRoutes(validations: IValidationReport) {
     this.routes.delete('/reports', ReportController.delete);
-    this.routes.get('/reports', ReportController.show);
+    this.routes.delete('/reportsone', celebrate({ query: validations.reportDelete }), ReportController.deleteOne);
+    this.routes.get('/reports', celebrate({ query: validations.report }), ReportController.show);
     this.routes.get(
       '/reports/total',
       celebrate({ query: validations.report }),
@@ -23,6 +24,6 @@ export class ReportRoutes {
       celebrate({ query: validations.report }),
       ReportController.showClosedOrders,
     );
-    this.routes.get('/reports/coststock', ReportController.costStock);
+    this.routes.get('/reports/coststock', celebrate({ query: validations.report }), ReportController.costStock);
   }
 }

@@ -1,14 +1,11 @@
 // --------------------------------------------- Classe Relatorio -----------------------------------------------------
 
 //funcao responsavel por fazer a ligação necessaria com a tela de relatorio de caixa
-async function ligacaoRelatorioCaixaFacede() {
+function ligacaoRelatorioCaixaFacede() {
     const situacao = autenticacaoLogin()
 
     if (JSON.parse(situacao).tipo == 'Administrador') {
         telaRelatorioDeCaixa();
-        await aguardeCarregamento(true)
-        await requisicaoDELETE(`reports`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
-        await aguardeCarregamento(false)
     } else {
         mensagemDeErro('Usuário não autorizado!')
     }
@@ -20,9 +17,21 @@ function telaRelatorioDeCaixa() {
 
     codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
         <h4 class="text-center"><span class="fas fa-chart-line"></span> Relatórios</h4>
+        <div class="col-6 mx-auto row" style="margin-top:20px;">
+            <label for="dataInicial">Inicio</label>
+            <input id="dataInicial" type="date" class="form-control form-control-sm" value="${new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()}">
+            <label for="dataFinal">Final</label>
+            <input id="dataFinal" type="date" class="form-control form-control-sm" value="${new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()}">
+        </div>
         <div class="col-6 mx-auto" style="margin-top:20px;">
+            <button onclick="chamadaDeMetodosRelatorio();" class="btn btn-info btn-block btn-sm" style="margin-bottom:40px;">
+                <span class="fas fa-search"></span> Buscar
+            </button>
             <button onclick="imprimirRelatorioProdutoeOrders();" class="btn btn-warning btn-block btn-sm">
                 <span class="fas fa-print"></span> Imprimir Relatório
+            </button>
+            <button onclick="confirmarAcao('Excluir relatórios com mais de 5 anos!', 'excluirRelatorioAutomaticamente();', null);" class="btn btn-danger btn-block btn-sm">
+                <span class="fas fa-trash-alt"></span> Excluir relatórios antigos
             </button>
         </div>
     </div>
@@ -34,12 +43,15 @@ function telaRelatorioDeCaixa() {
         <div id="listaDadosGerais" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>`
 
     document.getElementById('janela2').innerHTML = codigoHTML;
+}
 
+//funcao responsavel por chamar os metodos da classe relatorio
+function chamadaDeMetodosRelatorio() {
     setTimeout(function () {
         gerarGraficoDemonstrativoVendaPorItem();
         gerarGraficoGanhoGastoMensal();
-        gerarGraficoQuantidadeVendas();
         gerarGraficoDemonstrativoVendaPorItem();
+        gerarGraficoQuantidadeVendas();
         tabelaDeRelatorioCaixa();
         tabelaGeralDeRelatorios();
     }, 300)
@@ -48,7 +60,7 @@ function telaRelatorioDeCaixa() {
 //funcao responsasvel por gerar o relatorio de quantidade venda de produtos
 async function gerarGraficoDemonstrativoVendaPorItem() {
     await aguardeCarregamento(true)
-    let json = await requisicaoGET('reports/products', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    let json = await requisicaoGET(`reports/products?initial=${document.getElementById('dataInicial').value}&final=${document.getElementById('dataFinal').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false)
     let vetorNome = [], vetorQuantidade = [], vetorValor = [];
 
@@ -74,26 +86,26 @@ async function gerarGraficoDemonstrativoVendaPorItem() {
         }],
         yAxis: [{ // Primary yAxis
             labels: {
-                format: '{value} unid.',
+                format: 'R$ {value} reais',
                 style: {
                     color: Highcharts.getOptions().colors[1]
                 }
             },
             title: {
-                text: 'Quantidade vendida',
+                text: 'Valor recebido',
                 style: {
                     color: Highcharts.getOptions().colors[1]
                 }
             }
         }, { // Secondary yAxis
             title: {
-                text: 'Valor recebido',
+                text: 'Quantidade vendida',
                 style: {
                     color: Highcharts.getOptions().colors[0]
                 }
             },
             labels: {
-                format: 'R$ {value} reais',
+                format: '{value} unid.',
                 style: {
                     color: Highcharts.getOptions().colors[0]
                 }
@@ -137,7 +149,7 @@ async function gerarGraficoDemonstrativoVendaPorItem() {
 //funcao responsavel por gerar o relatorio de lucro mensal
 async function gerarGraficoGanhoGastoMensal() {
     await aguardeCarregamento(true)
-    let json = await requisicaoGET(`reports`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    let json = await requisicaoGET(`reports?initial=${document.getElementById('dataInicial').value}&final=${document.getElementById('dataFinal').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false)
 
     Highcharts.chart('grafico2', {
@@ -199,10 +211,7 @@ async function gerarGraficoQuantidadeVendas() {
     let vetorData = [], vetorTotal = [];
 
     await aguardeCarregamento(true)
-    let dia = new Date().getDate(),
-        mes = new Date().getMonth() + 1,
-        ano = new Date().getFullYear();
-    let json = await requisicaoGET(`reports/total?initial=${ano}-${mes > 9 ? mes : '0' + mes}-${dia > 9 ? dia : '0' + dia}&final=${ano}-${mes > 9 ? mes : '0' + mes}-${dia > 9 ? dia + 1 : '0' + (dia + 1)}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    let json = await requisicaoGET(`reports/total?initial=${document.getElementById('dataInicial').value}&final=${document.getElementById('dataFinal').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false)
 
     for (let item of json.data) {
@@ -249,10 +258,7 @@ async function tabelaDeRelatorioCaixa() {
 
     try {
         await aguardeCarregamento(true)
-        let dia = new Date().getDate(),
-            mes = new Date().getMonth() + 1,
-            ano = new Date().getFullYear();
-        json = await requisicaoGET(`reports/orders?initial=${ano}-${mes > 9 ? mes : '0' + mes}-${dia > 9 ? dia : '0' + dia}&final=${ano}-${mes > 9 ? mes : '0' + mes}-${dia > 9 ? dia + 1 : '0' + (dia + 1)}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        json = await requisicaoGET(`reports/orders?initial=${document.getElementById('dataInicial').value}&final=${document.getElementById('dataFinal').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false)
 
         codigoHTML += `<h5>Lista de Pedidos Fechados do Dia</h5>
@@ -265,6 +271,7 @@ async function tabelaDeRelatorioCaixa() {
                         <td scope="col"><small>Forma pagamento</small></td>
                         <td scope="col"><small>Custo</small></td>
                         <td scope="col"><small>Valor</small></td>
+                        <td scope="col"><small>Excluir</small></td>
                     </tr>
                 </thead>
                 <tbody>`
@@ -281,6 +288,11 @@ async function tabelaDeRelatorioCaixa() {
                     <td scope="col"><small><strong>${item.order.payment}</strong></small></td>
                     <td scope="col" class="text-danger"><small><strong>R$${(item.costTotal).toFixed(2)}</strong></small></td>
                     <td scope="col" class="text-danger"><small><strong>R$${(item.order.total).toFixed(2)}</strong></small></td>
+                    <td scope="col">
+                        <button class="btn btn-outline-danger btn-sm" onclick="confirmarAcao('Excluir relatório!', 'excluirUmRelatorio(this.value);', '${item.order._id}');" value=${item.identification}>
+                            <span class="fas fa-trash-alt"></span>
+                        </button>
+                    </td>
                 </tr>`
         }
         codigoHTML += `</tbody>
@@ -300,8 +312,8 @@ async function tabelaGeralDeRelatorios() {
 
     try {
         await aguardeCarregamento(true)
-        let json = await requisicaoGET(`reports`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-        let json2 = await requisicaoGET(`reports/coststock`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        let json = await requisicaoGET(`reports?initial=${document.getElementById('dataInicial').value}&final=${document.getElementById('dataFinal').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        let json2 = await requisicaoGET(`reports/coststock?initial=${document.getElementById('dataInicial').value}&final=${document.getElementById('dataFinal').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false)
 
         codigoHTML += `<h5>Informações gerais</h5>
@@ -357,5 +369,29 @@ async function imprimirRelatorioProdutoeOrders() {
         await aguardeCarregamento(false)
     } catch (error) {
         await aguardeCarregamento(false)
+    }
+}
+
+//funcao responsavel por apagar os relatorios com mais de 5 anos
+async function excluirRelatorioAutomaticamente() {
+    try {
+        await aguardeCarregamento(true)
+        await requisicaoDELETE(`reports`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        await aguardeCarregamento(false)
+        mensagemDeAviso('Relatórios com mais de 5 anos excluidos com sucesso!')
+    } catch (error) {
+        mensagemDeErro('Não foi possível excluir os relatórios mais antigos!')
+    }
+}
+
+//funcao responsavel por excluir um determinado relatorio
+async function excluirUmRelatorio(id) {
+    try {
+        await aguardeCarregamento(true)
+        await requisicaoDELETE(`reportsone?id=${id}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        await aguardeCarregamento(false)
+        mensagemDeAviso('Relatório excluido com sucesso!')
+    } catch (error) {
+        mensagemDeErro('Não foi possível excluir o relatório!')
     }
 }

@@ -239,7 +239,7 @@ var PrinterController = /** @class */ (function () {
             var ordersProfit, myDoc, contentStyle, contentBorder, header, date, content;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, new OrderProfitUseCase_1.OrdersProfitUseCase(Order_1.default).execute()];
+                    case 0: return [4 /*yield*/, new OrderProfitUseCase_1.OrdersProfitUseCase(Order_1.default).execute(String(date_fns_1.startOfDay(new Date())), String(date_fns_1.endOfDay(new Date())))];
                     case 1:
                         ordersProfit = _a.sent();
                         myDoc = new jsrtf_1.default({
