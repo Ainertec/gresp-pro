@@ -1,21 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import jwt from 'jsonwebtoken';
-import { promisify } from 'util';
 import { Request, Response, NextFunction } from 'express';
 
-interface VerifyResponse {
+interface VerifyResponse extends jwt.SigningKeyCallback {
   id: string;
-}
-interface CustomRequest extends Request {
-  [userId: string]: any;
 }
 
 class Authentication {
-  public async auth(
-    request: CustomRequest,
-    response: Response,
-    next: NextFunction,
-  ) {
+  public async auth(request: Request, response: Response, next: NextFunction) {
     const authHeaders = request.headers.authorization;
 
     if (!authHeaders) {
@@ -24,12 +16,9 @@ class Authentication {
     const [, token] = authHeaders.split(' ');
 
     try {
-      const decoded = (await promisify(jwt.verify)(
-        token,
-        String(process.env.APP_SECRET),
-      )) as VerifyResponse;
+      const jwtPayload = <any>jwt.verify(token, process.env.APP_SECRET);
 
-      request.userId = decoded.id;
+      request.userId = jwtPayload.id;
       return next();
     } catch (error) {
       return response.status(401).json({ message: 'Token invalid' });
