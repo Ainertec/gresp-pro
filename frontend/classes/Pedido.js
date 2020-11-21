@@ -130,7 +130,7 @@ function telaDigitarPedido() {
                     </div>
                 </div>
                 <div class="col-12 rounded mx-auto" id="escondeDados4" style="margin-top: 5px; padding: 7px">
-                    <div class="col-12 layer1" style="position: relative; height: 40vh; z-index: 1; overflow: scroll; margin-right: 0px; padding: 5px">
+                    <div class="col-12 layer1" style="position: relative; height: 35vh; z-index: 1; overflow: scroll; margin-right: 0px; padding: 5px">
                         <div class="shadow p-3 mb-3 bg-white rounded">
                             <div class="col-11 rounded mx-auto d-block">
                                 <button onclick="telaBuscaeExibirItens();" class="btn btn-warning btn-block">
@@ -140,12 +140,13 @@ function telaDigitarPedido() {
                         </div>
                         <div class="shadow p-3 mb-3 bg-white rounded">
                             <h5 style="margin-top:5px; margin-left: 5px">Observações</h5>
-                            <textArea id="observacao" class="form-control col-11 rounded mx-auto d-block border border-dark mousetrap" rows="5">Nenhuma.</textArea>
+                            <textArea id="observacao" class="form-control col-11 rounded mx-auto d-block border border-dark mousetrap" rows="3">Nenhuma.</textArea>
                         </div>
                     </div>
                     <div class="shadow p-3 mb-3 bg-white rounded">
                         <div id="botaoFinalizarPedido" style="margin-top:5px" class="col-11 rounded mx-auto d-block"></div>
                         <div id="botaoReimprimir" style="margin-top:10px" class="col-11 rounded mx-auto d-block"></div>
+                        <div id="botaoExcluir" style="margin-top:10px" class="col-11 rounded mx-auto d-block"></div>
                     </div>
                 </div>
             </div>
@@ -259,8 +260,8 @@ async function buscarPedido(identificacao) {
             document.getElementById('observacao').innerHTML = json.data.note;
             $('#escondeDados4').slideDown(300);
             botaoDeConfirmaçãoDePedido(`confirmarAcao('Atualizar este pedido!', 'cadastrarAtualizarPedido(this.value,${identificacao})', 'atualizar');`);
-            botaoDeConfirmaçãoDePedido(`confirmarAcao('Reimprimir pedido!', 'cadastrarAtualizarPedido(this.value,${identificacao})', 'atualizar');`);
             botaoDeReimprimirDePedido();
+            botaoDeExcluirDePedido(json.data._id);
             mensagemDeAviso('Pedido pronto para atualização!')
         } else {
             botaoDeConfirmaçãoDePedido(`confirmarAcao('Cadastrar este pedido!','cadastrarAtualizarPedido(this.value,${identificacao})', 'cadastrar');`);
@@ -290,6 +291,17 @@ function botaoDeReimprimirDePedido() {
     </button>`
 
     document.getElementById('botaoReimprimir').innerHTML = codigoHTML;
+}
+
+//funcao para criar sub menu de opcoes
+function botaoDeExcluirDePedido(id) {
+    let codigoHTML = '';
+
+    codigoHTML += `<button id="botaoExcluirPedido" onclick="confirmarAcao('Excluir este pedido!','excluirPedidoEmAberto(this.value);', '${id}');" type="button" class="btn btn-outline-danger btn-block">
+        <span class="fas fa-trash-alt"></span> Excluir Pedido
+    </button>`
+
+    document.getElementById('botaoExcluir').innerHTML = codigoHTML;
 }
 
 //funcao responsavel por adicionar o produto/bebida na tabela do pedido
@@ -487,25 +499,37 @@ async function categoriaProdutoPedido() {
 //funcao para criar lista de produtos para adicionar
 async function listaItens(tipoBusca) {
 
-    let codigoHTML = ``, json = null;
+    let codigoHTML = ``, json = null, json2 = null, produtosFilterCategorias = [];
 
     if (tipoBusca == 'todos') {
         await aguardeCarregamento(true)
         json = await requisicaoGET(`itemsDesk`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        json2 = await requisicaoGET(`categories`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false)
+        for (let category of json2.data) {
+            produtosFilterCategorias.push({ 'name': category.name, 'itens': json.data.filter((element) => category.products.findIndex((element1) => element1._id == element._id) > -1) })
+        }
     } else if (tipoBusca == 'nome') {
         await aguardeCarregamento(true)
         json = await requisicaoGET(`itemsDesk/${$('#nome').val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        json2 = await requisicaoGET(`categories`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false)
+        for (let category of json2.data) {
+            produtosFilterCategorias.push({ 'name': category.name, 'itens': json.data.filter((element) => category.products.findIndex((element1) => element1._id == element._id) > -1) })
+        }
     } else if (tipoBusca == 'categoria') {
         await aguardeCarregamento(true)
         json = await requisicaoGET(`categories/${document.getElementById('botaocategoriapedido').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        json2 = await requisicaoGET(`categories`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false)
+        for (let category of json2.data) {
+            produtosFilterCategorias.push({ 'name': category.name, 'itens': json.data.filter((element) => category.products.findIndex((element1) => element1._id == element._id) > -1) })
+        }
     }
 
     codigoHTML += `<div class="shadow p-3 mb-3 bg-white rounded">
         <h5 class="text-center" style="margin-top:5px; margin-bottom:10px"><span class="fas fa-utensils"></span> Lista de Itens <span class="fas fa-wine-glass-alt"></span></h5>
-        <div class="col-12 layer1" style="position: relative; height: 25vh; z-index: 1; overflow: scroll; margin-right: 0px; padding: 0px">
+        <div class="col-12 layer1" style="position: relative; height: 35vh; z-index: 1; overflow: scroll; margin-right: 0px; padding: 0px">
             <table class="table table-light table-sm">
                 <thead class="thead-dark">
                     <tr>
@@ -516,30 +540,41 @@ async function listaItens(tipoBusca) {
                     </tr>
                 </thead>
                 <tbody>`
-    for (let item of json.data) {
-        codigoHTML += `<tr>
-                            <td class="col-md-5 table-secondary" title="${item.name}">
-                                <strong>
-                                    <span class="fas fa-${item.drink ? 'wine-glass-alt' : 'utensils'}"></span> ${corrigirTamanhoString(30, item.name)}
-                                </strong>
-                            </td>
-                            <td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>
-                            <td class="col-md-2 table-warning">
-                                <input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" />
-                            </td>
-                            <td class="col-md-2">`
-        if (item.available) {
-            codigoHTML += `<button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('${item._id}', '#quantidadeAdicionar${item._id}', 'novo', false)}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm">
-                                    <span class="fas fa-plus"></span>
-                                </button>`
-        } else {
-            codigoHTML += `<button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('${item._id}', '#quantidadeAdicionar${item._id}', 'novo', false)}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-danger btn-sm" disabled>
-                                    <span class="fas fa-plus"></span>
-                                </button>`
+
+    for (let itemCategory of produtosFilterCategorias) {
+
+        if (itemCategory.itens[0] != null) {
+            codigoHTML += `<tr class="bg-warning">
+                        <th colspan="7" class="text-center"> ${itemCategory.name}</th>
+                    </tr>`
         }
-        codigoHTML += `</td>
-                        </tr>`
+
+        for (let item of itemCategory.itens) {
+            codigoHTML += `<tr>
+                                            <td class="col-md-5 table-secondary" title="${item.name}">
+                                                <strong>
+                                                    <span class="fas fa-${item.drink ? 'wine-glass-alt' : 'utensils'}"></span> ${corrigirTamanhoString(30, item.name)}
+                                                </strong>
+                                            </td>
+                                            <td class="col-md-2 table-warning text-danger"><strong>R$${(item.price).toFixed(2)}</strong></td>
+                                            <td class="col-md-2 table-warning">
+                                                <input class="form-control form-control-sm col-md-8 mousetrap" type="Number" value=1 id="quantidadeAdicionar${item._id}" />
+                                            </td>
+                                            <td class="col-md-2">`
+            if (item.available) {
+                codigoHTML += `<button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('${item._id}', '#quantidadeAdicionar${item._id}', 'novo', false)}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-success btn-sm">
+                                                    <span class="fas fa-plus"></span>
+                                                </button>`
+            } else {
+                codigoHTML += `<button onclick="if(validaDadosCampo(['#quantidadeAdicionar${item._id}']) && validaValoresCampo(['#quantidadeAdicionar${item._id}'])){adicionarItemaoPedido('${item._id}', '#quantidadeAdicionar${item._id}', 'novo', false)}else{mensagemDeErro('Quantidade inválida para adicionar!'); mostrarCamposIncorrreto(['quantidadeAdicionar${item._id}']);}" class="btn btn-danger btn-sm" disabled>
+                                                    <span class="fas fa-plus"></span>
+                                                </button>`
+            }
+            codigoHTML += `</td>
+                                        </tr>`
+        }
     }
+
     codigoHTML += `</tbody>
             </table>
         </div>
@@ -699,4 +734,18 @@ function efeitoPaginaPedido() {
     $('#escondeDados1').slideUp(300);
     $('#escondeDados2').slideUp(300);
     $('#escondeDados4').slideUp(300);
+}
+
+//funcao responsavel por excluir um pedido
+async function excluirPedidoEmAberto(id) {
+    console.log(id)
+    try {
+        await aguardeCarregamento(true)
+        await requisicaoDELETE(`orderone/${id}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        await aguardeCarregamento(false)
+        mensagemDeAviso('Pedido excluido com sucesso!')
+        await menuPedido();
+    } catch (error) {
+        mensagemDeErro('Não foi possível excluir o pedido!')
+    }
 }

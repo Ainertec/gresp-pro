@@ -41,6 +41,7 @@ import {
   orderUpdate,
   paramIdentPayment,
   paramIdentification,
+  orderDelete,
 } from '../validations/orderSchema';
 import { report, reportDelete } from '../validations/reportSchema';
 import kitchen from '../validations/kitchenSchema';
@@ -95,6 +96,7 @@ orderRoutes.getRoutes({
   orderUpdate,
   paramIdentPayment,
   paramIdentification,
+  orderDelete,
 });
 
 // Kitchen

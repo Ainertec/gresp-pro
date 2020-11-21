@@ -25,24 +25,13 @@ class ReportController {
 
   public async costStock(req: Request, res: Response) {
     try {
-      const initial = String(req.query.initial);
-      const final = String(req.query.final);
-
       const item = await Item.find();
-      const orders = await Order.find({
-        createdAt: { $gte: initial, $lte: final },
-        closed: true,
-      }).populate('items.product');
 
       const costTotalStock = item.reduce((sum, element) => {
         return sum + element.cost * (element.stock ? element.stock : 0);
       }, 0);
 
-      const totalOrder = orders.reduce((sum, element) => {
-        return sum + element.total;
-      }, 0);
-
-      return res.json({ costTotalStock, totalOrder });
+      return res.json(costTotalStock);
     } catch (error) {
       return res.status(400).json(error.message);
     }
@@ -134,9 +123,9 @@ class ReportController {
   }
 
   public async deleteOne(req: Request, res: Response) {
-    const id = String(req.query._id);
+    const { id } = req.params;
 
-    await Order.deleteOne({ order: { _id: id } });
+    await Order.deleteOne({ _id: id });
 
     return res.status(200).send();
   }

@@ -43,20 +43,27 @@ function telaDeBuscarEstoque(tipo) {
 
 //funcao para fazer busca via GET de todas as bebidas
 async function buscarEstoque(tipoBusca, tipo) {
-    let codigoHTML = ``, json = null;
+    let codigoHTML = ``, json = null, json2 = null, produtosFilterCategorias = [];
 
     if (tipo == 'produto') {
         if (tipoBusca == 'nome') {
             await aguardeCarregamento(true)
             json = await requisicaoGET(`itemsDesk/${$("#nome").val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
             json.data = json.data.filter((element) => element.stock != null)
-            console.log(json.data)
+            json2 = await requisicaoGET(`categories`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
             await aguardeCarregamento(false)
+            for (let category of json2.data) {
+                produtosFilterCategorias.push({ 'name': category.name, 'itens': json.data.filter((element) => category.products.findIndex((element1) => element1._id == element._id) > -1) })
+            }
         } else if (tipoBusca == 'todos') {
             await aguardeCarregamento(true)
             json = await requisicaoGET(`itemsDesk`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
             json.data = json.data.filter((element) => element.stock != null)
+            json2 = await requisicaoGET(`categories`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
             await aguardeCarregamento(false)
+            for (let category of json2.data) {
+                produtosFilterCategorias.push({ 'name': category.name, 'itens': json.data.filter((element) => category.products.findIndex((element1) => element1._id == element._id) > -1) })
+            }
         }
     } else if (tipo == 'ingrediente') {
         if (tipoBusca == 'nome') {
@@ -89,52 +96,116 @@ async function buscarEstoque(tipoBusca, tipo) {
                     </tr>
                 </thead>
                 <tbody>`
-    for (let item of json.data) {
-        VETORDEITENSESTOQUE.push(item);
-        codigoHTML += '<tr>'
-        if (item.drink) {
-            codigoHTML += `<td class="table-warning text-dark" title="${item.name}"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
-        } else if (item.drink == false) {
-            codigoHTML += `<td class="table-warning text-dark" title="${item.name}"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
-        } else {
-            codigoHTML += `<td class="table-warning text-dark" title="${item.name}"><strong><span class="fas fa-boxes"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
+
+    if (tipo == 'ingrediente') {
+
+        for (let item of json.data) {
+            VETORDEITENSESTOQUE.push(item);
+            codigoHTML += '<tr>'
+            if (item.drink) {
+                codigoHTML += `<td class="table-warning text-dark" title="${item.name}"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
+            } else if (item.drink == false) {
+                codigoHTML += `<td class="table-warning text-dark" title="${item.name}"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
+            } else {
+                codigoHTML += `<td class="table-warning text-dark" title="${item.name}"><strong><span class="fas fa-boxes"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
+            }
+            codigoHTML += `<th class="table-warning text-dark" style="width:10vw">R$${(parseFloat(item.priceUnit ? item.priceUnit : item.cost)).toFixed(2)}</th>`
+            if (item.unit == 'g') {
+                codigoHTML += `<td class="table-${item.stock > 2000 ? 'success' : 'danger'} text-dark text-center"><strong>${item.stock} g</strong></td>`
+            } else if (item.unit == 'ml') {
+                codigoHTML += `<td class="table-${item.stock > 3000 ? 'success' : 'danger'} text-dark text-center"><strong>${item.stock} ml</strong></td>`
+            } else {
+                codigoHTML += `<td class="table-${item.stock > 5 ? 'success' : 'danger'} text-dark text-center"><strong>${item.stock} unid.</strong></td>`
+            }
+            codigoHTML += `<td class="table-warning text-dark" style="width:15vw">
+                                                <div class="input-group input-group-sm">
+                                                    <input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=10 />
+                                                    <div class="input-group-prepend">`
+            if (item.unit == 'g') {
+                codigoHTML += `<span class="input-group-text">g</span>`
+            } else if (item.unit == 'ml') {
+                codigoHTML += `<span class="input-group-text">ml</span>`
+            } else {
+                codigoHTML += `<span class="input-group-text">unid.</span>`
+            }
+            codigoHTML += `</div>
+                                                </div>                        
+                                            </td>
+                                            <td class="table-warning text-dark" style="width:15vw">
+                                                <div class="input-group input-group-sm">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">R$</span>
+                                                    </div>
+                                                    <input class="form-control form-control-sm mousetrap" type="Number" id="precocusto${item._id}" value=${tipo == 'produto' ? (parseFloat(item.cost)).toFixed(2) : (parseFloat(item.price)).toFixed(2)} />
+                                                </div>
+                                            </td>
+                                            <td class="table-secondary text-dark" style="width:7vw">
+                                                <button onclick="if(validaDadosCampo(['#quantidade${item._id}'])){confirmarAcao('Atualizar quantidade!', 'atualizarEstoque(this.value,${tipo == 'produto' ? true : false})', '${item._id}');}else{mensagemDeErro('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorrreto(['quantidade${item._id}']);}" class="btn btn-success btn-sm">
+                                                    <span class="fas fa-sync"></span> Alterar
+                                                </button>
+                                            </td>
+                                        </tr>`
         }
-        codigoHTML += `<th class="table-warning text-dark" style="width:10vw">R$${(parseFloat(item.priceUnit ? item.priceUnit : item.cost)).toFixed(2)}</th>`
-        if (item.unit == 'g') {
-            codigoHTML += `<td class="table-${item.stock > 2000 ? 'success' : 'danger'} text-dark text-center"><strong>${item.stock} g</strong></td>`
-        } else if (item.unit == 'ml') {
-            codigoHTML += `<td class="table-${item.stock > 3000 ? 'success' : 'danger'} text-dark text-center"><strong>${item.stock} ml</strong></td>`
-        } else {
-            codigoHTML += `<td class="table-${item.stock > 5 ? 'success' : 'danger'} text-dark text-center"><strong>${item.stock} unid.</strong></td>`
-        }
-        codigoHTML += `<td class="table-warning text-dark" style="width:15vw">
-                                <div class="input-group input-group-sm">
-                                    <input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=10 />
-                                    <div class="input-group-prepend">`
-        if (item.unit == 'g') {
-            codigoHTML += `<span class="input-group-text">g</span>`
-        } else if (item.unit == 'ml') {
-            codigoHTML += `<span class="input-group-text">ml</span>`
-        } else {
-            codigoHTML += `<span class="input-group-text">unid.</span>`
-        }
-        codigoHTML += `</div>
-                                </div>                        
-                            </td>
-                            <td class="table-warning text-dark" style="width:15vw">
-                                <div class="input-group input-group-sm">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">R$</span>
-                                    </div>
-                                    <input class="form-control form-control-sm mousetrap" type="Number" id="precocusto${item._id}" value=${tipo == 'produto' ? (parseFloat(item.cost)).toFixed(2) : (parseFloat(item.price)).toFixed(2)} />
-                                </div>
-                            </td>
-                            <td class="table-secondary text-dark" style="width:7vw">
-                                <button onclick="if(validaDadosCampo(['#quantidade${item._id}']) && validaValoresCampo(['#quantidade${item._id}'])){confirmarAcao('Atualizar quantidade!', 'atualizarEstoque(this.value,${tipo == 'produto' ? true : false})', '${item._id}');}else{mensagemDeErro('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorrreto(['quantidade${item._id}']);}" class="btn btn-success btn-sm">
-                                    <span class="fas fa-sync"></span> Alterar
-                                </button>
-                            </td>
+
+    } else if (tipo == 'produto') {
+
+        for (let itemCategory of produtosFilterCategorias) {
+
+            if (itemCategory.itens[0] != null) {
+                codigoHTML += `<tr class="bg-warning">
+                            <th colspan="6" class="text-center"> ${itemCategory.name}</th>
                         </tr>`
+            }
+
+            for (let item of itemCategory.itens) {
+                VETORDEITENSESTOQUE.push(item);
+                codigoHTML += '<tr>'
+                if (item.drink) {
+                    codigoHTML += `<td class="table-warning text-dark" title="${item.name}"><strong><span class="fas fa-wine-glass-alt"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
+                } else if (item.drink == false) {
+                    codigoHTML += `<td class="table-warning text-dark" title="${item.name}"><strong><span class="fas fa-utensils"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
+                } else {
+                    codigoHTML += `<td class="table-warning text-dark" title="${item.name}"><strong><span class="fas fa-boxes"></span> ${corrigirTamanhoString(20, item.name)}</strong></td>`
+                }
+                codigoHTML += `<th class="table-warning text-dark" style="width:10vw">R$${(parseFloat(item.priceUnit ? item.priceUnit : item.cost)).toFixed(2)}</th>`
+                if (item.unit == 'g') {
+                    codigoHTML += `<td class="table-${item.stock > 2000 ? 'success' : 'danger'} text-dark text-center"><strong>${item.stock} g</strong></td>`
+                } else if (item.unit == 'ml') {
+                    codigoHTML += `<td class="table-${item.stock > 3000 ? 'success' : 'danger'} text-dark text-center"><strong>${item.stock} ml</strong></td>`
+                } else {
+                    codigoHTML += `<td class="table-${item.stock > 5 ? 'success' : 'danger'} text-dark text-center"><strong>${item.stock} unid.</strong></td>`
+                }
+                codigoHTML += `<td class="table-warning text-dark" style="width:15vw">
+                                                    <div class="input-group input-group-sm">
+                                                        <input class="form-control form-control-sm mousetrap" type="Number" id="quantidade${item._id}" value=10 />
+                                                        <div class="input-group-prepend">`
+                if (item.unit == 'g') {
+                    codigoHTML += `<span class="input-group-text">g</span>`
+                } else if (item.unit == 'ml') {
+                    codigoHTML += `<span class="input-group-text">ml</span>`
+                } else {
+                    codigoHTML += `<span class="input-group-text">unid.</span>`
+                }
+                codigoHTML += `</div>
+                                                    </div>                        
+                                                </td>
+                                                <td class="table-warning text-dark" style="width:15vw">
+                                                    <div class="input-group input-group-sm">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">R$</span>
+                                                        </div>
+                                                        <input class="form-control form-control-sm mousetrap" type="Number" id="precocusto${item._id}" value=${tipo == 'produto' ? (parseFloat(item.cost)).toFixed(2) : (parseFloat(item.price)).toFixed(2)} />
+                                                    </div>
+                                                </td>
+                                                <td class="table-secondary text-dark" style="width:7vw">
+                                                    <button onclick="if(validaDadosCampo(['#quantidade${item._id}'])){confirmarAcao('Atualizar quantidade!', 'atualizarEstoque(this.value,${tipo == 'produto' ? true : false})', '${item._id}');}else{mensagemDeErro('Preencha o campo quantidade com um valor válido!'); mostrarCamposIncorrreto(['quantidade${item._id}']);}" class="btn btn-success btn-sm">
+                                                        <span class="fas fa-sync"></span> Alterar
+                                                    </button>
+                                                </td>
+                                            </tr>`
+            }
+        }
+
     }
     codigoHTML += `</tbody>
             </table>
@@ -183,8 +254,10 @@ async function atualizarEstoque(id, tipo) {
         await mensagemDeAviso('Atualizado com sucesso!');
         if (tipo) {
             await telaDeBuscarEstoque('produto');
+            await buscarEstoque('todos', 'produto');
         } else {
             await telaDeBuscarEstoque('ingrediente');
+            await buscarEstoque('todos', 'ingrediente');
         }
     } catch (error) {
         mensagemDeErro('Não foi possível atualizar a quantidade do produto!')

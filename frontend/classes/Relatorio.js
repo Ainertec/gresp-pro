@@ -75,7 +75,7 @@ async function gerarGraficoDemonstrativoVendaPorItem() {
             zoomType: 'xy'
         },
         title: {
-            text: 'Demonstrativo de Montante Sobre Valor e Quantidade de Items Vendidos'
+            text: 'Demonstrativo de Montante Sobre Valor e Quantidade de Items Vendidos (Diário)'
         },
         subtitle: {
             text: 'Este gráfico demonstra o montante de valor recebido e a quantidade total vendida de cada item.'
@@ -157,7 +157,7 @@ async function gerarGraficoGanhoGastoMensal() {
             type: 'column'
         },
         title: {
-            text: 'Demonstrativo de Valor Recebido'
+            text: 'Demonstrativo de Valor Recebido (Período)'
         },
         subtitle: {
             text: 'Este gráfico demonstra a relação entre o valor total recebido, o valor total menos os descontos por gastos do produto e os gastos referentes a cortesia.'
@@ -224,7 +224,7 @@ async function gerarGraficoQuantidadeVendas() {
             type: 'line'
         },
         title: {
-            text: 'Demonstrativo Quantitativo de Vendas Diárias'
+            text: 'Demonstrativo Quantitativo de Vendas (Período)'
         },
         subtitle: {
             text: 'Gráfico responsavel por demostrar a quantidade total de vendas do dia.'
@@ -261,7 +261,7 @@ async function tabelaDeRelatorioCaixa() {
         json = await requisicaoGET(`reports/orders?initial=${document.getElementById('dataInicial').value}&final=${document.getElementById('dataFinal').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false)
 
-        codigoHTML += `<h5>Lista de Pedidos Fechados do Dia</h5>
+        codigoHTML += `<h5>Lista de Pedidos Fechados no Período</h5>
             <table class="table table-dark table-bordered text-center">
                 <thead class="thead-dark">
                     <tr>
@@ -313,7 +313,7 @@ async function tabelaGeralDeRelatorios() {
     try {
         await aguardeCarregamento(true)
         let json = await requisicaoGET(`reports?initial=${document.getElementById('dataInicial').value}&final=${document.getElementById('dataFinal').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
-        let json2 = await requisicaoGET(`reports/coststock?initial=${document.getElementById('dataInicial').value}&final=${document.getElementById('dataFinal').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        let json2 = await requisicaoGET(`reports/coststock`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false)
 
         codigoHTML += `<h5>Informações gerais</h5>
@@ -326,28 +326,24 @@ async function tabelaGeralDeRelatorios() {
                 </thead>
                 <tbody>
                     <tr class="table-light text-dark">
-                        <td scope="col"><small><strong>Valor recebido bruto(Dia)</strong></small></td>
+                        <td scope="col"><small><strong>Valor recebido bruto(Período)</strong></small></td>
                         <td scope="col" class="text-danger"><small><strong>R$${json.data.total}</strong></small></td>
                     </tr>
                     <tr class="table-light text-dark">
-                        <td scope="col"><small><strong>Valor recebido bruto(Mês)</strong></small></td>
-                        <td scope="col" class="text-danger"><small><strong>R$${(json2.data.totalOrder).toFixed(2)}</strong></small></td>
-                    </tr>
-                    <tr class="table-light text-dark">
-                        <td scope="col"><small><strong>Receitas menos custos(Dia)</strong></small></td>
+                        <td scope="col"><small><strong>Receitas menos custos(Período)</strong></small></td>
                         <td scope="col" class="text-danger"><small><strong>R$${json.data.netValue}</strong></small></td>
                     </tr>
                     <tr class="table-light text-dark">
-                        <td scope="col"><small><strong>Gastos com cortesia(Dia)</strong></small></td>
+                        <td scope="col"><small><strong>Gastos com cortesia(Período)</strong></small></td>
                         <td scope="col" class="text-danger"><small><strong>R$${json.data.totalCourtesy}</strong></small></td>
                     </tr>
                     <tr class="table-light text-dark">
-                        <td scope="col"><small><strong>Custos com pedidos(Dia)</strong></small></td>
+                        <td scope="col"><small><strong>Custos com pedidos(Período)</strong></small></td>
                         <td scope="col" class="text-danger"><small><strong>R$${json.data.totalCost}</strong></small></td>
                     </tr>
                     <tr class="table-light text-dark">
                         <td scope="col"><small><strong>Valor total em estoque(Total)</strong></small></td>
-                        <td scope="col" class="text-danger"><small><strong>R$${(json2.data.costTotalStock).toFixed(2)}</strong></small></td>
+                        <td scope="col" class="text-danger"><small><strong>R$${(json2.data).toFixed(2)}</strong></small></td>
                     </tr>
                 </tbody>
             </table>`
@@ -386,11 +382,13 @@ async function excluirRelatorioAutomaticamente() {
 
 //funcao responsavel por excluir um determinado relatorio
 async function excluirUmRelatorio(id) {
+    console.log(id)
     try {
         await aguardeCarregamento(true)
-        await requisicaoDELETE(`reportsone?id=${id}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        await requisicaoDELETE(`reportsone/${id}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
         await aguardeCarregamento(false)
         mensagemDeAviso('Relatório excluido com sucesso!')
+        await chamadaDeMetodosRelatorio();
     } catch (error) {
         mensagemDeErro('Não foi possível excluir o relatório!')
     }

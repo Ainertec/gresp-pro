@@ -73,33 +73,22 @@ var ReportController = /** @class */ (function () {
     };
     ReportController.prototype.costStock = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var initial, final, item, orders, costTotalStock, totalOrder, error_2;
+            var item, costTotalStock, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        initial = String(req.query.initial);
-                        final = String(req.query.final);
+                        _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, Item_1.default.find()];
                     case 1:
                         item = _a.sent();
-                        return [4 /*yield*/, Order_1.default.find({
-                                createdAt: { $gte: initial, $lte: final },
-                                closed: true,
-                            }).populate('items.product')];
-                    case 2:
-                        orders = _a.sent();
                         costTotalStock = item.reduce(function (sum, element) {
                             return sum + element.cost * (element.stock ? element.stock : 0);
                         }, 0);
-                        totalOrder = orders.reduce(function (sum, element) {
-                            return sum + element.total;
-                        }, 0);
-                        return [2 /*return*/, res.json({ costTotalStock: costTotalStock, totalOrder: totalOrder })];
-                    case 3:
+                        return [2 /*return*/, res.json(costTotalStock)];
+                    case 2:
                         error_2 = _a.sent();
                         return [2 /*return*/, res.status(400).json(error_2.message)];
-                    case 4: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -230,8 +219,8 @@ var ReportController = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        id = String(req.query._id);
-                        return [4 /*yield*/, Order_1.default.deleteOne({ order: { _id: id } })];
+                        id = req.params.id;
+                        return [4 /*yield*/, Order_1.default.deleteOne({ _id: id })];
                     case 1:
                         _a.sent();
                         return [2 /*return*/, res.status(200).send()];

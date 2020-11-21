@@ -4,7 +4,7 @@ import OrderController from '../controllers/OrderController';
 import { IValidationOrder } from './routesDTO';
 
 export class OrderRoutes {
-  constructor(private routes: Router) {}
+  constructor(private routes: Router) { }
 
   getRoutes(validations: IValidationOrder) {
     this.routes.get('/orders', OrderController.index);
@@ -31,5 +31,6 @@ export class OrderRoutes {
       celebrate({ params: validations.paramIdentPayment }),
       OrderController.delete,
     );
+    this.routes.delete('/orderone/:id', celebrate({ params: validations.orderDelete }), OrderController.deleteOne);
   }
 }

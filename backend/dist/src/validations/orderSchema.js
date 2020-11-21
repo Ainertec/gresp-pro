@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.paramIdentPayment = exports.paramIdentification = exports.orderUpdate = exports.order = void 0;
+exports.orderDelete = exports.paramIdentPayment = exports.paramIdentification = exports.orderUpdate = exports.order = void 0;
 var celebrate_1 = require("celebrate");
 var validObjectId_1 = __importDefault(require("./validObjectId"));
 var itemsArray = celebrate_1.Joi.object().keys({
@@ -26,4 +26,7 @@ exports.paramIdentification = {
 exports.paramIdentPayment = {
     identification: celebrate_1.Joi.number().required(),
     payment: celebrate_1.Joi.string().required(),
+};
+exports.orderDelete = {
+    id: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id').required(),
 };

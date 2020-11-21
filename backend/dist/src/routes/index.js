@@ -64,6 +64,7 @@ orderRoutes.getRoutes({
     orderUpdate: orderSchema_1.orderUpdate,
     paramIdentPayment: orderSchema_1.paramIdentPayment,
     paramIdentification: orderSchema_1.paramIdentification,
+    orderDelete: orderSchema_1.orderDelete,
 });
 // Kitchen
 var kitchenRoutes = new Kitchen_routes_1.KitchenRoutes(routes);

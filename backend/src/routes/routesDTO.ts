@@ -38,6 +38,7 @@ export interface IValidationOrder {
     identification: Joi.NumberSchema;
     payment: Joi.StringSchema;
   };
+  orderDelete: { id: Joi.AnySchema };
 }
 
 export interface IValidationReport {
