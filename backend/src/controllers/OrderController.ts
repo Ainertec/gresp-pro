@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import { Request, Response } from 'express';
 
 import { Document } from 'mongoose';

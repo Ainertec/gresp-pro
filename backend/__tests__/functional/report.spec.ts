@@ -31,6 +31,7 @@ describe('Order Controller', () => {
     });
     await factory.createMany('Order', 3, {
       closed: true,
+      createdAt: new Date(2020, 5, 30),
     });
     await factory.createMany('Order', 3, {
       closed: true,
@@ -40,6 +41,7 @@ describe('Order Controller', () => {
     });
     await factory.createMany('Order', 3, {
       closed: true,
+      createdAt: new Date(2020, 5, 30),
       items: [
         {
           product: product._id,
@@ -51,9 +53,11 @@ describe('Order Controller', () => {
 
     const response = await request(app)
       .get('/reports')
-
+      .query({
+        initial: '2020-06-01',
+        final: '2020-08-30',
+      })
       .set('Authorization', `Bearer ${token}`);
-
     expect(response.status).toBe(200);
   });
 

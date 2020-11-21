@@ -3,9 +3,9 @@ import { startOfDay, endOfDay } from 'date-fns';
 import { OrderInterface } from '../../interfaces/base';
 
 export class OrdersProfitUseCase {
-  constructor(private OrderModel: Model<OrderInterface>) { }
+  constructor(private OrderModel: Model<OrderInterface>) {}
 
-  public async execute(reqInicial: String, reqFinal: String) {
+  public async execute(reqInicial: string, reqFinal: string) {
     const initial = String(reqInicial);
     const final = String(reqFinal);
 
@@ -37,7 +37,7 @@ export class OrdersProfitUseCase {
       return (
         sum +
         order.items.reduce((sum2, item) => {
-          return sum2 + (item.quantity * item.product.cost);
+          return sum2 + item.quantity * item.product.cost;
         }, 0)
       );
     }, 0);

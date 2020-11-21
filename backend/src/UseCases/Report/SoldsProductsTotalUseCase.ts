@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { OrderInterface } from '../../interfaces/base';
 
 export class SoldsProductsTotalUseCase {
-  constructor(private OrderModel: Model<OrderInterface>) { }
+  constructor(private OrderModel: Model<OrderInterface>) {}
 
   async execute() {
     const initial = startOfDay(new Date());

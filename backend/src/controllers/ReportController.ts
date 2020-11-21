@@ -76,7 +76,7 @@ class ReportController {
       closed: true,
     }).populate('items.product');
 
-    const result = orders.map((order) => {
+    const result = orders.map(order => {
       let costTotal = 0;
       order.items.forEach(element => {
         costTotal += element.product.cost * element.quantity;
@@ -84,7 +84,7 @@ class ReportController {
 
       return {
         order,
-        costTotal
+        costTotal,
       };
     });
 
@@ -112,7 +112,7 @@ class ReportController {
   }
 
   public async delete(req: Request, res: Response) {
-    const date = sub(new Date(), { years: 5 });
+    const date = sub(new Date(), { years: 2 });
 
     await Order.deleteMany({
       createdAt: { $lte: date },
