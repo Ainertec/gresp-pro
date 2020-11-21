@@ -1,6 +1,7 @@
 import { sub, parseISO, isValid } from 'date-fns';
 import { Request, Response } from 'express';
 import Order from '../models/Order';
+import Item from '../models/Item';
 import { ItemInterface } from '../interfaces/base';
 import { OrdersProfitUseCase } from '../UseCases/Report/OrderProfitUseCase';
 import { SoldsProductsTotalUseCase } from '../UseCases/Report/SoldsProductsTotalUseCase';
@@ -11,10 +12,26 @@ interface ProductsTotalSold extends ItemInterface {
 
 class ReportController {
   public async show(req: Request, res: Response) {
+    const initial = String(req.query.initial);
+    const final = String(req.query.final);
     try {
       const orderProfitUseCase = new OrdersProfitUseCase(Order);
-      const orders = await orderProfitUseCase.execute();
+      const orders = await orderProfitUseCase.execute(initial, final);
       return res.json(orders);
+    } catch (error) {
+      return res.status(400).json(error.message);
+    }
+  }
+
+  public async costStock(req: Request, res: Response) {
+    try {
+      const item = await Item.find();
+
+      const costTotalStock = item.reduce((sum, element) => {
+        return sum + element.cost * (element.stock ? element.stock : 0);
+      }, 0);
+
+      return res.json(costTotalStock);
     } catch (error) {
       return res.status(400).json(error.message);
     }
@@ -59,7 +76,19 @@ class ReportController {
       closed: true,
     }).populate('items.product');
 
-    return res.json(orders);
+    const result = orders.map((order) => {
+      let costTotal = 0;
+      order.items.forEach(element => {
+        costTotal += element.product.cost * element.quantity;
+      });
+
+      return {
+        order,
+        costTotal
+      };
+    });
+
+    return res.json(result);
   }
 
   public async totalSoldProducts(req: Request, res: Response) {
@@ -72,13 +101,31 @@ class ReportController {
     }
   }
 
+  public async totalSoldProductsMes(req: Request, res: Response) {
+    try {
+      const soldsProductsUseCase = new SoldsProductsTotalUseCase(Order);
+      const products = await soldsProductsUseCase.executeMes();
+      return res.json(products);
+    } catch (error) {
+      return res.status(400).json(error.message);
+    }
+  }
+
   public async delete(req: Request, res: Response) {
-    const date = sub(new Date(), { years: 2 });
+    const date = sub(new Date(), { years: 5 });
 
     await Order.deleteMany({
       createdAt: { $lte: date },
       closed: true,
     });
+
+    return res.status(200).send();
+  }
+
+  public async deleteOne(req: Request, res: Response) {
+    const { id } = req.params;
+
+    await Order.deleteOne({ _id: id });
 
     return res.status(200).send();
   }

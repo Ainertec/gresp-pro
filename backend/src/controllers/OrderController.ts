@@ -126,6 +126,14 @@ class OrderController {
     return res.json('Order was closed with success!');
   }
 
+  public async deleteOne(req: Request, res: Response) {
+    const { id } = req.params;
+
+    await Order.deleteOne({ _id: id });
+
+    return res.status(200).send();
+  }
+
   public async index(req: Request, res: Response) {
     const orders = await Order.find({ closed: false }).populate(
       'items.product',

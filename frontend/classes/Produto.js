@@ -43,18 +43,26 @@ function telaBuscarProduto() {
 
 //funcao responsavel por buscar os produtos selecionados
 async function buscarProdutos(tipoBusca) {
-    let codigoHTML = ``, json = null;
+    let codigoHTML = ``, json = null, json2 = null, produtosFilterCategorias = [];
 
     VETORDEPRODUTOSCLASSEPRODUTO = []
 
     if (tipoBusca == 'nome') {
         await aguardeCarregamento(true)
-        json = await requisicaoGET("items/" + $('#nome').val(), { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        json = await requisicaoGET(`itemsDesk/${$('#nome').val()}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        json2 = await requisicaoGET(`categories`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false)
+        for (let category of json2.data) {
+            produtosFilterCategorias.push({ 'name': category.name, 'itens': json.data.filter((element) => category.products.findIndex((element1) => element1._id == element._id) > -1) })
+        }
     } else if (tipoBusca == 'todos') {
         await aguardeCarregamento(true)
-        json = await requisicaoGET("items", { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        json = await requisicaoGET(`itemsDesk`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        json2 = await requisicaoGET(`categories`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false)
+        for (let category of json2.data) {
+            produtosFilterCategorias.push({ 'name': category.name, 'itens': json.data.filter((element) => category.products.findIndex((element1) => element1._id == element._id) > -1) })
+        }
     }
 
     codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
@@ -73,26 +81,35 @@ async function buscarProdutos(tipoBusca) {
             </thead>
             <tbody>`
 
-    for (let item of json.data) {
-        VETORDEPRODUTOSCLASSEPRODUTO.push(item)
-        codigoHTML += `<tr>
-                        <th class="table-info" title="${item.name}">${item.drink ? '<span class="fas fa-wine-glass-alt"></span>' : '<span class="fas fa-utensils"></span>'} ${corrigirTamanhoString(20, item.name)}</th>
-                        <th class="table-info" title="${item.description}">${corrigirTamanhoString(40, item.description)}</th>
-                        <th class="table-warning"><strong>R$${(item.cost).toFixed(2)}<strong></th>
-                        <th class="table-warning text-danger"><strong>R$${(item.price).toFixed(2)}<strong></th>
-                        <td class="table-light"><button class="btn btn-primary btn-sm" onclick="carregarDadosProduto('${item._id}');"><span class="fas fa-pencil-alt iconsTam"></span> Editar</button></td>
-                        <td class="table-light"><button class="btn btn-outline-danger btn-sm" onclick="confirmarAcao('Excluir os dados do produto permanentemente!', 'deletarProduto(this.value)', '${item._id}');" ><span class="fas fa-trash-alt iconsTam"></span> Excluir</button></td>
-                        <td class="table-light">
-                            <div class="custom-control custom-switch">`
-        if (item.available) {
-            codigoHTML += `<input type="checkbox" onclick="this.checked? disponibilizarIndisponibilizarProduto('${item._id}',true) : disponibilizarIndisponibilizarProduto('${item._id}',false) " class="custom-control-input custom-switch" id="botaoselectdisponivel${item._id}" checked=true>`
-        } else {
-            codigoHTML += `<input type="checkbox" onclick="this.checked? disponibilizarIndisponibilizarProduto('${item._id}',true) : disponibilizarIndisponibilizarProduto('${item._id}',false) " class="custom-control-input custom-switch" id="botaoselectdisponivel${item._id}">`
+    for (let itemCategory of produtosFilterCategorias) {
+
+        if (itemCategory.itens[0] != null) {
+            codigoHTML += `<tr class="bg-warning">
+            <th colspan="7" class="text-center"> ${itemCategory.name}</th>
+        </tr>`
         }
-        codigoHTML += `<label class="custom-control-label" for="botaoselectdisponivel${item._id}">Disponível</label>
-                    </div>
-                </td>
-            </tr>`
+
+        for (let item of itemCategory.itens) {
+            VETORDEPRODUTOSCLASSEPRODUTO.push(item)
+            codigoHTML += `<tr>
+                            <th class="table-info" title="${item.name}">${item.drink ? '<span class="fas fa-wine-glass-alt"></span>' : '<span class="fas fa-utensils"></span>'} ${corrigirTamanhoString(20, item.name)}</th>
+                            <th class="table-info" title="${item.description}">${corrigirTamanhoString(40, item.description)}</th>
+                            <th class="table-warning"><strong>R$${(item.cost).toFixed(2)}<strong></th>
+                            <th class="table-warning text-danger"><strong>R$${(item.price).toFixed(2)}<strong></th>
+                            <td class="table-light"><button class="btn btn-primary btn-sm" onclick="carregarDadosProduto('${item._id}');"><span class="fas fa-pencil-alt iconsTam"></span> Editar</button></td>
+                            <td class="table-light"><button class="btn btn-outline-danger btn-sm" onclick="confirmarAcao('Excluir os dados do produto permanentemente!', 'deletarProduto(this.value)', '${item._id}');" ><span class="fas fa-trash-alt iconsTam"></span> Excluir</button></td>
+                            <td class="table-light">
+                                <div class="custom-control custom-switch">`
+            if (item.available) {
+                codigoHTML += `<input type="checkbox" onclick="this.checked? disponibilizarIndisponibilizarProduto('${item._id}',true) : disponibilizarIndisponibilizarProduto('${item._id}',false) " class="custom-control-input custom-switch" id="botaoselectdisponivel${item._id}" checked=true>`
+            } else {
+                codigoHTML += `<input type="checkbox" onclick="this.checked? disponibilizarIndisponibilizarProduto('${item._id}',true) : disponibilizarIndisponibilizarProduto('${item._id}',false) " class="custom-control-input custom-switch" id="botaoselectdisponivel${item._id}">`
+            }
+            codigoHTML += `<label class="custom-control-label" for="botaoselectdisponivel${item._id}">Disponível</label>
+                        </div>
+                    </td>
+                </tr>`
+        }
     }
     codigoHTML += `</tbody>
         </table>
@@ -111,6 +128,7 @@ async function buscarProdutos(tipoBusca) {
 
 //funcao responsavel por gerar a tela de dados do produto
 async function telaProduto(tipoRequisicao, id) {
+    VETORDECATEGORIASCLASSEPRODUTO = [];
     let codigoHTML = ``, json = await requisicaoGET(`categories`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
 
     codigoHTML += `<div class="modal" id="modalTelaProduto">
@@ -266,6 +284,14 @@ async function parteEstoqueTelaDeProduto(tipo) {
                     <span class="input-group-text">R$</span>
                 </div>
                 <input id="precocustoproduto" type="Number" class="form-control mousetrap" placeholder="Preço de custo">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">%</button>
+                    <div class="dropdown-menu">`
+        for (let i = 5; i <= 90; i += 5) {
+            codigoHTML += `<a class="dropdown-item" onclick="calcularValorDeCustoPorPorcentagem(${i});" href="#">${i}%</a>`
+        }
+        codigoHTML += `</div>
+                </div>
             </div>
         </div>`
     }
@@ -304,7 +330,6 @@ async function carregarDadosProduto(id) {
         document.getElementById('tipoproduto').value = dado.drink
         const categoriaExistente = VETORDECATEGORIASCLASSEPRODUTO.find((element) => element.products.findIndex((element1) => element1._id == dado._id) > -1)
         document.getElementById('categoriaproduto').value = categoriaExistente._id
-        document.getElementById('categoriaproduto').disabled = true
 
         if (dado.ingredients != null) {
             await parteEstoqueTelaDeProduto(true)
@@ -357,7 +382,8 @@ async function cadastrarProduto() {
             }
             json += `"drink": ${document.getElementById(`tipoproduto`).value},
                 "description":"${document.getElementById('descricao').value}",
-                "available":true
+                "available":true,
+                "categoryId":"${document.getElementById('categoriaproduto').value}"
             }`
 
             json = JSON.parse(json)
@@ -367,32 +393,21 @@ async function cadastrarProduto() {
             }
 
             await aguardeCarregamento(true)
-            result = await requisicaoPOST("items", json, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+            result = await requisicaoPOST(`items`, json, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
             await aguardeCarregamento(false)
-            await adicionarProdutoEmCategoria(document.getElementById('categoriaproduto').value, result.data._id)
+            await mensagemDeAviso("Cadastrado com sucesso!");
             document.getElementById('modal').innerHTML = ''
-            inicializacaoClasseProduto();
+            if (validaDadosCampo(['#nome'])) {
+                buscarProdutos('nome');
+            } else {
+                buscarProdutos('todos');
+            }
         } else {
             mensagemDeErro('Adicione pelo menos um ingrediente!')
         }
     } catch (error) {
         mensagemDeErro('Não foi possível cadastrar o produto!')
     }
-}
-
-//funcao responsavel por adicionar o produto em uma categoria
-async function adicionarProdutoEmCategoria(idCategoria, idProduto) {
-    const dado = VETORDECATEGORIASCLASSEPRODUTO.find((element) => element._id == idCategoria);
-    dado.products.push(idProduto)
-    delete dado._id
-    delete dado.createdAt
-    delete dado.updatedAt
-    delete dado.__v
-
-    await aguardeCarregamento(true)
-    await requisicaoPUT(`categories/${idCategoria}`, dado, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
-    await aguardeCarregamento(false)
-    await mensagemDeAviso("Cadastrado com sucesso!");
 }
 
 //chamada de funcao de requisicao put enviando os dados e o Id da opcao selecionada
@@ -410,7 +425,8 @@ async function atualizaProduto(id) {
             }
             json += `"drink": ${document.getElementById(`tipoproduto`).value},
                 "description":"${document.getElementById('descricao').value}",
-                "available":true
+                "available":true,
+                "categoryId":"${document.getElementById('categoriaproduto').value}"
             }`
 
             json = JSON.parse(json)
@@ -423,7 +439,11 @@ async function atualizaProduto(id) {
             await requisicaoPUT(`items/${id}`, json, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
             await aguardeCarregamento(false)
             await mensagemDeAviso('Atualizado com sucesso!');
-            await telaBuscarProduto();
+            if (validaDadosCampo(['#nome'])) {
+                buscarProdutos('nome');
+            } else {
+                buscarProdutos('todos');
+            }
 
         } else {
 
@@ -460,6 +480,12 @@ async function disponibilizarIndisponibilizarProduto(id, disponivel) {
     } else {
         await buscarProdutos('todos')
     }
+}
+
+//funcao responsavel por gerar valor de custo a partir de porcentagem do valor de venda
+function calcularValorDeCustoPorPorcentagem(porcentagem) {
+    let valorCusto = (parseFloat(document.getElementById('precovendaproduto').value ? document.getElementById('precovendaproduto').value : 0.0) * parseInt(porcentagem)) / 100;
+    document.getElementById('precocustoproduto').value = valorCusto.toFixed(2);
 }
 
 //funcao responsavel por inicializar as variaveis da classe produto

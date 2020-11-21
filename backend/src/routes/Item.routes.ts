@@ -4,7 +4,7 @@ import ItemController from '../controllers/ItemController';
 import { IValidationItem } from './routesDTO';
 
 export class ItemRoutes {
-  constructor(private routes: Router) {}
+  constructor(private routes: Router) { }
 
   getRoutes(validations: IValidationItem) {
     this.routes.get(
@@ -15,7 +15,16 @@ export class ItemRoutes {
       }),
       ItemController.show,
     );
+    this.routes.get(
+      '/itemsDesk/:name',
+      celebrate({
+        params: validations.paramNameItem,
+        query: validations.queryPage,
+      }),
+      ItemController.showDesk,
+    );
     this.routes.get('/items', ItemController.index);
+    this.routes.get('/itemsDesk', ItemController.indexDesk);
     this.routes.post(
       '/items',
       celebrate({ body: validations.item }),

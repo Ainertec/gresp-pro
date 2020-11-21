@@ -5,7 +5,11 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "win64": "electron-packager . myApp --platform=win32 --arch=x64"
+    "win64": "electron-packager . myApp --platform=win32 --arch=x64",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.gresppro.app"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -18,7 +22,8 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^7.1.4"
+    "electron": "^7.1.4",
+    "electron-builder": "^22.9.1"
   },
   "dependencies": {
     "axios": "^0.20.0",

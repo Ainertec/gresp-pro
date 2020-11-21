@@ -24,3 +24,7 @@ export const paramIdentPayment = {
   identification: Joi.number().required(),
   payment: Joi.string().required(),
 };
+
+export const orderDelete = {
+  id: Joi.custom(validObjectId, 'valid id').required(),
+};

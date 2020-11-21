@@ -10,6 +10,7 @@ var celebrate_1 = require("celebrate");
 var cors_1 = __importDefault(require("cors"));
 var socket_io_1 = __importDefault(require("socket.io"));
 var http_1 = __importDefault(require("http"));
+var compression = require('compression');
 var routes_1 = __importDefault(require("./routes"));
 var App = /** @class */ (function () {
     function App() {
@@ -34,6 +35,7 @@ var App = /** @class */ (function () {
         });
     };
     App.prototype.routes = function () {
+        this.express.use(compression());
         this.express.use(routes_1.default);
         this.express.use(celebrate_1.errors());
     };

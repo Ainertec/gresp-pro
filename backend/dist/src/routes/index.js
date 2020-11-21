@@ -25,7 +25,7 @@ var itemSchema_1 = require("../validations/itemSchema");
 var ingredientSchema_1 = require("../validations/ingredientSchema");
 var categorySchema_1 = require("../validations/categorySchema");
 var orderSchema_1 = require("../validations/orderSchema");
-var reportSchema_1 = __importDefault(require("../validations/reportSchema"));
+var reportSchema_1 = require("../validations/reportSchema");
 var kitchenSchema_1 = __importDefault(require("../validations/kitchenSchema"));
 var printerValidation_1 = __importDefault(require("../validations/printerValidation"));
 var serialSchema_1 = __importDefault(require("../validations/serialSchema"));
@@ -64,6 +64,7 @@ orderRoutes.getRoutes({
     orderUpdate: orderSchema_1.orderUpdate,
     paramIdentPayment: orderSchema_1.paramIdentPayment,
     paramIdentification: orderSchema_1.paramIdentification,
+    orderDelete: orderSchema_1.orderDelete,
 });
 // Kitchen
 var kitchenRoutes = new Kitchen_routes_1.KitchenRoutes(routes);
@@ -80,6 +81,7 @@ routes.use(Authorization_1.default);
 // Report
 var reportRoutes = new Report_routes_1.ReportRoutes(routes);
 reportRoutes.getRoutes({
-    report: reportSchema_1.default,
+    report: reportSchema_1.report,
+    reportDelete: reportSchema_1.reportDelete,
 });
 exports.default = routes;

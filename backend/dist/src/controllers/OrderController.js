@@ -183,6 +183,21 @@ var OrderController = /** @class */ (function () {
             });
         });
     };
+    OrderController.prototype.deleteOne = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var id;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        id = req.params.id;
+                        return [4 /*yield*/, Order_1.default.deleteOne({ _id: id })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, res.status(200).send()];
+                }
+            });
+        });
+    };
     OrderController.prototype.index = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var orders;

@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-restricted-syntax */
 import { Request, Response } from 'express';
-import { format } from 'date-fns';
+import { format, startOfDay, endOfDay } from 'date-fns';
 import JsRtf from 'jsrtf';
 import Order from '../models/Order';
 import { ItemsInterface } from '../interfaces/base';
@@ -114,7 +114,7 @@ class PrinterController {
       myDoc.writeText('=========== Produtos ==========', contentBorder);
       items.products.map(item => {
         myDoc.writeText(
-          `* ${item.product.name} ${item.courtesy && '/ Cortesia'}`,
+          `* ${item.product.name} ${item.courtesy ? '/ Cortesia' : ''}`,
           contentStyle,
         );
         myDoc.writeText(`- Quantidade: ${item.quantity}`, contentStyle);
@@ -123,7 +123,7 @@ class PrinterController {
       myDoc.writeText('=========== Bebidas ===========', contentBorder);
       items.drinks.map(item => {
         myDoc.writeText(
-          `* ${item.product.name} ${item.courtesy && '/ Cortesia'}`,
+          `* ${item.product.name} ${item.courtesy ? '/ Cortesia' : ''}`,
           contentStyle,
         );
         myDoc.writeText(`- Quantidade: ${item.quantity}`, contentStyle);
@@ -200,7 +200,7 @@ class PrinterController {
   }
 
   async index(req: Request, res: Response) {
-    const ordersProfit = await new OrdersProfitUseCase(Order).execute();
+    const ordersProfit = await new OrdersProfitUseCase(Order).execute(String(startOfDay(new Date())), String(endOfDay(new Date())));
     const myDoc = new JsRtf({
       language: JsRtf.Language.BR,
       pageWidth: JsRtf.Utils.mm2twips(58),

@@ -143,13 +143,13 @@ var PrinterController = /** @class */ (function () {
                                 : myDoc.writeText("Tipo: Atualizado", header);
                             myDoc.writeText('=========== Produtos ==========', contentBorder);
                             items.products.map(function (item) {
-                                myDoc.writeText("* " + item.product.name + " " + (item.courtesy && '/ Cortesia'), contentStyle);
+                                myDoc.writeText("* " + item.product.name + " " + (item.courtesy ? '/ Cortesia' : ''), contentStyle);
                                 myDoc.writeText("- Quantidade: " + item.quantity, contentStyle);
                                 // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
                             });
                             myDoc.writeText('=========== Bebidas ===========', contentBorder);
                             items.drinks.map(function (item) {
-                                myDoc.writeText("* " + item.product.name + " " + (item.courtesy && '/ Cortesia'), contentStyle);
+                                myDoc.writeText("* " + item.product.name + " " + (item.courtesy ? '/ Cortesia' : ''), contentStyle);
                                 myDoc.writeText("- Quantidade: " + item.quantity, contentStyle);
                                 // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
                             });
@@ -239,7 +239,7 @@ var PrinterController = /** @class */ (function () {
             var ordersProfit, myDoc, contentStyle, contentBorder, header, date, content;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, new OrderProfitUseCase_1.OrdersProfitUseCase(Order_1.default).execute()];
+                    case 0: return [4 /*yield*/, new OrderProfitUseCase_1.OrdersProfitUseCase(Order_1.default).execute(String(date_fns_1.startOfDay(new Date())), String(date_fns_1.endOfDay(new Date())))];
                     case 1:
                         ordersProfit = _a.sent();
                         myDoc = new jsrtf_1.default({

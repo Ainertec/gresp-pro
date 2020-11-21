@@ -22,12 +22,13 @@ home.on('ready', function () {
   janelaPrincipal.loadURL(`file://${__dirname}/index.html`);
   janelaPrincipal.once('ready-to-show', () => {
     janelaPrincipal.show();
+    janelaPrincipal.maximize();
   });
 
   //shell.openItem("C://gresppro-x64//executaveis_modulos//startMongo.vbs")
   //shell.openItem("C://gresppro-x64//executaveis_modulos//startNode.vbs")
   //shell.openItem("C://gresppro-x64//executaveis_modulos//impressao.vbs")
-  //shell.openItem("C://gresppro-x64//executaveis_modulos//web.vbs")
+  //shell.openItem("C://gresppro-x64//executaveis_modulos//startWeb.vbs")
 
   var data = new Date();
 

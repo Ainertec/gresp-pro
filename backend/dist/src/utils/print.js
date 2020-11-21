@@ -13,7 +13,7 @@ function printFile(content, fileName) {
         var buffer = Buffer.from(content, 'binary');
         var dir = process.env.NODE_ENV === 'test'
             ? path_1.default.resolve(__dirname, '..', '..', '__tests__', 'recipes')
-            : process.env.DIR_PRODUCTION;
+            : "C:\\\\gresppro-x64\\backend\\commands\\commandsCreate\\";
         fs_1.default.writeFile(dir + "/" + fileName + ".rtf", buffer, { encoding: 'utf-8', flag: 'w' }, function () { });
         return;
     }

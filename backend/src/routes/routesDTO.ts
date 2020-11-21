@@ -38,10 +38,12 @@ export interface IValidationOrder {
     identification: Joi.NumberSchema;
     payment: Joi.StringSchema;
   };
+  orderDelete: { id: Joi.AnySchema };
 }
 
 export interface IValidationReport {
   report: Joi.ObjectSchema;
+  reportDelete: { id: Joi.AnySchema };
 }
 
 export interface IValidationKitchen {
