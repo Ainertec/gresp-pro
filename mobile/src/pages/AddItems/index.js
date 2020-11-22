@@ -18,16 +18,21 @@ export default function AddItems({ navigation }) {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [name, setName] = useState('');
+  const [hasCategory,setHasCategory] = useState(false);
 
   const formRef = useRef(null);
 
   async function handleSubmit(data) {
+    setHasCategory(false);
     setName(data.name);
-    loadProducts(1, data.name, true);
+    await loadProducts(1, data.name, true);
   }
 
   async function loadProducts(pageNumber = page, data = name, newItems) {
     if (loading) {
+      return;
+    }
+    if(hasCategory){
       return;
     }
 
@@ -59,6 +64,8 @@ export default function AddItems({ navigation }) {
   }
 
   async function handleLoadCategoryProducts(id) {
+    setHasCategory(true);
+    setItems([]);
     const response = await api.get(`/categories/${id}`);
     setItems(response.data);
   }
@@ -126,6 +133,7 @@ export default function AddItems({ navigation }) {
           <CategoryItem
             item={item}
             handleLoadCategoryProducts={handleLoadCategoryProducts}
+            
           />
         )}
       />
