@@ -5,7 +5,7 @@ import { errors } from 'celebrate';
 import cors from 'cors';
 import socketio from 'socket.io';
 import http from 'http';
-const compression = require('compression');
+import compression from 'compression';
 
 import routes from './routes';
 import { CustomRequest } from './interfaces/base';
