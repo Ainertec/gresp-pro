@@ -65,7 +65,6 @@ export default function AddItems({ navigation }) {
 
   async function handleLoadCategoryProducts(id) {
     setHasCategory(true);
-    setItems([]);
     const response = await api.get(`/categories/${id}`);
     setItems(response.data);
   }
