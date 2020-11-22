@@ -43,7 +43,7 @@ const Setting = () => {
 
       <Footer>
         <FooterText>Desenvolvido por Ainertec</FooterText>
-        <FooterVersion>Versão 2.4.4</FooterVersion>
+        <FooterVersion>Versão 2.4.5</FooterVersion>
       </Footer>
     </Container>
   );
