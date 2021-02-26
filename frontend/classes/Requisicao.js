@@ -14,7 +14,11 @@ async function requisicaoGET(url, authorization) {
 			}
 		})
 		.catch(function (error) {
-			retorno = error.response.status
+			try {
+				retorno = error.response.status	
+			} catch (errorN) {
+				retorno = error.response;
+			}
 		});
 
 	return retorno;
@@ -34,7 +38,11 @@ async function requisicaoDELETE(url, json, authorization) {
 			}
 		})
 		.catch(function (error) {
-			retorno = error.response.status
+			try {
+				retorno = error.response.status	
+			} catch (errorN) {
+				retorno = error.response
+			}
 		});
 }
 
@@ -51,7 +59,11 @@ async function requisicaoPOST(url, json, authorization) {
 			}
 		})
 		.catch(function (error) {
-			retorno = error.response.status
+			try {
+				retorno = error.response.status	
+			} catch (errorN) {
+				retorno = error.response
+			}
 		});
 
 	return retorno;
@@ -70,7 +82,11 @@ async function requisicaoPUT(url, json, authorization) {
 			}
 		})
 		.catch(function (error) {
-			retorno = error.response.status
+			try {
+				retorno = error.response.status	
+			} catch (errorN) {
+				retorno = error.response
+			}
 		});
 
 	return retorno;
