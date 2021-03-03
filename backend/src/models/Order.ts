@@ -31,6 +31,12 @@ const OrderSchema = new Schema(
       type: Number,
       required: true,
     },
+    cardfee: {
+      type: Number,
+    },
+    tip: {
+      type: Number,
+    },
     note: {
       type: String,
     },

@@ -39,13 +39,14 @@ import { paramIdCategory, category } from '../validations/categorySchema';
 import {
   order,
   orderUpdate,
+  orderFees,
   paramIdentPayment,
   paramIdentification,
   orderDelete,
 } from '../validations/orderSchema';
 import { report, reportDelete } from '../validations/reportSchema';
 import kitchen from '../validations/kitchenSchema';
-import printer from '../validations/printerValidation';
+import { printer, printerComprovant } from '../validations/printerValidation';
 import serial from '../validations/serialSchema';
 import CategoryController from '../controllers/CategoryController';
 
@@ -94,6 +95,7 @@ const orderRoutes = new OrderRoutes(routes);
 orderRoutes.getRoutes({
   order,
   orderUpdate,
+  orderFees,
   paramIdentPayment,
   paramIdentification,
   orderDelete,
@@ -108,7 +110,7 @@ kitchenRoutes.getRoutes({
 // Printer
 const printerRoutes = new PrinterRoutes(routes);
 printerRoutes.getRoutes({
-  printer,
+  printer, printerComprovant,
 });
 
 // Authorization

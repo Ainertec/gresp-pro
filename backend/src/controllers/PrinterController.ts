@@ -6,7 +6,7 @@ import { Request, Response } from 'express';
 import { format, startOfDay, endOfDay } from 'date-fns';
 import JsRtf from 'jsrtf';
 import Order from '../models/Order';
-import { ItemsInterface } from '../interfaces/base';
+import { ItemsInterface, ItemInterface } from '../interfaces/base';
 import { printFile } from '../utils/print';
 import { SoldsProductsTotalUseCase } from '../UseCases/Report/SoldsProductsTotalUseCase';
 import { OrdersProfitUseCase } from '../UseCases/Report/OrderProfitUseCase';
@@ -132,6 +132,103 @@ class PrinterController {
       myDoc.writeText('========== Observação =========', contentStyle);
       myDoc.writeText(
         `\n- ${order.note ? order.note : 'Nenhuma.'}\n`,
+        contentStyle,
+      );
+      myDoc.writeText(`- ${date}`, contentStyle);
+
+      const content = myDoc.createDocument();
+      try {
+        printFile(content, String(identification));
+        return res.status(200).send();
+      } catch (error) {
+        return res.status(400).json(error.message);
+      }
+    } else {
+      return res.status(400).json('There are no items');
+    }
+  }
+
+  async createComprovant(req: Request, res: Response) {
+    const { identification } = req.body;
+    const order = await Order.findOne({ closed: false, identification });
+
+    if (!order) return res.status(400).json('orders does not exist!');
+
+    await order.populate('items.product').execPopulate();
+
+    const date = order.updatedAt
+      ? format(order.updatedAt, 'dd/MM/yyyy HH:mm:ss')
+      : '';
+    const myDoc = new JsRtf({
+      language: JsRtf.Language.BR,
+      pageWidth: JsRtf.Utils.mm2twips(58),
+      landscape: false,
+      marginLeft: 5,
+      marginRight: 2,
+    });
+    const contentStyle = new JsRtf.Format({
+      spaceBefore: 20,
+      spaceAfter: 20,
+      fontSize: 8,
+      paragraph: true,
+    });
+    const contentBorder = new JsRtf.Format({
+      spaceBefore: 100,
+      spaceAfter: 100,
+      fontSize: 8,
+      paragraph: true,
+      borderBottom: { type: 'single', width: 10 },
+    });
+    const header = new JsRtf.Format({
+      spaceBefore: 20,
+      spaceAfter: 100,
+      fontSize: 8,
+      bold: true,
+      paragraph: true,
+      align: 'center',
+      borderTop: { size: 2, spacing: 100, color: JsRtf.Colors.GREEN },
+    });
+
+    if (order.items) {
+      const items = this.toPrinterNew(order.items)
+
+      myDoc.writeText('', contentBorder);
+      myDoc.writeText('>>>>>>>>> Comprovante <<<<<<<<<<', header);
+      myDoc.writeText(`Número: ${order.identification}`, header);
+      myDoc.writeText('=========== Produtos ==========', contentBorder);
+      items.products.map(item => {
+        myDoc.writeText(
+          `* ${item.product.name} ${item.courtesy ? '/ Cortesia' : ''}`,
+          contentStyle,
+        );
+        myDoc.writeText(`- Quantidade: ${item.quantity} --- Valor:R$${item.product.price}`, contentStyle);
+        // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
+      });
+      myDoc.writeText('=========== Bebidas ===========', contentBorder);
+      items.drinks.map(item => {
+        myDoc.writeText(
+          `* ${item.product.name} ${item.courtesy ? '/ Cortesia' : ''}`,
+          contentStyle,
+        );
+        myDoc.writeText(`- Quantidade: ${item.quantity} --- Valor:R$${item.product.price}`, contentStyle);
+        // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
+      });
+      myDoc.writeText('========== Observação =========', contentStyle);
+      myDoc.writeText(
+        `\n- ${order.note ? order.note : 'Nenhuma.'}\n`,
+        contentStyle,
+      );
+      myDoc.writeText('========== Resumo =========', contentStyle);
+      myDoc.writeText(
+        `\n- Valor do pedido: R$${order.total}\n`,
+        contentStyle,
+      );
+      myDoc.writeText(
+        `\n- Taxa Cartão: R$${order.total}\n`,
+        contentStyle,
+      );
+      myDoc.writeText(
+        `\n- Taxa de serviço/gorjeta: R$${order.total}\n`,
         contentStyle,
       );
       myDoc.writeText(`- ${date}`, contentStyle);

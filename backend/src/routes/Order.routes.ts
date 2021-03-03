@@ -26,6 +26,14 @@ export class OrderRoutes {
       }),
       OrderController.update,
     );
+    this.routes.put(
+      '/ordersfees/:identification',
+      celebrate({
+        body: validations.orderFees,
+        params: validations.paramIdentification,
+      }),
+      OrderController.addFees,
+    );
     this.routes.delete(
       '/orders/:identification/:payment',
       celebrate({ params: validations.paramIdentPayment }),

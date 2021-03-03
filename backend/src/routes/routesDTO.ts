@@ -33,6 +33,7 @@ export interface IValidationCategory {
 export interface IValidationOrder {
   order: Joi.ObjectSchema;
   orderUpdate: Joi.ObjectSchema;
+  orderFees: Joi.ObjectSchema;
   paramIdentification: { identification: Joi.NumberSchema };
   paramIdentPayment: {
     identification: Joi.NumberSchema;
@@ -52,4 +53,5 @@ export interface IValidationKitchen {
 
 export interface IValidationPrinter {
   printer: Joi.ObjectSchema;
+  printerComprovant: Joi.ObjectSchema;
 }

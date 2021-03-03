@@ -32,6 +32,8 @@ export interface OrderInterface extends Document {
   identification: number;
   total: number;
   note?: string;
+  cardfee?: number;
+  tip?: number;
   closed?: boolean;
   finished?: boolean;
   payment?: string;

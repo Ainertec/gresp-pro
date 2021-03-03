@@ -270,6 +270,8 @@ async function tabelaDeRelatorioCaixa() {
                         <td scope="col"><small>Lista itens</small></td>
                         <td scope="col"><small>Forma pagamento</small></td>
                         <td scope="col"><small>Custo</small></td>
+                        <td scope="col"><small>Taxa Cartão</small></td>
+                        <td scope="col"><small>serviço/gorjeta</small></td>
                         <td scope="col"><small>Valor</small></td>
                         <td scope="col"><small>Excluir</small></td>
                     </tr>
@@ -287,6 +289,8 @@ async function tabelaDeRelatorioCaixa() {
             codigoHTML += `</small></td>
                     <td scope="col"><small><strong>${item.order.payment}</strong></small></td>
                     <td scope="col" class="text-danger"><small><strong>R$${(item.costTotal).toFixed(2)}</strong></small></td>
+                    <td scope="col" class="text-danger"><small><strong>R$${(item.order.cardfee).toFixed(2)}</strong></small></td>
+                    <td scope="col" class="text-danger"><small><strong>R$${(item.order.tip).toFixed(2)}</strong></small></td>
                     <td scope="col" class="text-danger"><small><strong>R$${(item.order.total).toFixed(2)}</strong></small></td>
                     <td scope="col">
                         <button class="btn btn-outline-danger btn-sm" onclick="confirmarAcao('Excluir relatório!', 'excluirUmRelatorio(this.value);', '${item.order._id}');" value=${item.identification}>
@@ -338,6 +342,14 @@ async function tabelaGeralDeRelatorios() {
                         <td scope="col" class="text-danger"><small><strong>R$${json.data.totalCourtesy}</strong></small></td>
                     </tr>
                     <tr class="table-light text-dark">
+                        <td scope="col"><small><strong>Taxas de cartão(Período)</strong></small></td>
+                        <td scope="col" class="text-danger"><small><strong>R$${json.data.totalCardFee}</strong></small></td>
+                    </tr>
+                    <tr class="table-light text-dark">
+                        <td scope="col"><small><strong>Taxas de serviço/gorjeta(Período)</strong></small></td>
+                        <td scope="col" class="text-danger"><small><strong>R$${json.data.totalTip}</strong></small></td>
+                    </tr>
+                    <tr class="table-light text-dark">
                         <td scope="col"><small><strong>Custos com pedidos(Período)</strong></small></td>
                         <td scope="col" class="text-danger"><small><strong>R$${json.data.totalCost}</strong></small></td>
                     </tr>
@@ -382,10 +394,9 @@ async function excluirRelatorioAutomaticamente() {
 
 //funcao responsavel por excluir um determinado relatorio
 async function excluirUmRelatorio(id) {
-    console.log(id)
     try {
         await aguardeCarregamento(true)
-        await requisicaoDELETE(`reportsone/${id}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
+        await requisicaoDELETE(`reports/${id}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
         await aguardeCarregamento(false)
         mensagemDeAviso('Relatório excluido com sucesso!')
         await chamadaDeMetodosRelatorio();

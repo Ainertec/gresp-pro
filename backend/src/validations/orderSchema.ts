@@ -17,6 +17,11 @@ export const orderUpdate = Joi.object().keys({
   items: Joi.array().required(),
 });
 
+export const orderFees = Joi.object().keys({
+  tip: Joi.number().required(),
+  cardfee: Joi.number().required(),
+});
+
 export const paramIdentification = {
   identification: Joi.number().required(),
 };

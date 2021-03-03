@@ -13,6 +13,11 @@ export class PrinterRoutes {
       celebrate({ body: validations.printer }),
       PrinterController.create,
     );
+    this.routes.post(
+      '/printer/comprovant',
+      celebrate({ body: validations.printerComprovant }),
+      PrinterController.createComprovant,
+    )
     this.routes.get('/printer/products', PrinterController.show);
     this.routes.get('/printer/orders', PrinterController.index);
   }

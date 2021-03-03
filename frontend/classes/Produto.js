@@ -286,11 +286,13 @@ async function parteEstoqueTelaDeProduto(tipo) {
                 <input id="precocustoproduto" type="Number" class="form-control mousetrap" placeholder="Preço de custo">
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">%</button>
-                    <div class="dropdown-menu">`
+                    <div class="dropdown-menu">
+                        <div class="col-12 layer1" style="position: relative; height: 50vh; z-index: 1; overflow: scroll; margin-right: 0px;">`
         for (let i = 5; i <= 90; i += 5) {
             codigoHTML += `<a class="dropdown-item" onclick="calcularValorDeCustoPorPorcentagem(${i});" href="#">${i}%</a>`
         }
         codigoHTML += `</div>
+                    </div>
                 </div>
             </div>
         </div>`
