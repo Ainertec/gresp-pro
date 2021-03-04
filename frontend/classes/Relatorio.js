@@ -289,8 +289,8 @@ async function tabelaDeRelatorioCaixa() {
             codigoHTML += `</small></td>
                     <td scope="col"><small><strong>${item.order.payment}</strong></small></td>
                     <td scope="col" class="text-danger"><small><strong>R$${(item.costTotal).toFixed(2)}</strong></small></td>
-                    <td scope="col" class="text-danger"><small><strong>R$${(item.order.cardfee).toFixed(2)}</strong></small></td>
-                    <td scope="col" class="text-danger"><small><strong>R$${(item.order.tip).toFixed(2)}</strong></small></td>
+                    <td scope="col" class="text-danger"><small><strong>R$${item.order.cardfee? (item.order.cardfee).toFixed(2):'0.00'}</strong></small></td>
+                    <td scope="col" class="text-danger"><small><strong>R$${item.order.tip? (item.order.tip).toFixed(2):'0.00'}</strong></small></td>
                     <td scope="col" class="text-danger"><small><strong>R$${(item.order.total).toFixed(2)}</strong></small></td>
                     <td scope="col">
                         <button class="btn btn-outline-danger btn-sm" onclick="confirmarAcao('Excluir relatório!', 'excluirUmRelatorio(this.value);', '${item.order._id}');" value=${item.identification}>

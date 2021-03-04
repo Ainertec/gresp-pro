@@ -13,13 +13,13 @@ class OrdersProfitUseCase {
             closed: true,
         }).populate('items.product');
         const totalOrders = ordersProfit.reduce((sum, order) => {
-            return sum + (order.total + order.cardfee + order.tip);
+            return sum + (order.total + (order.cardfee ? order.cardfee : 0) + (order.tip ? order.tip : 0));
         }, 0);
         const totalCardFee = ordersProfit.reduce((sum, order) => {
-            return sum + order.cardfee;
+            return sum + (order.cardfee ? order.cardfee : 0);
         }, 0);
         const totalTip = ordersProfit.reduce((sum, order) => {
-            return sum + order.tip;
+            return sum + (order.tip ? order.tip : 0);
         }, 0);
         const totalProducts = ordersProfit.reduce((sum, order) => {
             return (sum +
