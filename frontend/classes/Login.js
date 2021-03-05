@@ -177,5 +177,6 @@ $(document).ready(function () {
     } else {
         document.getElementById('statusLogin').innerHTML =
             '<a onclick="telaAutenticacao();" class="nav-link text-light" href="#"><span class="fas fa-user-shield iconsTam"></span> Entrar</a>'
+            telaAutenticacao();
     }
 });

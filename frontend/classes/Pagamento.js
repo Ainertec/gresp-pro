@@ -240,7 +240,7 @@ async function buscarDadosDoPedidoParaPagamento(identificacao) {
                             codigoHTML+=`<h6>Valor do pedido: <span class="badge badge-warning"> R$ ${(json.data.total).toFixed(2)}</span></h6>
                                 <h6>Taxa do cartão: <span class="badge badge-warning"> R$ ${(json.data.cardfee).toFixed(2)}</span></h6>
                                 <h6>Taxa serviço/gorjeta: <span class="badge badge-warning"> R$ ${(json.data.tip).toFixed(2)}</span></h6>
-                                <h4 style="margin-top:5vh">Valor total: <span class="badge badge-success"> R$ ${(json.data.total+json.data.cardfee+json.data.tip).toFixed(2)}</span></h4>`
+                                <h4 style="margin-top:5vh">Valor total: <span class="badge badge-success"> R$ ${(json.data.total+json.data.tip).toFixed(2)}</span></h4>`
                         }else{
                             codigoHTML+=`<h4>Valor total: <span class="badge badge-success"> R$ ${(json.data.total).toFixed(2)}</span></h4>`
                         }

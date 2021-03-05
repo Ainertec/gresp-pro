@@ -15,7 +15,7 @@ export class OrdersProfitUseCase {
     }).populate('items.product');
 
     const totalOrders = ordersProfit.reduce((sum, order) => {
-      return sum + (order.total + (order.cardfee? order.cardfee:0) + (order.tip? order.tip:0));
+      return sum + (order.total + (order.tip? order.tip:0));
     }, 0);
     const totalCardFee = ordersProfit.reduce((sum, order) => {
       return sum + (order.cardfee? order.cardfee:0);

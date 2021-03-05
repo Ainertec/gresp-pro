@@ -248,7 +248,7 @@ export default function Home() {
             name="monetization-on"
             onPress={handleFee}
           />
-          <Total>Total: R$ {order.total? (order.total + ((order.cardfee? order.cardfee:0) + (order.tip? order.tip:0)) ).toFixed(2):'0.00'}</Total>
+          <Total>Total: R$ {order.total? (order.total + (order.tip? order.tip:0)).toFixed(2):'0.00'}</Total>
           <Icon
             style={{ marginBottom: 10 }}
             reverse
