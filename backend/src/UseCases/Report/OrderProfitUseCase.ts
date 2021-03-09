@@ -48,7 +48,7 @@ export class OrdersProfitUseCase {
       );
     }, 0);
 
-    const filteredTotal = totalOrders - (totalProducts + totalCardFee);
+    const filteredTotal = totalOrders - (totalProducts + totalCardFee + totalTip);
 
     return {
       orders: ordersProfit,

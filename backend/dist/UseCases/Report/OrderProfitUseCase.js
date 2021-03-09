@@ -40,7 +40,7 @@ class OrdersProfitUseCase {
                     return sum2 + item.quantity * item.product.cost;
                 }, 0));
         }, 0);
-        const filteredTotal = totalOrders - (totalProducts + totalCardFee);
+        const filteredTotal = totalOrders - (totalProducts + totalCardFee + totalTip);
         return {
             orders: ordersProfit,
             total: totalOrders.toFixed(2),
