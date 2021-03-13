@@ -7,7 +7,7 @@ set colProcesses=objWMIService.ExecQuery _
 	("Select * from Win32_Process Where Name = 'GrespPro.exe'")
 
 For Each Processo In colProcesses
-	msgbox"Programa já aberto ou em andamento de abertura!",vbInformation,"Sisvep - Aviso"
+	msgbox"Programa ja aberto ou em andamento de abertura!",vbInformation,"Gresp Pro - Aviso"
 	WScript.Quit
 Next
 
