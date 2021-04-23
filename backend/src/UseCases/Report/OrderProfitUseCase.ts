@@ -15,13 +15,7 @@ export class OrdersProfitUseCase {
     }).populate('items.product');
 
     const totalOrders = ordersProfit.reduce((sum, order) => {
-      return sum + (order.total + (order.tip? order.tip:0));
-    }, 0);
-    const totalCardFee = ordersProfit.reduce((sum, order) => {
-      return sum + (order.cardfee? order.cardfee:0);
-    }, 0);
-    const totalTip = ordersProfit.reduce((sum, order) => {
-      return sum + (order.tip? order.tip:0);
+      return sum + (order.total);
     }, 0);
     const totalProducts = ordersProfit.reduce((sum, order) => {
       return (
@@ -48,7 +42,7 @@ export class OrdersProfitUseCase {
       );
     }, 0);
 
-    const filteredTotal = totalOrders - (totalProducts + totalCardFee + totalTip);
+    const filteredTotal = totalOrders - totalProducts;
 
     return {
       orders: ordersProfit,
@@ -56,8 +50,6 @@ export class OrdersProfitUseCase {
       netValue: filteredTotal.toFixed(2),
       totalCourtesy: totalCourtesy.toFixed(2),
       totalCost: totalCost.toFixed(2),
-      totalCardFee: totalCardFee.toFixed(2),
-      totalTip:totalTip.toFixed(2),
     };
   }
 }

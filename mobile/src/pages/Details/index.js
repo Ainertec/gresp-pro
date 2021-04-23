@@ -4,7 +4,6 @@ import { useRoute } from '@react-navigation/native';
 
 import ActionButton from '../../components/ActionButton';
 import PaymentModal from '../../components/PaymentModal';
-import FeeModal from '../../components/FeeModal';
 import {
   Container,
   Title,
@@ -18,15 +17,8 @@ import {
 
 const Details = () => {
   const [order,setOrderPayment ] = useState(useRoute().params);
-  const [showFee, setShowFee] = useState(false);
   const [showPay, setShowPay] = useState(false);
   const [changed, setChanged] = useState(false);
-
-  async function handleFee() {
-    if (order.total === undefined || changed === true)
-    return Alert.alert('Ops!', 'Crie ou atualize o pedido para paga-lo!');
-    setShowFee(true);
-  }
 
   async function handlePayment() {
     if (order.total === undefined || changed === true)
@@ -65,17 +57,16 @@ const Details = () => {
           />
         )}
       />
-      <ActionButton onPress={handleFee} background>
+      <ActionButton onPress={handlePayment} background>
         <MaterialIcons
           size={56}
           reverse
           raised
           color='#a46810'
           name='monetization-on'
-          onPress={handleFee}
+          onPress={handlePayment}
         />
       </ActionButton>
-      <FeeModal showFee={showFee} setShowPay={setShowPay} setOrderPayment={setOrderPayment} setShowFee={setShowFee} order={order} />
       <PaymentModal
         showPay={showPay}
         setShowPay={setShowPay}

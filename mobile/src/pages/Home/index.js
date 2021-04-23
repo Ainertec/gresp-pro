@@ -10,7 +10,6 @@ import AlertRN from '../../components/Alert';
 import api from '../../services/api';
 
 import PaymentModal from '../../components/PaymentModal';
-import FeeModal from '../../components/FeeModal';
 
 import ItemList from './item';
 
@@ -31,7 +30,6 @@ export default function Home() {
   const { order, setOrder } = useOrder();
   const [isSpinnerVisible, setIsSpinnerVisible] = useState(false);
   const [showPay, setShowPay] = useState(false);
-  const [showFee, setShowFee] = useState(false);
   const [changed, setChanged] = useState(false);
 
   const orderErrorRef = useRef(null);
@@ -171,12 +169,6 @@ export default function Home() {
     }, 3500);
   }
 
-  async function handleFee() {
-    if (order.total === undefined || changed === true)
-      return paymentErroRef.current.open();
-    setShowFee(true);
-  }
-
   async function handlePayment() {
     if (order.total === undefined || changed === true)
       return paymentErroRef.current.open();
@@ -246,9 +238,9 @@ export default function Home() {
             raised
             color="#a46810"
             name="monetization-on"
-            onPress={handleFee}
+            onPress={handlePayment}
           />
-          <Total>Total: R$ {order.total? (order.total + (order.tip? order.tip:0)).toFixed(2):'0.00'}</Total>
+          <Total>Total: R$ {order.total? (order.total).toFixed(2):'0.00'}</Total>
           <Icon
             style={{ marginBottom: 10 }}
             reverse
@@ -260,7 +252,6 @@ export default function Home() {
         </FooterNavigation>
       </FooterContainer>
 
-      <FeeModal showFee={showFee} setShowPay={setShowPay} setOrderPayment={null} setShowFee={setShowFee} order={order} />
       <PaymentModal showPay={showPay} setShowPay={setShowPay} order={order} />
       <AlertRN
         ref={identificationErrorRef}

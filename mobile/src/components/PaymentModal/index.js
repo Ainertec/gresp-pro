@@ -94,7 +94,7 @@ const PaymentModal = ({ showPay, setShowPay, order, goBack }) => {
         ></Check>
 
         <TotalPayment>
-          Total: R$ {order.total == undefined ? '0' : (order.total + (order.tip? order.tip:0)).toFixed(2)}
+          Total: R$ {order.total == undefined ? '0.00' : (order.total).toFixed(2)}
         </TotalPayment>
         <TouchableOpacity onPress={payment}>
           <Button

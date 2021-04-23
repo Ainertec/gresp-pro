@@ -62,7 +62,6 @@ const orderRoutes = new Order_routes_1.OrderRoutes(routes);
 orderRoutes.getRoutes({
     order: orderSchema_1.order,
     orderUpdate: orderSchema_1.orderUpdate,
-    orderFees: orderSchema_1.orderFees,
     paramIdentPayment: orderSchema_1.paramIdentPayment,
     paramIdentification: orderSchema_1.paramIdentification,
     orderDelete: orderSchema_1.orderDelete,
