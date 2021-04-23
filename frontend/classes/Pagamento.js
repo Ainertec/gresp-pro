@@ -179,72 +179,9 @@ async function buscarDadosDoPedidoParaPagamento(identificacao) {
         codigoHTML += `<div class="shadow p-3 mb-3 bg-white rounded">
             <div class="col-12 rounded mx-auto" id="escondeDados1" style="margin-top: 10px;">
                 <div class="row">
-                    <div class="col-4">
-                        <label>Taxa de cartão: </label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">R$</span>
-                            </div>
-                            <input id="cardfee" type="number" class="form-control" value=${json.data.cardfee? json.data.cardfee:0.00}>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">%</button>
-                                <div class="dropdown-menu">
-                                    <div class="col-12 layer1" style="position: relative; height: 50vh; z-index: 1; overflow: scroll; margin-right: 0px;">`
-                                    for (let i = 0.0; i <= 14.0; i += 0.1) {
-                                        codigoHTML += `<a class="dropdown-item" onclick="document.getElementById('cardfee').value=${((json.data.total*i)/100).toFixed(2)}" href="#">${(i).toFixed(1)}%</a>`
-                                    }
-                                codigoHTML += `</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <div class="col-4">
-                        <label>Taxa de serviço/gorjeta: </label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">R$</span>
-                            </div>
-                            <input id="tip" type="number" class="form-control" value=${json.data.tip? json.data.tip:0.00}>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">%</button>
-                                <div class="dropdown-menu">
-                                    <div class="col-12 layer1" style="position: relative; height: 50vh; z-index: 1; overflow: scroll; margin-right: 0px;">`
-                                    for (let i = 0; i <= 50; i += 1) {
-                                        codigoHTML += `<a class="dropdown-item" onclick="document.getElementById('tip').value=${((json.data.total*i)/100).toFixed(2)}" href="#">${i}%</a>`
-                                    }
-                                codigoHTML += `</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col">
+                        <h4>Valor total: <span class="badge badge-success"> R$ ${(json.data.total).toFixed(2)}</span></h4>
                     </div>
-                </div>
-                <div class="row" style="margin-top:5vh">
-                    <div class="col-12">
-                        <button onclick="if(validaDadosCampo(['#cardfee','#tip'])){confirmarAcao('Adicionar taxas!', 'adicionarTaxas(this.value)','${identificacao}'); $('#modalTelaProduto').modal('hide');}else{mensagemDeErro('Preencha todos os campos com valores válidos!');  mostrarCamposIncorrreto(['cardfee','tip']);}" type="button" class="btn btn-danger">
-                            <span class="fas fa-credit-card"></span> Adicionar taxas
-                        </button>
-                        <button onclick="" type="button" class="btn btn-outline-secondary">
-                            <span class="fas fa-print"></span> Imprimir comprovante
-                        </button>
-                    </div>
-                </div>
-                <hr class="my-6 bg-dark">
-            </div>
-        </div>
-        <div class="shadow p-3 mb-3 bg-white rounded">
-            <div class="col-12 rounded mx-auto" id="escondeDados1" style="margin-top: 10px;">
-                <div class="row">
-                    <div class="col">`
-                        if(json.data.cardfee){
-                            codigoHTML+=`<h6>Valor do pedido: <span class="badge badge-warning"> R$ ${(json.data.total).toFixed(2)}</span></h6>
-                                <h6>Taxa do cartão: <span class="badge badge-warning"> R$ ${(json.data.cardfee).toFixed(2)}</span></h6>
-                                <h6>Taxa serviço/gorjeta: <span class="badge badge-warning"> R$ ${(json.data.tip).toFixed(2)}</span></h6>
-                                <h4 style="margin-top:5vh">Valor total: <span class="badge badge-success"> R$ ${(json.data.total+json.data.tip).toFixed(2)}</span></h4>`
-                        }else{
-                            codigoHTML+=`<h4>Valor total: <span class="badge badge-success"> R$ ${(json.data.total).toFixed(2)}</span></h4>`
-                        }
-                    codigoHTML+=`</div>
                     <div class="col">
                         <div class="input-group mb-3">
                             <select class="custom-select" id="formaPagamento">
@@ -297,7 +234,7 @@ async function buscarDadosDoPedidoParaPagamento(identificacao) {
             </table>
         </div>
         <div class="col-12 rounded mx-auto" style="margin-top: 10px;">
-            <h6>Observações do pedido: <span class="badge badge-warning">${json.data.note}</span></h6>
+            <h6>Observações do pedido: <span class="badge badge-warning">${json.data.note? json.data.note:''}</span></h6>
         </div>
     </div>`
 
@@ -307,19 +244,6 @@ async function buscarDadosDoPedidoParaPagamento(identificacao) {
             document.getElementById('resposta').innerHTML = codigoHTML;
             animacaoSlideDown(['#resposta'])
         }, 400)
-    }
-}
-
-//funcao para adicionar as taxas de cartão e demais
-async function adicionarTaxas(identificacao){
-    try {
-        await aguardeCarregamento(true)
-        await requisicaoPUT(`ordersfees/${identificacao}`, {cardfee:document.getElementById('cardfee').value, tip:document.getElementById('tip').value}, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } })
-        await aguardeCarregamento(false)
-        await mensagemDeAviso(`Taxas adicionadas ao pedido nº ${identificacao}!`);
-        await setTimeout(function () { buscarDadosDoPedidoParaPagamento(identificacao); }, 500)
-    } catch (error) {
-        mensagemDeErro('Não foi possível adicionar as taxas!')
     }
 }
 

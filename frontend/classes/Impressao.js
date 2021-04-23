@@ -125,6 +125,20 @@ function telaGerarRelatorioDeCaixa() {
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                <div class="shadow-lg p-3 mb-5 bg-white rounded">
+                    <h4 class="text-center"><span class="fas fa-chart-line"></span> Relatórios</h4>
+                    <div class="col-6 mx-auto row" style="margin-top:20px;">
+                        <label for="dataInicial">Inicio</label>
+                        <input id="dataInicial" type="date" class="form-control form-control-sm" value="${new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()}">
+                        <label for="dataFinal">Final</label>
+                        <input id="dataFinal" type="date" class="form-control form-control-sm" value="${new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()}">
+                    </div>
+                    <div class="col-6 mx-auto" style="margin-top:20px;">
+                        <button onclick="telaRespostaRelatorioDeCaixa();" class="btn btn-info btn-block btn-sm" style="margin-bottom:40px;">
+                            <span class="fas fa-search"></span> Buscar
+                        </button>
+                    </div>
+                </div>
                 <div id="relatorioCaixa" class="modal-body">
                     <div class="text-center">
                         <h3>Relatório de caixa</h3>
@@ -142,7 +156,6 @@ function telaGerarRelatorioDeCaixa() {
 
     document.getElementById('modal').innerHTML = codigoHTML;
     $('#modalRelatorioDeCaixa').modal('show');
-    telaRespostaRelatorioDeCaixa();
 
 }
 

@@ -152,36 +152,6 @@ class OrderController {
 
     return res.json(order);
   }
-
-  public async addFees(req: CustomRequest, res: Response){
-    const { tip, cardfee } = req.body;
-    const identification = Number(req.params.identification);
-
-    const order = await Order.findOneAndUpdate(
-      { identification, closed: false },
-      {
-        tip,
-        cardfee,
-      },
-      {
-        new: false,
-      },
-    );
-
-    const newOrder = await Order.findOne({
-      identification,
-      closed: false,
-    }).populate('items.product');
-
-    if (!order) return res.status(400).json('identification does not exist');
-
-    // await order.populate('items.product').execPopulate();
-
-    req.io.emit('updatedOrder', newOrder);
-    return res.json({
-      order: newOrder
-    });
-  }
 }
 
 

@@ -39,7 +39,6 @@ import { paramIdCategory, category } from '../validations/categorySchema';
 import {
   order,
   orderUpdate,
-  orderFees,
   paramIdentPayment,
   paramIdentification,
   orderDelete,
@@ -95,7 +94,6 @@ const orderRoutes = new OrderRoutes(routes);
 orderRoutes.getRoutes({
   order,
   orderUpdate,
-  orderFees,
   paramIdentPayment,
   paramIdentification,
   orderDelete,

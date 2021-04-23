@@ -32,12 +32,6 @@ const OrderSchema = new mongoose_1.Schema({
         type: Number,
         required: true,
     },
-    cardfee: {
-        type: Number,
-    },
-    tip: {
-        type: Number,
-    },
     note: {
         type: String,
     },
