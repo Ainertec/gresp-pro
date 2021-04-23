@@ -18,10 +18,6 @@ class OrderRoutes {
             body: validations.orderUpdate,
             params: validations.paramIdentification,
         }), OrderController_1.default.update);
-        this.routes.put('/ordersfees/:identification', celebrate_1.celebrate({
-            body: validations.orderFees,
-            params: validations.paramIdentification,
-        }), OrderController_1.default.addFees);
         this.routes.delete('/orders/:identification/:payment', celebrate_1.celebrate({ params: validations.paramIdentPayment }), OrderController_1.default.delete);
         this.routes.delete('/orderone/:id', celebrate_1.celebrate({ params: validations.orderDelete }), OrderController_1.default.deleteOne);
     }

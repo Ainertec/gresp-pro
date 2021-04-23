@@ -29,7 +29,7 @@ async function telaPedidosCozinha() {
                                 <h5 class="mb-1 text-danger"><span class="fas fa-concierge-bell"></span> Pedido nº: ${item.identification}<h5>
                                 <small>Data/Hora: ${(item.updatedAt).split('.')[0]}</small>
                             </div>
-                            <small title="${item.note}">Descrição: ${corrigirTamanhoString(60, item.note)}</small>
+                            <small title="${item.note? item.note:''}">Descrição: ${item.note? corrigirTamanhoString(60, item.note):''}</small>
                         </a>`
         } else {
             codigoHTML += `<a onclick="confirmarAcao('Colocar pedido como disponível para entrega!', 'entregarPedido(${item.identification})', null);" href="#" class="list-group-item list-group-item-action disabled">
@@ -37,7 +37,7 @@ async function telaPedidosCozinha() {
                                 <h5 class="mb-1">Pedido nº: ${item.identification}<h5>
                                 <small>Data/Hora: ${(item.updatedAt).split('.')[0]}</small>
                             </div>
-                            <small title="${item.note}">Descrição: ${corrigirTamanhoString(60, item.note)}</small>
+                            <small title="${item.note? item.note:''}">Descrição: ${item.note? corrigirTamanhoString(60, item.note):''}</small>
                         </a>`
         }
     }
