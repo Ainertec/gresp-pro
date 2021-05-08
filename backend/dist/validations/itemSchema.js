@@ -19,6 +19,7 @@ exports.item = celebrate_1.Joi.object().keys({
     stock: celebrate_1.Joi.number(),
     drink: celebrate_1.Joi.boolean(),
     available: celebrate_1.Joi.boolean(),
+    print: celebrate_1.Joi.boolean(),
     categoryId: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id'),
 });
 exports.paramIdItem = {

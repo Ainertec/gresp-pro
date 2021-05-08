@@ -7,7 +7,7 @@ import { format, startOfDay, endOfDay } from 'date-fns';
 import JsRtf from 'jsrtf';
 import Order from '../models/Order';
 import { ItemsInterface, ItemInterface } from '../interfaces/base';
-import { printFile } from '../utils/print';
+import { printFile,printFileProof } from '../utils/print';
 import { SoldsProductsTotalUseCase } from '../UseCases/Report/SoldsProductsTotalUseCase';
 import { OrdersProfitUseCase } from '../UseCases/Report/OrderProfitUseCase';
 
@@ -100,7 +100,11 @@ class PrinterController {
       borderTop: { size: 2, spacing: 100, color: JsRtf.Colors.GREEN },
     });
 
-    if (order.items) {
+    const notItem = order.items.find(element => {
+      return !element.product.drink && element.product.print
+    });
+
+    if (order.items && (notItem || Boolean(process.env.PRINTDRINK == 'true'))) {
       const items = type
         ? this.toPrinterNew(order.items)
         : this.toPrinterUpdated(order.items, oldItems);
@@ -111,23 +115,31 @@ class PrinterController {
       type
         ? myDoc.writeText(`Tipo: Novo`, header)
         : myDoc.writeText(`Tipo: Atualizado`, header);
+
+      if( process.env.PRINTDRINK ){
+        myDoc.writeText('=========== Bebidas ==========', contentBorder);
+        items.drinks.map(item => {
+          if(item.product.print){
+            myDoc.writeText(
+              `* ${item.product.name} ${item.courtesy ? '/ Cortesia' : ''}`,
+              contentStyle,
+            );
+            myDoc.writeText(`- Quantidade: ${item.quantity}`, contentStyle);
+            // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
+          }
+        }); 
+      }
+
       myDoc.writeText('=========== Produtos ==========', contentBorder);
       items.products.map(item => {
-        myDoc.writeText(
-          `* ${item.product.name} ${item.courtesy ? '/ Cortesia' : ''}`,
-          contentStyle,
-        );
-        myDoc.writeText(`- Quantidade: ${item.quantity}`, contentStyle);
-        // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
-      });
-      myDoc.writeText('=========== Bebidas ===========', contentBorder);
-      items.drinks.map(item => {
-        myDoc.writeText(
-          `* ${item.product.name} ${item.courtesy ? '/ Cortesia' : ''}`,
-          contentStyle,
-        );
-        myDoc.writeText(`- Quantidade: ${item.quantity}`, contentStyle);
-        // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
+        if(item.product.print){
+          myDoc.writeText(
+            `* ${item.product.name} ${item.courtesy ? '/ Cortesia' : ''}`,
+            contentStyle,
+          );
+          myDoc.writeText(`- Quantidade: ${item.quantity}`, contentStyle);
+          // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
+        }
       });
       myDoc.writeText('========== Observação =========', contentStyle);
       myDoc.writeText(
@@ -149,7 +161,7 @@ class PrinterController {
   }
 
   async createComprovant(req: Request, res: Response) {
-    const { identification } = req.body;
+    const { identification, payment } = req.body;
     const order = await Order.findOne({ closed: false, identification });
 
     if (!order) return res.status(400).json('orders does not exist!');
@@ -190,27 +202,17 @@ class PrinterController {
     });
 
     if (order.items) {
-      const items = this.toPrinterNew(order.items)
 
       myDoc.writeText('', contentBorder);
       myDoc.writeText('>>>>>>>>> Comprovante <<<<<<<<<<', header);
-      myDoc.writeText(`Número: ${order.identification}`, header);
+      myDoc.writeText(`Identificador: ${order.identification}`, header);
       myDoc.writeText('=========== Produtos ==========', contentBorder);
-      items.products.map(item => {
+      order.items.map(item => {
         myDoc.writeText(
           `* ${item.product.name} ${item.courtesy ? '/ Cortesia' : ''}`,
           contentStyle,
         );
-        myDoc.writeText(`- Quantidade: ${item.quantity} --- Valor:R$${item.product.price}`, contentStyle);
-        // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
-      });
-      myDoc.writeText('=========== Bebidas ===========', contentBorder);
-      items.drinks.map(item => {
-        myDoc.writeText(
-          `* ${item.product.name} ${item.courtesy ? '/ Cortesia' : ''}`,
-          contentStyle,
-        );
-        myDoc.writeText(`- Quantidade: ${item.quantity} --- Valor:R$${item.product.price}`, contentStyle);
+        myDoc.writeText(`- Quantidade: ${item.quantity} --- Valor:R$ ${(item.product.price).toFixed(2)}`, contentStyle);
         // item.courtesy && myDoc.writeText(`Cortesia`, contentStyle);
       });
       myDoc.writeText('========== Observação =========', contentStyle);
@@ -218,24 +220,56 @@ class PrinterController {
         `\n- ${order.note ? order.note : 'Nenhuma.'}\n`,
         contentStyle,
       );
-      myDoc.writeText('========== Resumo =========', contentStyle);
+      myDoc.writeText('=========== Resumo ===========', contentStyle);
       myDoc.writeText(
-        `\n- Valor do pedido: R$${order.total}\n`,
+        `\n- Valor do pedido: R$${(order.total).toFixed(2)}\n`,
         contentStyle,
       );
-      myDoc.writeText(
-        `\n- Taxa Cartão: R$${order.total}\n`,
-        contentStyle,
-      );
-      myDoc.writeText(
-        `\n- Taxa de serviço/gorjeta: R$${order.total}\n`,
-        contentStyle,
-      );
-      myDoc.writeText(`- ${date}`, contentStyle);
+      if(payment == 'dinheiro'){
+        myDoc.writeText(
+          `- Taxa de serviço/gorjeta: R$${order.tip? (order.tip).toFixed(2):'0.00'}\n`,
+          contentStyle,
+        );
+        myDoc.writeText('- - - - - - - - - - - - - - - - - - - - - - - - -', contentStyle);
+        myDoc.writeText(
+          `\n- Total no dinheiro: R$${(order.total + order.tip).toFixed(2)}\n`,
+          contentStyle,
+        );
+      }else if(payment == 'debito'){
+        myDoc.writeText(
+          `- Taxa de serviço/gorjeta: R$${order.tip? (order.tip + (order.carddebitfee * parseFloat(process.env.TIPFEE)/100)).toFixed(2):'0.00'}\n`,
+          contentStyle,
+        );
+        myDoc.writeText(
+          `- Taxa de Cartão: R$${order.carddebitfee? (order.carddebitfee).toFixed(2):'0.00'}\n`,
+          contentStyle,
+        );
+        myDoc.writeText('- - - - - - - - - - - - - - - - - - - - - - - - -', contentStyle);
+        myDoc.writeText(
+          `\n- Total no débito: R$${(order.total + order.carddebitfee + order.tip + (order.carddebitfee * parseFloat(process.env.TIPFEE)/100) ).toFixed(2)}\n`,
+          contentStyle,
+        );
+      }else{
+        myDoc.writeText(
+          `- Taxa de serviço/gorjeta: R$${order.tip? (order.tip + (order.cardcreditfee * parseFloat(process.env.TIPFEE)/100)).toFixed(2):'0.00'}\n`,
+          contentStyle,
+        );
+        myDoc.writeText(
+          `- Taxa de Cartão: R$${order.cardcreditfee? (order.cardcreditfee).toFixed(2):'0.00'}\n`,
+          contentStyle,
+        );
+        myDoc.writeText('- - - - - - - - - - - - - - - - - - - - - - - - -', contentStyle);
+        myDoc.writeText(
+          `\n- Total no crédito: R$${(order.total + order.cardcreditfee + order.tip + (order.cardcreditfee * parseFloat(process.env.TIPFEE)/100)).toFixed(2) }\n`,
+          contentStyle,
+        );
+      }
+
+      myDoc.writeText(`- Data/hora ${date}`, contentStyle);
 
       const content = myDoc.createDocument();
       try {
-        printFile(content, String(identification));
+        printFileProof(content, String(identification));
         return res.status(200).send();
       } catch (error) {
         return res.status(400).json(error.message);
@@ -289,7 +323,7 @@ class PrinterController {
     myDoc.writeText(`Relatório referente ao dia:${date} `, header);
     const content = myDoc.createDocument();
     try {
-      printFile(content, 'productsReport');
+      printFileProof(content, 'productsReport');
       return res.status(200).send();
     } catch (error) {
       return res.status(400).json(error.message);
@@ -342,7 +376,7 @@ class PrinterController {
 
     const content = myDoc.createDocument();
     try {
-      printFile(content, 'ordersReport');
+      printFileProof(content, 'ordersReport');
       return res.status(200).send();
     } catch (error) {
       return res.status(400).json(error.message);

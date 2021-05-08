@@ -17,7 +17,7 @@ export class PrinterRoutes {
       '/printer/comprovant',
       celebrate({ body: validations.printerComprovant }),
       PrinterController.createComprovant,
-    )
+    );
     this.routes.get('/printer/products', PrinterController.show);
     this.routes.get('/printer/orders', PrinterController.index);
   }

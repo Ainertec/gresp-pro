@@ -15,6 +15,7 @@ export const item = Joi.object().keys({
   stock: Joi.number(),
   drink: Joi.boolean(),
   available: Joi.boolean(),
+  print: Joi.boolean(),
   categoryId: Joi.custom(validObjectId, 'valid id'),
 });
 

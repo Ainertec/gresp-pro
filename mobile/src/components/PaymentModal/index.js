@@ -24,7 +24,9 @@ const { height } = Dimensions.get('window');
 const PaymentModal = ({ showPay, setShowPay, order, goBack }) => {
   const [checked, setChecked] = useState(true);
   const [checked2, setChecked2] = useState(false);
-  const [paymentKind, setPaymentKind] = useState('Dinheiro');
+  const [checked3, setChecked3] = useState(false);
+  const [paymentKind, setPaymentKind] = useState('dinheiro');
+  const [paymentTotal,setPaymentTotal] = useState(0)
   const { setOrder } = useOrder();
   const paymentFailRef = useRef(null);
   const successRef = useRef(null);
@@ -35,11 +37,21 @@ const PaymentModal = ({ showPay, setShowPay, order, goBack }) => {
     if (number === 1) {
       setChecked2(false);
       setChecked(true);
-      setPaymentKind('Dinheiro');
-    } else {
+      setChecked3(false);
+      setPaymentKind('dinheiro');
+      setPaymentTotal(order.total == undefined ? 0 : (order.total + (order.tip? order.tip:0)) )
+    } else if(number === 2){
       setChecked(false);
       setChecked2(true);
-      setPaymentKind('Cartão');
+      setChecked3(false);
+      setPaymentKind('credito');
+      setPaymentTotal(order.total == undefined ? 0 : (order.total + ((json.data.cardcreditfee * ((json.data.tip * 100)/json.data.total))/100 +  json.data.tip ) + (order.customerfee? order.cardcreditfee:0)) )
+    }else{
+      setChecked(false);
+      setChecked2(false);
+      setChecked3(true);
+      setPaymentKind('debito');
+      setPaymentTotal(order.total == undefined ? 0 : (order.total + ((json.data.carddebitfee * ((json.data.tip * 100)/json.data.total))/100 +  json.data.tip ) + (order.customerfee? order.carddebitfee:0)) )
     }
   }
 
@@ -88,13 +100,21 @@ const PaymentModal = ({ showPay, setShowPay, order, goBack }) => {
           checkedIcon="dot-circle-o"
           uncheckedIcon="circle-o"
           checkedColor="#000"
-          title="Cartão"
+          title="Crédito"
           checked={checked2}
           onPress={() => selected(2)}
         ></Check>
+        <Check
+          checkedIcon="dot-circle-o"
+          uncheckedIcon="circle-o"
+          checkedColor="#000"
+          title="Débito"
+          checked={checked2}
+          onPress={() => selected(3)}
+        ></Check>
 
         <TotalPayment>
-          Total: R$ {order.total == undefined ? '0.00' : (order.total).toFixed(2)}
+          Total: R$ {(paymentTotal).toFixed(2)}
         </TotalPayment>
         <TouchableOpacity onPress={payment}>
           <Button

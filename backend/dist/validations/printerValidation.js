@@ -9,5 +9,6 @@ exports.printer = celebrate_1.Joi.object().keys({
 });
 exports.printerComprovant = celebrate_1.Joi.object().keys({
     identification: celebrate_1.Joi.number().required(),
+    payment: celebrate_1.Joi.string().required(),
 });
 //# sourceMappingURL=printerValidation.js.map

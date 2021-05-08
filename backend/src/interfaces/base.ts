@@ -5,6 +5,7 @@ export interface ItemInterface extends Document {
   cost: number;
   ingredients?: Ingredients[];
   name: string;
+  print?:boolean;
   price: number;
   description?: string;
   stock?: number;
@@ -32,6 +33,10 @@ export interface OrderInterface extends Document {
   identification: number;
   total: number;
   note?: string;
+  carddebitfee?: number;
+  cardcreditfee?: number;
+  tip?: number;
+  customerfee?: boolean;
   closed?: boolean;
   finished?: boolean;
   payment?: string;
@@ -62,4 +67,17 @@ export interface ICategory extends Document {
   name: string;
   color: string;
   products: ItemInterface[];
+}
+
+export interface CashRegisterInterface extends Document {
+  thing: number;
+  exits: Array<{
+    login: string,
+    description: string,
+    value: string;
+  }>;
+  debit: number;
+  credit: number;
+  cash: number;
+  closure: number;
 }

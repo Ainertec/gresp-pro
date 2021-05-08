@@ -32,8 +32,21 @@ const OrderSchema = new mongoose_1.Schema({
         type: Number,
         required: true,
     },
+    carddebitfee: {
+        type: Number,
+    },
+    cardcreditfee: {
+        type: Number,
+    },
+    tip: {
+        type: Number,
+    },
     note: {
         type: String,
+    },
+    customerfee: {
+        type: Boolean,
+        default: false,
     },
     closed: {
         type: Boolean,

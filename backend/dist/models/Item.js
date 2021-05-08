@@ -39,6 +39,10 @@ const ItemSchema = new mongoose_1.Schema({
         type: Boolean,
         default: true,
     },
+    print: {
+        type: Boolean,
+        default: true,
+    },
     cost: {
         type: Number,
         required: true,

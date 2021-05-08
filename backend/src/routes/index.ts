@@ -6,6 +6,7 @@ import { UserRoutes } from './User.routes';
 import { ItemRoutes } from './Item.routes';
 import { IngredientsRoutes } from './Ingredients.routes';
 import { CategoryRoutes } from './Category.routes';
+import { CashRegisterRoutes } from './CashRegister.routes';
 import { OrderRoutes } from './Order.routes';
 import { ReportRoutes } from './Report.routes';
 import { KitchenRoutes } from './Kitchen.routes';
@@ -36,6 +37,7 @@ import {
   ingredient,
 } from '../validations/ingredientSchema';
 import { paramIdCategory, category } from '../validations/categorySchema';
+import { paramIdCashRegister, cashRegister } from '../validations/cashRegisterSchema';
 import {
   order,
   orderUpdate,
@@ -89,6 +91,13 @@ categoriesRoutes.getRoutes({
   category,
 });
 
+// Cash Register
+const cashRegisterRoutes = new CashRegisterRoutes(routes);
+cashRegisterRoutes.getRoutes({
+  paramIdCashRegister,
+  cashRegister
+});
+
 // Order
 const orderRoutes = new OrderRoutes(routes);
 orderRoutes.getRoutes({
@@ -108,7 +117,8 @@ kitchenRoutes.getRoutes({
 // Printer
 const printerRoutes = new PrinterRoutes(routes);
 printerRoutes.getRoutes({
-  printer, printerComprovant,
+  printer,
+  printerComprovant,
 });
 
 // Authorization

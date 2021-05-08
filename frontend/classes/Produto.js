@@ -77,6 +77,7 @@ async function buscarProdutos(tipoBusca) {
                     <th scope="col">Editar</th>
                     <th scope="col">Excluir</th>
                     <th scope="col">Disponível</th>
+                    <th scope="col"><span class="fas fa-print"></span></th>
                 </tr>
             </thead>
             <tbody>`
@@ -85,7 +86,7 @@ async function buscarProdutos(tipoBusca) {
 
         if (itemCategory.itens[0] != null) {
             codigoHTML += `<tr class="bg-warning">
-            <th colspan="7" class="text-center"> ${itemCategory.name}</th>
+            <th colspan="8" class="text-center"> ${itemCategory.name}</th>
         </tr>`
         }
 
@@ -99,16 +100,18 @@ async function buscarProdutos(tipoBusca) {
                             <td class="table-light"><button class="btn btn-primary btn-sm" onclick="carregarDadosProduto('${item._id}');"><span class="fas fa-pencil-alt iconsTam"></span> Editar</button></td>
                             <td class="table-light"><button class="btn btn-outline-danger btn-sm" onclick="confirmarAcao('Excluir os dados do produto permanentemente!', 'deletarProduto(this.value)', '${item._id}');" ><span class="fas fa-trash-alt iconsTam"></span> Excluir</button></td>
                             <td class="table-light">
-                                <div class="custom-control custom-switch">`
-            if (item.available) {
-                codigoHTML += `<input type="checkbox" onclick="this.checked? disponibilizarIndisponibilizarProduto('${item._id}',true) : disponibilizarIndisponibilizarProduto('${item._id}',false) " class="custom-control-input custom-switch" id="botaoselectdisponivel${item._id}" checked=true>`
-            } else {
-                codigoHTML += `<input type="checkbox" onclick="this.checked? disponibilizarIndisponibilizarProduto('${item._id}',true) : disponibilizarIndisponibilizarProduto('${item._id}',false) " class="custom-control-input custom-switch" id="botaoselectdisponivel${item._id}">`
-            }
-            codigoHTML += `<label class="custom-control-label" for="botaoselectdisponivel${item._id}">Disponível</label>
-                        </div>
-                    </td>
-                </tr>`
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" onclick="this.checked? disponibilizarIndisponibilizarProduto('${item._id}',true) : disponibilizarIndisponibilizarProduto('${item._id}',false) " class="custom-control-input custom-switch" id="botaoselectdisponivel${item._id}" ${Boolean(item.available)? "checked":''}>
+                                    <label class="custom-control-label" for="botaoselectdisponivel${item._id}"><span class="fas fa-eye"></span></label>
+                                </div>
+                            </td>
+                            <td class="table-light">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" onclick="this.checked? disponibilizarIndisponibilizarProdutoPrint('${item._id}',true) : disponibilizarIndisponibilizarProdutoPrint('${item._id}',false) " class="custom-control-input custom-switch" id="botaoselectdisponivelprint${item._id}" ${Boolean(item.print)? "checked":''}>
+                                    <label class="custom-control-label" for="botaoselectdisponivelprint${item._id}"><span class="fas fa-print"></span></label>
+                                </div>
+                            </td>
+                        </tr>`
         }
     }
     codigoHTML += `</tbody>
@@ -474,6 +477,36 @@ async function disponibilizarIndisponibilizarProduto(id, disponivel) {
     dado.available = disponivel
 
     await aguardeCarregamento(true)
+    await requisicaoPUT(`items/${id}`, dado, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+    await aguardeCarregamento(false)
+
+    if (validaDadosCampo(['#nome'])) {
+        await buscarProdutos('nome')
+    } else {
+        await buscarProdutos('todos')
+    }
+}
+
+//funcao responsavel por disponibilizar ou não para impressão
+async function disponibilizarIndisponibilizarProdutoPrint(id, print) {
+    const dado = VETORDEPRODUTOSCLASSEPRODUTO.find((element) => element._id == id);
+
+    delete dado._id
+    delete dado.createdAt
+    delete dado.updatedAt
+    delete dado.__v
+
+    if (dado.ingredients != null) {
+        delete dado.cost
+        delete dado.stock
+    } else {
+        delete dado.ingredients
+    }
+
+    dado.print = print
+
+    await aguardeCarregamento(true)
+    console.log(dado)
     await requisicaoPUT(`items/${id}`, dado, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false)
 

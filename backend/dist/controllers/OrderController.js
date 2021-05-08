@@ -40,6 +40,10 @@ class OrderController {
             identification,
             items,
             total: Number(finalPrice.toFixed(2)),
+            carddebitfee: Number(((finalPrice * parseFloat(process.env.CARDDEBITFEE)) / 100).toFixed(2)),
+            cardcreditfee: Number(((finalPrice * parseFloat(process.env.CARDCREDITFEE)) / 100).toFixed(2)),
+            customerfee: Boolean(process.env.COSTUMERFEE == 'true'),
+            tip: Number(((finalPrice * parseFloat(process.env.TIPFEE)) / 100).toFixed(2)),
             note,
             finished: false,
         });
@@ -61,6 +65,10 @@ class OrderController {
             identification,
             items,
             total: Number(finalPrice.toFixed(2)),
+            carddebitfee: Number(((finalPrice * parseFloat(process.env.CARDDEBITFEE)) / 100).toFixed(2)),
+            cardcreditfee: Number(((finalPrice * parseFloat(process.env.CARDCREDITFEE)) / 100).toFixed(2)),
+            customerfee: Boolean(process.env.COSTUMERFEE == 'true'),
+            tip: Number(((finalPrice * parseFloat(process.env.TIPFEE)) / 100).toFixed(2)),
             note,
         }, {
             new: false,
@@ -84,7 +92,28 @@ class OrderController {
     async delete(req, res) {
         const identification = Number(req.params.identification);
         const { payment } = req.params;
-        const order = await Order_1.default.findOneAndUpdate({ identification, closed: false }, { closed: true, payment }, { new: true });
+        const orderFee = await Order_1.default.findOne({
+            identification,
+            closed: false,
+        });
+        let newCardDebitFee = 0;
+        let newCardCreditFee = 0;
+        let newTipFee = orderFee.tip;
+        if (payment == "debito") {
+            newCardDebitFee = orderFee.carddebitfee;
+            newTipFee = Number(((orderFee.total + (orderFee.total * parseFloat(process.env.CARDDEBITFEE)) / 100) * parseFloat(process.env.TIPFEE)) / 100);
+        }
+        else if (payment == "credito") {
+            newCardCreditFee = orderFee.cardcreditfee;
+            newTipFee = Number(((orderFee.total + (orderFee.total * parseFloat(process.env.CARDCREDITFEE)) / 100) * parseFloat(process.env.TIPFEE)) / 100);
+        }
+        const order = await Order_1.default.findOneAndUpdate({ identification, closed: false }, {
+            closed: true,
+            payment,
+            cardcreditfee: newCardCreditFee,
+            carddebitfee: newCardDebitFee,
+            tip: newTipFee,
+        }, { new: true });
         req.io.emit('payment', order);
         return res.json('Order was closed with success!');
     }

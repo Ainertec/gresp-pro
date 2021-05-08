@@ -61,6 +61,7 @@ class ItemController {
       name,
       price,
       description,
+      print,
       stock,
       drink,
       ingredients,
@@ -91,6 +92,7 @@ class ItemController {
       cost: Number(itemCost.toFixed(5)),
       ingredients: ingredients || null,
       available,
+      print
     });
 
     if (categoryId) {
@@ -114,6 +116,7 @@ class ItemController {
       ingredients,
       categoryId,
       available,
+      print
     } = req.body;
     const { id } = req.params;
 
@@ -139,6 +142,7 @@ class ItemController {
         stock: ingredients ? undefined : stock,
         cost: Number(itemCost.toFixed(5)),
         drink: !!drink,
+        print
       },
       {
         new: true,

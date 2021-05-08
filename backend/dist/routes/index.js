@@ -10,6 +10,7 @@ const User_routes_1 = require("./User.routes");
 const Item_routes_1 = require("./Item.routes");
 const Ingredients_routes_1 = require("./Ingredients.routes");
 const Category_routes_1 = require("./Category.routes");
+const CashRegister_routes_1 = require("./CashRegister.routes");
 const Order_routes_1 = require("./Order.routes");
 const Report_routes_1 = require("./Report.routes");
 const Kitchen_routes_1 = require("./Kitchen.routes");
@@ -24,6 +25,7 @@ const userSchema_1 = require("../validations/userSchema");
 const itemSchema_1 = require("../validations/itemSchema");
 const ingredientSchema_1 = require("../validations/ingredientSchema");
 const categorySchema_1 = require("../validations/categorySchema");
+const cashRegisterSchema_1 = require("../validations/cashRegisterSchema");
 const orderSchema_1 = require("../validations/orderSchema");
 const reportSchema_1 = require("../validations/reportSchema");
 const kitchenSchema_1 = __importDefault(require("../validations/kitchenSchema"));
@@ -57,6 +59,12 @@ categoriesRoutes.getRoutes({
     paramIdCategory: categorySchema_1.paramIdCategory,
     category: categorySchema_1.category,
 });
+// Cash Register
+const cashRegisterRoutes = new CashRegister_routes_1.CashRegisterRoutes(routes);
+cashRegisterRoutes.getRoutes({
+    paramIdCashRegister: cashRegisterSchema_1.paramIdCashRegister,
+    cashRegister: cashRegisterSchema_1.cashRegister
+});
 // Order
 const orderRoutes = new Order_routes_1.OrderRoutes(routes);
 orderRoutes.getRoutes({
@@ -74,7 +82,8 @@ kitchenRoutes.getRoutes({
 // Printer
 const printerRoutes = new Printer_routes_1.PrinterRoutes(routes);
 printerRoutes.getRoutes({
-    printer: printerValidation_1.printer, printerComprovant: printerValidation_1.printerComprovant,
+    printer: printerValidation_1.printer,
+    printerComprovant: printerValidation_1.printerComprovant,
 });
 // Authorization
 routes.use(Authorization_1.default);

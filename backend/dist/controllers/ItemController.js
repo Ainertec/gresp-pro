@@ -46,7 +46,7 @@ class ItemController {
         return res.json(items);
     }
     async create(req, res) {
-        const { name, price, description, stock, drink, ingredients, cost, categoryId, available, } = req.body;
+        const { name, price, description, print, stock, drink, ingredients, cost, categoryId, available, } = req.body;
         if (!ingredients && !cost) {
             return res
                 .status(400)
@@ -67,6 +67,7 @@ class ItemController {
             cost: Number(itemCost.toFixed(5)),
             ingredients: ingredients || null,
             available,
+            print
         });
         if (categoryId) {
             await Category_1.default.findOneAndUpdate({ _id: categoryId }, { $addToSet: { products: item._id } });
@@ -75,7 +76,7 @@ class ItemController {
         return res.json(item);
     }
     async update(req, res) {
-        const { name, price, description, stock, drink, cost, ingredients, categoryId, available, } = req.body;
+        const { name, price, description, stock, drink, cost, ingredients, categoryId, available, print } = req.body;
         const { id } = req.params;
         if (!ingredients && !cost) {
             return res
@@ -95,6 +96,7 @@ class ItemController {
             stock: ingredients ? undefined : stock,
             cost: Number(itemCost.toFixed(5)),
             drink: !!drink,
+            print
         }, {
             new: true,
         });
