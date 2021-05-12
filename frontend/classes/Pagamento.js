@@ -238,8 +238,8 @@ async function buscarDadosDoPedidoParaPagamento(identificacao) {
                                 <option value="credito">Crédito</option>
                             </select>
                             <div class="input-group-append">
-                                <button onclick="confirmarAcao('Efetuar o pagamento deste pedido!','efetuarPagamento(this.value)',${identificacao});" type="button" class="btn btn-primary">
-                                    <span class="fas fa-hand-holding-usd"></span> Efetuar Pagamento
+                                <button onclick="confirmarAcao('Colocar este pedido como pago!','efetuarPagamento(this.value)',${identificacao});" type="button" class="btn btn-success">
+                                    <span class="fas fa-hand-holding-usd"></span> Pago
                                 </button>
                             </div>
                         </div>
