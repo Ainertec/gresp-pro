@@ -268,6 +268,7 @@ async function parteEstoqueTelaDeProduto(tipo) {
                 </div>
             </div>`
     } else {
+        VETORDEINGREDIENTESCLASSEPRODUTO = [];
         codigoHTML += `<div class="col-6">
             <label>Quantidade: </label>
             <div class="input-group">
@@ -446,8 +447,6 @@ async function atualizaProduto(id) {
             } else {
                 buscarProdutos('todos');
             }
-
-        } else {
 
         }
     } catch (error) {
