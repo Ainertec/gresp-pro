@@ -43,23 +43,16 @@ class OrdersProfitUseCase {
                     return sum2 + item.quantity * item.product.cost;
                 }, 0));
         }, 0);
-<<<<<<< Updated upstream
-        const filteredTotal = totalOrders - totalProducts;
-=======
         const filteredTotal = totalOrders - (totalProducts + totalCardCreditFee + totalCardDebitFee + totalTip);
->>>>>>> Stashed changes
         return {
             orders: ordersProfit,
             total: totalOrders.toFixed(2),
             netValue: filteredTotal.toFixed(2),
             totalCourtesy: totalCourtesy.toFixed(2),
             totalCost: totalCost.toFixed(2),
-<<<<<<< Updated upstream
-=======
             totalCardCreditFee: totalCardCreditFee.toFixed(2),
             totalCardDebitFee: totalCardDebitFee.toFixed(2),
             totalTip: totalTip.toFixed(2),
->>>>>>> Stashed changes
         };
     }
 }
