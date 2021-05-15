@@ -109,7 +109,7 @@ const PaymentModal = ({ showPay, setShowPay, order, goBack }) => {
           uncheckedIcon="circle-o"
           checkedColor="#000"
           title="Débito"
-          checked={checked2}
+          checked={checked3}
           onPress={() => selected(3)}
         ></Check>
 
