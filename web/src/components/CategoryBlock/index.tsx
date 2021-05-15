@@ -46,7 +46,7 @@ const CategoryBlock: React.FC<Props> = ({ categoryInformation }) => {
                 <ItemTitle>{product.name}</ItemTitle>
               </header>
 
-              <ItemPrice>{`R$ ${product.price.toFixed(2)}`}</ItemPrice>
+              <ItemPrice>{`R$${product.price.toFixed(2)}`}</ItemPrice>
             </HeaderContent>
             <Description>{product.description}</Description>
           </ItemInformation>
