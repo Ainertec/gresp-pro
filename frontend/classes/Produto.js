@@ -161,7 +161,7 @@ async function telaProduto(tipoRequisicao, id) {
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">R$</span>
                                 </div>
-                                <input id="precovendaproduto" type="Number" class="form-control mousetrap" placeholder="Preço de venda">
+                                <input id="precovendaproduto" type="text" class="form-control mousetrap" placeholder="Preço de venda" onkeypress="return permiteApenasNumeros();" onkeyup="this.value = mascara(this.value);">
                             </div>
                         </div>
                     </div>
@@ -286,7 +286,7 @@ async function parteEstoqueTelaDeProduto(tipo) {
                 <div class="input-group-prepend">
                     <span class="input-group-text">R$</span>
                 </div>
-                <input id="precocustoproduto" type="Number" class="form-control mousetrap" placeholder="Preço de custo">
+                <input id="precocustoproduto" type="text" class="form-control mousetrap" placeholder="Preço de custo" onkeypress="return permiteApenasNumeros();" onkeyup="this.value = mascara(this.value);">
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">%</button>
                     <div class="dropdown-menu">

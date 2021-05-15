@@ -30,7 +30,7 @@ function modalAbrireFecharCaixa(){
                     <h5>Troco em caixa:</h5>`
                 if(!localStorage.getItem('@caixagresppro')){
                     codigoHTML+=`<div class="shadow p-3 mb-3 bg-white rounded">
-                        <input id="troco" type="Number" class="form-control form-control-sm mx-auto mousetrap" style="margin:20px;" placeholder="Troco em caixa">
+                        <input id="troco" type="text" class="form-control form-control-sm mx-auto mousetrap" style="margin:20px;" placeholder="Troco em caixa" onkeypress="return permiteApenasNumeros();" onkeyup="this.value = mascara(this.value);">
                     </div>    
                     <div class="shadow p-3 mb-5 bg-white rounded">
                         <button onclick="if(validaValoresCampo(['#troco']) && validaDadosCampo(['#troco'])){ confirmarAcao('Abrir caixa!','cadastrarCaixa()','');}else{mensagemDeErro('Preencha o valor de troco!');}" type="button" class="btn btn-primary btn-block btn-sm" data-dismiss="modal">
@@ -39,7 +39,7 @@ function modalAbrireFecharCaixa(){
                     </div>`
                 }else{
                     codigoHTML+=`<div class="shadow p-3 mb-3 bg-white rounded">
-                        <input id="troco" type="Number" class="form-control form-control-sm mx-auto mousetrap" style="margin:20px;" placeholder="Valor em caixa">
+                        <input id="troco" type="text" class="form-control form-control-sm mx-auto mousetrap" style="margin:20px;" placeholder="Valor em caixa" onkeypress="return permiteApenasNumeros();" onkeyup="this.value = mascara(this.value);">
                     </div>    
                     <div class="shadow p-3 mb-5 bg-white rounded">
                         <button onclick="if(validaValoresCampo(['#troco']) && validaDadosCampo(['#troco'])){ confirmarAcao('Fechar caixa!','fechamentoCaixa()','');}else{mensagemDeErro('Preencha o valor de em caixa!');}" type="button" class="btn btn-danger btn-block btn-sm" data-dismiss="modal">
@@ -75,7 +75,7 @@ function modalSaidasCaixa(){
                 <div class="modal-body">
                     <div class="shadow p-3 mb-3 bg-white rounded">
                         <input id="descricao" type="text" class="form-control form-control-sm mx-auto mousetrap" style="margin:20px;" placeholder="Descrição">
-                        <input id="saida" type="Number" class="form-control form-control-sm mx-auto mousetrap" style="margin:20px;" placeholder="Valor: R$ 0.00">
+                        <input id="saida" type="text" class="form-control form-control-sm mx-auto mousetrap" style="margin:20px;" placeholder="Valor: R$ 0.00" onkeypress="return permiteApenasNumeros();" onkeyup="this.value = mascara(this.value);">
                     </div>    
                     <div class="shadow p-3 mb-5 bg-white rounded">
                         <button onclick="if(validaValoresCampo(['#saida']) && validaDadosCampo(['#descricao','#saida'])){ confirmarAcao('Adicionar saída de caixa!','adicionarSaidasCaixa()','');}else{mensagemDeErro('Preencha os campos descrição e valor!');}" type="button" class="btn btn-primary btn-block btn-sm" data-dismiss="modal">

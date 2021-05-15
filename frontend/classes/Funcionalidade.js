@@ -285,3 +285,40 @@ function aguardeCarregamento(tipo) {
         setTimeout(function () { document.getElementById('carregamento').innerHTML = ''; }, 300)
     }
 }
+
+//funcao responsavel por criar mascaras
+function mascara(dado) {    
+    let money = [];
+    dado = dado.replace('.', '');
+    dado = dado.replace(',', '');
+
+    if (dado > 99999) {
+        money.push(dado.substring(0, dado.length - 5));
+        money.push(dado.substring(dado.length - 5, dado.length - 2));
+        money.push(dado.substring(dado.length - 2, dado.length));
+
+        return `${money[0]}${money[1]}.${money[2]}`
+    } else if (dado > 99 && dado < 100000) {
+        money.push(dado.substring(0, dado.length - 2));
+        money.push(dado.substring(dado.length - 2, dado.length));
+
+        return `${money[0]}.${money[1]}`
+    } else if (dado > 0) {
+
+        return `${dado}`
+    } else {
+        return ''
+    }
+}
+
+//funcao responsavel por permitir apenas teclas de numero
+function permiteApenasNumeros(evt) {
+    let theEvent = evt || window.event;
+    let key = theEvent.keyCode || theEvent.which;
+    key = String.fromCharCode(key);
+    let regex = /^[0-9.]+$/;
+    if (!regex.test(key)) {
+        theEvent.returnValue = false;
+        if (theEvent.preventDefault) theEvent.preventDefault();
+    }
+}

@@ -145,7 +145,7 @@ function telaIngrediente(tipoRequisicao, id) {
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">R$</span>
                                 </div>
-                                <input id="precocustoingrediente" type="Number" class="form-control mousetrap" placeholder="Preço de custo">
+                                <input id="precocustoingrediente" type="text" class="form-control mousetrap" placeholder="Preço de custo" onkeypress="return permiteApenasNumeros();" onkeyup="this.value = mascara(this.value);">
                             </div>
                         </div>
                     </div>
