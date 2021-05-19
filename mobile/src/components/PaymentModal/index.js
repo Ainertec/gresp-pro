@@ -45,13 +45,13 @@ const PaymentModal = ({ showPay, setShowPay, order, goBack }) => {
       setChecked2(true);
       setChecked3(false);
       setPaymentKind('credito');
-      setPaymentTotal(order.total == undefined ? 0 : (order.total + ((json.data.cardcreditfee * ((json.data.tip * 100)/json.data.total))/100 +  json.data.tip ) + (order.customerfee? order.cardcreditfee:0)) )
+      setPaymentTotal(order.total == undefined ? 0 : (order.total + ((order.cardcreditfee * ((order.tip * 100)/order.total))/100 + order.tip ) + (order.customerfee? order.cardcreditfee:0)) )
     }else{
       setChecked(false);
       setChecked2(false);
       setChecked3(true);
       setPaymentKind('debito');
-      setPaymentTotal(order.total == undefined ? 0 : (order.total + ((json.data.carddebitfee * ((json.data.tip * 100)/json.data.total))/100 +  json.data.tip ) + (order.customerfee? order.carddebitfee:0)) )
+      setPaymentTotal(order.total == undefined ? 0 : (order.total + ((order.carddebitfee * ((order.tip * 100)/order.total))/100 +  order.tip ) + (order.customerfee? order.carddebitfee:0)) )
     }
   }
 
@@ -121,11 +121,11 @@ const PaymentModal = ({ showPay, setShowPay, order, goBack }) => {
             style={{
               marginTop: 30,
               height: height * 0.06,
-              backgroundColor: '#e72847',
+              backgroundColor: '#008000',
             }}
             customSize={height * 0.06}
             iconName="dollar-sign"
-            title="Efetuar Pagamento"
+            title="Pago"
           />
         </TouchableOpacity>
         <Alert
