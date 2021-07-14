@@ -15,7 +15,7 @@ export class OrdersProfitUseCase {
     }).populate('items.product');
 
     const totalOrders = ordersProfit.reduce((sum, order) => {
-      return sum + (order.total + (order.tip? order.tip:0) + (Boolean(process.env.COSTUMERFEE == 'true')? order.cardcreditfee+order.carddebitfee:0));
+      return sum + (order.total + (order.tip? order.tip:0) + (Boolean(process.env.COSTUMERFEE == 'true') && (order.cardcreditfee || order.carddebitfee)? order.cardcreditfee+order.carddebitfee:0));
     }, 0);
     const totalCardCreditFee = ordersProfit.reduce((sum, order) => {
       return sum + (order.cardcreditfee? order.cardcreditfee:0);
