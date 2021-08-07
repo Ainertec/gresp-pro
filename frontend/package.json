@@ -4,7 +4,9 @@
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "npm-run-all --parallel electron json-server",
+    "electron": "electron .",
+    "json-server": "json-server --watch db/db.json --port 3334",
     "win64": "electron-packager . myApp --platform=win32 --arch=x64",
     "dist": "electron-builder"
   },
@@ -31,9 +33,11 @@
     "bootstrap": "^4.5.2",
     "date-fns": "^2.15.0",
     "highcharts": "^8.2.0",
+    "json-server": "^0.16.3",
     "jquery": "^3.5.1",
     "mousetrap": "^1.6.5",
     "popper.js": "^1.16.1",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "yarn-run-all": "^3.1.1"
   }
 }
