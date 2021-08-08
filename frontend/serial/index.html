@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Licence key</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <link rel="stylesheet" type="text/css" href="./style.css">
+    </head>
+    <body>
+        <div class="Body">
+            <div class="Container">
+                <div class="DivImage">
+                    <img class="Img" src="https://lh3.googleusercontent.com/VO5QdMm-xw25_MFXzveaIVY8iJdLnPMXQjATLLhuvQFtV7pBHs2JgH_RtIDeiiMSKdhYngRTlmYgP521y5GcdTpis353rIJdxWKeiegFsOpLSIUOgzzIrL_EYk_6Yw0pnjfukg9k=w555-h124-no" />
+                </div>
+                <h3 class="H3" id="msg" style="color: yellow;">Verificando sua Chave! Aguarde...</H3>
+                <div class="DivGroup" id="camposEntrada">
+                    <input placeholder="Chave de licença" class="Input" id="inputKey"/>
+                    <button class="Button" onclick="cadastrarChave();">Cadastrar</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="./action.js"></script>
+        <script>
+            async function cadastrarChave(){
+                const validation = guardarLicense(document.getElementById('inputKey').value);
+                document.getElementById('msg').innerHTML = validation.msg;
+                document.getElementById('msg').setAttribute('style',`color: ${validation.validation? 'green':'yellow'}`)
+                load();
+            }
+            async function load(){
+                const codeExisti = await verificarExitenciaChave()
+                document.getElementById('camposEntrada').setAttribute('style',`display:${codeExisti? 'none':'grid'}`)
+                const validation = await Init();
+                document.getElementById('msg').innerHTML = validation.msg;
+                document.getElementById('msg').setAttribute('style',`color: ${validation.validation? 'green':'yellow'}`)
+                if(validation.validation === 1){
+                    setTimeout(function () { window.location.href = "../home.html"; }, 3000);
+                }
+            }
+            window.load = load();
+        </script>
+    </body>
+</html>

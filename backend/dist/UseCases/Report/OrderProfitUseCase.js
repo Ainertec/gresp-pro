@@ -13,7 +13,16 @@ class OrdersProfitUseCase {
             closed: true,
         }).populate('items.product');
         const totalOrders = ordersProfit.reduce((sum, order) => {
-            return sum + (order.total);
+            return sum + (order.total + (order.tip ? order.tip : 0) + (Boolean(process.env.COSTUMERFEE == 'true') && (order.cardcreditfee || order.carddebitfee) ? order.cardcreditfee + order.carddebitfee : 0));
+        }, 0);
+        const totalCardCreditFee = ordersProfit.reduce((sum, order) => {
+            return sum + (order.cardcreditfee ? order.cardcreditfee : 0);
+        }, 0);
+        const totalCardDebitFee = ordersProfit.reduce((sum, order) => {
+            return sum + (order.carddebitfee ? order.carddebitfee : 0);
+        }, 0);
+        const totalTip = ordersProfit.reduce((sum, order) => {
+            return sum + (order.tip ? order.tip : 0);
         }, 0);
         const totalProducts = ordersProfit.reduce((sum, order) => {
             return (sum +
@@ -34,13 +43,16 @@ class OrdersProfitUseCase {
                     return sum2 + item.quantity * item.product.cost;
                 }, 0));
         }, 0);
-        const filteredTotal = totalOrders - totalProducts;
+        const filteredTotal = totalOrders - (totalProducts + totalCardCreditFee + totalCardDebitFee + totalTip);
         return {
             orders: ordersProfit,
             total: totalOrders.toFixed(2),
             netValue: filteredTotal.toFixed(2),
             totalCourtesy: totalCourtesy.toFixed(2),
             totalCost: totalCost.toFixed(2),
+            totalCardCreditFee: totalCardCreditFee.toFixed(2),
+            totalCardDebitFee: totalCardDebitFee.toFixed(2),
+            totalTip: totalTip.toFixed(2),
         };
     }
 }

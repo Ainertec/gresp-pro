@@ -54,14 +54,13 @@ export const ItemTitle = styled.h4`
   padding-left: 0.7rem;
   max-width: 90%;
   text-align: center;
-
-  color: #ffffff;
+  color: #ffbf00;
 `;
 export const ItemPrice = styled.h4`
   font-size: 1.9rem;
   line-height: 1.9rem;
   margin-left: 10vw;
-  color: #ffffff;
+  color: #cf0e0e;
 `;
 export const Description = styled.p`
   font-size: 1.4rem;

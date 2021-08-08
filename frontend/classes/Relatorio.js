@@ -270,7 +270,10 @@ async function tabelaDeRelatorioCaixa() {
                         <td scope="col"><small>Lista itens</small></td>
                         <td scope="col"><small>Forma pagamento</small></td>
                         <td scope="col"><small>Custo</small></td>
-                        <td scope="col"><small>Valor</small></td>
+                        <td scope="col"><small>Valor pedido</small></td>
+                        <td scope="col"><small>Taxa crédito/débito</small></td>
+                        <td scope="col"><small>Taxa gorjeta</small></td>
+                        <td scope="col"><small>Valor total</small></td>
                         <td scope="col"><small>Excluir</small></td>
                     </tr>
                 </thead>
@@ -288,6 +291,9 @@ async function tabelaDeRelatorioCaixa() {
                     <td scope="col"><small><strong>${item.order.payment}</strong></small></td>
                     <td scope="col" class="text-danger"><small><strong>R$${(item.costTotal).toFixed(2)}</strong></small></td>
                     <td scope="col" class="text-danger"><small><strong>R$${(item.order.total).toFixed(2)}</strong></small></td>
+                    <td scope="col" class="text-danger"><small><strong>R$${item.order.payment=='credito'? item.order.cardcreditfee? (item.order.cardcreditfee).toFixed(2):'0.00':item.order.carddebitfee? (item.order.carddebitfee).toFixed(2):'0.00'}</strong></small></td>
+                    <td scope="col" class="text-danger"><small><strong>R$${item.order.tip? (item.order.tip).toFixed(2):'0.00'}</strong></small></td>
+                    <td scope="col" class="text-danger"><small><strong>R$${((item.order.total + (item.order.tip? item.order.tip:0) + (item.order.payment=='credito'? item.order.cardcreditfee? item.order.cardcreditfee:0 : item.order.carddebitfee? item.order.carddebitfee:0) )).toFixed(2)}</strong></small></td>
                     <td scope="col">
                         <button class="btn btn-outline-danger btn-sm" onclick="confirmarAcao('Excluir relatório!', 'excluirUmRelatorio(this.value);', '${item.order._id}');" value=${item.identification}>
                             <span class="fas fa-trash-alt"></span>
@@ -336,6 +342,18 @@ async function tabelaGeralDeRelatorios() {
                     <tr class="table-light text-dark">
                         <td scope="col"><small><strong>Gastos com cortesia(Período)</strong></small></td>
                         <td scope="col" class="text-danger"><small><strong>R$${json.data.totalCourtesy}</strong></small></td>
+                    </tr>
+                    <tr class="table-light text-dark">
+                        <td scope="col"><small><strong>Taxas de crédito(Período)</strong></small></td>
+                        <td scope="col" class="text-danger"><small><strong>R$${json.data.totalCardCreditFee}</strong></small></td>
+                    </tr>
+                    <tr class="table-light text-dark">
+                        <td scope="col"><small><strong>Taxas de débito(Período)</strong></small></td>
+                        <td scope="col" class="text-danger"><small><strong>R$${json.data.totalCardDebitFee}</strong></small></td>
+                    </tr>
+                    <tr class="table-light text-dark">
+                        <td scope="col"><small><strong>Taxas de serviço/gorjeta(Período)</strong></small></td>
+                        <td scope="col" class="text-danger"><small><strong>R$${json.data.totalTip}</strong></small></td>
                     </tr>
                     <tr class="table-light text-dark">
                         <td scope="col"><small><strong>Custos com pedidos(Período)</strong></small></td>

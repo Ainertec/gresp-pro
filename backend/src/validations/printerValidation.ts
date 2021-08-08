@@ -8,4 +8,5 @@ export const printer = Joi.object().keys({
 
 export const printerComprovant = Joi.object().keys({
   identification: Joi.number().required(),
+  payment:Joi.string().required(),
 });

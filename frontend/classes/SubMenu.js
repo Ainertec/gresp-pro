@@ -56,7 +56,7 @@ function menuProdutoeBebida() {
 
 // --------------------------------------------- SUB MENU PEDIDO -----------------------------------------------------
 
-//funcao menu de opcaoes para pedido
+//funcao menu de opcoes para pedido
 function menuPedido() {
     let codigoHTML = ``;
 
@@ -71,6 +71,30 @@ function menuPedido() {
             </button>
             <button onclick="animacaoSlideUp(['#janela2']); setTimeout(function(){ligacaoPedidoFacede('lista');},300);" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
                 <span class="fas fa-list-alt"></span> Exibir Todos
+            </button>
+        </div>
+    </div>`
+
+    document.getElementById('janela2').innerHTML = codigoHTML;
+}
+
+// --------------------------------------------- SUB MENU CAIXA -----------------------------------------------------
+
+//funcao menu de opcoes para caixa
+function menuCaixa() {
+    let codigoHTML = ``;
+
+    codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded" style="margin-top:5vh">
+        <h3 class="text-center" style="margin-top:30px;"><span class="fas fa-cash-register"></span> Caixa</h3>
+        <div class="card-deck mx-auto" style="margin-top:80px;">
+            <button onclick="modalAbrireFecharCaixa();" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
+                <span class="fas fa-wallet"></span> Abrir/Fechar caixa
+            </button>
+            <button onclick="modalSaidasCaixa();" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
+                <span class="fab fa-creative-commons-nc"></span> Saídas de caixa
+            </button>
+            <button onclick="autorizacaoCaixa();" type="button" class="btn btn-light border border-dark btn-lg mx-auto" style="margin-top: 10px; height: 20vh; width: 20vw;">
+                <span class="fas fa-file-invoice-dollar"></span> Gerenciar caixa
             </button>
         </div>
     </div>`

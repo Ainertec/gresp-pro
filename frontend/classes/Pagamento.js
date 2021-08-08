@@ -178,19 +178,68 @@ async function buscarDadosDoPedidoParaPagamento(identificacao) {
 
         codigoHTML += `<div class="shadow p-3 mb-3 bg-white rounded">
             <div class="col-12 rounded mx-auto" id="escondeDados1" style="margin-top: 10px;">
+                <div class="row" style="margin-top:5vh">
+                    <div class="col-6">
+                        <div class="input-group">
+                            <select class="custom-select" id="formaPagamentoComprovante">
+                                <option selected value="dinheiro">Dinheiro</option>
+                                <option value="debito">Débito</option>
+                                <option value="credito">Crédito</option>
+                            </select>
+                            <div class="input-group-append">
+                                <button onclick="confirmarAcao('Imprimir comprovante!','imprimirComprovante(this.value)',${identificacao});" type="button" class="btn btn-outline-secondary">
+                                    <span class="fas fa-print"></span> Comprovante
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="my-6 bg-dark">
+            </div>
+        </div>
+        <div class="shadow p-3 mb-3 bg-white rounded">
+            <div class="col-12 rounded mx-auto" id="escondeDados1" style="margin-top: 10px;">
                 <div class="row">
-                    <div class="col">
-                        <h4>Valor total: <span class="badge badge-success"> R$ ${(json.data.total).toFixed(2)}</span></h4>
+                    <div class="col" id="valorComTaxaDebito" hidden>
+                        <h6>Valor do pedido: <span class="badge badge-warning"> R$ ${(json.data.total).toFixed(2)}</span></h6>
+                        <h6>Taxa do cartão: <span class="badge badge-warning"> R$ ${(json.data.carddebitfee).toFixed(2)}</span></h6>
+                        <h6>Taxa serviço/gorjeta: <span class="badge badge-warning"> R$ ${( (json.data.carddebitfee * ((json.data.tip * 100)/json.data.total))/100 +  json.data.tip ).toFixed(2)}</span></h6>
+                        <h4 style="margin-top:5vh">Valor total: <span class="badge badge-success"> R$ ${(json.data.total + ((json.data.carddebitfee * ((json.data.tip * 100)/json.data.total))/100 +  json.data.tip) + (json.data.customerfee? json.data.carddebitfee:0)).toFixed(2)}</span></h4>
+                    </div>
+                    <div class="col" id="valorComTaxaCredito" hidden>
+                        <h6>Valor do pedido: <span class="badge badge-warning"> R$ ${(json.data.total).toFixed(2)}</span></h6>
+                        <h6>Taxa do cartão: <span class="badge badge-warning"> R$ ${(json.data.cardcreditfee).toFixed(2)}</span></h6>
+                        <h6>Taxa serviço/gorjeta: <span class="badge badge-warning"> R$ ${( (json.data.cardcreditfee * ((json.data.tip * 100)/json.data.total))/100 +  json.data.tip ).toFixed(2)}</span></h6>
+                        <h4 style="margin-top:5vh">Valor total: <span class="badge badge-success"> R$ ${(json.data.total + ((json.data.cardcreditfee * ((json.data.tip * 100)/json.data.total))/100 +  json.data.tip) + (json.data.customerfee? json.data.cardcreditfee:0)).toFixed(2)}</span></h4>
+                    </div>
+                    <div class="col" id="valorSemTaxaCartao">
+                        <h6>Valor do pedido: <span class="badge badge-warning"> R$ ${(json.data.total).toFixed(2)}</span></h6>
+                        <h6>Taxa serviço/gorjeta: <span class="badge badge-warning"> R$ ${(json.data.tip).toFixed(2)}</span></h6>
+                        <h4 style="margin-top:5vh">Valor total: <span class="badge badge-success"> R$ ${(json.data.total + json.data.tip).toFixed(2)}</span></h4>
                     </div>
                     <div class="col">
                         <div class="input-group mb-3">
-                            <select class="custom-select" id="formaPagamento">
+                            <select class="custom-select" id="formaPagamento" onchange="if(this.value=='dinheiro'){
+                                document.getElementById('valorComTaxaCredito').hidden=true
+                                document.getElementById('valorComTaxaDebito').hidden=true
+                                document.getElementById('valorSemTaxaCartao').hidden=false
+                            }else if(this.value=='debito'){
+                                document.getElementById('valorComTaxaCredito').hidden=true
+                                document.getElementById('valorComTaxaDebito').hidden=false
+                                document.getElementById('valorSemTaxaCartao').hidden=true
+                            }else if(this.value=='credito'){
+                                document.getElementById('valorComTaxaCredito').hidden=false
+                                document.getElementById('valorComTaxaDebito').hidden=true
+                                document.getElementById('valorSemTaxaCartao').hidden=true
+                            }
+                            ">
                                 <option selected value="dinheiro">Dinheiro</option>
-                                <option value="cartão">Cartão</option>
+                                <option value="debito">Débito</option>
+                                <option value="credito">Crédito</option>
                             </select>
                             <div class="input-group-append">
-                                <button onclick="confirmarAcao('Efetuar o pagamento deste pedido!','efetuarPagamento(this.value)',${identificacao});" type="button" class="btn btn-primary">
-                                    <span class="fas fa-hand-holding-usd"></span> Efetuar Pagamento
+                                <button onclick="confirmarAcao('Colocar este pedido como pago!','efetuarPagamento(this.value)',${identificacao});" type="button" class="btn btn-success">
+                                    <span class="fas fa-hand-holding-usd"></span> Pago
                                 </button>
                             </div>
                         </div>
@@ -244,6 +293,21 @@ async function buscarDadosDoPedidoParaPagamento(identificacao) {
             document.getElementById('resposta').innerHTML = codigoHTML;
             animacaoSlideDown(['#resposta'])
         }, 400)
+    }
+}
+
+//funcao responsavel por imprimir comprovante
+async function imprimirComprovante(identification){
+    try {
+        const payment = document.getElementById('formaPagamentoComprovante').value;
+        console.log(payment)
+
+        await aguardeCarregamento(true)
+        await requisicaoPOST(`printer/comprovant`, {identification,payment}, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        await aguardeCarregamento(false)
+        await mensagemDeAviso("Imprimindo Comprovante...");
+    } catch (error) {
+        mensagemDeErro('Não foi possível imprimir o comprovante!')
     }
 }
 

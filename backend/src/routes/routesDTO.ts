@@ -54,3 +54,8 @@ export interface IValidationPrinter {
   printer: Joi.ObjectSchema;
   printerComprovant: Joi.ObjectSchema;
 }
+
+export interface IValidationCashRegister {
+  cashRegister: Joi.ObjectSchema;
+  paramIdCashRegister: { id: Joi.AnySchema };
+}

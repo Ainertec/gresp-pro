@@ -28,11 +28,10 @@ home.on('ready', function () {
   //shell.openItem("C://gresppro-x64//executaveis_modulos//startMongo.vbs")
   //shell.openItem("C://gresppro-x64//executaveis_modulos//startNode.vbs")
   //shell.openItem("C://gresppro-x64//executaveis_modulos//impressao.vbs")
+  //shell.openItem("C://gresppro-x64//executaveis_modulos//impressaoComprovant.vbs")
   //shell.openItem("C://gresppro-x64//executaveis_modulos//startWeb.vbs")
 
-  var data = new Date();
 
-  if (data.getDate() == 5 || data.getDate() == 15 || data.getDate() == 25) {
-    //shell.openItem("C://gresppro-x64//executaveis_modulos//startBackup.vbs")
-  }
+  //shell.openItem("C://gresppro-x64//executaveis_modulos//startBackup.vbs")
+
 });

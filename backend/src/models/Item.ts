@@ -38,6 +38,10 @@ const ItemSchema = new Schema(
       type: Boolean,
       default: true,
     },
+    print: {
+      type: Boolean,
+      default: true,
+    },
     cost: {
       type: Number,
       required: true,
