@@ -23,6 +23,7 @@ export const paramIdentification = {
 export const paramIdentPayment = {
   identification: Joi.number().required(),
   payment: Joi.string().required(),
+  paymentTip: Joi.boolean(),
 };
 
 export const orderDelete = {

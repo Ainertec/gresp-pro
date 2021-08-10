@@ -24,8 +24,7 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^7.1.4",
-    "electron-builder": "^22.9.1"
+    "electron": "^7.1.4"
   },
   "dependencies": {
     "axios": "^0.20.0",

@@ -125,6 +125,7 @@ class OrderController {
 
   public async delete(req: CustomRequest, res: Response) {
     const identification = Number(req.params.identification);
+    const paymentTip = Boolean(req.params.paymentTip);
     const { payment } = req.params;
 
     const orderFee = await Order.findOne({
@@ -138,16 +139,17 @@ class OrderController {
 
     if(payment=="debito"){
       newCardDebitFee = orderFee.carddebitfee;
-      newTipFee = Number(((orderFee.total + (orderFee.total * parseFloat(process.env.CARDDEBITFEE))/100) * parseFloat(process.env.TIPFEE))/100);
+      newTipFee = Number((orderFee.total * parseFloat(process.env.TIPFEE))/100);
     }else if(payment=="credito"){
       newCardCreditFee = orderFee.cardcreditfee;
-      newTipFee = Number(((orderFee.total + (orderFee.total * parseFloat(process.env.CARDCREDITFEE))/100) * parseFloat(process.env.TIPFEE))/100);
+      newTipFee = Number((orderFee.total * parseFloat(process.env.TIPFEE))/100);
     }
 
     const order = await Order.findOneAndUpdate(
       { identification, closed: false },
       { 
         closed: true,
+        paymentTip,
         payment,
         cardcreditfee: newCardCreditFee,
         carddebitfee: newCardDebitFee,

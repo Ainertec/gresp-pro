@@ -6,7 +6,7 @@ export const Modal = styled(Overlay).attrs({
   overlayStyle: {
     borderRadius: 20,
     paddingBottom: 0,
-    height: 450,
+    height: 500,
     backgroundColor: '#3f173f',
   },
 })``;

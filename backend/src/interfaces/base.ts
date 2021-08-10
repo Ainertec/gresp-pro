@@ -36,6 +36,7 @@ export interface OrderInterface extends Document {
   carddebitfee?: number;
   cardcreditfee?: number;
   tip?: number;
+  paymentTip?: boolean;
   customerfee?: boolean;
   closed?: boolean;
   finished?: boolean;

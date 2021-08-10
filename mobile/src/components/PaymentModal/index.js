@@ -25,6 +25,7 @@ const PaymentModal = ({ showPay, setShowPay, order, goBack }) => {
   const [checked, setChecked] = useState(true);
   const [checked2, setChecked2] = useState(false);
   const [checked3, setChecked3] = useState(false);
+  const [paymentTip, setPaymentTip] = useState(true);
   const [paymentKind, setPaymentKind] = useState('dinheiro');
   const [paymentTotal,setPaymentTotal] = useState(0)
   const { setOrder } = useOrder();
@@ -45,19 +46,19 @@ const PaymentModal = ({ showPay, setShowPay, order, goBack }) => {
       setChecked2(true);
       setChecked3(false);
       setPaymentKind('credito');
-      setPaymentTotal(order.total == undefined ? 0 : (order.total + ((order.cardcreditfee * ((order.tip * 100)/order.total))/100 + order.tip ) + (order.customerfee? order.cardcreditfee:0)) )
+      setPaymentTotal(order.total == undefined ? 0 : (order.total + order.tip + (order.customerfee? order.cardcreditfee:0)) )
     }else{
       setChecked(false);
       setChecked2(false);
       setChecked3(true);
       setPaymentKind('debito');
-      setPaymentTotal(order.total == undefined ? 0 : (order.total + ((order.carddebitfee * ((order.tip * 100)/order.total))/100 +  order.tip ) + (order.customerfee? order.carddebitfee:0)) )
+      setPaymentTotal(order.total == undefined ? 0 : (order.total + order.tip + (order.customerfee? order.carddebitfee:0)) )
     }
   }
 
   async function payment() {
     await api
-      .delete(`/orders/${order.identification}/${paymentKind}`)
+      .delete(`/orders/${order.identification}/${paymentKind}/${paymentTip}`)
       .catch(error => {
         paymentFailRef.current.open();
       });
@@ -111,6 +112,14 @@ const PaymentModal = ({ showPay, setShowPay, order, goBack }) => {
           title="Débito"
           checked={checked3}
           onPress={() => selected(3)}
+        ></Check>
+        <Check
+          checkedIcon="dot-circle-o"
+          uncheckedIcon="circle-o"
+          checkedColor="#000"
+          title="Adicionar gorjeta"
+          checked={paymentTip}
+          onPress={() => {paymentTip? setPaymentTip(false):setPaymentTip(true)}}
         ></Check>
 
         <TotalPayment>

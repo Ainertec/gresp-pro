@@ -27,7 +27,7 @@ export class OrderRoutes {
       OrderController.update,
     );
     this.routes.delete(
-      '/orders/:identification/:payment',
+      '/orders/:identification/:payment/:paymentTip',
       celebrate({ params: validations.paramIdentPayment }),
       OrderController.delete,
     );

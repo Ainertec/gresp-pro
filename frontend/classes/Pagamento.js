@@ -203,14 +203,14 @@ async function buscarDadosDoPedidoParaPagamento(identificacao) {
                     <div class="col" id="valorComTaxaDebito" hidden>
                         <h6>Valor do pedido: <span class="badge badge-warning"> R$ ${(json.data.total).toFixed(2)}</span></h6>
                         <h6>Taxa do cartão: <span class="badge badge-warning"> R$ ${(json.data.carddebitfee).toFixed(2)}</span></h6>
-                        <h6>Taxa serviço/gorjeta: <span class="badge badge-warning"> R$ ${( (json.data.carddebitfee * ((json.data.tip * 100)/json.data.total))/100 +  json.data.tip ).toFixed(2)}</span></h6>
-                        <h4 style="margin-top:5vh">Valor total: <span class="badge badge-success"> R$ ${(json.data.total + ((json.data.carddebitfee * ((json.data.tip * 100)/json.data.total))/100 +  json.data.tip) + (json.data.customerfee? json.data.carddebitfee:0)).toFixed(2)}</span></h4>
+                        <h6>Taxa serviço/gorjeta: <span class="badge badge-warning"> R$ ${(json.data.tip).toFixed(2)}</span></h6>
+                        <h4 style="margin-top:5vh">Valor total: <span class="badge badge-success"> R$ ${(json.data.total + json.data.tip + (json.data.customerfee? json.data.carddebitfee:0)).toFixed(2)}</span></h4>
                     </div>
                     <div class="col" id="valorComTaxaCredito" hidden>
                         <h6>Valor do pedido: <span class="badge badge-warning"> R$ ${(json.data.total).toFixed(2)}</span></h6>
                         <h6>Taxa do cartão: <span class="badge badge-warning"> R$ ${(json.data.cardcreditfee).toFixed(2)}</span></h6>
-                        <h6>Taxa serviço/gorjeta: <span class="badge badge-warning"> R$ ${( (json.data.cardcreditfee * ((json.data.tip * 100)/json.data.total))/100 +  json.data.tip ).toFixed(2)}</span></h6>
-                        <h4 style="margin-top:5vh">Valor total: <span class="badge badge-success"> R$ ${(json.data.total + ((json.data.cardcreditfee * ((json.data.tip * 100)/json.data.total))/100 +  json.data.tip) + (json.data.customerfee? json.data.cardcreditfee:0)).toFixed(2)}</span></h4>
+                        <h6>Taxa serviço/gorjeta: <span class="badge badge-warning"> R$ ${(json.data.tip).toFixed(2)}</span></h6>
+                        <h4 style="margin-top:5vh">Valor total: <span class="badge badge-success"> R$ ${(json.data.total + json.data.tip + (json.data.customerfee? json.data.cardcreditfee:0)).toFixed(2)}</span></h4>
                     </div>
                     <div class="col" id="valorSemTaxaCartao">
                         <h6>Valor do pedido: <span class="badge badge-warning"> R$ ${(json.data.total).toFixed(2)}</span></h6>
@@ -218,6 +218,10 @@ async function buscarDadosDoPedidoParaPagamento(identificacao) {
                         <h4 style="margin-top:5vh">Valor total: <span class="badge badge-success"> R$ ${(json.data.total + json.data.tip).toFixed(2)}</span></h4>
                     </div>
                     <div class="col">
+                        <div class="custom-control custom-switch" style="margin-bottom:20px">
+                            <input type="checkbox" class="custom-control-input custom-switch" id="botaoselectTaxaGorgeta" checked>
+                            <label class="custom-control-label" for="botaoselectTaxaGorgeta">Adicionar taxa gorgeta</label>
+                        </div>
                         <div class="input-group mb-3">
                             <select class="custom-select" id="formaPagamento" onchange="if(this.value=='dinheiro'){
                                 document.getElementById('valorComTaxaCredito').hidden=true
@@ -315,7 +319,7 @@ async function imprimirComprovante(identification){
 async function efetuarPagamento(identificacao) {
     try {
         await aguardeCarregamento(true)
-        await requisicaoDELETE(`orders/${identificacao}/${$('#formaPagamento').val()}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        await requisicaoDELETE(`orders/${identificacao}/${$('#formaPagamento').val()}/${document.getElementById('botaoselectTaxaGorgeta').checked}`, '', { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
         await aguardeCarregamento(false)
         await mensagemDeAviso(`Pagamento efetuado para o pedido nº ${identificacao}!`);
         await setTimeout(function () { menuPagamentoPedido(); }, 500)

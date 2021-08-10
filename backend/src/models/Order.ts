@@ -47,6 +47,10 @@ const OrderSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    paymentTip: {
+      type: Boolean,
+      default: true,
+    },
     closed: {
       type: Boolean,
       default: false,

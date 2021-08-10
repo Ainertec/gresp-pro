@@ -37,6 +37,7 @@ export interface IValidationOrder {
   paramIdentPayment: {
     identification: Joi.NumberSchema;
     payment: Joi.StringSchema;
+    paymentTip: Joi.BooleanSchema;
   };
   orderDelete: { id: Joi.AnySchema };
 }
