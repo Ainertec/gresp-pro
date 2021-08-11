@@ -56,47 +56,55 @@ const Item = ({ item }) => {
   }, [quantity]);
 
   return (
-    <ItemContent
-      style={existItem(item) && styles.selectedItem}
-      leftAvatar={
-        <Icon
-          name={!item.drink ? 'local-dining' : 'local-bar'}
-          size={30}
-          onPress={() =>
-            Alert.alert(
-              'Informações',
-              `Nome: ${item.name}\nDescrição: ${item.description}`
-            )
-          }
-        />
-      }
-      title={item.name}
-      subtitle={`R$ ${item.price.toFixed(2)}`}
-      rightElement={
-        <ItemContainer>
-          <ItemContentQuantity>
+    <>
+    {
+      item.available? (
+        <ItemContent
+          style={existItem(item) && styles.selectedItem}
+          leftAvatar={
             <Icon
-              // reverse
-              raised
-              name='remove'
-              size={12}
+              name={!item.drink ? 'local-dining' : 'local-bar'}
+              size={30}
               onPress={() =>
-                setQuantity((state) => (state > 1 ? state - 1 : 1))
+                Alert.alert(
+                  'Informações',
+                  `Nome: ${item.name}\nDescrição: ${item.description}`
+                )
               }
             />
-            <Quantity>{quantity}</Quantity>
-            <Icon
-              name='add'
-              raised
-              size={12}
-              onPress={() => setQuantity((state) => state + 1)}
-            />
-          </ItemContentQuantity>
-          <QuantityLabel>Quantidade</QuantityLabel>
-        </ItemContainer>
-      }
-      onPress={() => handleSelect(item)}
-    />
+          }
+          title={item.name}
+          subtitle={`R$ ${item.price.toFixed(2)}`}
+          rightElement={
+            <ItemContainer>
+              <ItemContentQuantity>
+                <Icon
+                  // reverse
+                  raised
+                  name='remove'
+                  size={12}
+                  onPress={() =>
+                    setQuantity((state) => (state > 1 ? state - 1 : 1))
+                  }
+                />
+                <Quantity>{quantity}</Quantity>
+                <Icon
+                  name='add'
+                  raised
+                  size={12}
+                  onPress={() => setQuantity((state) => state + 1)}
+                />
+              </ItemContentQuantity>
+              <QuantityLabel>Quantidade</QuantityLabel>
+            </ItemContainer>
+          }
+          onPress={() => handleSelect(item)}
+        />
+      ):(
+        <></>
+      )
+    }
+    </>
   );
 };
 

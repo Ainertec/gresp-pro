@@ -71,11 +71,11 @@ const PaymentModal = ({ showPay, setShowPay, order, goBack }) => {
 
   function handlePaymentTip(tipo) {
     if(tipo){
-      setPaymentTip(false);
-      setPaymentTotal(paymentTotal - (order.tip? order.tip:0));
-    }else{
       setPaymentTip(true);
       setPaymentTotal(paymentTotal + (order.tip? order.tip:0) );
+    }else{
+      setPaymentTip(false);
+      setPaymentTotal(paymentTotal - (order.tip? order.tip:0));
     }
   }
 

@@ -124,7 +124,7 @@ const Item = ({ item, setChanged, itemRemove }) => {
           />
         </RightContent>
       }
-      subtitle={`R$ ${item.product.price}`}
+      subtitle={`R$ ${(parseFloat(item.product.price)).toFixed(2)}`}
       bottomDivider
     />
   );
