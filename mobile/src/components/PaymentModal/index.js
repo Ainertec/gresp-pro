@@ -22,7 +22,7 @@ import {
 const { height } = Dimensions.get('window');
 
 const PaymentModal = ({ showPay, setShowPay, order, goBack }) => {
-  const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(false);
   const [checked2, setChecked2] = useState(false);
   const [checked3, setChecked3] = useState(false);
   const [paymentTip, setPaymentTip] = useState(true);
@@ -40,19 +40,19 @@ const PaymentModal = ({ showPay, setShowPay, order, goBack }) => {
       setChecked(true);
       setChecked3(false);
       setPaymentKind('dinheiro');
-      setPaymentTotal(order.total == undefined ? 0 : (order.total + (order.tip? order.tip:0)) )
+      setPaymentTotal(order.total == undefined ? 0 : (order.total + (order.tip && paymentTip? order.tip:0)) )
     } else if(number === 2){
       setChecked(false);
       setChecked2(true);
       setChecked3(false);
       setPaymentKind('credito');
-      setPaymentTotal(order.total == undefined ? 0 : (order.total + order.tip + (order.customerfee? order.cardcreditfee:0)) )
+      setPaymentTotal(order.total == undefined ? 0 : (order.total + (order.tip && paymentTip? order.tip:0) + (order.customerfee? order.cardcreditfee:0)) )
     }else{
       setChecked(false);
       setChecked2(false);
       setChecked3(true);
       setPaymentKind('debito');
-      setPaymentTotal(order.total == undefined ? 0 : (order.total + order.tip + (order.customerfee? order.carddebitfee:0)) )
+      setPaymentTotal(order.total == undefined ? 0 : (order.total + (order.tip && paymentTip? order.tip:0) + (order.customerfee? order.carddebitfee:0)) )
     }
   }
 
@@ -67,6 +67,16 @@ const PaymentModal = ({ showPay, setShowPay, order, goBack }) => {
     // setShowPay(false);
     setOrder({});
     // goBack && navigation.goBack();
+  }
+
+  function handlePaymentTip(tipo) {
+    if(tipo){
+      setPaymentTip(false);
+      setPaymentTotal(paymentTotal - (order.tip? order.tip:0));
+    }else{
+      setPaymentTip(true);
+      setPaymentTotal(paymentTotal + (order.tip? order.tip:0) );
+    }
   }
 
   function handleClosed() {
@@ -119,24 +129,30 @@ const PaymentModal = ({ showPay, setShowPay, order, goBack }) => {
           checkedColor="#000"
           title="Adicionar gorjeta"
           checked={paymentTip}
-          onPress={() => {paymentTip? setPaymentTip(false):setPaymentTip(true)}}
+          onPress={() => {paymentTip? handlePaymentTip(false):handlePaymentTip(true)}}
         ></Check>
 
         <TotalPayment>
           Total: R$ {(paymentTotal).toFixed(2)}
         </TotalPayment>
-        <TouchableOpacity onPress={payment}>
-          <Button
-            style={{
-              marginTop: 30,
-              height: height * 0.06,
-              backgroundColor: '#008000',
-            }}
-            customSize={height * 0.06}
-            iconName="dollar-sign"
-            title="Pago"
-          />
-        </TouchableOpacity>
+        {
+          checked || checked2 || checked3?(
+            <TouchableOpacity onPress={payment}>
+              <Button
+                style={{
+                  marginTop: 30,
+                  height: height * 0.06,
+                  backgroundColor: '#008000',
+                }}
+                customSize={height * 0.06}
+                iconName="dollar-sign"
+                title="Pago"
+              />
+            </TouchableOpacity>
+          ):(
+            <></>
+          )         
+        }
         <Alert
           ref={paymentFailRef}
           title="Ops..."
