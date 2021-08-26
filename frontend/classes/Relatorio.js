@@ -18,10 +18,14 @@ function telaRelatorioDeCaixa() {
     codigoHTML += `<div class="shadow-lg p-3 mb-5 bg-white rounded">
         <h4 class="text-center"><span class="fas fa-chart-line"></span> Relatórios</h4>
         <div class="col-6 mx-auto row" style="margin-top:20px;">
-            <label for="dataInicial">Inicio</label>
-            <input id="dataInicial" type="date" class="form-control form-control-sm" value="${new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()}">
-            <label for="dataFinal">Final</label>
-            <input id="dataFinal" type="date" class="form-control form-control-sm" value="${new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()}">
+            <div class="col-6">
+                <label for="dataInicial">Inicio</label>
+                <input id="dataInicial" type="date" class="form-control form-control-sm" value="${new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()}">
+            </div>
+            <div class="col-6">
+                <label for="dataFinal">Final</label>
+                <input id="dataFinal" type="date" class="form-control form-control-sm" value="${new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()}">
+            </div>
         </div>
         <div class="col-6 mx-auto" style="margin-top:20px;">
             <button onclick="chamadaDeMetodosRelatorio();" class="btn btn-info btn-block btn-sm" style="margin-bottom:40px;">
@@ -35,12 +39,11 @@ function telaRelatorioDeCaixa() {
             </button>
         </div>
     </div>
-
+        <div id="listaDadosGerais" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>
+        <div id="listaItens" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>
         <div id="grafico1" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
         <div id="grafico2" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
-        <div id="grafico3" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
-        <div id="listaItens" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>
-        <div id="listaDadosGerais" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>`
+        <div id="grafico3" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>`
 
     document.getElementById('janela2').innerHTML = codigoHTML;
 }
