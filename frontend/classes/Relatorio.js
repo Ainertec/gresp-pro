@@ -39,8 +39,10 @@ function telaRelatorioDeCaixa() {
             </button>
         </div>
     </div>
+
+        <div id="dadosGerais" style="margin-top:5vh" class="col-12 rounded mx-auto d-block"></div>
         <div id="listaDadosGerais" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>
-        <div id="listaItens" style="margin-top:20px" class="col-12 rounded mx-auto d-block"></div>
+        <div id="listaItens" class="col-12 layer1" style="margin-top:20px; position: relative; height: 70vh; z-index: 1; overflow: scroll; margin-right: 0px;" class="col-12 rounded mx-auto d-block"></div>
         <div id="grafico1" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
         <div id="grafico2" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>
         <div id="grafico3" style="margin-top:20px;" class="col-12 rounded mx-auto d-block"></div>`
@@ -57,6 +59,7 @@ function chamadaDeMetodosRelatorio() {
         gerarGraficoQuantidadeVendas();
         tabelaDeRelatorioCaixa();
         tabelaGeralDeRelatorios();
+        dadosGeraisExibir();
     }, 300)
 }
 
@@ -65,6 +68,7 @@ async function gerarGraficoDemonstrativoVendaPorItem() {
     await aguardeCarregamento(true)
     let json = await requisicaoGET(`reports/products?initial=${document.getElementById('dataInicial').value}&final=${document.getElementById('dataFinal').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false)
+
     let vetorNome = [], vetorQuantidade = [], vetorValor = [];
 
     for (let item of json.data) {
@@ -154,6 +158,8 @@ async function gerarGraficoGanhoGastoMensal() {
     await aguardeCarregamento(true)
     let json = await requisicaoGET(`reports?initial=${document.getElementById('dataInicial').value}&final=${document.getElementById('dataFinal').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
     await aguardeCarregamento(false)
+
+    console.log(json);
 
     Highcharts.chart('grafico2', {
         chart: {
@@ -375,6 +381,78 @@ async function tabelaGeralDeRelatorios() {
 
         document.getElementById('listaDadosGerais').innerHTML = 'Não foi possivel carregar a lista!' + error
     }
+}
+
+//funcao responsavel por gerar os dados gerais
+async function dadosGeraisExibir() {
+    let codigoHTML = ``
+
+    await aguardeCarregamento(true)
+        let json = await requisicaoGET(`reports?initial=${document.getElementById('dataInicial').value}&final=${document.getElementById('dataFinal').value}`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        let json2 = await requisicaoGET(`reports/coststock`, { headers: { Authorization: `Bearer ${buscarSessionUser().token}` } });
+        await aguardeCarregamento(false)
+
+    codigoHTML +=`<h5>Informações gerais</h5>
+    <div class="card-group">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Valor recebido bruto(Período)</h6>
+                        <h3 style="color:green">R$ ${json.data.total}</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Receitas menos custos(Período)</h6>
+                        <h3 style="color:green">R$ ${json.data.netValue}</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Gastos com cortesia(Período)</h6>
+                        <h3 style="color:red">R$ ${json.data.totalCourtesy}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Taxas de cartão crédito(Período)</h6>
+                        <h3 style="color:red">R$ ${json.data.totalCardCreditFee}</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Taxas de cartão débito(Período)</h6>
+                        <h3 style="color:red">R$ ${json.data.totalCardDebitFee}</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Taxas de serviço/gorjeta(Período)</h6>
+                        <h3 style="color:green">R$ ${json.data.totalTip}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Custos com pedidos(Período)</h6>
+                        <h3 style="color:red">R$ ${json.data.totalCost}</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Valor total em estoque(Total)</h6>
+                        <h3 style="color:red">R$ ${(json2.data).toFixed(2)}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`
+
+    document.getElementById('dadosGerais').innerHTML = codigoHTML;
 }
 
 //funcao responsavel por imprimir o relatorio geral

@@ -257,7 +257,7 @@ async function buscarPedido(identificacao) {
             for (let item of json.data.items) {
                 adicionarItemaoPedido(item.product._id, item.quantity, 'atualizar', item.courtesy ? true : false);
             }
-            document.getElementById('observacao').innerHTML = json.data.note;
+            document.getElementById('observacao').innerHTML = json.data.note? json.data.note:'';
             $('#escondeDados4').slideDown(300);
             botaoDeConfirmaçãoDePedido(`confirmarAcao('Atualizar este pedido!', 'cadastrarAtualizarPedido(this.value,${identificacao})', 'atualizar');`);
             botaoDeReimprimirDePedido();
@@ -682,7 +682,7 @@ async function cadastrarAtualizarPedido(tipoRequisicao, identificacao) {
 
                 try {
                     if (result.data.stockAlert[0]) {
-                        await mensagemEstoque(`O estoque referente ao (s) produto(s) (${result.data.stockAlert.join()}), está acabando, verifique o estoque!`);
+                        await mensagemEstoque(`O estoque referente ao(s) produto(s) (${result.data.stockAlert.join()}), está acabando, verifique o estoque!`);
                     }
                 } catch (error) { }
                 await mensagemDeAviso("Pedido atualizado com sucesso!");

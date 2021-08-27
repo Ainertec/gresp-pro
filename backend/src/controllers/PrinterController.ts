@@ -100,11 +100,15 @@ class PrinterController {
       borderTop: { size: 2, spacing: 100, color: JsRtf.Colors.GREEN },
     });
 
-    const notItem = order.items.find(element => {
-      return !element.product.drink && element.product.print
-    });
+    let notItem = false;
+    for (const iterator of order.items) {
+      console.log(Boolean(iterator.product.print))
+      if(Boolean(iterator.product.print && (!iterator.product.drink || Boolean(process.env.PRINTDRINK == 'true')))){
+        notItem = true;
+      }
+    }
 
-    if (order.items && (notItem || Boolean(process.env.PRINTDRINK == 'true'))) {
+    if (order.items && notItem) {
       const items = type
         ? this.toPrinterNew(order.items)
         : this.toPrinterUpdated(order.items, oldItems);
@@ -237,7 +241,7 @@ class PrinterController {
         );
       }else if(payment == 'debito'){
         myDoc.writeText(
-          `- Taxa de serviço/gorjeta: R$${order.tip? (order.tip + (order.carddebitfee * parseFloat(process.env.TIPFEE)/100)).toFixed(2):'0.00'}\n`,
+          `- Taxa de serviço/gorjeta: R$${order.tip? (order.tip).toFixed(2):'0.00'}\n`,
           contentStyle,
         );
         myDoc.writeText(
@@ -246,12 +250,12 @@ class PrinterController {
         );
         myDoc.writeText('- - - - - - - - - - - - - - - - - - - - - - - - -', contentStyle);
         myDoc.writeText(
-          `\n- Total no débito: R$${(order.total + order.carddebitfee + order.tip + (order.carddebitfee * parseFloat(process.env.TIPFEE)/100) ).toFixed(2)}\n`,
+          `\n- Total no débito: R$${(order.total + order.carddebitfee + order.tip ).toFixed(2)}\n`,
           contentStyle,
         );
       }else{
         myDoc.writeText(
-          `- Taxa de serviço/gorjeta: R$${order.tip? (order.tip + (order.cardcreditfee * parseFloat(process.env.TIPFEE)/100)).toFixed(2):'0.00'}\n`,
+          `- Taxa de serviço/gorjeta: R$${order.tip? (order.tip).toFixed(2):'0.00'}\n`,
           contentStyle,
         );
         myDoc.writeText(
@@ -260,7 +264,7 @@ class PrinterController {
         );
         myDoc.writeText('- - - - - - - - - - - - - - - - - - - - - - - - -', contentStyle);
         myDoc.writeText(
-          `\n- Total no crédito: R$${(order.total + order.cardcreditfee + order.tip + (order.cardcreditfee * parseFloat(process.env.TIPFEE)/100)).toFixed(2) }\n`,
+          `\n- Total no crédito: R$${(order.total + order.cardcreditfee + order.tip).toFixed(2) }\n`,
           contentStyle,
         );
       }
