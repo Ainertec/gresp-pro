@@ -34,7 +34,14 @@ class PrinterController {
       if (position >= 0) {
         items.splice(position, 1);
       }
+      items.map(
+        item => {
+          if(String(item.product._id) === String(oldItem.product))
+          item.quantity = item.quantity - oldItem.quantity
+        }
+      )
     });
+
     items.map(item => {
       if (item.product.drink) {
         drinks.push(item);
@@ -102,13 +109,13 @@ class PrinterController {
 
     let notItem = false;
     for (const iterator of order.items) {
-      console.log(Boolean(iterator.product.print))
       if(Boolean(iterator.product.print && (!iterator.product.drink || Boolean(process.env.PRINTDRINK == 'true')))){
         notItem = true;
       }
     }
 
     if (order.items && notItem) {
+      console.log(type)
       const items = type
         ? this.toPrinterNew(order.items)
         : this.toPrinterUpdated(order.items, oldItems);

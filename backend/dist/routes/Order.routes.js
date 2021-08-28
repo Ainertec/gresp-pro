@@ -18,7 +18,7 @@ class OrderRoutes {
             body: validations.orderUpdate,
             params: validations.paramIdentification,
         }), OrderController_1.default.update);
-        this.routes.delete('/orders/:identification/:payment', celebrate_1.celebrate({ params: validations.paramIdentPayment }), OrderController_1.default.delete);
+        this.routes.delete('/orders/:identification/:payment/:paymentTip', celebrate_1.celebrate({ params: validations.paramIdentPayment }), OrderController_1.default.delete);
         this.routes.delete('/orderone/:id', celebrate_1.celebrate({ params: validations.orderDelete }), OrderController_1.default.deleteOne);
     }
 }

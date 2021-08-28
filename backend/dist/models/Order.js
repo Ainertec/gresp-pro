@@ -48,6 +48,10 @@ const OrderSchema = new mongoose_1.Schema({
         type: Boolean,
         default: false,
     },
+    paymentTip: {
+        type: Boolean,
+        default: true,
+    },
     closed: {
         type: Boolean,
         default: false,

@@ -26,6 +26,7 @@ exports.paramIdentification = {
 exports.paramIdentPayment = {
     identification: celebrate_1.Joi.number().required(),
     payment: celebrate_1.Joi.string().required(),
+    paymentTip: celebrate_1.Joi.boolean(),
 };
 exports.orderDelete = {
     id: celebrate_1.Joi.custom(validObjectId_1.default, 'valid id').required(),

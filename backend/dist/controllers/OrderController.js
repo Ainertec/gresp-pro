@@ -91,6 +91,7 @@ class OrderController {
     }
     async delete(req, res) {
         const identification = Number(req.params.identification);
+        const paymentTip = Boolean(req.params.paymentTip);
         const { payment } = req.params;
         const orderFee = await Order_1.default.findOne({
             identification,
@@ -101,14 +102,15 @@ class OrderController {
         let newTipFee = orderFee.tip;
         if (payment == "debito") {
             newCardDebitFee = orderFee.carddebitfee;
-            newTipFee = Number(((orderFee.total + (orderFee.total * parseFloat(process.env.CARDDEBITFEE)) / 100) * parseFloat(process.env.TIPFEE)) / 100);
+            newTipFee = Number((orderFee.total * parseFloat(process.env.TIPFEE)) / 100);
         }
         else if (payment == "credito") {
             newCardCreditFee = orderFee.cardcreditfee;
-            newTipFee = Number(((orderFee.total + (orderFee.total * parseFloat(process.env.CARDCREDITFEE)) / 100) * parseFloat(process.env.TIPFEE)) / 100);
+            newTipFee = Number((orderFee.total * parseFloat(process.env.TIPFEE)) / 100);
         }
         const order = await Order_1.default.findOneAndUpdate({ identification, closed: false }, {
             closed: true,
+            paymentTip,
             payment,
             cardcreditfee: newCardCreditFee,
             carddebitfee: newCardDebitFee,
