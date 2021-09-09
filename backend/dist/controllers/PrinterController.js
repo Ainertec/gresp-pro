@@ -95,7 +95,6 @@ class PrinterController {
             }
         }
         if (order.items && notItem) {
-            console.log(type);
             const items = type
                 ? this.toPrinterNew(order.items)
                 : this.toPrinterUpdated(order.items, oldItems);
@@ -200,13 +199,13 @@ class PrinterController {
                 myDoc.writeText(`- Taxa de serviço/gorjeta: R$${order.tip ? (order.tip).toFixed(2) : '0.00'}\n`, contentStyle);
                 myDoc.writeText(`- Taxa de Cartão: R$${order.carddebitfee ? (order.carddebitfee).toFixed(2) : '0.00'}\n`, contentStyle);
                 myDoc.writeText('- - - - - - - - - - - - - - - - - - - - - - - - -', contentStyle);
-                myDoc.writeText(`\n- Total no débito: R$${(order.total + order.carddebitfee + order.tip).toFixed(2)}\n`, contentStyle);
+                myDoc.writeText(`\n- Total no débito: R$${(order.total + (order.customerfee ? order.carddebitfee : 0) + order.tip).toFixed(2)}\n`, contentStyle);
             }
             else {
                 myDoc.writeText(`- Taxa de serviço/gorjeta: R$${order.tip ? (order.tip).toFixed(2) : '0.00'}\n`, contentStyle);
                 myDoc.writeText(`- Taxa de Cartão: R$${order.cardcreditfee ? (order.cardcreditfee).toFixed(2) : '0.00'}\n`, contentStyle);
                 myDoc.writeText('- - - - - - - - - - - - - - - - - - - - - - - - -', contentStyle);
-                myDoc.writeText(`\n- Total no crédito: R$${(order.total + order.cardcreditfee + order.tip).toFixed(2)}\n`, contentStyle);
+                myDoc.writeText(`\n- Total no crédito: R$${(order.total + (order.customerfee ? order.cardcreditfee : 0) + order.tip).toFixed(2)}\n`, contentStyle);
             }
             myDoc.writeText(`- Data/hora ${date}`, contentStyle);
             const content = myDoc.createDocument();
