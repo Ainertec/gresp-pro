@@ -115,7 +115,6 @@ class PrinterController {
     }
 
     if (order.items && notItem) {
-      console.log(type)
       const items = type
         ? this.toPrinterNew(order.items)
         : this.toPrinterUpdated(order.items, oldItems);
@@ -257,7 +256,7 @@ class PrinterController {
         );
         myDoc.writeText('- - - - - - - - - - - - - - - - - - - - - - - - -', contentStyle);
         myDoc.writeText(
-          `\n- Total no débito: R$${(order.total + order.carddebitfee + order.tip ).toFixed(2)}\n`,
+          `\n- Total no débito: R$${(order.total + (order.customerfee? order.carddebitfee:0) + order.tip ).toFixed(2)}\n`,
           contentStyle,
         );
       }else{
@@ -271,7 +270,7 @@ class PrinterController {
         );
         myDoc.writeText('- - - - - - - - - - - - - - - - - - - - - - - - -', contentStyle);
         myDoc.writeText(
-          `\n- Total no crédito: R$${(order.total + order.cardcreditfee + order.tip).toFixed(2) }\n`,
+          `\n- Total no crédito: R$${(order.total + (order.customerfee? order.cardcreditfee:0) + order.tip).toFixed(2) }\n`,
           contentStyle,
         );
       }
