@@ -34,4 +34,8 @@ home.on('ready', function () {
 
   //shell.openItem("C://gresppro-x64//executaveis_modulos//startBackup.vbs")
 
+  if(new Date().getDate() == 5){
+    //shell.openItem("C://gresppro-x64//executaveis_modulos//deleteBackup.vbs")
+  }
+
 });
